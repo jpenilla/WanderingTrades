@@ -4,6 +4,7 @@ import fun.ccmc.wt.listener.VillagerAcquireTradeEventListener;
 import fun.ccmc.wt.command.CommandWanderingTrades;
 import fun.ccmc.wt.util.Config;
 import fun.ccmc.wt.util.Log;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class WanderingTrades extends JavaPlugin {
@@ -23,6 +24,9 @@ public final class WanderingTrades extends JavaPlugin {
         }
 
         this.getCommand("wanderingtrades").setExecutor(new CommandWanderingTrades());
+
+        int pluginId = 7597;
+        Metrics metrics = new Metrics(this, pluginId);
 
         Log.info("&d[ON]");
     }
