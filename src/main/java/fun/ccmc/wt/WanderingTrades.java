@@ -1,7 +1,7 @@
 package fun.ccmc.wt;
 
 import fun.ccmc.wt.listener.VillagerAcquireTradeEventListener;
-import fun.ccmc.wt.util.CommandWanderingTrades;
+import fun.ccmc.wt.command.CommandWanderingTrades;
 import fun.ccmc.wt.util.Config;
 import fun.ccmc.wt.util.Log;
 import org.bukkit.plugin.java.JavaPlugin;
