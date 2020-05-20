@@ -1,4 +1,4 @@
-debug: true
+debug: false
 enabled: true
 trades:
   myfirsttrade:
@@ -8,22 +8,22 @@ trades:
         customname: NONE
         material: GLASS
         amount: 3
-      2:
-        customname: NONE
-        material: DIRT
-        amount: 2
     result:
       customname: NONE
       material: DIAMOND
       amount: 64
-  trade22222:
+  microblock1:
     experienceReward: true
     ingredients:
       1:
         customname: NONE
-        material: DIRT
-        amount: 3
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: PACKED_ICE
+        amount: 1
     result:
       customname: '&b&lPacked Ice'
       material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzE1NDIyODZkYTAzYWI3ZWVjYzRlNTYyYzNmOGI4YTFjZjc4MWRhMzA4YjA3OWUzYWMzMzE0NTYxYjljMWQ5OSJ9fX0=
-      amount: 64
+      amount: 8
