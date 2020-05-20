@@ -36,6 +36,8 @@ public class Config {
     }
 
     private static void loadRecipes(FileConfiguration config) {
+        trades.clear();
+
         String parent = "trades";
         for(String key : config.getConfigurationSection(parent).getKeys(false)) {
             String prefix = parent + "." + key + ".";
