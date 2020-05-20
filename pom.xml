@@ -67,6 +67,10 @@
             <id>skullcreator-repo</id>
             <url>https://dl.bintray.com/deanveloper/SkullCreator</url>
         </repository>
+        <repository>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -80,6 +84,12 @@
             <groupId>com.deanveloper</groupId>
             <artifactId>skullcreator</artifactId>
             <version>1.0.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.7</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
