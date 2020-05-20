@@ -15,6 +15,8 @@ import java.util.List;
 public class Config {
     private static boolean debug;
     private static boolean enabled;
+    private static boolean randomized;
+    private static int randomAmount;
     private static List<MerchantRecipe> trades = new ArrayList<>();
 
     public static void init(WanderingTrades plugin) {
@@ -28,6 +30,8 @@ public class Config {
 
         debug = config.getBoolean("debug");
         enabled = config.getBoolean("enabled");
+        randomized = config.getBoolean("randomized");
+        randomAmount = config.getInt("randomAmount");
         loadRecipes(config);
     }
 
@@ -76,6 +80,14 @@ public class Config {
 
     public static boolean getEnabled() {
         return enabled;
+    }
+
+    public static  boolean getRandomized() {
+        return randomized;
+    }
+
+    public static int getRandomAmount() {
+        return randomAmount;
     }
 
     public static List<MerchantRecipe> getTrades() {
