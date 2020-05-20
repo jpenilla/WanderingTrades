@@ -44,7 +44,11 @@ public class Config {
 
             ItemStack result = getStack(config, prefix + "result");
 
-            MerchantRecipe recipe = new MerchantRecipe(result, 0, 1, config.getBoolean(prefix + "experienceReward"));
+            int m = 1;
+            if (config.getInt(prefix + "maxUses") != 0) {
+                m = config.getInt(prefix + "maxUses");
+            }
+            MerchantRecipe recipe = new MerchantRecipe(result, 0, m, config.getBoolean(prefix + "experienceReward"));
 
             int i = 1;
             while( i < 3 ) {
@@ -65,7 +69,11 @@ public class Config {
             if(config.getString(key + ".material").contains("head-")) {
                 is = SkullCreator.withBase64(new ItemStack(Material.PLAYER_HEAD, config.getInt(key + ".amount")), config.getString(key + ".material").replace("head-", ""));
             } else {
-                is = new ItemStack(Material.getMaterial(config.getString(key + ".material")), config.getInt(key + ".amount"));
+                if(Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
+                    is = new ItemStack(Material.getMaterial(config.getString(key + ".material").toUpperCase()), config.getInt(key + ".amount"));
+                } else {
+                    Log.warn(config.getString(key + ".material") + " is not a valid material");
+                }
             }
             if(!config.getString(key + ".customname").equals("NONE")) {
                 ItemMeta iMeta = is.getItemMeta();

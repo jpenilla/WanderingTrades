@@ -1,6 +1,8 @@
-package fun.ccmc.wt.util;
+package fun.ccmc.wt.command;
 
 import fun.ccmc.wt.WanderingTrades;
+import fun.ccmc.wt.util.Config;
+import fun.ccmc.wt.util.TextFormatting;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
