@@ -6,6 +6,7 @@
 
 * WanderingTrades is a plugin for [Spigot](https://www.spigotmc.org/) Minecraft Servers (also works on [Paper](https://www.papermc.io/))
 * Adds trades defined in config file to wandering traders. Randomization options in config.
+* Commands: `````/wanderingtrades`````, `````/wanderingtrades reload````` (requires ```wanderingtrades.reload``` permission)
 * [VanillaTweaks](https://vanillatweaks.net) microblocks config: [config.yml](https://gist.github.com/jmanpenilla/56120245992a7c4099c13b798c94b5e0)
 
 
