@@ -3,8 +3,8 @@ enabled: true
 randomized: true
 randomAmount: 2
 trades:
-  maxUses: 3
   myfirsttrade:
+    maxUses: 3
     experienceReward: true
     ingredients:
       1:
