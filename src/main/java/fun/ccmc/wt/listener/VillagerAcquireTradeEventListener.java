@@ -8,6 +8,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
+import org.bukkit.inventory.MerchantRecipe;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class VillagerAcquireTradeEventListener implements Listener {
     WanderingTrades plugin;
@@ -25,7 +30,11 @@ public class VillagerAcquireTradeEventListener implements Listener {
             if(trader.getRecipes().size() == 0) {
                 Log.debug("First VillagerAcquireTradeEvent");
 
-                trader.setRecipes(Config.getTrades());
+                if(Config.getRandomized()) {
+                    trader.setRecipes(pickTrades(Config.getTrades(), Config.getRandomAmount()));
+                } else {
+                    trader.setRecipes(Config.getTrades());
+                }
 
                 int x = 0;
                 while(x < trader.getRecipes().size()) {
@@ -34,5 +43,11 @@ public class VillagerAcquireTradeEventListener implements Listener {
                 }
             }
         }
+    }
+
+    public static List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int n) {
+        List<MerchantRecipe> copy = new LinkedList<MerchantRecipe>(lst);
+        Collections.shuffle(copy);
+        return copy.subList(0, n);
     }
 }
