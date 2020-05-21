@@ -31,12 +31,12 @@ public final class WanderingTrades extends JavaPlugin {
 
         new UpdateChecker(this, 79068).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                Log.info("&aYou are running the latest version of WanderingTrades! :)");
+                Log.info("&aYou are running the latest version of " + this.getName() + "! :)");
             } else if(this.getDescription().getVersion().contains("SNAPSHOT")) {
-                Log.info("&e[!] &6You are running a development build of WanderingTrades &e[!]");
+                Log.info("&e[!] &6You are running a development build of " + this.getName() + " &e[!]");
             } else {
-                Log.info("&e[!] &6You are running an outdated version of WanderingTrades (" + this.getDescription().getVersion() + ") &e[!]");
-                Log.info("&bVersion " + version + " is available at https://www.spigotmc.org/resources/wanderingtrades.79068/");
+                Log.info("&e[!] &6You are running an outdated version of " + this.getName() + " (" + this.getDescription().getVersion() + ") &e[!]");
+                Log.info("&bVersion " + version + " is available at &b&ohttps://www.spigotmc.org/resources/wanderingtrades.79068/");
             }
         });
 

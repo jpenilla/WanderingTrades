@@ -29,7 +29,7 @@ public class CommandWanderingTrades implements CommandExecutor {
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("reload")) {
                 if(sender.hasPermission("wanderingtrades.reload") || !(sender instanceof Player)) {
-                    sender.sendMessage(TextFormatting.colorize("&d&oReloading " + plugin.getName() + " config... (This will reload config values only. Server restart required to enable/disable features)"));
+                    sender.sendMessage(TextFormatting.colorize("&d&oReloading " + plugin.getName() + " config..."));
                     Config.reload(plugin);
                     sender.sendMessage(TextFormatting.colorize("&dDone"));
                 } else {
