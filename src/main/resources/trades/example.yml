@@ -1,3 +1,5 @@
+# WanderingTrades Example TradeConfig ${project.version}
+
 # Enable this tradeset config
 enabled: true
 
