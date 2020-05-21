@@ -32,7 +32,7 @@ public final class WanderingTrades extends JavaPlugin {
         new UpdateChecker(this, 79068).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                 Log.info("&aYou are running the latest version");
-            } else if(version.contains("SNAPSHOT")) {
+            } else if(this.getDescription().getVersion().contains("SNAPSHOT")) {
                 Log.info("&eYou are running a dev build");
             } else {
                 Log.info("&eThere is an update available at https://www.spigotmc.org/resources/wanderingtrades.79068/");
