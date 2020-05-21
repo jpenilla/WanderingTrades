@@ -27,20 +27,19 @@ public class VillagerAcquireTradeEventListener implements Listener {
         if(e.getEntityType().equals(EntityType.WANDERING_TRADER) && e.getEntity().getRecipes().size() == 0) {
             AbstractVillager trader = e.getEntity();
 
-            if(trader.getRecipes().size() == 0) {
-                Log.debug("First VillagerAcquireTradeEvent");
+            Log.debug("First VillagerAcquireTradeEvent");
+            Log.debug(trader.getLocation().toString());
 
-                if(Config.getRandomized()) {
-                    trader.setRecipes(pickTrades(Config.getTrades(), Config.getRandomAmount()));
-                } else {
-                    trader.setRecipes(Config.getTrades());
-                }
+            if(Config.getRandomized()) {
+                trader.setRecipes(pickTrades(Config.getTrades(), Config.getRandomAmount()));
+            } else {
+                trader.setRecipes(Config.getTrades());
+            }
 
-                int x = 0;
-                while(x < trader.getRecipes().size()) {
-                    Log.debug(x + " " + trader.getRecipe(x).getIngredients().toString() + " " + trader.getRecipe(x).getResult().toString());
-                    x++;
-                }
+            int x = 0;
+            while(x < trader.getRecipes().size()) {
+                Log.debug(x + " " + trader.getRecipe(x).getIngredients().toString() + " " + trader.getRecipe(x).getResult().toString());
+                x++;
             }
         }
     }
