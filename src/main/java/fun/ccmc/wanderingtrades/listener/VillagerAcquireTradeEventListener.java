@@ -29,18 +29,18 @@ public class VillagerAcquireTradeEventListener implements Listener {
             Log.debug("First VillagerAcquireTradeEvent");
             Log.debug(trader.getLocation().toString());
 
-            ArrayList<MerchantRecipe> j = new ArrayList<>();
+            ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
             if(Config.getRandomSetPerTrader()) {
                 int r = new Random().nextInt(Config.getTradeConfigs().size());
-                j.addAll(Config.getTradeConfigs().get(r).getTrades());
+                newTrades.addAll(Config.getTradeConfigs().get(r).getTrades());
             } else {
                 for(TradeConfig tc : Config.getTradeConfigs()) {
-                    j.addAll(tc.getTrades());
+                    newTrades.addAll(tc.getTrades());
                 }
             }
 
-            trader.setRecipes(j);
+            trader.setRecipes(newTrades);
 
             if(Config.getDebug()) {
                 int x = 0;
