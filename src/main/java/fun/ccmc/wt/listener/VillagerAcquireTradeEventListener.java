@@ -10,9 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.MerchantRecipe;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class VillagerAcquireTradeEventListener implements Listener {
     WanderingTrades plugin;
@@ -30,23 +28,48 @@ public class VillagerAcquireTradeEventListener implements Listener {
             Log.debug("First VillagerAcquireTradeEvent");
             Log.debug(trader.getLocation().toString());
 
-            if(Config.getRandomized()) {
-                trader.setRecipes(pickTrades(Config.getTrades(), Config.getRandomAmount()));
+            ArrayList<MerchantRecipe> j = new ArrayList<>();
+
+            if(Config.getRandomSetPerTrader()) {
+                int r = new Random().nextInt(Config.getTrades().size());
+                j.addAll(addTrades(r));
             } else {
-                trader.setRecipes(Config.getTrades());
+                for(List<MerchantRecipe> l : Config.getTrades()) {
+                    int index = Config.getTrades().indexOf(l);
+                    j.addAll(addTrades(index));
+                }
             }
 
-            int x = 0;
-            while(x < trader.getRecipes().size()) {
-                Log.debug(x + " " + trader.getRecipe(x).getIngredients().toString() + " " + trader.getRecipe(x).getResult().toString());
-                x++;
+            trader.setRecipes(j);
+
+            if(Config.getDebug()) {
+                int x = 0;
+                while(x < trader.getRecipes().size()) {
+                    Log.debug(x + " " + trader.getRecipe(x).getIngredients().toString() + " " + trader.getRecipe(x).getResult().toString());
+                    x++;
+                }
             }
         }
     }
 
-    public static List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int n) {
-        List<MerchantRecipe> copy = new LinkedList<MerchantRecipe>(lst);
+    private static List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int n) {
+        List<MerchantRecipe> copy = new LinkedList<>(lst);
         Collections.shuffle(copy);
         return copy.subList(0, n);
     }
+
+    private static ArrayList addTrades(int index) {
+        ArrayList h = new ArrayList();
+
+        if(Config.getEnabled().get(index)) {
+            if(Config.getRandomized().get(index)) {
+                h.addAll(pickTrades(Config.getTrades().get(index), Config.getRandomAmount().get(index)));
+            } else {
+                h.addAll(Config.getTrades().get(index));
+            }
+        }
+
+        return h;
+    }
+
 }

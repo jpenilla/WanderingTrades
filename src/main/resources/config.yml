@@ -1,34 +1,14 @@
+# WanderingTrades Config ${project.version}
 debug: false
+
+# Enable adding trades to Wandering Traders
 enabled: true
-randomized: true
-randomAmount: 2
-trades:
-  myfirsttrade:
-    maxUses: 3
-    experienceReward: true
-    ingredients:
-      1:
-        customname: NONE
-        material: GLASS
-        amount: 3
-    result:
-      customname: NONE
-      material: DIAMOND
-      amount: 64
-      enchantments:
-        - unbreaking:3
-  microblock1:
-    experienceReward: true
-    ingredients:
-      1:
-        customname: NONE
-        material: EMERALD
-        amount: 1
-      2:
-        customname: NONE
-        material: PACKED_ICE
-        amount: 1
-    result:
-      customname: '&b&lPacked Ice'
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzE1NDIyODZkYTAzYWI3ZWVjYzRlNTYyYzNmOGI4YTFjZjc4MWRhMzA4YjA3OWUzYWMzMzE0NTYxYjljMWQ5OSJ9fX0=
-      amount: 8
+
+# True means each Trader will be assigned the trades defined
+# in a random ONE of the configs in the trades folder
+# (Disabled configs may be chosen, use this to have a
+# chance for unmodified Traders)
+#
+# False means each Trader will be assigned the trades
+# from all of the enabled configs in the trades folder
+randomSetPerTrader: false
