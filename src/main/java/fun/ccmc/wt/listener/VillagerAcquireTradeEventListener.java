@@ -3,6 +3,7 @@ package fun.ccmc.wt.listener;
 import fun.ccmc.wt.WanderingTrades;
 import fun.ccmc.wt.util.Config;
 import fun.ccmc.wt.util.Log;
+import fun.ccmc.wt.util.TradeConfig;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -31,12 +32,11 @@ public class VillagerAcquireTradeEventListener implements Listener {
             ArrayList<MerchantRecipe> j = new ArrayList<>();
 
             if(Config.getRandomSetPerTrader()) {
-                int r = new Random().nextInt(Config.getTrades().size());
-                j.addAll(addTrades(r));
+                int r = new Random().nextInt(Config.getTradeConfigs().size());
+                j.addAll(Config.getTradeConfigs().get(r).getTrades());
             } else {
-                for(List<MerchantRecipe> l : Config.getTrades()) {
-                    int index = Config.getTrades().indexOf(l);
-                    j.addAll(addTrades(index));
+                for(TradeConfig tc : Config.getTradeConfigs()) {
+                    j.addAll(tc.getTrades());
                 }
             }
 
@@ -51,25 +51,4 @@ public class VillagerAcquireTradeEventListener implements Listener {
             }
         }
     }
-
-    private static List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int n) {
-        List<MerchantRecipe> copy = new LinkedList<>(lst);
-        Collections.shuffle(copy);
-        return copy.subList(0, n);
-    }
-
-    private static ArrayList addTrades(int index) {
-        ArrayList h = new ArrayList();
-
-        if(Config.getEnabled().get(index)) {
-            if(Config.getRandomized().get(index)) {
-                h.addAll(pickTrades(Config.getTrades().get(index), Config.getRandomAmount().get(index)));
-            } else {
-                h.addAll(Config.getTrades().get(index));
-            }
-        }
-
-        return h;
-    }
-
 }

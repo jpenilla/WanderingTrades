@@ -19,10 +19,8 @@ import java.util.List;
 
 public class Config {
     private static boolean debug, pluginEnabled, randomSetPerTrader;
-    private static ArrayList<Boolean> randomized = new ArrayList<>();
-    private static ArrayList<Boolean> enabled = new ArrayList<>();
-    private static ArrayList<Integer> randomAmount = new ArrayList<>();
-    private static ArrayList<List<MerchantRecipe>> trades = new ArrayList<>();
+
+    private static ArrayList<TradeConfig> tradeConfigs = new ArrayList<>();
 
     public static void init(WanderingTrades plugin) {
         plugin.saveDefaultConfig();
@@ -37,69 +35,34 @@ public class Config {
         pluginEnabled = config.getBoolean("enabled");
         randomSetPerTrader = config.getBoolean("randomSetPerTrader");
 
-        loadConfigs(plugin);
+        loadTradeConfigs(plugin);
     }
 
-    private static void loadConfigs(JavaPlugin plugin) {
-        trades.clear();
-        randomized.clear();
-        randomAmount.clear();
-        enabled.clear();
+    private static void loadTradeConfigs(JavaPlugin plugin) {
+        tradeConfigs.clear();
 
         String path = plugin.getDataFolder() + "/trades";
+
         File folder = new File(path);
-
         if(!folder.exists()) {
-            folder.mkdir();
+            if(folder.mkdir()) {
+                Log.info("Creating trades folder");
+            }
         }
-
         if(folder.listFiles().length == 0) {
+            Log.info("No trade configs found, copying example.yml");
             plugin.saveResource("trades/example.yml", false);
         }
 
-        File[] tradeConfigs = new File(path).listFiles();
+        File[] tradeConfigFiles = new File(path).listFiles();
 
-        for(File f : tradeConfigs) {
+        for(File f : tradeConfigFiles) {
             FileConfiguration data = YamlConfiguration.loadConfiguration(f);
-            loadRecipes(data);
+            tradeConfigs.add(new TradeConfig(data));
         }
     }
 
-    private static void loadRecipes(FileConfiguration config) {
-        randomized.add(config.getBoolean("randomized"));
-        randomAmount.add(config.getInt("randomAmount"));
-        enabled.add(config.getBoolean("enabled"));
-
-        List<MerchantRecipe> rs = new ArrayList<>();
-
-        String parent = "trades";
-        for(String key : config.getConfigurationSection(parent).getKeys(false)) {
-            String prefix = parent + "." + key + ".";
-
-            ItemStack result = getStack(config, prefix + "result");
-
-            int m = 1;
-            if (config.getInt(prefix + "maxUses") != 0) {
-                m = config.getInt(prefix + "maxUses");
-            }
-            MerchantRecipe recipe = new MerchantRecipe(result, 0, m, config.getBoolean(prefix + "experienceReward"));
-
-            int i = 1;
-            while( i < 3 ) {
-                ItemStack stack = getStack(config, prefix + "ingredients." + i);
-                if(stack != null) {
-                    recipe.addIngredient(stack);
-                }
-                i++;
-            }
-
-            rs.add(recipe);
-        }
-
-        trades.add(rs);
-    }
-
-    private static ItemStack getStack(FileConfiguration config, String key) {
+    public static ItemStack getStack(FileConfiguration config, String key) {
         ItemStack is = null;
 
         if(config.getString(key + ".material") != null) {
@@ -142,23 +105,11 @@ public class Config {
         return pluginEnabled;
     }
 
-    public static ArrayList<Boolean> getRandomized() {
-        return randomized;
-    }
-
-    public static ArrayList<Integer> getRandomAmount() {
-        return randomAmount;
-    }
-
-    public static List<List<MerchantRecipe>> getTrades() {
-        return trades;
-    }
-
-    public static ArrayList<Boolean> getEnabled() {
-        return enabled;
-    }
-
     public static boolean getRandomSetPerTrader() {
         return randomSetPerTrader;
+    }
+
+    public static ArrayList<TradeConfig> getTradeConfigs() {
+        return tradeConfigs;
     }
 }
