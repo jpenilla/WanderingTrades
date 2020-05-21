@@ -37,7 +37,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>fun.ccmc.wt</shadedPattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

@@ -1,4 +1,4 @@
-package fun.ccmc.wt.util;
+package fun.ccmc.wanderingtrades.util;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;

@@ -1,10 +1,6 @@
-package fun.ccmc.wt.util;
+package fun.ccmc.wanderingtrades.util;
 
 import org.bukkit.ChatColor;
-
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class TextFormatting {
     public static String colorize(String s) {

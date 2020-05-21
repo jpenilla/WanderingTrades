@@ -1,6 +1,6 @@
 name: WanderingTrades
 version: ${project.version}
-main: fun.ccmc.wt.WanderingTrades
+main: fun.ccmc.wanderingtrades.WanderingTrades
 api-version: 1.15
 description: Customizable Trades for Wandering Traders. Inspired by Vanilla Tweaks
 load: STARTUP

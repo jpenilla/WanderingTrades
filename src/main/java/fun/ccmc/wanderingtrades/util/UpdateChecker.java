@@ -1,4 +1,4 @@
-package fun.ccmc.wt.util;
+package fun.ccmc.wanderingtrades.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -26,7 +26,7 @@ public class UpdateChecker {
                     consumer.accept(scanner.next());
                 }
             } catch (IOException exception) {
-                this.plugin.getLogger().info("Cannot look for updates: " + exception.getMessage());
+                Log.info("&eCannot look for updates:&r " + exception.getMessage());
             }
         });
     }
