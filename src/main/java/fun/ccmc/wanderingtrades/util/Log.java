@@ -1,6 +1,6 @@
-package fun.ccmc.wt.util;
+package fun.ccmc.wanderingtrades.util;
 
-import fun.ccmc.wt.WanderingTrades;
+import fun.ccmc.wanderingtrades.WanderingTrades;
 
 public class Log {
     public static void info(String s) {

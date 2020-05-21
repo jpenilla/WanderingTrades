@@ -1,10 +1,10 @@
-package fun.ccmc.wt;
+package fun.ccmc.wanderingtrades;
 
-import fun.ccmc.wt.listener.VillagerAcquireTradeEventListener;
-import fun.ccmc.wt.command.CommandWanderingTrades;
-import fun.ccmc.wt.util.Config;
-import fun.ccmc.wt.util.Log;
-import fun.ccmc.wt.util.UpdateChecker;
+import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
+import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
+import fun.ccmc.wanderingtrades.util.Config;
+import fun.ccmc.wanderingtrades.util.Log;
+import fun.ccmc.wanderingtrades.util.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,11 +31,12 @@ public final class WanderingTrades extends JavaPlugin {
 
         new UpdateChecker(this, 79068).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                Log.info("&aYou are running the latest version");
+                Log.info("&aYou are running the latest version of WanderingTrades! :)");
             } else if(this.getDescription().getVersion().contains("SNAPSHOT")) {
-                Log.info("&eYou are running a dev build");
+                Log.info("&e[!] &6You are running a development build of WanderingTrades &e[!]");
             } else {
-                Log.info("&eThere is an update available at https://www.spigotmc.org/resources/wanderingtrades.79068/");
+                Log.info("&e[!] &6You are running an outdated version of WanderingTrades (" + this.getDescription().getVersion() + ") &e[!]");
+                Log.info("&bVersion " + version + " is available at https://www.spigotmc.org/resources/wanderingtrades.79068/");
             }
         });
 

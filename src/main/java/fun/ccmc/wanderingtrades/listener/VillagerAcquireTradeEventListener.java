@@ -1,9 +1,9 @@
-package fun.ccmc.wt.listener;
+package fun.ccmc.wanderingtrades.listener;
 
-import fun.ccmc.wt.WanderingTrades;
-import fun.ccmc.wt.util.Config;
-import fun.ccmc.wt.util.Log;
-import fun.ccmc.wt.util.TradeConfig;
+import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.util.Config;
+import fun.ccmc.wanderingtrades.util.Log;
+import fun.ccmc.wanderingtrades.util.TradeConfig;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;

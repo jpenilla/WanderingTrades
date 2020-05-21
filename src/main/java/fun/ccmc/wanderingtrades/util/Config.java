@@ -1,7 +1,7 @@
-package fun.ccmc.wt.util;
+package fun.ccmc.wanderingtrades.util;
 
 import com.deanveloper.skullcreator.SkullCreator;
-import fun.ccmc.wt.WanderingTrades;
+import fun.ccmc.wanderingtrades.WanderingTrades;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,13 +9,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Config {
     private static boolean debug, pluginEnabled, randomSetPerTrader;
@@ -78,8 +76,9 @@ public class Config {
 
             ItemMeta iMeta = is.getItemMeta();
 
-            if(!config.getString(key + ".customname").equals("NONE")) {
-                iMeta.setDisplayName(TextFormatting.colorize(config.getString(key + ".customname")));
+            String cname = config.getString(key + ".customname");
+            if(cname != null && !cname.equals("NONE")) {
+                iMeta.setDisplayName(TextFormatting.colorize(cname));
             }
 
             for (String s : config.getStringList(key + ".enchantments")) {
