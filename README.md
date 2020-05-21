@@ -5,9 +5,11 @@
 ## Summary
 
 * WanderingTrades is a plugin for [Spigot](https://www.spigotmc.org/) Minecraft Servers (also works on [Paper](https://www.papermc.io/))
-* Adds trades defined in config file to wandering traders. Randomization options in config.
+* Adds trades defined in config files to wandering traders. Config files are located in ```plugins/WanderingTraders/trades``` in your server. You may create as many as you like. If you have no configs, an ```example.yml``` config file will be created for you.
+* Randomization options
+* Supports enchantments, and custom player heads
 * Commands: `````/wanderingtrades`````, `````/wanderingtrades reload````` (requires ```wanderingtrades.reload``` permission)
-* [VanillaTweaks](https://vanillatweaks.net) microblocks config: [config.yml](https://gist.github.com/jmanpenilla/56120245992a7c4099c13b798c94b5e0)
+* [VanillaTweaks](https://vanillatweaks.net) microblocks config: [microblocks.yml](https://gist.github.com/jmanpenilla/56120245992a7c4099c13b798c94b5e0) 
 
 
 ## How to compile
