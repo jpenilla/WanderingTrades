@@ -20,7 +20,7 @@ public final class WanderingTrades extends JavaPlugin {
 
         Config.init(this);
 
-        if(Config.getEnabled()) {
+        if(Config.getPluginEnabled()) {
             getServer().getPluginManager().registerEvents(new VillagerAcquireTradeEventListener(this), this);
         }
 

@@ -5,6 +5,7 @@ import fun.ccmc.wt.WanderingTrades;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
@@ -12,15 +13,16 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Config {
-    private static boolean debug;
-    private static boolean enabled;
-    private static boolean randomized;
-    private static int randomAmount;
-    private static List<MerchantRecipe> trades = new ArrayList<>();
+    private static boolean debug, pluginEnabled, randomSetPerTrader;
+    private static ArrayList<Boolean> randomized = new ArrayList<>();
+    private static ArrayList<Boolean> enabled = new ArrayList<>();
+    private static ArrayList<Integer> randomAmount = new ArrayList<>();
+    private static ArrayList<List<MerchantRecipe>> trades = new ArrayList<>();
 
     public static void init(WanderingTrades plugin) {
         plugin.saveDefaultConfig();
@@ -32,14 +34,43 @@ public class Config {
         FileConfiguration config = plugin.getConfig();
 
         debug = config.getBoolean("debug");
-        enabled = config.getBoolean("enabled");
-        randomized = config.getBoolean("randomized");
-        randomAmount = config.getInt("randomAmount");
-        loadRecipes(config);
+        pluginEnabled = config.getBoolean("enabled");
+        randomSetPerTrader = config.getBoolean("randomSetPerTrader");
+
+        loadConfigs(plugin);
+    }
+
+    private static void loadConfigs(JavaPlugin plugin) {
+        trades.clear();
+        randomized.clear();
+        randomAmount.clear();
+        enabled.clear();
+
+        String path = plugin.getDataFolder() + "/trades";
+        File folder = new File(path);
+
+        if(!folder.exists()) {
+            folder.mkdir();
+        }
+
+        if(folder.listFiles().length == 0) {
+            plugin.saveResource("trades/example.yml", false);
+        }
+
+        File[] tradeConfigs = new File(path).listFiles();
+
+        for(File f : tradeConfigs) {
+            FileConfiguration data = YamlConfiguration.loadConfiguration(f);
+            loadRecipes(data);
+        }
     }
 
     private static void loadRecipes(FileConfiguration config) {
-        trades.clear();
+        randomized.add(config.getBoolean("randomized"));
+        randomAmount.add(config.getInt("randomAmount"));
+        enabled.add(config.getBoolean("enabled"));
+
+        List<MerchantRecipe> rs = new ArrayList<>();
 
         String parent = "trades";
         for(String key : config.getConfigurationSection(parent).getKeys(false)) {
@@ -62,8 +93,10 @@ public class Config {
                 i++;
             }
 
-            trades.add(recipe);
+            rs.add(recipe);
         }
+
+        trades.add(rs);
     }
 
     private static ItemStack getStack(FileConfiguration config, String key) {
@@ -105,19 +138,27 @@ public class Config {
         return debug;
     }
 
-    public static boolean getEnabled() {
-        return enabled;
+    public static boolean getPluginEnabled() {
+        return pluginEnabled;
     }
 
-    public static  boolean getRandomized() {
+    public static ArrayList<Boolean> getRandomized() {
         return randomized;
     }
 
-    public static int getRandomAmount() {
+    public static ArrayList<Integer> getRandomAmount() {
         return randomAmount;
     }
 
-    public static List<MerchantRecipe> getTrades() {
+    public static List<List<MerchantRecipe>> getTrades() {
         return trades;
+    }
+
+    public static ArrayList<Boolean> getEnabled() {
+        return enabled;
+    }
+
+    public static boolean getRandomSetPerTrader() {
+        return randomSetPerTrader;
     }
 }
