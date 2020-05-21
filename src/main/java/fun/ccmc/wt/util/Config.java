@@ -3,7 +3,10 @@ package fun.ccmc.wt.util;
 import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wt.WanderingTrades;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -65,6 +68,7 @@ public class Config {
 
     private static ItemStack getStack(FileConfiguration config, String key) {
         ItemStack is = null;
+
         if(config.getString(key + ".material") != null) {
             if(config.getString(key + ".material").contains("head-")) {
                 is = SkullCreator.withBase64(new ItemStack(Material.PLAYER_HEAD, config.getInt(key + ".amount")), config.getString(key + ".material").replace("head-", ""));
@@ -75,11 +79,24 @@ public class Config {
                     Log.warn(config.getString(key + ".material") + " is not a valid material");
                 }
             }
+
+            ItemMeta iMeta = is.getItemMeta();
+
             if(!config.getString(key + ".customname").equals("NONE")) {
-                ItemMeta iMeta = is.getItemMeta();
                 iMeta.setDisplayName(TextFormatting.colorize(config.getString(key + ".customname")));
-                is.setItemMeta(iMeta);
             }
+
+            for (String s : config.getStringList(key + ".enchantments")) {
+                if(s.contains(":")) {
+                    String[] e = s.split(":");
+                    Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
+                    if(ench != null) {
+                        iMeta.addEnchant(ench, Integer.parseInt(e[1]), true);
+                    }
+                }
+            }
+
+            is.setItemMeta(iMeta);
         }
         return is;
     }
