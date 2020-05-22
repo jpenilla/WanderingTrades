@@ -1,47 +1,49 @@
 package fun.ccmc.wanderingtrades.command;
 
-import fun.ccmc.wanderingtrades.WanderingTrades;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandHelp;
+import co.aikar.commands.annotation.*;
+import fun.ccmc.wanderingtrades.util.Chat;
 import fun.ccmc.wanderingtrades.util.Config;
 import fun.ccmc.wanderingtrades.util.TextFormatting;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class CommandWanderingTrades implements CommandExecutor {
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        WanderingTrades plugin = WanderingTrades.plugin;
+@CommandAlias("wanderingtrades|wt")
+public class CommandWanderingTrades extends BaseCommand {
+    private static JavaPlugin plugin;
 
-        if (args.length == 0) {
-            String[] message = TextFormatting.colorize(
-                    new String[]{
-                            plugin.getName() + " &d&o" + plugin.getDescription().getVersion(),
-                            "Commands&7: &d/wanderingtrades&7, &d/wanderingtrades reload"
-                    }
-            );
+    public CommandWanderingTrades(JavaPlugin p) {
+        plugin = p;
+    }
 
-            sender.sendMessage(message);
+    @Default
+    @HelpCommand
+    @Description("WanderingTrades Help")
+    public void onHelp(CommandSender sender, CommandHelp help) {
+        String m = "&f---&a[ &d&l" + plugin.getName() + " Help &a]&f---";
+        Chat.sendMsg(sender, m);
+        help.showHelp();
+    }
 
-            return true;
-        }
+    @Subcommand("about")
+    @Description("About WanderingTrades")
+    public static void onAbout(CommandSender sender) {
+        String[] m = new String[]{
+                "&a==========================",
+                plugin.getName() + " &d&o" + plugin.getDescription().getVersion(),
+                "&7By &bjmp",
+                "&a=========================="
+        };
+        Chat.sendCenteredMessage(sender, m);
+    }
 
-        if (args.length >= 1) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                if(sender.hasPermission("wanderingtrades.reload") || !(sender instanceof Player)) {
-                    sender.sendMessage(TextFormatting.colorize("&d&oReloading " + plugin.getName() + " config..."));
-                    Config.reload(plugin);
-                    sender.sendMessage(TextFormatting.colorize("&dDone"));
-                } else {
-                    sender.sendMessage(TextFormatting.colorize("&4You do not have permission for that command"));
-                }
-                return true;
-            } else {
-                sender.sendMessage(TextFormatting.colorize("&4Subcommand does not exist"));
-                return true;
-            }
-        }
-
-        return false;
+    @Subcommand("reload")
+    @CommandPermission("wanderingtrades.reload")
+    @Description("Reloads all config files for WanderingTrades")
+    public static void onReload(CommandSender sender) {
+        Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
+        Config.reload(plugin);
+        Chat.sendCenteredMessage(sender, "&aDone.");
     }
 }
