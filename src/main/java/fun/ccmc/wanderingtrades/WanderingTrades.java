@@ -1,5 +1,6 @@
 package fun.ccmc.wanderingtrades;
 
+import co.aikar.commands.PaperCommandManager;
 import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
 import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
 import fun.ccmc.wanderingtrades.util.Config;
@@ -24,7 +25,9 @@ public final class WanderingTrades extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new VillagerAcquireTradeEventListener(this), this);
         }
 
-        this.getCommand("wanderingtrades").setExecutor(new CommandWanderingTrades());
+        PaperCommandManager manager = new PaperCommandManager(this);
+        manager.enableUnstableAPI("help");
+        manager.registerCommand(new CommandWanderingTrades(this));
 
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
