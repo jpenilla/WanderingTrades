@@ -1,5 +1,6 @@
 # WanderingTrades ![WanderingTrades](https://github.com/jmanpenilla/WanderingTrades/workflows/WanderingTrades/badge.svg?branch=master)
-[bStats](https://bstats.org/plugin/bukkit/WanderingTrades/7597)
+* [bStats](https://bstats.org/plugin/bukkit/WanderingTrades/7597)
+* [Spigot Resource Page](https://www.spigotmc.org/resources/wanderingtrades.79068/)
 
 
 ## Summary
