@@ -5,7 +5,6 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.util.Chat;
 import fun.ccmc.wanderingtrades.util.Config;
-import fun.ccmc.wanderingtrades.util.TextFormatting;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
