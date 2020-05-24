@@ -3,6 +3,7 @@ package fun.ccmc.wanderingtrades.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
+import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.util.Chat;
 import fun.ccmc.wanderingtrades.util.Config;
 import org.bukkit.command.CommandSender;
@@ -10,9 +11,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 @CommandAlias("wanderingtrades|wt")
 public class CommandWanderingTrades extends BaseCommand {
-    private final JavaPlugin plugin;
+    private final WanderingTrades plugin;
 
-    public CommandWanderingTrades(JavaPlugin p) {
+    public CommandWanderingTrades(WanderingTrades p) {
         plugin = p;
     }
 
@@ -42,7 +43,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Description("Reloads all config files for WanderingTrades")
     public void onReload(CommandSender sender) {
         Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
-        Config.reload(plugin);
+        plugin.getCfg().reload();
         Chat.sendCenteredMessage(sender, "&aDone.");
     }
 }

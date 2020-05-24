@@ -21,17 +21,17 @@ public class VillagerAcquireTradeEventListener implements Listener {
 
     @EventHandler
     public void onAcquireTrade(VillagerAcquireTradeEvent e) {
-        Log.debug("VillagerAcquireTradeEvent");
+        plugin.getLog().debug("VillagerAcquireTradeEvent");
 
         if(e.getEntityType().equals(EntityType.WANDERING_TRADER) && e.getEntity().getRecipes().size() == 0) {
             AbstractVillager trader = e.getEntity();
 
-            Log.debug("First VillagerAcquireTradeEvent");
-            Log.debug(trader.getLocation().toString());
+            plugin.getLog().debug("First VillagerAcquireTradeEvent");
+            plugin.getLog().debug(trader.getLocation().toString());
 
             ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
-            if(Config.getRandomSetPerTrader()) {
+            if(plugin.getCfg().isRandomSetPerTrader()) {
                 int r = new Random().nextInt(Config.getTradeConfigs().size());
                 newTrades.addAll(Config.getTradeConfigs().get(r).getTrades());
             } else {
@@ -42,10 +42,10 @@ public class VillagerAcquireTradeEventListener implements Listener {
 
             trader.setRecipes(newTrades);
 
-            if(Config.getDebug()) {
+            if(plugin.getCfg().isDebug()) {
                 int x = 0;
                 while(x < trader.getRecipes().size()) {
-                    Log.debug(x + " " + trader.getRecipe(x).getIngredients().toString() + " " + trader.getRecipe(x).getResult().toString());
+                    plugin.getLog().debug(x + " " + trader.getRecipe(x).getIngredients().toString() + " " + trader.getRecipe(x).getResult().toString());
                     x++;
                 }
             }
