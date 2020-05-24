@@ -19,8 +19,8 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn clean install
-    - run: mkdir staging && cp target/*.jar staging
+      run: mvn clean package
+    - run: mkdir staging && cp target/WanderingTrades*.jar staging
     - uses: actions/upload-artifact@v1
       with:
         name: Package

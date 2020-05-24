@@ -11,8 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.MerchantRecipe;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class VillagerAcquireTradeEventListener implements Listener {
     WanderingTrades plugin;

@@ -81,6 +81,10 @@ public class Config {
                 iMeta.setDisplayName(TextFormatting.colorize(cname));
             }
 
+            if(config.getStringList(key + ".lore").size() != 0) {
+                iMeta.setLore(TextFormatting.colorize(config.getStringList(key + ".lore")));
+            }
+
             for (String s : config.getStringList(key + ".enchantments")) {
                 if(s.contains(":")) {
                     String[] e = s.split(":");

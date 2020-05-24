@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 @CommandAlias("wanderingtrades|wt")
 public class CommandWanderingTrades extends BaseCommand {
-    private static JavaPlugin plugin;
+    private final JavaPlugin plugin;
 
     public CommandWanderingTrades(JavaPlugin p) {
         plugin = p;
@@ -27,7 +27,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Subcommand("about")
     @Description("About WanderingTrades")
-    public static void onAbout(CommandSender sender) {
+    public void onAbout(CommandSender sender) {
         String[] m = new String[]{
                 "&a==========================",
                 plugin.getName() + " &d&o" + plugin.getDescription().getVersion(),
@@ -40,7 +40,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Subcommand("reload")
     @CommandPermission("wanderingtrades.reload")
     @Description("Reloads all config files for WanderingTrades")
-    public static void onReload(CommandSender sender) {
+    public void onReload(CommandSender sender) {
         Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
         Config.reload(plugin);
         Chat.sendCenteredMessage(sender, "&aDone.");
