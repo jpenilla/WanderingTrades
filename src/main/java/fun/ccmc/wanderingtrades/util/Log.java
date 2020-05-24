@@ -3,21 +3,27 @@ package fun.ccmc.wanderingtrades.util;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 
 public class Log {
-    public static void info(String s) {
-        WanderingTrades.plugin.getLogger().info(TextFormatting.colorize(s));
+    private final WanderingTrades plugin;
+
+    public Log(WanderingTrades wanderingTrades) {
+        plugin = wanderingTrades;
     }
 
-    public static void warn(String s) {
-        WanderingTrades.plugin.getLogger().warning(TextFormatting.colorize(s));
+    public void info(String s) {
+        plugin.getLogger().info(TextFormatting.colorize(s));
     }
 
-    public static void err(String s) {
-        WanderingTrades.plugin.getLogger().severe(TextFormatting.colorize(s));
+    public void warn(String s) {
+        plugin.getLogger().warning(TextFormatting.colorize(s));
     }
 
-    public static void debug(String s) {
-        if(Config.getDebug()) {
-            WanderingTrades.plugin.getLogger().info(TextFormatting.colorize("&e[DEBUG] &r" + s));
+    public void err(String s) {
+        plugin.getLogger().severe(TextFormatting.colorize(s));
+    }
+
+    public void debug(String s) {
+        if(plugin.getCfg().isDebug()) {
+            plugin.getLogger().info(TextFormatting.colorize("&e[DEBUG] &r" + s));
         }
     }
 }

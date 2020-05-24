@@ -1,5 +1,6 @@
 package fun.ccmc.wanderingtrades.util;
 
+import fun.ccmc.wanderingtrades.WanderingTrades;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Consumer;
@@ -11,10 +12,10 @@ import java.util.Scanner;
 
 public class UpdateChecker {
 
-    private Plugin plugin;
-    private int resourceId;
+    private final WanderingTrades plugin;
+    private final int resourceId;
 
-    public UpdateChecker(Plugin plugin, int resourceId) {
+    public UpdateChecker(WanderingTrades plugin, int resourceId) {
         this.plugin = plugin;
         this.resourceId = resourceId;
     }
@@ -26,7 +27,7 @@ public class UpdateChecker {
                     consumer.accept(scanner.next());
                 }
             } catch (IOException exception) {
-                Log.info("&eCannot look for updates:&r " + exception.getMessage());
+                plugin.getLog().info("&eCannot look for updates:&r " + exception.getMessage());
             }
         });
     }

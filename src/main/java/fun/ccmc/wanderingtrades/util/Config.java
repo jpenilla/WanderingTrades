@@ -2,6 +2,7 @@ package fun.ccmc.wanderingtrades.util;
 
 import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,16 +17,24 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Config {
-    private static boolean debug, pluginEnabled, randomSetPerTrader;
+    private final WanderingTrades plugin;
 
-    private static ArrayList<TradeConfig> tradeConfigs = new ArrayList<>();
+    @Getter
+    private boolean debug;
+    @Getter
+    private boolean pluginEnabled;
+    @Getter
+    private boolean randomSetPerTrader;
+    @Getter
+    private final static ArrayList<TradeConfig> tradeConfigs = new ArrayList<>();
 
-    public static void init(WanderingTrades plugin) {
+    public Config(WanderingTrades instance) {
+        plugin = instance;
         plugin.saveDefaultConfig();
-        reload(plugin);
+        reload();
     }
 
-    public static void reload(JavaPlugin plugin) {
+    public void reload() {
         plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
 
@@ -33,10 +42,10 @@ public class Config {
         pluginEnabled = config.getBoolean("enabled");
         randomSetPerTrader = config.getBoolean("randomSetPerTrader");
 
-        loadTradeConfigs(plugin);
+        loadTradeConfigs();
     }
 
-    private static void loadTradeConfigs(JavaPlugin plugin) {
+    private void loadTradeConfigs() {
         tradeConfigs.clear();
 
         String path = plugin.getDataFolder() + "/trades";
@@ -44,11 +53,11 @@ public class Config {
         File folder = new File(path);
         if(!folder.exists()) {
             if(folder.mkdir()) {
-                Log.info("Creating trades folder");
+                plugin.getLog().info("Creating trades folder");
             }
         }
         if(folder.listFiles().length == 0) {
-            Log.info("No trade configs found, copying example.yml");
+            plugin.getLog().info("No trade configs found, copying example.yml");
             plugin.saveResource("trades/example.yml", false);
         }
 
@@ -56,63 +65,7 @@ public class Config {
 
         for(File f : tradeConfigFiles) {
             FileConfiguration data = YamlConfiguration.loadConfiguration(f);
-            tradeConfigs.add(new TradeConfig(data));
+            tradeConfigs.add(new TradeConfig(plugin, data));
         }
-    }
-
-    public static ItemStack getStack(FileConfiguration config, String key) {
-        ItemStack is = null;
-
-        if(config.getString(key + ".material") != null) {
-            if(config.getString(key + ".material").contains("head-")) {
-                is = SkullCreator.withBase64(new ItemStack(Material.PLAYER_HEAD, config.getInt(key + ".amount")), config.getString(key + ".material").replace("head-", ""));
-            } else {
-                if(Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
-                    is = new ItemStack(Material.getMaterial(config.getString(key + ".material").toUpperCase()), config.getInt(key + ".amount"));
-                } else {
-                    Log.warn(config.getString(key + ".material") + " is not a valid material");
-                }
-            }
-
-            ItemMeta iMeta = is.getItemMeta();
-
-            String cname = config.getString(key + ".customname");
-            if(cname != null && !cname.equals("NONE")) {
-                iMeta.setDisplayName(TextFormatting.colorize(cname));
-            }
-
-            if(config.getStringList(key + ".lore").size() != 0) {
-                iMeta.setLore(TextFormatting.colorize(config.getStringList(key + ".lore")));
-            }
-
-            for (String s : config.getStringList(key + ".enchantments")) {
-                if(s.contains(":")) {
-                    String[] e = s.split(":");
-                    Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
-                    if(ench != null) {
-                        iMeta.addEnchant(ench, Integer.parseInt(e[1]), true);
-                    }
-                }
-            }
-
-            is.setItemMeta(iMeta);
-        }
-        return is;
-    }
-
-    public static boolean getDebug() {
-        return debug;
-    }
-
-    public static boolean getPluginEnabled() {
-        return pluginEnabled;
-    }
-
-    public static boolean getRandomSetPerTrader() {
-        return randomSetPerTrader;
-    }
-
-    public static ArrayList<TradeConfig> getTradeConfigs() {
-        return tradeConfigs;
     }
 }
