@@ -1,32 +1,21 @@
 package fun.ccmc.wanderingtrades.util;
 
-import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import lombok.Getter;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentWrapper;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Config {
     private final WanderingTrades plugin;
 
-    @Getter
-    private boolean debug;
-    @Getter
-    private boolean pluginEnabled;
-    @Getter
-    private boolean randomSetPerTrader;
-    @Getter
-    private final static ArrayList<TradeConfig> tradeConfigs = new ArrayList<>();
+    @Getter private boolean debug;
+    @Getter private boolean pluginEnabled;
+    @Getter private boolean randomSetPerTrader;
+    @Getter private final static ArrayList<TradeConfig> tradeConfigs = new ArrayList<>();
 
     public Config(WanderingTrades instance) {
         plugin = instance;
@@ -63,9 +52,9 @@ public class Config {
 
         File[] tradeConfigFiles = new File(path).listFiles();
 
-        for(File f : tradeConfigFiles) {
+        Arrays.stream(tradeConfigFiles).forEach(f -> {
             FileConfiguration data = YamlConfiguration.loadConfiguration(f);
             tradeConfigs.add(new TradeConfig(plugin, data));
-        }
+        });
     }
 }

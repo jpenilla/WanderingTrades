@@ -16,17 +16,14 @@ public class TextFormatting {
             s[index] = colorize(e);
             index++;
         }
-
         return s;
     }
 
-    public static ArrayList<String> colorize(List<String> s) {
-        ArrayList<String> l = new ArrayList<>();
-        for (String e: s) {
-            String r = colorize(e);
-            l.add(r);
-        }
-
-        return l;
+    public static ArrayList<String> colorize(List<String> stringArray) {
+        ArrayList<String> colorizedArray = new ArrayList<>();
+        stringArray.forEach(s -> {
+            colorizedArray.add(colorize(s));
+        });
+        return colorizedArray;
     }
 }

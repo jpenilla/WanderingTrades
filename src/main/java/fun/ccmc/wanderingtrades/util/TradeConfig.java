@@ -35,7 +35,7 @@ public class TradeConfig {
     private ArrayList<MerchantRecipe> readTrades(FileConfiguration config) {
         ArrayList<MerchantRecipe> tradeList = new ArrayList<>();
         String parent = "trades";
-        for(String key : config.getConfigurationSection(parent).getKeys(false)) {
+        config.getConfigurationSection(parent).getKeys(false).forEach(key -> {
             String prefix = parent + "." + key + ".";
 
             int maxUses = 1;
@@ -56,7 +56,7 @@ public class TradeConfig {
             }
 
             tradeList.add(recipe);
-        }
+        });
         return tradeList;
     }
 
@@ -88,6 +88,7 @@ public class TradeConfig {
                 if(Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
                     is = new ItemStack(Material.getMaterial(config.getString(key + ".material").toUpperCase()), config.getInt(key + ".amount"));
                 } else {
+                    is = new ItemStack(Material.STONE);
                     plugin.getLog().warn(config.getString(key + ".material") + " is not a valid material");
                 }
             }
@@ -103,7 +104,7 @@ public class TradeConfig {
                 iMeta.setLore(TextFormatting.colorize(config.getStringList(key + ".lore")));
             }
 
-            for (String s : config.getStringList(key + ".enchantments")) {
+            config.getStringList(key + ".enchantments").forEach(s -> {
                 if(s.contains(":")) {
                     String[] e = s.split(":");
                     Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
@@ -111,7 +112,7 @@ public class TradeConfig {
                         iMeta.addEnchant(ench, Integer.parseInt(e[1]), true);
                     }
                 }
-            }
+            });
 
             is.setItemMeta(iMeta);
         }
