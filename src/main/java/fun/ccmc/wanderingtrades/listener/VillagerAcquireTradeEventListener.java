@@ -2,7 +2,6 @@ package fun.ccmc.wanderingtrades.listener;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.util.Config;
-import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.TradeConfig;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
@@ -11,7 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.MerchantRecipe;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class VillagerAcquireTradeEventListener implements Listener {
     WanderingTrades plugin;

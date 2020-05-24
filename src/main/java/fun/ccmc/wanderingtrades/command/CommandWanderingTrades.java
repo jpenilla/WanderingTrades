@@ -5,9 +5,7 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.util.Chat;
-import fun.ccmc.wanderingtrades.util.Config;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
 
 @CommandAlias("wanderingtrades|wt")
 public class CommandWanderingTrades extends BaseCommand {

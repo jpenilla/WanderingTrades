@@ -2,7 +2,6 @@ package fun.ccmc.wanderingtrades.util;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Consumer;
 
 import java.io.IOException;
