@@ -1,8 +1,8 @@
 package fun.ccmc.wanderingtrades;
 
 import co.aikar.commands.PaperCommandManager;
-import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
 import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
+import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
 import fun.ccmc.wanderingtrades.util.Config;
 import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
