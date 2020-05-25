@@ -1,7 +1,6 @@
 package fun.ccmc.wanderingtrades.listener;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import fun.ccmc.wanderingtrades.util.Config;
 import fun.ccmc.wanderingtrades.util.TradeConfig;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
@@ -10,8 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.MerchantRecipe;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class VillagerAcquireTradeEventListener implements Listener {
     WanderingTrades plugin;
@@ -32,11 +30,16 @@ public class VillagerAcquireTradeEventListener implements Listener {
             ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
             if(plugin.getCfg().isRandomSetPerTrader()) {
-                int r = new Random().nextInt(Config.getTradeConfigs().size());
-                newTrades.addAll(Config.getTradeConfigs().get(r).getTrades());
+                HashMap<String, TradeConfig> m = plugin.getCfg().getTradeConfigs();
+                int r = new Random().nextInt(m.size());
+                String randomName = (String) m.keySet().toArray()[r];
+                newTrades.addAll(m.get(randomName).getTrades(false));
             } else {
-                for(TradeConfig tc : Config.getTradeConfigs()) {
-                    newTrades.addAll(tc.getTrades());
+                Iterator it = plugin.getCfg().getTradeConfigs().entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry)it.next();
+                    newTrades.addAll(((TradeConfig) pair.getValue()).getTrades(false));
+                    it.remove();
                 }
             }
 

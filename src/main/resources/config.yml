@@ -2,6 +2,7 @@
 debug: false
 
 # Enable adding trades to Wandering Traders
+# Summoning Villagers or Traders through commands will bypass this
 enabled: true
 
 # True means each Trader will be assigned the trades defined
