@@ -1,0 +1,35 @@
+# WanderingTrades PlayerHeads Config ${project.version}
+
+# Should player heads from players who have been on the server
+# be added to wandering traders
+playerHeadsFromServer: true
+
+# what is the chance a trader will have player head trades
+# range: [0.01 - 1] ie 0.5 for 50%
+playerHeadsFromServerChance: 0.5
+
+# how many different player heads should each trader that has them have
+# WARNING!!! THIS MUST BE EQUAL TO OR BELOW THE AMOUNT OF PLAYERS
+#     THAT HAVE EVER LOGGED INTO YOUR SERVER!
+# recommended range [1 - 4]
+playerHeadsFromServerAmount: 1
+
+# the ingredients are fully customizable, and the second one is optional
+# for the heads the name, amount, and lore are customizable
+headTrade:
+  maxUses: 3
+  experienceReward: true
+  ingredients:
+    1:
+      customname: NONE
+      material: EMERALD
+      amount: 1
+    2:
+      customname: NONE
+      material: IRON_INGOT
+      amount: 1
+  head:
+    customname: '&e{PLAYER}''s Head'
+    amount: 1
+    lore:
+      - '    &7Obtained from Wandering Trader'

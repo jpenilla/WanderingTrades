@@ -1,4 +1,4 @@
-package fun.ccmc.wanderingtrades.util;
+package fun.ccmc.wanderingtrades.config;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.command.TabCompletions;
@@ -18,6 +18,7 @@ public class Config {
     @Getter private boolean randomSetPerTrader;
     @Getter private boolean removeOriginalTrades;
     @Getter private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
+    @Getter private PlayerHeadConfig playerHeadConfig;
 
     public Config(WanderingTrades instance) {
         plugin = instance;
@@ -37,6 +38,17 @@ public class Config {
         loadTradeConfigs();
         plugin.setTabCompletions(new TabCompletions(plugin));
         plugin.getTabCompletions().register();
+        loadPlayerHeadConfig();
+    }
+
+    private void loadPlayerHeadConfig() {
+        File f = new File(plugin.getDataFolder() + "/playerheads.yml");
+        if(!f.exists()) {
+            plugin.saveResource("playerheads.yml", false);
+        }
+        f = new File(plugin.getDataFolder() + "/playerheads.yml");
+        FileConfiguration data = YamlConfiguration.loadConfiguration(f);
+        playerHeadConfig = new PlayerHeadConfig(plugin, data);
     }
 
     private void loadTradeConfigs() {

@@ -1,81 +1,49 @@
-package fun.ccmc.wanderingtrades.util;
+package fun.ccmc.wanderingtrades.config;
 
 import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.util.TextFormatting;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
-public class TradeConfig {
+public class PlayerHeadConfig {
 
     private final WanderingTrades plugin;
-    private final boolean randomized;
-    private final boolean enabled;
-    private final int randomAmount;
-    private final List<MerchantRecipe> trades;
 
-    public TradeConfig(WanderingTrades instance, FileConfiguration config) {
-        trades = readTrades(config);
-        randomized = config.getBoolean("randomized");
-        randomAmount = config.getInt("randomAmount");
-        enabled = config.getBoolean("enabled");
+    @Getter private int maxUses = 1;
+    @Getter private final boolean experienceReward;
+    @Getter private final boolean playerHeadsFromServer;
+    @Getter private final double playerHeadsFromServerChance;
+    @Getter private final int playerHeadsFromServerAmount;
+    @Getter private final int amountOfHeadsPerTrade;
+    @Getter private final String name;
+    @Getter private final ArrayList<String> lore;
+    @Getter private final ItemStack ingredient1;
+    @Getter private final ItemStack ingredient2;
+
+    public PlayerHeadConfig(WanderingTrades instance, FileConfiguration config) {
         plugin = instance;
-    }
-
-    private ArrayList<MerchantRecipe> readTrades(FileConfiguration config) {
-        ArrayList<MerchantRecipe> tradeList = new ArrayList<>();
-        String parent = "trades";
-        config.getConfigurationSection(parent).getKeys(false).forEach(key -> {
-            String prefix = parent + "." + key + ".";
-
-            int maxUses = 1;
-            if (config.getInt(prefix + "maxUses") != 0) {
-                maxUses = config.getInt(prefix + "maxUses");
-            }
-
-            ItemStack result = getStack(config, prefix + "result");
-            MerchantRecipe recipe = new MerchantRecipe(result, 0, maxUses, config.getBoolean(prefix + "experienceReward"));
-
-            int ingredientNumber = 1;
-            while( ingredientNumber < 3 ) {
-                ItemStack ingredient = getStack(config, prefix + "ingredients." + ingredientNumber);
-                if(ingredient != null) {
-                    recipe.addIngredient(ingredient);
-                }
-                ingredientNumber++;
-            }
-
-            tradeList.add(recipe);
-        });
-        return tradeList;
-    }
-
-    private List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int amount) {
-        List<MerchantRecipe> copy = new LinkedList<>(lst);
-        Collections.shuffle(copy);
-        return copy.subList(0, amount);
-    }
-
-    public ArrayList<MerchantRecipe> getTrades(boolean bypassDisabled) {
-        ArrayList<MerchantRecipe> h = new ArrayList<>();
-        if(enabled || bypassDisabled) {
-            if(randomized) {
-                h.addAll(pickTrades(trades, randomAmount));
-            } else {
-                h.addAll(trades);
-            }
+        playerHeadsFromServer = config.getBoolean("playerHeadsFromServer");
+        playerHeadsFromServerChance = config.getDouble("playerHeadsFromServerChance");
+        playerHeadsFromServerAmount = config.getInt("playerHeadsFromServerAmount");
+        String prefix = "headTrade.";
+        if (config.getInt(prefix + "maxUses") != 0) {
+            maxUses = config.getInt(prefix + "maxUses");
         }
-        return h;
+        experienceReward = config.getBoolean(prefix + "experienceReward");
+        ingredient1 = getStack(config, prefix + "ingredients.1");
+        ingredient2 = getStack(config, prefix + "ingredients.2");
+        amountOfHeadsPerTrade = config.getInt(prefix + "head.amount");
+        name = TextFormatting.colorize(config.getString(prefix + "head.customname"));
+        lore = TextFormatting.colorize(config.getStringList(prefix + "head.lore"));
     }
 
     private ItemStack getStack(FileConfiguration config, String key) {
