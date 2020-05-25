@@ -13,6 +13,7 @@
 * Commands: `````/wanderingtrades`````, `````/wanderingtrades reload````` (requires ```wanderingtrades.reload``` permission)
 * [VanillaTweaks](https://vanillatweaks.net) microblocks config: [microblocks.yml](https://gist.github.com/jmanpenilla/56120245992a7c4099c13b798c94b5e0)  (Place in ```plugins/WanderingTrades/trades```)
 * Default config file [config.yml](https://github.com/jmanpenilla/WanderingTrades/blob/master/src/main/resources/config.yml)
+* See the Spigot Resource Page for a more up to date overview
 
 
 ## How to compile
