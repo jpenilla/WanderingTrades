@@ -2,6 +2,7 @@ package fun.ccmc.wanderingtrades.util;
 
 import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.command.TabCompletions;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,6 +34,8 @@ public class Config {
         randomSetPerTrader = config.getBoolean("randomSetPerTrader");
 
         loadTradeConfigs();
+        plugin.setTabCompletions(new TabCompletions(plugin));
+        plugin.getTabCompletions().register();
     }
 
     private void loadTradeConfigs() {

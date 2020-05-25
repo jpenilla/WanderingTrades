@@ -59,7 +59,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Subcommand("summon|s")
     @CommandPermission("wanderingtrades.summon")
     @Description("Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.")
-    @CommandCompletion("configName *")
+    @CommandCompletion("@wtConfigs *")
     @Syntax("<tradeConfig> [world:x,y,z]")
     public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
         Location loc;
@@ -85,7 +85,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Subcommand("summonvillager|sv")
     @CommandPermission("wanderingtrades.summonvillager")
     @Description("Summons a Villager with the specified config. Ignores whether the config is disabled.")
-    @CommandCompletion("configName * * *")
+    @CommandCompletion("@wtConfigs * * *")
     @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
     public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
         Location loc;
