@@ -3,6 +3,7 @@ package fun.ccmc.wanderingtrades.config;
 import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.util.TextFormatting;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,6 +25,7 @@ public class TradeConfig {
     private final boolean enabled;
     private final int randomAmount;
     private final List<MerchantRecipe> trades;
+    @Getter private double chance;
 
     public TradeConfig(WanderingTrades instance, FileConfiguration config) {
         plugin = instance;
@@ -31,6 +33,7 @@ public class TradeConfig {
         randomized = config.getBoolean("randomized");
         randomAmount = config.getInt("randomAmount");
         enabled = config.getBoolean("enabled");
+        chance = config.getDouble("chance");
     }
 
     private ArrayList<MerchantRecipe> readTrades(FileConfiguration config) {

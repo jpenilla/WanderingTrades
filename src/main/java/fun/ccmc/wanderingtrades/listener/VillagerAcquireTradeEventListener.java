@@ -39,7 +39,7 @@ public class VillagerAcquireTradeEventListener implements Listener {
                     ArrayList<OfflinePlayer> offlinePlayers = new ArrayList<>(Arrays.asList(plugin.getServer().getOfflinePlayers()));
                     Collections.shuffle(offlinePlayers);
                     ArrayList<OfflinePlayer> selectedPlayers = new ArrayList<>();
-                    for(int i = 0; i < plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount(); ++i) {
+                    for(int i = 0; i < plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount(); i++) {
                         selectedPlayers.add(offlinePlayers.get(i));
                     }
                     selectedPlayers.forEach(player -> {
@@ -59,17 +59,25 @@ public class VillagerAcquireTradeEventListener implements Listener {
                     });
                 }
 
-                if(plugin.getCfg().isRandomSetPerTrader()) {
-                    HashMap<String, TradeConfig> m = plugin.getCfg().getTradeConfigs();
-                    int r = new Random().nextInt(m.size());
-                    String randomName = (String) m.keySet().toArray()[r];
-                    newTrades.addAll(m.get(randomName).getTrades(false));
-                } else {
-                    Iterator it = plugin.getCfg().getTradeConfigs().entrySet().iterator();
+                if(plugin.getCfg().isAllowMultipleSets()) {
+                    HashMap<String, TradeConfig> m = new HashMap<>(plugin.getCfg().getTradeConfigs());
+                    Iterator it = m.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry)it.next();
-                        newTrades.addAll(((TradeConfig) pair.getValue()).getTrades(false));
+                        if(randBoolean(((TradeConfig) pair.getValue()).getChance())) {
+                            newTrades.addAll(((TradeConfig) pair.getValue()).getTrades(false));
+                        }
                         it.remove();
+                    }
+                } else {
+                    ArrayList<String> keys = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
+                    Collections.shuffle(keys);
+                    boolean hasTrades = false;
+                    for(String config : keys) {
+                        if(randBoolean(plugin.getCfg().getTradeConfigs().get(config).getChance()) && !hasTrades) {
+                            newTrades.addAll(plugin.getCfg().getTradeConfigs().get(config).getTrades(false));
+                            hasTrades = true;
+                        }
                     }
                 }
 

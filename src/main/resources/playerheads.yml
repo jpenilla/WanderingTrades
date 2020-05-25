@@ -17,7 +17,7 @@ playerHeadsFromServerAmount: 1
 # the ingredients are fully customizable, and the second one is optional
 # for the heads the name, amount, and lore are customizable
 headTrade:
-  maxUses: 3
+  maxUses: 1
   experienceReward: true
   ingredients:
     1:
