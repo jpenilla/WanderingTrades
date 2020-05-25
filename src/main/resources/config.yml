@@ -13,3 +13,7 @@ enabled: true
 # False means each Trader will be assigned the trades
 # from all of the enabled configs in the trades folder
 randomSetPerTrader: false
+
+# Should the plugin remove the original trades from wandering
+#    traders
+removeOriginalTrades: false

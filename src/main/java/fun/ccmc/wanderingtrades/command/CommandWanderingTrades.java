@@ -7,8 +7,6 @@ import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.util.Chat;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;

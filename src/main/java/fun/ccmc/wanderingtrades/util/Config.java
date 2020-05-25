@@ -1,6 +1,5 @@
 package fun.ccmc.wanderingtrades.util;
 
-import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.command.TabCompletions;
 import lombok.Getter;
@@ -8,8 +7,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class Config {
     private final WanderingTrades plugin;
@@ -17,6 +16,7 @@ public class Config {
     @Getter private boolean debug;
     @Getter private boolean pluginEnabled;
     @Getter private boolean randomSetPerTrader;
+    @Getter private boolean removeOriginalTrades;
     @Getter private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
 
     public Config(WanderingTrades instance) {
@@ -32,6 +32,7 @@ public class Config {
         debug = config.getBoolean("debug");
         pluginEnabled = config.getBoolean("enabled");
         randomSetPerTrader = config.getBoolean("randomSetPerTrader");
+        removeOriginalTrades = config.getBoolean("removeOriginalTrades");
 
         loadTradeConfigs();
         plugin.setTabCompletions(new TabCompletions(plugin));

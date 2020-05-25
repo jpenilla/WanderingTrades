@@ -1,7 +1,6 @@
 package fun.ccmc.wanderingtrades;
 
 import co.aikar.commands.PaperCommandManager;
-import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
 import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
