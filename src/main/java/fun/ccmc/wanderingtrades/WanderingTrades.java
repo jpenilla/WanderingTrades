@@ -1,6 +1,7 @@
 package fun.ccmc.wanderingtrades;
 
 import co.aikar.commands.PaperCommandManager;
+import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
 import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
 import fun.ccmc.wanderingtrades.util.Config;
@@ -11,25 +12,24 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class WanderingTrades extends JavaPlugin {
-    @Getter
-    private Config cfg;
-    @Getter
-    private Log log;
+    @Getter private Config cfg;
+    @Getter private Log log;
+    @Getter private PaperCommandManager commandManager;
 
     @Override
     public void onEnable() {
         log = new Log(this);
         log.info("&d[STARTING]");
 
+        commandManager = new PaperCommandManager(this);
+        commandManager.enableUnstableAPI("help");
+        commandManager.registerCommand(new CommandWanderingTrades(this));
+
         cfg = new Config(this);
 
         if(cfg.isPluginEnabled()) {
             getServer().getPluginManager().registerEvents(new VillagerAcquireTradeEventListener(this), this);
         }
-
-        PaperCommandManager manager = new PaperCommandManager(this);
-        manager.enableUnstableAPI("help");
-        manager.registerCommand(new CommandWanderingTrades(this));
 
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);

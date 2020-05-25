@@ -66,9 +66,9 @@ public class TradeConfig {
         return copy.subList(0, amount);
     }
 
-    public ArrayList<MerchantRecipe> getTrades() {
+    public ArrayList<MerchantRecipe> getTrades(boolean bypassDisabled) {
         ArrayList<MerchantRecipe> h = new ArrayList<>();
-        if(enabled) {
+        if(enabled || bypassDisabled) {
             if(randomized) {
                 h.addAll(pickTrades(trades, randomAmount));
             } else {

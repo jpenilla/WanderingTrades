@@ -1,13 +1,14 @@
 package fun.ccmc.wanderingtrades.util;
 
+import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Config {
     private final WanderingTrades plugin;
@@ -15,7 +16,7 @@ public class Config {
     @Getter private boolean debug;
     @Getter private boolean pluginEnabled;
     @Getter private boolean randomSetPerTrader;
-    @Getter private final static ArrayList<TradeConfig> tradeConfigs = new ArrayList<>();
+    @Getter private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
 
     public Config(WanderingTrades instance) {
         plugin = instance;
@@ -54,7 +55,7 @@ public class Config {
 
         Arrays.stream(tradeConfigFiles).forEach(f -> {
             FileConfiguration data = YamlConfiguration.loadConfiguration(f);
-            tradeConfigs.add(new TradeConfig(plugin, data));
+            tradeConfigs.put(f.getName().split("\\.")[0], new TradeConfig(plugin, data));
         });
     }
 }
