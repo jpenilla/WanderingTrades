@@ -15,8 +15,8 @@ public class Config {
 
     @Getter private boolean debug;
     @Getter private boolean pluginEnabled;
-    @Getter private boolean randomSetPerTrader;
     @Getter private boolean removeOriginalTrades;
+    @Getter private boolean allowMultipleSets;
     @Getter private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
     @Getter private PlayerHeadConfig playerHeadConfig;
 
@@ -32,8 +32,8 @@ public class Config {
 
         debug = config.getBoolean("debug");
         pluginEnabled = config.getBoolean("enabled");
-        randomSetPerTrader = config.getBoolean("randomSetPerTrader");
         removeOriginalTrades = config.getBoolean("removeOriginalTrades");
+        allowMultipleSets = config.getBoolean("allowMultipleSets");
 
         loadTradeConfigs();
         plugin.setTabCompletions(new TabCompletions(plugin));

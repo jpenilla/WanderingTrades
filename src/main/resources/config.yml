@@ -1,18 +1,13 @@
 # WanderingTrades Config ${project.version}
 debug: false
 
-# Enable adding trades to Wandering Traders
+# Enable adding trades to natural spawned Wandering Traders
 # Summoning Villagers or Traders through commands will bypass this
 enabled: true
 
-# True means each Trader will be assigned the trades defined
-# in a random ONE of the configs in the trades folder
-# (Disabled configs may be chosen, use this to have a
-# chance for unmodified Traders)
-#
-# False means each Trader will be assigned the trades
-# from all of the enabled configs in the trades folder
-randomSetPerTrader: false
+# should traders be allowed to get trades from more than one
+# trade config
+allowMultipleSets: true
 
 # Should the plugin remove the original trades from wandering
 #    traders

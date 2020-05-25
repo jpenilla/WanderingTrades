@@ -3,6 +3,10 @@
 # Enable this tradeset config
 enabled: true
 
+# the chance that a wandering trader will get the trades
+# from this config [0.01 - 1] ie 75% = 0.75
+chance: 0.75
+
 # true: randomly select from these trades
 # false: add all off these trades
 randomized: true
