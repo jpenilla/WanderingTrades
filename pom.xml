@@ -6,7 +6,7 @@
 
     <groupId>fun.ccmc.wanderingtrades</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.1.5-SNAPSHOT.{BUILDID}</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
