@@ -3,11 +3,13 @@ package fun.ccmc.wanderingtrades;
 import co.aikar.commands.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
+import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
 import fun.ccmc.wanderingtrades.util.Config;
 import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
 import lombok.Getter;
+import lombok.Setter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +17,7 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private Config cfg;
     @Getter private Log log;
     @Getter private PaperCommandManager commandManager;
+    @Getter @Setter private TabCompletions tabCompletions;
 
     @Override
     public void onEnable() {
