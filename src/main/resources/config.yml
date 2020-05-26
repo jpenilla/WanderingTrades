@@ -7,6 +7,14 @@ enabled: true
 
 # should traders be allowed to get trades from more than one
 # trade config
+#
+#    - when true, the chance in the trade config is the % chance that any
+#      trader will get that config
+#    - when false, the chance in the trade config is a weight value for
+#      picking one trade set per villager
+#
+# when using false, use disabled configs to insert chances for wandering
+# traders with no custom trades
 allowMultipleSets: true
 
 # Should the plugin remove the original trades from wandering

@@ -3,6 +3,7 @@ package fun.ccmc.wanderingtrades.listener;
 import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
+import fun.ccmc.wanderingtrades.util.WeightedRandom;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
@@ -71,13 +72,11 @@ public class VillagerAcquireTradeEventListener implements Listener {
                     }
                 } else {
                     ArrayList<String> keys = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
-                    Collections.shuffle(keys);
-                    boolean hasTrades = false;
-                    for(String config : keys) {
-                        if(randBoolean(plugin.getCfg().getTradeConfigs().get(config).getChance()) && !hasTrades) {
-                            newTrades.addAll(plugin.getCfg().getTradeConfigs().get(config).getTrades(false));
-                            hasTrades = true;
-                        }
+                    WeightedRandom<String> weightedRandom = new WeightedRandom<>();
+                    keys.forEach(config -> weightedRandom.addEntry(config, plugin.getCfg().getTradeConfigs().get(config).getChance()));
+                    String chosenConfig = weightedRandom.getRandom();
+                    if(chosenConfig != null) {
+                        newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
                     }
                 }
 
