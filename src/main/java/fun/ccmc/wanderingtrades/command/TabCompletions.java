@@ -20,5 +20,12 @@ public class TabCompletions {
             });
             return completions;
         });
+
+        plugin.getCommandManager().getCommandCompletions().registerCompletion("boolean", c -> {
+            ArrayList<String> completions = new ArrayList<>();
+            completions.add("true");
+            completions.add("false");
+            return completions;
+        });
     }
 }

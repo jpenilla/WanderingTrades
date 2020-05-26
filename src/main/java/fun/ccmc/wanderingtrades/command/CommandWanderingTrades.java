@@ -5,12 +5,15 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.util.Chat;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 
 import java.util.ArrayList;
@@ -117,5 +120,28 @@ public class CommandWanderingTrades extends BaseCommand {
         String string = String.join("&7, &r", strings);
         Chat.sendMsg(sender, "&d&oLoaded Trade Configs:");
         Chat.sendMsg(sender, string);
+    }
+
+    @Subcommand("addhand|ah")
+    @CommandPermission("wanderingtrades.addhand")
+    @Description("Creates a template trade in the specified config with your held item as the result")
+    @CommandCompletion("@wtConfigs tradeName @range:20 @boolean")
+    @Syntax("<tradeConfig> <tradeName> <maxUses> <experienceReward>")
+    public void onAddHand(Player p, String tradeConfig, String tradeName, int maxUses, boolean experienceReward) {
+        ItemStack hand = p.getInventory().getItemInMainHand();
+        if(!hand.getType().equals(Material.AIR)) {
+            try {
+                TradeConfig tc = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+                if (!tc.writeTrade(tradeConfig, hand, tradeName, maxUses, experienceReward)) {
+                    Chat.sendMsg(p, "&4There is already a trade with that name");
+                } else {
+                    Chat.sendCenteredMessage(p, "&a&oSuccessfully added template trade");
+                    onReload(p);
+                }
+            } catch (NullPointerException e) {
+                Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
+                onList(p);
+            }
+        }
     }
 }
