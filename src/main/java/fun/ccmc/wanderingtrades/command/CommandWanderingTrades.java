@@ -59,55 +59,57 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Subcommand("summon|s")
     @CommandPermission("wanderingtrades.summon")
-    @Description("Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.")
-    @CommandCompletion("@wtConfigs *")
-    @Syntax("<tradeConfig> [world:x,y,z]")
-    public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
-        Location loc;
-        if(location != null) {
-            loc = location;
-        } else if(sender instanceof Player) {
-            loc = ((Player) sender).getLocation();
-        } else {
-            throw new InvalidCommandArgument("Console must provide world and coordinates", true);
+    public class SummonTrader extends BaseCommand {
+        @Default
+        @Description("Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.")
+        @CommandCompletion("@wtConfigs *")
+        @Syntax("<tradeConfig> [world:x,y,z]")
+        public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
+            Location loc = resolveLocation(sender, location);
+            summonTrader(sender, tradeConfig, loc, false);
         }
-        try {
-            ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            loc.getWorld().spawn(loc, WanderingTrader.class, wt -> {
-                wt.setRecipes(recipes);
-            });
-        } catch (NullPointerException e) {
-            Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
-            onList(sender);
+
+        @Subcommand("noai|n")
+        @Description("Same as /wt summon but with AI disabled")
+        public class NoAI extends BaseCommand {
+            @Default
+            @CommandCompletion("@wtConfigs @range:360 *")
+            @Syntax("<tradeConfig> [rotation] [world:x,y,z]")
+            public void onSummonNoAI(CommandSender sender, String tradeConfig, @Optional Float rotation, @Optional Location location) {
+                Location loc = resolveLocation(sender, location);
+                if(rotation != null) {
+                    loc.setYaw(rotation);
+                }
+                summonTrader(sender, tradeConfig, loc, true);
+            }
         }
     }
 
     @Subcommand("summonvillager|sv")
     @CommandPermission("wanderingtrades.summonvillager")
-    @Description("Summons a Villager with the specified config. Ignores whether the config is disabled.")
-    @CommandCompletion("@wtConfigs * * *")
-    @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
-    public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
-        Location loc;
-        if(location != null) {
-            loc = location;
-        } else if(sender instanceof Player) {
-            loc = ((Player) sender).getLocation();
-        } else {
-            Chat.sendMsg(sender, "&4Console must provide world and coordinates");
-            throw new InvalidCommandArgument("Console must provide world and coordinates", true);
+    public class SummonVillager extends BaseCommand {
+        @Default
+        @Description("Summons a Villager with the specified config. Ignores whether the config is disabled.")
+        @CommandCompletion("@wtConfigs * * *")
+        @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
+        public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
+            Location loc = resolveLocation(sender, location);
+            summonVillager(sender, tradeConfig, loc, type, profession, false);
         }
-        try {
-            ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            loc.getWorld().spawn(loc, Villager.class, v -> {
-                v.setVillagerType(type);
-                v.setProfession(profession);
-                v.setVillagerLevel(5);
-                v.setRecipes(recipes);
-            });
-        } catch (NullPointerException e) {
-            Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
-            onList(sender);
+
+        @Subcommand("noai|n")
+        @Description("Same as /wt summonvillager but with AI disabled")
+        public class NoAI extends BaseCommand {
+            @Default
+            @CommandCompletion("@wtConfigs * * @range:360 *")
+            @Syntax("<tradeConfig> <profession> <type> [rotation] [world:x,y,z]")
+            public void onSummonNoAI(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Float rotation, @Optional Location location) {
+                Location loc = resolveLocation(sender, location);
+                if(rotation != null) {
+                    loc.setYaw(rotation);
+                }
+                summonVillager(sender, tradeConfig, loc, type, profession, true);
+            }
         }
     }
 
@@ -142,6 +144,47 @@ public class CommandWanderingTrades extends BaseCommand {
                 Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
                 onList(p);
             }
+        }
+    }
+
+    private Location resolveLocation(CommandSender sender, Location loc) {
+        Location location;
+        if(loc != null) {
+            location = loc;
+        } else if(sender instanceof Player) {
+            location = ((Player) sender).getLocation();
+        } else {
+            throw new InvalidCommandArgument("Console must provide world and coordinates", true);
+        }
+        return location;
+    }
+
+    private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {
+        try {
+            ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
+            loc.getWorld().spawn(loc, WanderingTrader.class, wt -> {
+                wt.setRecipes(recipes);
+                wt.setAI(!disableAI);
+            });
+        } catch (NullPointerException e) {
+            Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
+            onList(sender);
+        }
+    }
+
+    private void summonVillager(CommandSender sender, String tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
+        try {
+            ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
+            loc.getWorld().spawn(loc, Villager.class, v -> {
+                v.setVillagerType(type);
+                v.setProfession(profession);
+                v.setVillagerLevel(5);
+                v.setRecipes(recipes);
+                v.setAI(!disableAI);
+            });
+        } catch (NullPointerException e) {
+            Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
+            onList(sender);
         }
     }
 }
