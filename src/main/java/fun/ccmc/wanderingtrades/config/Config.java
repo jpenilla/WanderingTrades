@@ -48,7 +48,7 @@ public class Config {
         }
         f = new File(plugin.getDataFolder() + "/playerheads.yml");
         FileConfiguration data = YamlConfiguration.loadConfiguration(f);
-        playerHeadConfig = new PlayerHeadConfig(plugin, data);
+        playerHeadConfig = new PlayerHeadConfig(data);
     }
 
     private void loadTradeConfigs() {

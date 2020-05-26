@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TradeConfig {
-
     private final WanderingTrades plugin;
     private final boolean randomized;
     private final boolean enabled;
@@ -67,6 +66,13 @@ public class TradeConfig {
     private List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int amount) {
         List<MerchantRecipe> copy = new LinkedList<>(lst);
         Collections.shuffle(copy);
+        List<MerchantRecipe> f = new LinkedList<>(lst);
+        int i = 0;
+        while(i < amount) {
+            Collections.shuffle(f);
+            copy.addAll(f);
+            i++;
+        }
         return copy.subList(0, amount);
     }
 
@@ -79,46 +85,66 @@ public class TradeConfig {
                 h.addAll(trades);
             }
         }
-        return h;
+        if(plugin.getMcRPG() != null) {
+            return plugin.getMcRPG().replacePlaceholders(h);
+        } else {
+            return h;
+        }
     }
 
-    public ItemStack getStack(FileConfiguration config, String key) {
+    public static ItemStack getStack(FileConfiguration config, String key) {
         ItemStack is = null;
+        boolean McRPG = false;
 
         if(config.getString(key + ".material") != null) {
             if(config.getString(key + ".material").contains("head-")) {
                 is = SkullCreator.withBase64(new ItemStack(Material.PLAYER_HEAD, config.getInt(key + ".amount")), config.getString(key + ".material").replace("head-", ""));
             } else {
-                if(Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
-                    is = new ItemStack(Material.getMaterial(config.getString(key + ".material").toUpperCase()), config.getInt(key + ".amount"));
+                if(config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
+                    is = new ItemStack(Material.CHIPPED_ANVIL);
+                    ItemMeta im = is.getItemMeta();
+                    if(config.getString(key + ".material").toUpperCase().contains("SKILL")) {
+                        im.setDisplayName("mcrpg_skill_book_placeholder_");
+                    } else {
+                        im.setDisplayName("mcrpg_upgrade_book_placeholder_");
+                    }
+                    McRPG = true;
+                    is.setItemMeta(im);
+                    is.setAmount(config.getInt(key + ".amount"));
                 } else {
-                    is = new ItemStack(Material.STONE);
-                    plugin.getLog().warn(config.getString(key + ".material") + " is not a valid material");
-                }
-            }
-
-            ItemMeta iMeta = is.getItemMeta();
-
-            String cname = config.getString(key + ".customname");
-            if(cname != null && !cname.equals("NONE")) {
-                iMeta.setDisplayName(TextFormatting.colorize(cname));
-            }
-
-            if(config.getStringList(key + ".lore").size() != 0) {
-                iMeta.setLore(TextFormatting.colorize(config.getStringList(key + ".lore")));
-            }
-
-            config.getStringList(key + ".enchantments").forEach(s -> {
-                if(s.contains(":")) {
-                    String[] e = s.split(":");
-                    Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
-                    if(ench != null) {
-                        iMeta.addEnchant(ench, Integer.parseInt(e[1]), true);
+                    if(Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
+                        is = new ItemStack(Material.getMaterial(config.getString(key + ".material").toUpperCase()), config.getInt(key + ".amount"));
+                    } else {
+                        is = new ItemStack(Material.STONE);
+                        WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
                     }
                 }
-            });
+            }
 
-            is.setItemMeta(iMeta);
+            if(!McRPG) {
+                ItemMeta iMeta = is.getItemMeta();
+
+                String cname = config.getString(key + ".customname");
+                if(cname != null && !cname.equals("NONE")) {
+                    iMeta.setDisplayName(TextFormatting.colorize(cname));
+                }
+
+                if(config.getStringList(key + ".lore").size() != 0) {
+                    iMeta.setLore(TextFormatting.colorize(config.getStringList(key + ".lore")));
+                }
+
+                config.getStringList(key + ".enchantments").forEach(s -> {
+                    if(s.contains(":")) {
+                        String[] e = s.split(":");
+                        Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
+                        if(ench != null) {
+                            iMeta.addEnchant(ench, Integer.parseInt(e[1]), true);
+                        }
+                    }
+                });
+
+                is.setItemMeta(iMeta);
+            }
         }
         return is;
     }
