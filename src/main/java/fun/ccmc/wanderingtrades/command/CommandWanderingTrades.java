@@ -2,7 +2,7 @@ package fun.ccmc.wanderingtrades.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
-import co.aikar.commands.ShowCommandHelp;
+import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.util.Chat;
@@ -66,8 +66,7 @@ public class CommandWanderingTrades extends BaseCommand {
         } else if(sender instanceof Player) {
             loc = ((Player) sender).getLocation();
         } else {
-            Chat.sendMsg(sender, "&4Console must provide world and coordinates");
-            throw new ShowCommandHelp();
+            throw new InvalidCommandArgument("Console must provide world and coordinates", true);
         }
         try {
             ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
@@ -93,7 +92,7 @@ public class CommandWanderingTrades extends BaseCommand {
             loc = ((Player) sender).getLocation();
         } else {
             Chat.sendMsg(sender, "&4Console must provide world and coordinates");
-            throw new ShowCommandHelp();
+            throw new InvalidCommandArgument("Console must provide world and coordinates", true);
         }
         try {
             ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
