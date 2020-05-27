@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.util.Chat;
+import fun.ccmc.wanderingtrades.util.TextUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -176,6 +177,10 @@ public class CommandWanderingTrades extends BaseCommand {
                     wt.setInvulnerable(true);
                     wt.setRemoveWhenFarAway(false);
                     wt.setPersistent(true);
+                    if(t.getCustomName() != null) {
+                        wt.setCustomName(TextUtil.colorize(t.getCustomName()));
+                        wt.setCustomNameVisible(true);
+                    }
                     NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
                     p.set(k, PersistentDataType.STRING, "true");
                 }
@@ -206,6 +211,10 @@ public class CommandWanderingTrades extends BaseCommand {
                     v.setInvulnerable(true);
                     v.setRemoveWhenFarAway(false);
                     v.setPersistent(true);
+                    if(t.getCustomName() != null && !t.getCustomName().equals("NONE")) {
+                        v.setCustomName(TextUtil.colorize(t.getCustomName()));
+                        v.setCustomNameVisible(true);
+                    }
                     NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
                     p.set(k, PersistentDataType.STRING, "true");
                 }
