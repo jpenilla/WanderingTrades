@@ -9,12 +9,15 @@ import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.util.Chat;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,6 +168,9 @@ public class CommandWanderingTrades extends BaseCommand {
             loc.getWorld().spawn(loc, WanderingTrader.class, wt -> {
                 wt.setRecipes(recipes);
                 wt.setAI(!disableAI);
+                PersistentDataContainer p = wt.getPersistentDataContainer();
+                NamespacedKey key = new NamespacedKey(plugin, "wt");
+                p.set(key, PersistentDataType.STRING, tradeConfig);
             });
         } catch (NullPointerException e) {
             Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
