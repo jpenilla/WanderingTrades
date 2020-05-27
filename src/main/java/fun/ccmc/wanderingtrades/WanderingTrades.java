@@ -24,6 +24,7 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter @Setter private TabCompletions tabCompletions;
     @Getter private McRPG McRPG = null;
     @Getter private WorldGuardCompat worldGuard = null;
+    @Getter private boolean paper;
 
     @Override
     public void onEnable() {
@@ -43,6 +44,17 @@ public final class WanderingTrades extends JavaPlugin {
         }
 
         cfg = new Config(this);
+
+        paper = false;
+        try {
+            paper = Class.forName("com.destroystokyo.paper.VersionHistoryManager$VersionData") != null;
+        } catch (ClassNotFoundException e) {
+            getLog().debug("Paper not detected. Install Paper from https://papermc.io");
+        }
+        if (paper) {
+            getLog().info("Got Paper!");
+        }
+
 
         if(cfg.isPluginEnabled()) {
             getServer().getPluginManager().registerEvents(new VillagerAcquireTradeEventListener(this), this);

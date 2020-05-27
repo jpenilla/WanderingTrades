@@ -1,7 +1,6 @@
 package fun.ccmc.wanderingtrades.command;
 
 import co.aikar.commands.PaperCommandManager;
-import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,9 +34,15 @@ public class TabCompletions {
             return completions;
         });
 
-        mgr.getCommandCompletions().registerCompletion("angles", c -> ImmutableList.of(
-                "30", "45", "60", "90", "120", "135", "150", "180",
-                "210", "225", "240", "270", "300", "315", "330", "360"));
+        mgr.getCommandCompletions().registerCompletion("angles", c -> {
+            ArrayList<String> completions =  new ArrayList<>(Arrays.asList(
+                    "30", "45", "60", "90", "120", "135", "150", "180",
+                    "210", "225", "240", "270", "300", "315", "330", "360"));
+            if(c.getSender() instanceof Player) {
+                completions.add(((Player) c.getSender()).getLocation().getYaw() + "");
+            }
+            return completions;
+        });
 
         mgr.getCommandCompletions().registerCompletion("wtWorlds", c -> {
             CommandSender s = c.getSender();

@@ -174,6 +174,8 @@ public class CommandWanderingTrades extends BaseCommand {
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
                 if(t.isInvincible()) {
                     wt.setInvulnerable(true);
+                    wt.setRemoveWhenFarAway(false);
+                    wt.setPersistent(true);
                     NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
                     p.set(k, PersistentDataType.STRING, "true");
                 }
@@ -202,6 +204,8 @@ public class CommandWanderingTrades extends BaseCommand {
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
                 if(t.isInvincible()) {
                     v.setInvulnerable(true);
+                    v.setRemoveWhenFarAway(false);
+                    v.setPersistent(true);
                     NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
                     p.set(k, PersistentDataType.STRING, "true");
                 }
