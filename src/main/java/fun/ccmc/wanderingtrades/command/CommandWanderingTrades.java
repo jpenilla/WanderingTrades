@@ -65,7 +65,7 @@ public class CommandWanderingTrades extends BaseCommand {
     public class SummonTrader extends BaseCommand {
         @Default
         @Description("Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.")
-        @CommandCompletion("@wtConfigs *")
+        @CommandCompletion("@wtConfigs @wtWorlds")
         @Syntax("<tradeConfig> [world:x,y,z]")
         public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
             Location loc = resolveLocation(sender, location);
@@ -76,7 +76,7 @@ public class CommandWanderingTrades extends BaseCommand {
         @Description("Same as /wt summon but with AI disabled")
         public class NoAI extends BaseCommand {
             @Default
-            @CommandCompletion("@wtConfigs @range:360 *")
+            @CommandCompletion("@wtConfigs @range:360 @wtWorlds")
             @Syntax("<tradeConfig> [rotation] [world:x,y,z]")
             public void onSummonNoAI(CommandSender sender, String tradeConfig, @Optional Float rotation, @Optional Location location) {
                 Location loc = resolveLocation(sender, location);
@@ -93,7 +93,7 @@ public class CommandWanderingTrades extends BaseCommand {
     public class SummonVillager extends BaseCommand {
         @Default
         @Description("Summons a Villager with the specified config. Ignores whether the config is disabled.")
-        @CommandCompletion("@wtConfigs * * *")
+        @CommandCompletion("@wtConfigs * * @wtWorlds")
         @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
         public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
             Location loc = resolveLocation(sender, location);
@@ -104,7 +104,7 @@ public class CommandWanderingTrades extends BaseCommand {
         @Description("Same as /wt summonvillager but with AI disabled")
         public class NoAI extends BaseCommand {
             @Default
-            @CommandCompletion("@wtConfigs * * @range:360 *")
+            @CommandCompletion("@wtConfigs * * @range:360 @wtWorlds")
             @Syntax("<tradeConfig> <profession> <type> [rotation] [world:x,y,z]")
             public void onSummonNoAI(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Float rotation, @Optional Location location) {
                 Location loc = resolveLocation(sender, location);
