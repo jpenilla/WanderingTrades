@@ -5,6 +5,7 @@ import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
 import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.compat.McRPG;
 import fun.ccmc.wanderingtrades.config.Config;
+import fun.ccmc.wanderingtrades.listener.PlayerInteractEntityEventListener;
 import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
 import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
@@ -39,6 +40,10 @@ public final class WanderingTrades extends JavaPlugin {
 
         if(cfg.isPluginEnabled()) {
             getServer().getPluginManager().registerEvents(new VillagerAcquireTradeEventListener(this), this);
+        }
+
+        if(cfg.isRefreshCommandTraders()) {
+            getServer().getPluginManager().registerEvents(new PlayerInteractEntityEventListener(this), this);
         }
 
         int pluginId = 7597;

@@ -5,18 +5,15 @@ import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.util.WeightedRandom;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
@@ -95,17 +92,6 @@ public class VillagerAcquireTradeEventListener implements Listener {
             }
             if(plugin.getCfg().isRemoveOriginalTrades()) {
                 e.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onClick(PlayerInteractEntityEvent e) {
-        if(e.getRightClicked().getType() == EntityType.WANDERING_TRADER) {
-            NamespacedKey key = new NamespacedKey(plugin, "wt");
-            String s = e.getRightClicked().getPersistentDataContainer().get(key, PersistentDataType.STRING);
-            if(s != null) {
-                plugin.getLog().warn(s);
             }
         }
     }
