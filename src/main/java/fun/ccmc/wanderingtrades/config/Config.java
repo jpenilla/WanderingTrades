@@ -1,7 +1,6 @@
 package fun.ccmc.wanderingtrades.config;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import fun.ccmc.wanderingtrades.command.TabCompletions;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -45,8 +44,6 @@ public class Config {
         wgWhitelist = config.getBoolean("wgWhitelist");
 
         loadTradeConfigs();
-        plugin.setTabCompletions(new TabCompletions(plugin));
-        plugin.getTabCompletions().register();
         loadPlayerHeadConfig();
     }
 

@@ -58,63 +58,9 @@ public class CommandWanderingTrades extends BaseCommand {
     public void onReload(CommandSender sender) {
         Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
         plugin.getCfg().reload();
+        plugin.getListeners().reload();
+        plugin.getTabCompletions().register();
         Chat.sendCenteredMessage(sender, "&aDone.");
-    }
-
-    @Subcommand("summon|s")
-    @CommandPermission("wanderingtrades.summon")
-    public class SummonTrader extends BaseCommand {
-        @Default
-        @Description("Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.")
-        @CommandCompletion("@wtConfigs @wtWorlds")
-        @Syntax("<tradeConfig> [world:x,y,z]")
-        public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
-            Location loc = resolveLocation(sender, location);
-            summonTrader(sender, tradeConfig, loc, false);
-        }
-
-        @Subcommand("noai|n")
-        @Description("Same as /wt summon but with AI disabled")
-        public class NoAI extends BaseCommand {
-            @Default
-            @CommandCompletion("@wtConfigs @angles @wtWorlds")
-            @Syntax("<tradeConfig> [rotation] [world:x,y,z]")
-            public void onSummonNoAI(CommandSender sender, String tradeConfig, @Optional Float rotation, @Optional Location location) {
-                Location loc = resolveLocation(sender, location);
-                if(rotation != null) {
-                    loc.setYaw(rotation);
-                }
-                summonTrader(sender, tradeConfig, loc, true);
-            }
-        }
-    }
-
-    @Subcommand("summonvillager|sv")
-    @CommandPermission("wanderingtrades.summonvillager")
-    public class SummonVillager extends BaseCommand {
-        @Default
-        @Description("Summons a Villager with the specified config. Ignores whether the config is disabled.")
-        @CommandCompletion("@wtConfigs * * @wtWorlds")
-        @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
-        public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
-            Location loc = resolveLocation(sender, location);
-            summonVillager(sender, tradeConfig, loc, type, profession, false);
-        }
-
-        @Subcommand("noai|n")
-        @Description("Same as /wt summonvillager but with AI disabled")
-        public class NoAI extends BaseCommand {
-            @Default
-            @CommandCompletion("@wtConfigs * * @angles @wtWorlds")
-            @Syntax("<tradeConfig> <profession> <type> [rotation] [world:x,y,z]")
-            public void onSummonNoAI(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Float rotation, @Optional Location location) {
-                Location loc = resolveLocation(sender, location);
-                if(rotation != null) {
-                    loc.setYaw(rotation);
-                }
-                summonVillager(sender, tradeConfig, loc, type, profession, true);
-            }
-        }
     }
 
     @Subcommand("list|l")
@@ -135,7 +81,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Syntax("<tradeConfig> <tradeName> <maxUses> <experienceReward>")
     public void onAddHand(Player p, String tradeConfig, String tradeName, int maxUses, boolean experienceReward) {
         ItemStack hand = p.getInventory().getItemInMainHand();
-        if(!hand.getType().equals(Material.AIR)) {
+        if (!hand.getType().equals(Material.AIR)) {
             try {
                 TradeConfig tc = plugin.getCfg().getTradeConfigs().get(tradeConfig);
                 if (!tc.writeTrade(tradeConfig, hand, tradeName, maxUses, experienceReward)) {
@@ -153,9 +99,9 @@ public class CommandWanderingTrades extends BaseCommand {
 
     private Location resolveLocation(CommandSender sender, Location loc) {
         Location location;
-        if(loc != null) {
+        if (loc != null) {
             location = loc;
-        } else if(sender instanceof Player) {
+        } else if (sender instanceof Player) {
             location = ((Player) sender).getLocation();
         } else {
             throw new InvalidCommandArgument("Console must provide world and coordinates", true);
@@ -173,11 +119,11 @@ public class CommandWanderingTrades extends BaseCommand {
                 PersistentDataContainer p = wt.getPersistentDataContainer();
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                if(t.isInvincible()) {
+                if (t.isInvincible()) {
                     wt.setInvulnerable(true);
                     wt.setRemoveWhenFarAway(false);
                     wt.setPersistent(true);
-                    if(t.getCustomName() != null) {
+                    if (t.getCustomName() != null) {
                         wt.setCustomName(TextUtil.colorize(t.getCustomName()));
                         wt.setCustomNameVisible(true);
                     }
@@ -207,11 +153,11 @@ public class CommandWanderingTrades extends BaseCommand {
                 PersistentDataContainer p = v.getPersistentDataContainer();
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                if(t.isInvincible()) {
+                if (t.isInvincible()) {
                     v.setInvulnerable(true);
                     v.setRemoveWhenFarAway(false);
                     v.setPersistent(true);
-                    if(t.getCustomName() != null && !t.getCustomName().equals("NONE")) {
+                    if (t.getCustomName() != null && !t.getCustomName().equals("NONE")) {
                         v.setCustomName(TextUtil.colorize(t.getCustomName()));
                         v.setCustomNameVisible(true);
                     }
@@ -225,6 +171,62 @@ public class CommandWanderingTrades extends BaseCommand {
         } catch (NullPointerException e) {
             Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
             onList(sender);
+        }
+    }
+
+    @Subcommand("summon|s")
+    @CommandPermission("wanderingtrades.summon")
+    public class SummonTrader extends BaseCommand {
+        @Default
+        @Description("Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.")
+        @CommandCompletion("@wtConfigs @wtWorlds")
+        @Syntax("<tradeConfig> [world:x,y,z]")
+        public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
+            Location loc = resolveLocation(sender, location);
+            summonTrader(sender, tradeConfig, loc, false);
+        }
+
+        @Subcommand("noai|n")
+        @Description("Same as /wt summon but with AI disabled")
+        public class NoAI extends BaseCommand {
+            @Default
+            @CommandCompletion("@wtConfigs @angles @wtWorlds")
+            @Syntax("<tradeConfig> [rotation] [world:x,y,z]")
+            public void onSummonNoAI(CommandSender sender, String tradeConfig, @Optional Float rotation, @Optional Location location) {
+                Location loc = resolveLocation(sender, location);
+                if (rotation != null) {
+                    loc.setYaw(rotation);
+                }
+                summonTrader(sender, tradeConfig, loc, true);
+            }
+        }
+    }
+
+    @Subcommand("summonvillager|sv")
+    @CommandPermission("wanderingtrades.summonvillager")
+    public class SummonVillager extends BaseCommand {
+        @Default
+        @Description("Summons a Villager with the specified config. Ignores whether the config is disabled.")
+        @CommandCompletion("@wtConfigs * * @wtWorlds")
+        @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
+        public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
+            Location loc = resolveLocation(sender, location);
+            summonVillager(sender, tradeConfig, loc, type, profession, false);
+        }
+
+        @Subcommand("noai|n")
+        @Description("Same as /wt summonvillager but with AI disabled")
+        public class NoAI extends BaseCommand {
+            @Default
+            @CommandCompletion("@wtConfigs * * @angles @wtWorlds")
+            @Syntax("<tradeConfig> <profession> <type> [rotation] [world:x,y,z]")
+            public void onSummonNoAI(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Float rotation, @Optional Location location) {
+                Location loc = resolveLocation(sender, location);
+                if (rotation != null) {
+                    loc.setYaw(rotation);
+                }
+                summonVillager(sender, tradeConfig, loc, type, profession, true);
+            }
         }
     }
 }
