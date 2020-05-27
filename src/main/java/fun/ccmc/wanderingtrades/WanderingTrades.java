@@ -6,24 +6,26 @@ import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.compat.McRPG;
 import fun.ccmc.wanderingtrades.compat.WorldGuardCompat;
 import fun.ccmc.wanderingtrades.config.Config;
-import fun.ccmc.wanderingtrades.listener.EntityDamageEventListener;
-import fun.ccmc.wanderingtrades.listener.PlayerInteractEntityEventListener;
-import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
+import fun.ccmc.wanderingtrades.util.Listeners;
 import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
 import lombok.Getter;
-import lombok.Setter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class WanderingTrades extends JavaPlugin {
     @Getter private static WanderingTrades instance;
+
     @Getter private Config cfg;
     @Getter private Log log;
-    @Getter private PaperCommandManager commandManager;
-    @Getter @Setter private TabCompletions tabCompletions;
+    @Getter private Listeners listeners;
+    @Getter private TabCompletions tabCompletions;
+
     @Getter private McRPG McRPG = null;
     @Getter private WorldGuardCompat worldGuard = null;
+
+    @Getter private PaperCommandManager commandManager;
+
     @Getter private boolean paper;
 
     @Override
@@ -44,6 +46,8 @@ public final class WanderingTrades extends JavaPlugin {
         }
 
         cfg = new Config(this);
+        tabCompletions = new TabCompletions(this);
+        tabCompletions.register();
 
         paper = false;
         try {
@@ -55,15 +59,8 @@ public final class WanderingTrades extends JavaPlugin {
             getLog().info("Got Paper!");
         }
 
-
-        if(cfg.isPluginEnabled()) {
-            getServer().getPluginManager().registerEvents(new VillagerAcquireTradeEventListener(this), this);
-            getServer().getPluginManager().registerEvents(new EntityDamageEventListener(this), this);
-        }
-
-        if(cfg.isRefreshCommandTraders()) {
-            getServer().getPluginManager().registerEvents(new PlayerInteractEntityEventListener(this), this);
-        }
+        listeners = new Listeners(this);
+        listeners.register();
 
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
