@@ -15,6 +15,12 @@ randomized: true
 # trades to add
 randomAmount: 2
 
+# if true, a trader spawned with this config by command
+# will not take damage, except from players with the
+# wanderingtrades.damage permission
+# and will also not despawn
+invincible: false
+
 # you may define as many trades as you want
 # in this section. this example shows all of
 # the configuration features
