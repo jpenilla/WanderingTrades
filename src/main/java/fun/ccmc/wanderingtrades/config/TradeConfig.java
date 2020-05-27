@@ -26,6 +26,7 @@ public class TradeConfig {
     private final int randomAmount;
     private final List<MerchantRecipe> trades;
     @Getter private double chance;
+    @Getter private boolean invincible;
     private final FileConfiguration file;
 
     public TradeConfig(WanderingTrades instance, FileConfiguration config) {
@@ -35,6 +36,7 @@ public class TradeConfig {
         randomAmount = config.getInt("randomAmount");
         enabled = config.getBoolean("enabled");
         chance = config.getDouble("chance");
+        invincible = config.getBoolean("invincible", false);
         file = config;
     }
 
