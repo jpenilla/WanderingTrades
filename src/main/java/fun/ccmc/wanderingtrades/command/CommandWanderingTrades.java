@@ -76,7 +76,7 @@ public class CommandWanderingTrades extends BaseCommand {
         @Description("Same as /wt summon but with AI disabled")
         public class NoAI extends BaseCommand {
             @Default
-            @CommandCompletion("@wtConfigs @range:360 @wtWorlds")
+            @CommandCompletion("@wtConfigs @angles @wtWorlds")
             @Syntax("<tradeConfig> [rotation] [world:x,y,z]")
             public void onSummonNoAI(CommandSender sender, String tradeConfig, @Optional Float rotation, @Optional Location location) {
                 Location loc = resolveLocation(sender, location);
@@ -104,7 +104,7 @@ public class CommandWanderingTrades extends BaseCommand {
         @Description("Same as /wt summonvillager but with AI disabled")
         public class NoAI extends BaseCommand {
             @Default
-            @CommandCompletion("@wtConfigs * * @range:360 @wtWorlds")
+            @CommandCompletion("@wtConfigs * * @angles @wtWorlds")
             @Syntax("<tradeConfig> <profession> <type> [rotation] [world:x,y,z]")
             public void onSummonNoAI(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Float rotation, @Optional Location location) {
                 Location loc = resolveLocation(sender, location);
@@ -170,6 +170,14 @@ public class CommandWanderingTrades extends BaseCommand {
                 wt.setAI(!disableAI);
 
                 PersistentDataContainer p = wt.getPersistentDataContainer();
+
+                TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+                if(t.isInvincible()) {
+                    wt.setInvulnerable(true);
+                    NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
+                    p.set(k, PersistentDataType.STRING, "true");
+                }
+
                 NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
                 p.set(key, PersistentDataType.STRING, tradeConfig);
             });
@@ -190,6 +198,14 @@ public class CommandWanderingTrades extends BaseCommand {
                 v.setAI(!disableAI);
 
                 PersistentDataContainer p = v.getPersistentDataContainer();
+
+                TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+                if(t.isInvincible()) {
+                    v.setInvulnerable(true);
+                    NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
+                    p.set(k, PersistentDataType.STRING, "true");
+                }
+
                 NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
                 p.set(key, PersistentDataType.STRING, tradeConfig);
             });

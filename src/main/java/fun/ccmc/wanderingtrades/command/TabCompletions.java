@@ -1,6 +1,7 @@
 package fun.ccmc.wanderingtrades.command;
 
 import co.aikar.commands.PaperCommandManager;
+import com.google.common.collect.ImmutableList;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -34,12 +35,17 @@ public class TabCompletions {
             return completions;
         });
 
+        mgr.getCommandCompletions().registerCompletion("angles", c -> ImmutableList.of(
+                "30", "45", "60", "90", "120", "135", "150", "180",
+                "210", "225", "240", "270", "300", "315", "330", "360"));
+
         mgr.getCommandCompletions().registerCompletion("wtWorlds", c -> {
             CommandSender s = c.getSender();
             ArrayList<String> completions = new ArrayList<>();
-            for(World w : Bukkit.getWorlds()) {
-                completions.add(w.getName() + ":x,y,z");
-            }
+            String[] worlds = Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
+            Arrays.stream(worlds).forEach(world -> {
+                completions.add(world + ":x,y,z");
+            });
             if(s instanceof Player) {
                 Location l = ((Player) s).getLocation();
                 double x = (double) Math.round(l.getX() * 100) / 100;
