@@ -119,14 +119,14 @@ public class CommandWanderingTrades extends BaseCommand {
                 PersistentDataContainer p = wt.getPersistentDataContainer();
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+                if (t.getCustomName() != null) {
+                    wt.setCustomName(TextUtil.colorize(t.getCustomName()));
+                    wt.setCustomNameVisible(true);
+                }
                 if (t.isInvincible()) {
                     wt.setInvulnerable(true);
                     wt.setRemoveWhenFarAway(false);
                     wt.setPersistent(true);
-                    if (t.getCustomName() != null) {
-                        wt.setCustomName(TextUtil.colorize(t.getCustomName()));
-                        wt.setCustomNameVisible(true);
-                    }
                     NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
                     p.set(k, PersistentDataType.STRING, "true");
                 }
@@ -153,14 +153,14 @@ public class CommandWanderingTrades extends BaseCommand {
                 PersistentDataContainer p = v.getPersistentDataContainer();
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+                if (t.getCustomName() != null && !t.getCustomName().equals("NONE")) {
+                    v.setCustomName(TextUtil.colorize(t.getCustomName()));
+                    v.setCustomNameVisible(true);
+                }
                 if (t.isInvincible()) {
                     v.setInvulnerable(true);
                     v.setRemoveWhenFarAway(false);
                     v.setPersistent(true);
-                    if (t.getCustomName() != null && !t.getCustomName().equals("NONE")) {
-                        v.setCustomName(TextUtil.colorize(t.getCustomName()));
-                        v.setCustomNameVisible(true);
-                    }
                     NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
                     p.set(k, PersistentDataType.STRING, "true");
                 }
