@@ -20,3 +20,10 @@ allowMultipleSets: true
 # Should the plugin remove the original trades from wandering
 #    traders
 removeOriginalTrades: false
+
+# should traders summoned using the /wt commands have their trades
+# automatically refreshed
+refreshCommandTraders: false
+
+# how many minutes between trade refreshes
+refreshCommandTradersMinutes: 5

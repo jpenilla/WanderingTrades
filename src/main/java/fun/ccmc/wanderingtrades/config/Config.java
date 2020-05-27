@@ -17,6 +17,8 @@ public class Config {
     @Getter private boolean pluginEnabled;
     @Getter private boolean removeOriginalTrades;
     @Getter private boolean allowMultipleSets;
+    @Getter private boolean refreshCommandTraders;
+    @Getter private int refreshCommandTradersMinutes;
     @Getter private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
     @Getter private PlayerHeadConfig playerHeadConfig;
 
@@ -34,6 +36,8 @@ public class Config {
         pluginEnabled = config.getBoolean("enabled");
         removeOriginalTrades = config.getBoolean("removeOriginalTrades");
         allowMultipleSets = config.getBoolean("allowMultipleSets");
+        refreshCommandTraders = config.getBoolean("refreshCommandTraders");
+        refreshCommandTradersMinutes = config.getInt("refreshCommandTradersMinutes");
 
         loadTradeConfigs();
         plugin.setTabCompletions(new TabCompletions(plugin));

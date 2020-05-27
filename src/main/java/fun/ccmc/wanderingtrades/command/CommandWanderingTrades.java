@@ -168,8 +168,9 @@ public class CommandWanderingTrades extends BaseCommand {
             loc.getWorld().spawn(loc, WanderingTrader.class, wt -> {
                 wt.setRecipes(recipes);
                 wt.setAI(!disableAI);
+
                 PersistentDataContainer p = wt.getPersistentDataContainer();
-                NamespacedKey key = new NamespacedKey(plugin, "wt");
+                NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
                 p.set(key, PersistentDataType.STRING, tradeConfig);
             });
         } catch (NullPointerException e) {
@@ -187,6 +188,10 @@ public class CommandWanderingTrades extends BaseCommand {
                 v.setVillagerLevel(5);
                 v.setRecipes(recipes);
                 v.setAI(!disableAI);
+
+                PersistentDataContainer p = v.getPersistentDataContainer();
+                NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
+                p.set(key, PersistentDataType.STRING, tradeConfig);
             });
         } catch (NullPointerException e) {
             Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
