@@ -3,6 +3,7 @@ debug: false
 
 # Enable adding trades to natural spawned Wandering Traders
 # Summoning Villagers or Traders through commands will bypass this
+#     requires server restart to turn on/off
 enabled: true
 
 # should traders be allowed to get trades from more than one
@@ -23,7 +24,16 @@ removeOriginalTrades: false
 
 # should traders summoned using the /wt commands have their trades
 # automatically refreshed
+#     requires server restart to turn on/off
 refreshCommandTraders: false
 
-# how many minutes between trade refreshes
+# how many minutes between trade refreshes, if enabled.
+#     tip: setting this to 0 gives a new trade every time you
+#          click the trader
 refreshCommandTradersMinutes: 5
+
+# false: below is a blacklist of WorldGuard regions for refreshing trades
+# true: below is a whitelist of WorldGuard regions for refreshing trades
+wgWhitelist: false
+wgRegionList:
+  - RegionExample

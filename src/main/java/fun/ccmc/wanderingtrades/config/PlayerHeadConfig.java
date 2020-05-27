@@ -1,6 +1,6 @@
 package fun.ccmc.wanderingtrades.config;
 
-import fun.ccmc.wanderingtrades.util.TextFormatting;
+import fun.ccmc.wanderingtrades.util.TextUtil;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +31,7 @@ public class PlayerHeadConfig {
         ingredient1 = TradeConfig.getStack(config, prefix + "ingredients.1");
         ingredient2 = TradeConfig.getStack(config, prefix + "ingredients.2");
         amountOfHeadsPerTrade = config.getInt(prefix + "head.amount");
-        name = TextFormatting.colorize(config.getString(prefix + "head.customname"));
-        lore = TextFormatting.colorize(config.getStringList(prefix + "head.lore"));
+        name = TextUtil.colorize(config.getString(prefix + "head.customname"));
+        lore = TextUtil.colorize(config.getStringList(prefix + "head.lore"));
     }
 }

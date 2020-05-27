@@ -4,6 +4,7 @@ import co.aikar.commands.PaperCommandManager;
 import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
 import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.compat.McRPG;
+import fun.ccmc.wanderingtrades.compat.WorldGuardCompat;
 import fun.ccmc.wanderingtrades.config.Config;
 import fun.ccmc.wanderingtrades.listener.PlayerInteractEntityEventListener;
 import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
@@ -21,6 +22,7 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private PaperCommandManager commandManager;
     @Getter @Setter private TabCompletions tabCompletions;
     @Getter private McRPG McRPG = null;
+    @Getter private WorldGuardCompat worldGuard = null;
 
     @Override
     public void onEnable() {
@@ -34,6 +36,9 @@ public final class WanderingTrades extends JavaPlugin {
 
         if(getServer().getPluginManager().isPluginEnabled("McRPG")) {
             McRPG = new McRPG(this);
+        }
+        if(getServer().getPluginManager().isPluginEnabled("WorldGuard") && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+            worldGuard = new WorldGuardCompat(this);
         }
 
         cfg = new Config(this);

@@ -2,7 +2,7 @@ package fun.ccmc.wanderingtrades.config;
 
 import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import fun.ccmc.wanderingtrades.util.TextFormatting;
+import fun.ccmc.wanderingtrades.util.TextUtil;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -157,11 +157,11 @@ public class TradeConfig {
 
                     String cname = config.getString(key + ".customname");
                     if(cname != null && !cname.equals("NONE")) {
-                        iMeta.setDisplayName(TextFormatting.colorize(cname));
+                        iMeta.setDisplayName(TextUtil.colorize(cname));
                     }
 
                     if(config.getStringList(key + ".lore").size() != 0) {
-                        iMeta.setLore(TextFormatting.colorize(config.getStringList(key + ".lore")));
+                        iMeta.setLore(TextUtil.colorize(config.getStringList(key + ".lore")));
                     }
 
                     config.getStringList(key + ".enchantments").forEach(s -> {

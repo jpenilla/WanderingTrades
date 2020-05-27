@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class Config {
     private final WanderingTrades plugin;
@@ -18,6 +19,8 @@ public class Config {
     @Getter private boolean removeOriginalTrades;
     @Getter private boolean allowMultipleSets;
     @Getter private boolean refreshCommandTraders;
+    @Getter private boolean wgWhitelist;
+    @Getter private List<String> wgRegionList;
     @Getter private int refreshCommandTradersMinutes;
     @Getter private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
     @Getter private PlayerHeadConfig playerHeadConfig;
@@ -38,6 +41,8 @@ public class Config {
         allowMultipleSets = config.getBoolean("allowMultipleSets");
         refreshCommandTraders = config.getBoolean("refreshCommandTraders");
         refreshCommandTradersMinutes = config.getInt("refreshCommandTradersMinutes");
+        wgRegionList = config.getStringList("wgRegionList");
+        wgWhitelist = config.getBoolean("wgWhitelist");
 
         loadTradeConfigs();
         plugin.setTabCompletions(new TabCompletions(plugin));
