@@ -51,15 +51,31 @@ public class TradeConfig {
             file.set(child + ".ingredients.1.material", "DIAMOND");
             file.set(child + ".ingredients.1.amount", 64);
             file.set(child + ".result.itemStack", is.serialize());
-            String path = plugin.getDataFolder() + "/trades/" + configName + ".yml";
-            try {
-                file.save(path);
-            } catch (IOException e) {
-                plugin.getLog().warn(e.getMessage());
-            }
+            save(configName);
             return true;
         } else {
             return false;
+        }
+    }
+
+    public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
+        String parent = "trades";
+        if(file.getConfigurationSection(parent).getKeys(false).contains(tradeName) && is != null) {
+            String child = parent + "." + tradeName ;
+            file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
+            save(configName);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void save(String configName) {
+        String path = plugin.getDataFolder() + "/trades/" + configName + ".yml";
+        try {
+            file.save(path);
+        } catch (IOException e) {
+            plugin.getLog().warn(e.getMessage());
         }
     }
 
