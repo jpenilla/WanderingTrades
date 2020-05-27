@@ -135,19 +135,19 @@ public class Chat {
     private final static int CENTER_PX = 154;
 
     public static void sendMsg(Player p, String msg) {
-        p.sendMessage(TextFormatting.colorize(msg));
+        p.sendMessage(TextUtil.colorize(msg));
     }
 
     public static void sendMsg(Player p, String[] msg) {
-        p.sendMessage(TextFormatting.colorize(msg));
+        p.sendMessage(TextUtil.colorize(msg));
     }
 
     public static void sendMsg(CommandSender s, String msg) {
-        s.sendMessage(TextFormatting.colorize(msg));
+        s.sendMessage(TextUtil.colorize(msg));
     }
 
     public static void sendMsg(CommandSender s, String[] msg) {
-        s.sendMessage(TextFormatting.colorize(msg));
+        s.sendMessage(TextUtil.colorize(msg));
     }
 
     public static void sendCenteredMessage(Player player, String message){
@@ -190,7 +190,7 @@ public class Chat {
         if(sender instanceof Player) {
             sendCenteredMessage((Player) sender, message);
         } else {
-            sender.sendMessage(TextFormatting.colorize(message));
+            sender.sendMessage(TextUtil.colorize(message));
         }
     }
 
@@ -198,7 +198,7 @@ public class Chat {
         if(sender instanceof Player) {
             sendCenteredMessage((Player) sender, message);
         } else {
-            sender.sendMessage(TextFormatting.colorize(message));
+            sender.sendMessage(TextUtil.colorize(message));
         }
     }
 }

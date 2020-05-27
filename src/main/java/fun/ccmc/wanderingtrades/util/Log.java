@@ -10,20 +10,20 @@ public class Log {
     }
 
     public void info(String s) {
-        plugin.getLogger().info(TextFormatting.colorize(s));
+        plugin.getLogger().info(TextUtil.colorize(s));
     }
 
     public void warn(String s) {
-        plugin.getLogger().warning(TextFormatting.colorize(s));
+        plugin.getLogger().warning(TextUtil.colorize(s));
     }
 
     public void err(String s) {
-        plugin.getLogger().severe(TextFormatting.colorize(s));
+        plugin.getLogger().severe(TextUtil.colorize(s));
     }
 
     public void debug(String s) {
         if(plugin.getCfg().isDebug()) {
-            plugin.getLogger().info(TextFormatting.colorize("&e[DEBUG] &r" + s));
+            plugin.getLogger().info(TextUtil.colorize("&e[DEBUG] &r" + s));
         }
     }
 }

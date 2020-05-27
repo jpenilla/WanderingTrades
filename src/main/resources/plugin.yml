@@ -3,4 +3,4 @@ version: ${project.version}
 main: fun.ccmc.wanderingtrades.WanderingTrades
 api-version: 1.15
 description: Customizable Trades for Wandering Traders. Inspired by Vanilla Tweaks
-softdepend: [McRPG]
+softdepend: [McRPG, WorldEdit, WorldGuard]

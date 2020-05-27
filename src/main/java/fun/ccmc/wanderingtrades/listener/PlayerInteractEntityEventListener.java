@@ -21,15 +21,24 @@ public class PlayerInteractEntityEventListener implements Listener {
     public void onClick(PlayerInteractEntityEvent e) {
         EntityType type = e.getRightClicked().getType();
         if(type == EntityType.WANDERING_TRADER || type == EntityType.VILLAGER) {
-            AbstractVillager entity = (AbstractVillager) e.getRightClicked();
-            if(entity.getTicksLived() / 20L / 60L >= plugin.getCfg().getRefreshCommandTradersMinutes()) {
-                NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
-                String s = entity.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-                if(s != null) {
-                    TradeConfig tc = plugin.getCfg().getTradeConfigs().get(s);
-                    entity.setRecipes(tc.getTrades(true));
-                    entity.setTicksLived(1);
+            if(plugin.getWorldGuard() != null) {
+                if(plugin.getWorldGuard().passesWhiteBlackList(e.getRightClicked().getLocation())) {
+                    updateTrades((AbstractVillager) e.getRightClicked());
                 }
+            } else {
+                updateTrades((AbstractVillager) e.getRightClicked());
+            }
+        }
+    }
+
+    private void updateTrades(AbstractVillager entity) {
+        if(entity.getTicksLived() / 20L / 60L >= plugin.getCfg().getRefreshCommandTradersMinutes()) {
+            NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
+            String s = entity.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+            if(s != null) {
+                TradeConfig tc = plugin.getCfg().getTradeConfigs().get(s);
+                entity.setRecipes(tc.getTrades(true));
+                entity.setTicksLived(1);
             }
         }
     }

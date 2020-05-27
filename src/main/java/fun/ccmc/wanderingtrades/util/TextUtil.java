@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextFormatting {
+public class TextUtil {
     public static String colorize(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
@@ -25,5 +25,9 @@ public class TextFormatting {
             colorizedArray.add(colorize(s));
         });
         return colorizedArray;
+    }
+
+    public static boolean containsCaseInsensitive(String s, List<String> l){
+        return l.stream().anyMatch(x -> x.equalsIgnoreCase(s));
     }
 }
