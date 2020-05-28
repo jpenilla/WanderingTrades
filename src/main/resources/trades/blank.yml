@@ -1,0 +1,45 @@
+# WanderingTrades Example TradeConfig ${project.version}
+
+# Enable this tradeset config
+enabled: true
+
+# the chance that a wandering trader will get the trades
+# from this config [0.01 - 1] ie 75% = 0.75
+chance: 0.75
+
+# true: randomly select from these trades
+# false: add all off these trades
+randomized: true
+
+# if the above is true, how many random
+# trades to add
+randomAmount: 2
+
+# if true, a trader spawned with this config by command
+# will not take damage, except from players with the
+# wanderingtrades.damage permission
+# and will also not despawn
+invincible: false
+
+# if set, a trader spawned with this config by command
+# will display this custom name tag above their head
+#
+# set to 'NONE' to disable
+customName: '&a&lExample&b!'
+
+# you may define as many trades as you want
+# in this section. this example shows all of
+# the configuration features
+trades:
+  myfirsttrade:
+    maxUses: 1
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: DIRT
+        amount: 1
+    result:
+      customname: NONE
+      material: DIRT
+      amount: 1

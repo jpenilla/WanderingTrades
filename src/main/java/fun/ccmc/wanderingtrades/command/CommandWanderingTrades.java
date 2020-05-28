@@ -74,13 +74,12 @@ public class CommandWanderingTrades extends BaseCommand {
         Chat.sendMsg(sender, string);
     }
 
-    /*@Subcommand("gui|g")
+    @Subcommand("gui|g")
     @CommandPermission("wanderingtrades.gui")
     @Description("Lists the loaded trade configs.")
     public void onGui(Player p) {
-        ConfigListGui g = new ConfigListGui();
-        g.openGui(p);
-    }*/
+        plugin.getGuiMgr().openConfigListGui(p);
+    }
 
     private Location resolveLocation(CommandSender sender, Location loc) {
         Location location;

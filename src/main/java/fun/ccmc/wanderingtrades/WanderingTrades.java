@@ -6,6 +6,7 @@ import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.compat.McRPG;
 import fun.ccmc.wanderingtrades.compat.WorldGuardCompat;
 import fun.ccmc.wanderingtrades.config.Config;
+import fun.ccmc.wanderingtrades.gui.GuiManager;
 import fun.ccmc.wanderingtrades.util.Listeners;
 import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
@@ -20,6 +21,7 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private Log log;
     @Getter private Listeners listeners;
     @Getter private TabCompletions tabCompletions;
+    @Getter private GuiManager guiMgr;
 
     @Getter private McRPG McRPG = null;
     @Getter private WorldGuardCompat worldGuard = null;
@@ -62,6 +64,8 @@ public final class WanderingTrades extends JavaPlugin {
         listeners = new Listeners(this);
         listeners.register();
 
+        guiMgr = new GuiManager();
+
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
 
@@ -75,18 +79,16 @@ public final class WanderingTrades extends JavaPlugin {
                 log.info("&bVersion " + version + " is available at &b&ohttps://www.spigotmc.org/resources/wanderingtrades.79068/");
             }
         });
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            new UpdateChecker(this, 79068).getVersion(version -> {
-                if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                    if (this.getDescription().getVersion().contains("SNAPSHOT")) {
-                        log.info("&e[!] &6You are running a development build of " + this.getName() + " &e[!]");
-                    } else {
-                        log.info("&e[!] &6You are running an outdated version of " + this.getName() + " (" + this.getDescription().getVersion() + ") &e[!]");
-                        log.info("&bVersion " + version + " is available at &b&ohttps://www.spigotmc.org/resources/wanderingtrades.79068/");
-                    }
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->new UpdateChecker(this, 79068).getVersion(version -> {
+            if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                if (this.getDescription().getVersion().contains("SNAPSHOT")) {
+                    log.info("&e[!] &6You are running a development build of " + this.getName() + " &e[!]");
+                } else {
+                    log.info("&e[!] &6You are running an outdated version of " + this.getName() + " (" + this.getDescription().getVersion() + ") &e[!]");
+                    log.info("&bVersion " + version + " is available at &b&ohttps://www.spigotmc.org/resources/wanderingtrades.79068/");
                 }
-            });
-        }, 20L * 60L * 30L, 20L * 60L * 60L);
+            }
+        }), 20L * 60L * 30L, 20L * 60L * 60L);
 
         log.info("&d[ON]");
     }
