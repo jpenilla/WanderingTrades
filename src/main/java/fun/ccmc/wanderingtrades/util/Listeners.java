@@ -1,9 +1,9 @@
 package fun.ccmc.wanderingtrades.util;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import fun.ccmc.wanderingtrades.listener.EntityDamageEventListener;
-import fun.ccmc.wanderingtrades.listener.PlayerInteractEntityEventListener;
-import fun.ccmc.wanderingtrades.listener.VillagerAcquireTradeEventListener;
+import fun.ccmc.wanderingtrades.listener.AcquireTradeListener;
+import fun.ccmc.wanderingtrades.listener.ProtectTradersListener;
+import fun.ccmc.wanderingtrades.listener.RefreshTradesListener;
 import org.bukkit.event.HandlerList;
 
 public class Listeners {
@@ -15,12 +15,12 @@ public class Listeners {
 
     public void register() {
         if (plugin.getCfg().isPluginEnabled()) {
-            plugin.getServer().getPluginManager().registerEvents(new VillagerAcquireTradeEventListener(plugin), plugin);
-            plugin.getServer().getPluginManager().registerEvents(new EntityDamageEventListener(plugin), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new AcquireTradeListener(plugin), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new ProtectTradersListener(plugin), plugin);
         }
 
         if (plugin.getCfg().isRefreshCommandTraders()) {
-            plugin.getServer().getPluginManager().registerEvents(new PlayerInteractEntityEventListener(plugin), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new RefreshTradesListener(plugin), plugin);
         }
     }
 

@@ -9,10 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.persistence.PersistentDataType;
 
-public class EntityDamageEventListener implements Listener {
+public class ProtectTradersListener implements Listener {
     private WanderingTrades plugin;
 
-    public EntityDamageEventListener(WanderingTrades instance) {
+    public ProtectTradersListener(WanderingTrades instance) {
         plugin = instance;
     }
 
