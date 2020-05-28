@@ -24,15 +24,15 @@ public class TradeConfig {
     private final boolean randomized;
     private final boolean enabled;
     private final int randomAmount;
-    private final List<MerchantRecipe> trades;
+    private final List<MerchantRecipe> allTrades;
     @Getter private double chance;
     @Getter private boolean invincible;
     @Getter private String customName;
-    private final FileConfiguration file;
+    @Getter private final FileConfiguration file;
 
     public TradeConfig(WanderingTrades instance, FileConfiguration config) {
         plugin = instance;
-        trades = readTrades(config);
+        allTrades = readTrades(config);
         randomized = config.getBoolean("randomized");
         randomAmount = config.getInt("randomAmount");
         enabled = config.getBoolean("enabled");
@@ -124,9 +124,9 @@ public class TradeConfig {
         ArrayList<MerchantRecipe> h = new ArrayList<>();
         if(enabled || bypassDisabled) {
             if(randomized) {
-                h.addAll(pickTrades(trades, randomAmount));
+                h.addAll(pickTrades(allTrades, randomAmount));
             } else {
-                h.addAll(trades);
+                h.addAll(allTrades);
             }
         }
         if(plugin.getMcRPG() != null) {

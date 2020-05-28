@@ -17,9 +17,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class VillagerAcquireTradeEventListener implements Listener {
+public class AcquireTradeListener implements Listener {
     WanderingTrades plugin;
-    public VillagerAcquireTradeEventListener(WanderingTrades p) {
+    public AcquireTradeListener(WanderingTrades p) {
         plugin = p;
     }
 

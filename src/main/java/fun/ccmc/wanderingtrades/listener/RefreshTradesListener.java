@@ -10,10 +10,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.persistence.PersistentDataType;
 
-public class PlayerInteractEntityEventListener implements Listener {
+public class RefreshTradesListener implements Listener {
     private final WanderingTrades plugin;
 
-    public PlayerInteractEntityEventListener(WanderingTrades instance) {
+    public RefreshTradesListener(WanderingTrades instance) {
         plugin = instance;
     }
 

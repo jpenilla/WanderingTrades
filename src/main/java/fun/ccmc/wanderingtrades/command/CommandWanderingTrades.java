@@ -74,63 +74,13 @@ public class CommandWanderingTrades extends BaseCommand {
         Chat.sendMsg(sender, string);
     }
 
-    @Subcommand("addhand|ah")
-    @CommandPermission("wanderingtrades.addhand")
-    public class AddHand extends BaseCommand {
-        @Default
-        @Description("Creates a template trade in the specified config with your held item as the result")
-        @CommandCompletion("@wtConfigs tradeName @range:20 @boolean")
-        @Syntax("<tradeConfig> <tradeName> <maxUses> <experienceReward>")
-        public void onAddHand(Player p, String tradeConfig, String tradeName, int maxUses, boolean experienceReward) {
-            ItemStack hand = p.getInventory().getItemInMainHand();
-            if (!hand.getType().equals(Material.AIR)) {
-                try {
-                    TradeConfig tc = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                    if (!tc.writeTrade(tradeConfig, hand, tradeName, maxUses, experienceReward)) {
-                        Chat.sendMsg(p, "&4There is already a trade with that name");
-                    } else {
-                        Chat.sendCenteredMessage(p, "&a&oSuccessfully added template trade");
-                        onReload(p);
-                    }
-                } catch (NullPointerException e) {
-                    Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
-                    onList(p);
-                }
-            } else {
-                Chat.sendCenteredMessage(p, "&You cannot use air");
-            }
-        }
-
-        @Subcommand("ingredient|i")
-        @Description("Sets the specified trade ingredient to your held item")
-        public class AddIngredient extends BaseCommand {
-            @Default
-            @CommandCompletion("@wtConfigs tradeName @range:1-2")
-            @Syntax("<tradeConfig> <tradeName> <ingredientNumber>")
-            public void onAddIngredient(Player p, String tradeConfig, String tradeName, int ingredientNumber) {
-                ItemStack ingred;
-                try {
-                    ItemStack hand = p.getInventory().getItemInMainHand();;
-                    if (!hand.getType().equals(Material.AIR)) {
-                        ingred = p.getInventory().getItemInMainHand();
-                    } else {
-                        ingred = null;
-                    }
-                    TradeConfig tc = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                    if (!tc.writeIngredient(tradeConfig, tradeName, ingredientNumber, ingred)) {
-                        Chat.sendCenteredMessage(p, "&4No trade exists with that name/you cannot use air");
-                    } else {
-                        Chat.sendCenteredMessage(p, "&a&oSuccessfully set ingredient");
-                        onReload(p);
-                    }
-                } catch (NullPointerException e) {
-                    Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
-                    onList(p);
-                }
-            }
-        }
-    }
-
+    /*@Subcommand("gui|g")
+    @CommandPermission("wanderingtrades.gui")
+    @Description("Lists the loaded trade configs.")
+    public void onGui(Player p) {
+        ConfigListGui g = new ConfigListGui();
+        g.openGui(p);
+    }*/
 
     private Location resolveLocation(CommandSender sender, Location loc) {
         Location location;
@@ -206,6 +156,63 @@ public class CommandWanderingTrades extends BaseCommand {
         } catch (NullPointerException e) {
             Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
             onList(sender);
+        }
+    }
+
+    @Subcommand("addhand|ah")
+    @CommandPermission("wanderingtrades.addhand")
+    public class AddHand extends BaseCommand {
+        @Default
+        @Description("Creates a template trade in the specified config with your held item as the result")
+        @CommandCompletion("@wtConfigs tradeName @range:20 @boolean")
+        @Syntax("<tradeConfig> <tradeName> <maxUses> <experienceReward>")
+        public void onAddHand(Player p, String tradeConfig, String tradeName, int maxUses, boolean experienceReward) {
+            ItemStack hand = p.getInventory().getItemInMainHand();
+            if (!hand.getType().equals(Material.AIR)) {
+                try {
+                    TradeConfig tc = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+                    if (!tc.writeTrade(tradeConfig, hand, tradeName, maxUses, experienceReward)) {
+                        Chat.sendMsg(p, "&4There is already a trade with that name");
+                    } else {
+                        Chat.sendCenteredMessage(p, "&a&oSuccessfully added template trade");
+                        onReload(p);
+                    }
+                } catch (NullPointerException e) {
+                    Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
+                    onList(p);
+                }
+            } else {
+                Chat.sendCenteredMessage(p, "&You cannot use air");
+            }
+        }
+
+        @Subcommand("ingredient|i")
+        @Description("Sets the specified trade ingredient to your held item")
+        public class AddIngredient extends BaseCommand {
+            @Default
+            @CommandCompletion("@wtConfigs tradeName @range:1-2")
+            @Syntax("<tradeConfig> <tradeName> <ingredientNumber>")
+            public void onAddIngredient(Player p, String tradeConfig, String tradeName, int ingredientNumber) {
+                ItemStack ingred;
+                try {
+                    ItemStack hand = p.getInventory().getItemInMainHand();
+                    if (!hand.getType().equals(Material.AIR)) {
+                        ingred = p.getInventory().getItemInMainHand();
+                    } else {
+                        ingred = null;
+                    }
+                    TradeConfig tc = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+                    if (!tc.writeIngredient(tradeConfig, tradeName, ingredientNumber, ingred)) {
+                        Chat.sendCenteredMessage(p, "&4No trade exists with that name/you cannot use air");
+                    } else {
+                        Chat.sendCenteredMessage(p, "&a&oSuccessfully set ingredient");
+                        onReload(p);
+                    }
+                } catch (NullPointerException e) {
+                    Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
+                    onList(p);
+                }
+            }
         }
     }
 
