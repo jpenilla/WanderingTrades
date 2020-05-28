@@ -21,10 +21,10 @@ import java.util.List;
 
 public class TradeConfig {
     private final WanderingTrades plugin;
-    private final boolean randomized;
-    private final boolean enabled;
-    private final int randomAmount;
-    private final List<MerchantRecipe> allTrades;
+    @Getter private boolean randomized;
+    @Getter private boolean enabled;
+    @Getter private int randomAmount;
+    private List<MerchantRecipe> allTrades;
     @Getter private double chance;
     @Getter private boolean invincible;
     @Getter private String customName;
@@ -32,14 +32,8 @@ public class TradeConfig {
 
     public TradeConfig(WanderingTrades instance, FileConfiguration config) {
         plugin = instance;
-        allTrades = readTrades(config);
-        randomized = config.getBoolean("randomized");
-        randomAmount = config.getInt("randomAmount");
-        enabled = config.getBoolean("enabled");
-        chance = config.getDouble("chance");
-        invincible = config.getBoolean("invincible", false);
-        customName = config.getString("customName", null);
         file = config;
+        load();
     }
 
     public boolean writeTrade(String configName, ItemStack is, String name, int maxUses, boolean experienceReward) {
@@ -58,6 +52,36 @@ public class TradeConfig {
         }
     }
 
+    public void setEnabled(String configName, boolean b) {
+        file.set("enabled", b);
+        save(configName);
+    }
+
+    public void setRandomized(String configName, boolean b) {
+        file.set("randomized", b);
+        save(configName);
+    }
+
+    public void setInvincible(String configName, boolean b) {
+        file.set("invincible", b);
+        save(configName);
+    }
+
+    public void setRandomAmount(String configName, int i) {
+        file.set("randomAmount", i);
+        save(configName);
+    }
+
+    public void setChance(String configName, double d) {
+        file.set("chance", d);
+        save(configName);
+    }
+
+    public void setCustomName(String configName, String customName) {
+        file.set("customName", customName);
+        save(configName);
+    }
+
     public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
         String parent = "trades";
         if(file.getConfigurationSection(parent).getKeys(false).contains(tradeName) && is != null) {
@@ -68,6 +92,16 @@ public class TradeConfig {
         } else {
             return false;
         }
+    }
+
+    public void load() {
+        allTrades = readTrades(file);
+        randomized = file.getBoolean("randomized");
+        randomAmount = file.getInt("randomAmount");
+        enabled = file.getBoolean("enabled");
+        chance = file.getDouble("chance");
+        invincible = file.getBoolean("invincible", false);
+        customName = file.getString("customName", null);
     }
 
     private void save(String configName) {

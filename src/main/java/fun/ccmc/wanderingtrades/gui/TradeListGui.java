@@ -13,16 +13,19 @@ import java.util.Arrays;
 
 public class TradeListGui extends PaginatedGui {
     private final ArrayList<String> configNames = new ArrayList<>();
-    private final ItemStack backButton = GuiManager.buildSingleLore(Material.BARRIER, "&4Back", "&7&o  Click to go back");
+    private final ItemStack editButton = GuiManager.buildSingleLore(Material.CHEST, "&aEdit Config Settings", "&7&o  Click to edit settings for this config");
+    private final String tradeConfig;
 
     public TradeListGui(String tradeConfig) {
-        super("&a&l" + tradeConfig, 54, getTradeStacks(tradeConfig));
+        super("&e&lConfig&7: &f" + tradeConfig, 54, getTradeStacks(tradeConfig));
+        this.tradeConfig = tradeConfig;
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
 
     public Inventory getInventory() {
         Inventory i = super.getInventory();
         i.setItem(inventory.getSize() - 1, backButton);
+        i.setItem(inventory.getSize() - 2, editButton);
         return i;
     }
 
@@ -30,6 +33,10 @@ public class TradeListGui extends PaginatedGui {
         if (backButton.isSimilar(i)) {
             p.closeInventory();
             WanderingTrades.getInstance().getGuiMgr().openConfigListGui(p);
+        } else if (editButton.isSimilar(i)) {
+            p.closeInventory();
+            EditConfigGui e = new EditConfigGui(tradeConfig);
+            p.openInventory(e.getInventory());
         }
     }
 

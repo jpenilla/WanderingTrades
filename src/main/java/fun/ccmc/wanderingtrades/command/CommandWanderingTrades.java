@@ -174,7 +174,7 @@ public class CommandWanderingTrades extends BaseCommand {
                         Chat.sendMsg(p, "&4There is already a trade with that name");
                     } else {
                         Chat.sendCenteredMessage(p, "&a&oSuccessfully added template trade");
-                        onReload(p);
+                        tc.load();
                     }
                 } catch (NullPointerException e) {
                     Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
@@ -205,7 +205,7 @@ public class CommandWanderingTrades extends BaseCommand {
                         Chat.sendCenteredMessage(p, "&4No trade exists with that name/you cannot use air");
                     } else {
                         Chat.sendCenteredMessage(p, "&a&oSuccessfully set ingredient");
-                        onReload(p);
+                        tc.load();
                     }
                 } catch (NullPointerException e) {
                     Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");

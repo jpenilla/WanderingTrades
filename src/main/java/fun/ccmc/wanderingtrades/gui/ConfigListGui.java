@@ -19,7 +19,6 @@ import java.util.Arrays;
 public class ConfigListGui extends PaginatedGui {
     private final ItemStack newConfig = GuiManager.buildSingleLore(Material.WRITABLE_BOOK, "&aAdd config", "&7&o  Click to add a new config");
     private final ArrayList<String> configNames = new ArrayList<>();
-    private final ItemStack closeButton = GuiManager.buildSingleLore(Material.BARRIER, "&4Close", "&7&o  Click to close");
 
     public ConfigListGui() {
         super("&a&lTrade Configs", 54, getConfigStacks());
@@ -71,7 +70,6 @@ public class ConfigListGui extends PaginatedGui {
                     .onComplete((player, text) -> {
                         if (!TextUtil.containsCaseInsensitive(text, configNames)) {
                             if (!text.contains(" ")) {
-                                Chat.sendCenteredMessage(p, "&aCreating new config");
                                 try {
                                     FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + text + ".yml"));
                                     WanderingTrades.getInstance().getCfg().reload();
@@ -93,8 +91,13 @@ public class ConfigListGui extends PaginatedGui {
                     .title("Name the config")
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
-        } else if (Material.PAPER.equals(i.getType())) {
-            WanderingTrades.getInstance().getGuiMgr().openTradeListGui(p, i.getItemMeta().getDisplayName());
         }
+        if(i != null) {
+        //try {
+            if (TextUtil.containsCaseInsensitive(i.getItemMeta().getDisplayName(), configNames)) {
+                p.closeInventory();
+                WanderingTrades.getInstance().getGuiMgr().openTradeListGui(p, i.getItemMeta().getDisplayName());
+            }
+        } //catch (NullPointerException ignored) {}
     }
 }

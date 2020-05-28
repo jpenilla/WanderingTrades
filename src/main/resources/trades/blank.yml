@@ -5,15 +5,15 @@ enabled: true
 
 # the chance that a wandering trader will get the trades
 # from this config [0.01 - 1] ie 75% = 0.75
-chance: 0.75
+chance: 0.00
 
 # true: randomly select from these trades
 # false: add all off these trades
-randomized: true
+randomized: false
 
 # if the above is true, how many random
 # trades to add
-randomAmount: 2
+randomAmount: 1
 
 # if true, a trader spawned with this config by command
 # will not take damage, except from players with the
