@@ -103,7 +103,7 @@ public class CommandWanderingTrades extends BaseCommand {
                 PersistentDataContainer p = wt.getPersistentDataContainer();
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                if (t.getCustomName() != null) {
+                if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
                     wt.setCustomName(TextUtil.colorize(t.getCustomName()));
                     wt.setCustomNameVisible(true);
                 }
@@ -118,9 +118,13 @@ public class CommandWanderingTrades extends BaseCommand {
                 NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
                 p.set(key, PersistentDataType.STRING, tradeConfig);
             });
-        } catch (NullPointerException e) {
-            Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
-            onList(sender);
+        } catch (NullPointerException | IllegalStateException ex) {
+            if (ex instanceof NullPointerException) {
+                Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
+                onList(sender);
+            } else {
+                Chat.sendCenteredMessage(sender, "&4That config is malformed. Make sure recipes have at least one ingredient.");
+            }
         }
     }
 
@@ -137,7 +141,7 @@ public class CommandWanderingTrades extends BaseCommand {
                 PersistentDataContainer p = v.getPersistentDataContainer();
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                if (t.getCustomName() != null && !t.getCustomName().equals("NONE")) {
+                if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
                     v.setCustomName(TextUtil.colorize(t.getCustomName()));
                     v.setCustomNameVisible(true);
                 }
@@ -152,9 +156,13 @@ public class CommandWanderingTrades extends BaseCommand {
                 NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
                 p.set(key, PersistentDataType.STRING, tradeConfig);
             });
-        } catch (NullPointerException e) {
-            Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
-            onList(sender);
+        } catch (NullPointerException | IllegalStateException ex) {
+            if (ex instanceof NullPointerException) {
+                Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
+                onList(sender);
+            } else {
+                Chat.sendCenteredMessage(sender, "&4That config is malformed. Make sure recipes have at least one ingredient.");
+            }
         }
     }
 
@@ -174,7 +182,7 @@ public class CommandWanderingTrades extends BaseCommand {
                         Chat.sendMsg(p, "&4There is already a trade with that name");
                     } else {
                         Chat.sendCenteredMessage(p, "&a&oSuccessfully added template trade");
-                        tc.load();
+                        onReload(p);
                     }
                 } catch (NullPointerException e) {
                     Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");
@@ -202,10 +210,10 @@ public class CommandWanderingTrades extends BaseCommand {
                     }
                     TradeConfig tc = plugin.getCfg().getTradeConfigs().get(tradeConfig);
                     if (!tc.writeIngredient(tradeConfig, tradeName, ingredientNumber, ingred)) {
-                        Chat.sendCenteredMessage(p, "&4No trade exists with that name/you cannot use air");
+                        Chat.sendCenteredMessage(p, "&4No trade exists with that name/Must have at least one ingredient");
                     } else {
                         Chat.sendCenteredMessage(p, "&a&oSuccessfully set ingredient");
-                        tc.load();
+                        onReload(p);
                     }
                 } catch (NullPointerException e) {
                     Chat.sendCenteredMessage(p, "&4&oThere are no trade configs with that name loaded.");

@@ -10,17 +10,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GuiManager {
-    private ConfigListGui getConfigListGui() {
-        return new ConfigListGui();
-    }
 
     public void openConfigListGui(Player p) {
-        p.openInventory(getConfigListGui().getInventory());
+        ConfigListGui gui = new ConfigListGui();
+        p.openInventory(gui.getInventory());
     }
 
     public void openTradeListGui(Player p, String config) {
         TradeListGui tradeListGui = new TradeListGui(config);
         p.openInventory(tradeListGui.getInventory());
+    }
+
+    public void openConfigEditGui(Player p, String config) {
+        EditConfigGui gui = new EditConfigGui(config);
+        p.openInventory(gui.getInventory());
     }
 
     public static ItemStack build(Material m, String name, ArrayList<String> lore) {

@@ -1,7 +1,7 @@
 # WanderingTrades Example TradeConfig ${project.version}
 
 # Enable this tradeset config
-enabled: true
+enabled: false
 
 # the chance that a wandering trader will get the trades
 # from this config [0.01 - 1] ie 75% = 0.75

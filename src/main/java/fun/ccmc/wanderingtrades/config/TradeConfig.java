@@ -84,9 +84,17 @@ public class TradeConfig {
 
     public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
         String parent = "trades";
-        if(file.getConfigurationSection(parent).getKeys(false).contains(tradeName) && is != null) {
-            String child = parent + "." + tradeName ;
-            file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
+        if(file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
+            String child = parent + "." + tradeName;
+            if(is != null) {
+                file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
+            } else {
+                if(i == 2) {
+                    file.set(child + ".ingredients.2", null);
+                } else {
+                    return false;
+                }
+            }
             save(configName);
             return true;
         } else {
