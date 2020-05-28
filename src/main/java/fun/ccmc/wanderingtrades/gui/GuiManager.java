@@ -34,6 +34,14 @@ public class GuiManager {
         return is;
     }
 
+    public static ItemStack buildBlank(Material m) {
+        ItemStack is = new ItemStack(m);
+        ItemMeta itemMeta = is.getItemMeta();
+        itemMeta.setDisplayName("");
+        is.setItemMeta(itemMeta);
+        return is;
+    }
+
     public static ItemStack buildSingleLore(Material m, String name, String lore) {
         ArrayList<String> lores = new ArrayList<>(Collections.singletonList(lore));
         return build(m, name, lores);
