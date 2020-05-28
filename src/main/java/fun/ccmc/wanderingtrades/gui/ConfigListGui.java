@@ -6,6 +6,7 @@ import fun.ccmc.wanderingtrades.util.Chat;
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -67,6 +68,11 @@ public class ConfigListGui extends PaginatedGui {
         } else if (newConfig.isSimilar(i)) {
             p.closeInventory();
             new AnvilGUI.Builder()
+                    .onClose(player -> {
+                        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> {
+                            WanderingTrades.getInstance().getGuiMgr().openConfigListGui(player);
+                        }, 1L);
+                    })
                     .onComplete((player, text) -> {
                         if (!TextUtil.containsCaseInsensitive(text, configNames)) {
                             if (!text.contains(" ")) {
@@ -87,7 +93,7 @@ public class ConfigListGui extends PaginatedGui {
                         }
                     })
                     .text("Type here")
-                    .item(new ItemStack(Material.WRITTEN_BOOK))
+                    .item(new ItemStack(Material.WRITABLE_BOOK))
                     .title("Name the config")
                     .plugin(WanderingTrades.getInstance())
                     .open(p);

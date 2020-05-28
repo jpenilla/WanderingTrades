@@ -4,6 +4,7 @@ import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -36,24 +37,24 @@ public class EditConfigGui extends GuiHolder {
     public Inventory getInventory() {
         inventory.clear();
 
-        inventory.setItem(inventory.getSize()-1, backButton);
+        inventory.setItem(inventory.getSize() - 1, backButton);
 
         TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
 
         ItemStack enabled;
-        if(t.isEnabled()) {
+        if (t.isEnabled()) {
             enabled = enabledEnabled;
         } else {
             enabled = enabledDisabled;
         }
         ItemStack randomized;
-        if(t.isRandomized()) {
+        if (t.isRandomized()) {
             randomized = randomizedEnabled;
         } else {
             randomized = randomizedDisabled;
         }
         ItemStack inv;
-        if(t.isInvincible()) {
+        if (t.isInvincible()) {
             inv = invEnabled;
         } else {
             inv = invDisabled;
@@ -86,8 +87,8 @@ public class EditConfigGui extends GuiHolder {
         customName.setItemMeta(customNameMeta);
         inventory.setItem(30, customName);
 
-        for(int i = 0; i < inventory.getSize(); i++) {
-            if(inventory.getItem(i) == null) {
+        for (int i = 0; i < inventory.getSize(); i++) {
+            if (inventory.getItem(i) == null) {
                 inventory.setItem(i, GuiManager.buildBlank(Material.GRAY_STAINED_GLASS_PANE));
             }
         }
@@ -108,42 +109,42 @@ public class EditConfigGui extends GuiHolder {
         }
         event.setCancelled(true);
 
-        if(backButton.isSimilar(item)) {
+        if (backButton.isSimilar(item)) {
             p.closeInventory();
             WanderingTrades.getInstance().getGuiMgr().openTradeListGui(p, tradeConfig);
         }
 
         TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
 
-        if(enabledEnabled.isSimilar(item)) {
+        if (enabledEnabled.isSimilar(item)) {
             t.setEnabled(tradeConfig, false);
         }
-        if(enabledDisabled.isSimilar(item)) {
+        if (enabledDisabled.isSimilar(item)) {
             t.setEnabled(tradeConfig, true);
         }
 
-        if(randomizedEnabled.isSimilar(item)) {
+        if (randomizedEnabled.isSimilar(item)) {
             t.setRandomized(tradeConfig, false);
         }
-        if(randomizedDisabled.isSimilar(item)) {
+        if (randomizedDisabled.isSimilar(item)) {
             t.setRandomized(tradeConfig, true);
         }
 
-        if(invEnabled.isSimilar(item)) {
+        if (invEnabled.isSimilar(item)) {
             t.setInvincible(tradeConfig, false);
         }
-        if(invDisabled.isSimilar(item)) {
+        if (invDisabled.isSimilar(item)) {
             t.setInvincible(tradeConfig, true);
         }
 
-        if(randAmount.isSimilar(item)) {
+        if (randAmount.isSimilar(item)) {
             p.closeInventory();
             new AnvilGUI.Builder()
-                    .onClose(player -> player.openInventory(getInventory()))
+                    .onClose(this::reOpen)
                     .onComplete((player, text) -> {
                         try {
                             int i = Integer.parseInt(text);
-                            if(i < 1) {
+                            if (i < 1) {
                                 return AnvilGUI.Response.text("Number must be > 0");
                             } else {
                                 t.setRandomAmount(tradeConfig, i);
@@ -155,20 +156,20 @@ public class EditConfigGui extends GuiHolder {
                         return AnvilGUI.Response.close();
                     })
                     .text(t.getRandomAmount() + "")
-                    .item(new ItemStack(Material.WRITTEN_BOOK))
+                    .item(new ItemStack(Material.WRITABLE_BOOK))
                     .title("Set Random Amount")
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
 
-        if(chance.isSimilar(item)) {
+        if (chance.isSimilar(item)) {
             p.closeInventory();
             new AnvilGUI.Builder()
-                    .onClose(player -> player.openInventory(getInventory()))
+                    .onClose(this::reOpen)
                     .onComplete((player, text) -> {
                         try {
                             double d = Double.parseDouble(text);
-                            if(d < 0 || d > 1) {
+                            if (d < 0 || d > 1) {
                                 return AnvilGUI.Response.text("Number must be 0.00-1.00");
                             } else {
                                 t.setChance(tradeConfig, d);
@@ -180,24 +181,24 @@ public class EditConfigGui extends GuiHolder {
                         return AnvilGUI.Response.close();
                     })
                     .text(t.getChance() + "")
-                    .item(new ItemStack(Material.WRITTEN_BOOK))
+                    .item(new ItemStack(Material.WRITABLE_BOOK))
                     .title("Set Chance 0.00-1.00")
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
 
-        if(customName.isSimilar(item)) {
+        if (customName.isSimilar(item)) {
             p.closeInventory();
             new AnvilGUI.Builder()
-                    .onClose(player -> player.openInventory(getInventory()))
+                    .onClose(this::reOpen)
                     .onComplete((player, text) -> {
                         t.setCustomName(tradeConfig, text);
                         t.load();
                         return AnvilGUI.Response.close();
                     })
                     .text(t.getCustomName())
-                    .item(new ItemStack(Material.WRITTEN_BOOK))
-                    .title("Set Custom Name")
+                    .item(new ItemStack(Material.WRITABLE_BOOK))
+                    .title("Enter a Name or 'NONE'")
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
@@ -205,5 +206,11 @@ public class EditConfigGui extends GuiHolder {
         t.load();
 
         getInventory();
+    }
+
+    private void reOpen(Player player) {
+        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> {
+            WanderingTrades.getInstance().getGuiMgr().openConfigEditGui(player, tradeConfig);
+        }, 1L);
     }
 }

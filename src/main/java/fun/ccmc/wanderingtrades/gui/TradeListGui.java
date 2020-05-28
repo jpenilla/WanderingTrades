@@ -35,8 +35,7 @@ public class TradeListGui extends PaginatedGui {
             WanderingTrades.getInstance().getGuiMgr().openConfigListGui(p);
         } else if (editButton.isSimilar(i)) {
             p.closeInventory();
-            EditConfigGui e = new EditConfigGui(tradeConfig);
-            p.openInventory(e.getInventory());
+            WanderingTrades.getInstance().getGuiMgr().openConfigEditGui(p, tradeConfig);
         }
     }
 
