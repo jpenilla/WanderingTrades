@@ -191,7 +191,7 @@ public class TradeConfig {
         if(is == null) {
             if(config.getString(key + ".material") != null) {
                 if(config.getString(key + ".material").contains("head-")) {
-                    is = SkullCreator.withBase64(new ItemStack(Material.PLAYER_HEAD, config.getInt(key + ".amount")), config.getString(key + ".material").replace("head-", ""));
+                    is = SkullCreator.itemFromBase64(config.getString(key + ".material").replace("head-", ""));
                 } else {
                     if(config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
                         is = new ItemStack(Material.CHIPPED_ANVIL);

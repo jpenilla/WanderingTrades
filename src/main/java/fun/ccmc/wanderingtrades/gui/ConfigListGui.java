@@ -3,6 +3,7 @@ package fun.ccmc.wanderingtrades.gui;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.util.Chat;
+import fun.ccmc.wanderingtrades.util.Gui;
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.apache.commons.io.FileUtils;
@@ -16,9 +17,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class ConfigListGui extends PaginatedGui {
-    private final ItemStack newConfig = GuiManager.buildSingleLore(Material.WRITABLE_BOOK, "&aAdd config", "&7&o  Click to add a new config");
+    private final ItemStack newConfig = Gui.buildLore(Material.WRITABLE_BOOK, "&aAdd config", "&7&o  Click to add a new config");
     private final ArrayList<String> configNames = new ArrayList<>();
 
     public ConfigListGui() {
@@ -49,7 +51,7 @@ public class ConfigListGui extends PaginatedGui {
             if (lores.length > 10) {
                 finalLores.add("  &7&o...and " + (lores.length - 10) + " more");
             }
-            items.add(GuiManager.build(Material.PAPER, "" + config, finalLores));
+            items.add(Gui.build(Material.PAPER, "" + config, finalLores));
             i++;
         }
         return items;
@@ -59,6 +61,11 @@ public class ConfigListGui extends PaginatedGui {
         Inventory i = super.getInventory();
         i.setItem(i.getSize() - 5, newConfig);
         i.setItem(inventory.getSize() - 1, closeButton);
+        IntStream.range(i.getSize()-9, i.getSize()-1).forEach(s -> {
+            if (inventory.getItem(s) == null) {
+                inventory.setItem(s, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+            }
+        });
         return i;
     }
 
@@ -68,11 +75,7 @@ public class ConfigListGui extends PaginatedGui {
         } else if (newConfig.isSimilar(i)) {
             p.closeInventory();
             new AnvilGUI.Builder()
-                    .onClose(player -> {
-                        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> {
-                            WanderingTrades.getInstance().getGuiMgr().openConfigListGui(player);
-                        }, 1L);
-                    })
+                    .onClose(player -> Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new ConfigListGui().open(player), 1L))
                     .onComplete((player, text) -> {
                         if (!TextUtil.containsCaseInsensitive(text, configNames)) {
                             if (!text.contains(" ")) {
@@ -102,7 +105,7 @@ public class ConfigListGui extends PaginatedGui {
         //try {
             if (TextUtil.containsCaseInsensitive(i.getItemMeta().getDisplayName(), configNames)) {
                 p.closeInventory();
-                WanderingTrades.getInstance().getGuiMgr().openTradeListGui(p, i.getItemMeta().getDisplayName());
+                new TradeListGui(i.getItemMeta().getDisplayName()).open(p);
             }
         } //catch (NullPointerException ignored) {}
     }

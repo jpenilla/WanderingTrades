@@ -26,5 +26,4 @@
 
 * Apache for Maven, IntelliJ for IDEA
 * Thank you to the Bukkit Spigot, and Paper communities for providing a better Minecraft server wrapper
-* Thanks to [SkullCreator](https://github.com/deanveloper/SkullCreator)
-* Thanks to [Annotation Command Framework](https://github.com/aikar/commands)
+* Thanks to [Deanveloper SkullCreator](https://github.com/deanveloper/SkullCreator), [Aikar Annotation Command Framework](https://github.com/aikar/commands), and [WesJD AnvilGUI](https://github.com/WesJD/AnvilGUI)
