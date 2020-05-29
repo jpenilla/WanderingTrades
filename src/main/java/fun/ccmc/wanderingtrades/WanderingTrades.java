@@ -6,7 +6,6 @@ import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.compat.McRPG;
 import fun.ccmc.wanderingtrades.compat.WorldGuardCompat;
 import fun.ccmc.wanderingtrades.config.Config;
-import fun.ccmc.wanderingtrades.gui.GuiManager;
 import fun.ccmc.wanderingtrades.util.Listeners;
 import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
@@ -21,7 +20,6 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private Log log;
     @Getter private Listeners listeners;
     @Getter private TabCompletions tabCompletions;
-    @Getter private GuiManager guiMgr;
 
     @Getter private McRPG McRPG = null;
     @Getter private WorldGuardCompat worldGuard = null;
@@ -63,8 +61,6 @@ public final class WanderingTrades extends JavaPlugin {
 
         listeners = new Listeners(this);
         listeners.register();
-
-        guiMgr = new GuiManager();
 
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);

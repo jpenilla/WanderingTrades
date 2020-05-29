@@ -2,6 +2,7 @@ package fun.ccmc.wanderingtrades.gui;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
+import fun.ccmc.wanderingtrades.util.Gui;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -10,10 +11,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class TradeListGui extends PaginatedGui {
     private final ArrayList<String> configNames = new ArrayList<>();
-    private final ItemStack editButton = GuiManager.buildSingleLore(Material.CHEST, "&aEdit Config Settings", "&7&o  Click to edit settings for this config");
+    private final ItemStack editButton = Gui.buildLore(Material.CHEST, "&aEdit Config Settings", "&7&o  Click to edit settings for this config");
+    private final ItemStack plus = Gui.buildHeadLore("New Trade", "  &7Click to create new trade", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19");
     private final String tradeConfig;
 
     public TradeListGui(String tradeConfig) {
@@ -26,16 +29,22 @@ public class TradeListGui extends PaginatedGui {
         Inventory i = super.getInventory();
         i.setItem(inventory.getSize() - 1, backButton);
         i.setItem(inventory.getSize() - 2, editButton);
+        i.setItem(inventory.getSize() - 5, plus);
+        IntStream.range(i.getSize() - 9, i.getSize() - 1).forEach(s -> {
+            if (inventory.getItem(s) == null) {
+                inventory.setItem(s, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+            }
+        });
         return i;
     }
 
     public void onClick(Player p, ItemStack i) {
         if (backButton.isSimilar(i)) {
             p.closeInventory();
-            WanderingTrades.getInstance().getGuiMgr().openConfigListGui(p);
+            new ConfigListGui().open(p);
         } else if (editButton.isSimilar(i)) {
             p.closeInventory();
-            WanderingTrades.getInstance().getGuiMgr().openConfigEditGui(p, tradeConfig);
+            new EditConfigGui(tradeConfig).open(p);
         }
     }
 

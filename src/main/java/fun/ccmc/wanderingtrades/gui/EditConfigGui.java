@@ -2,6 +2,7 @@ package fun.ccmc.wanderingtrades.gui;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
+import fun.ccmc.wanderingtrades.util.Gui;
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -16,15 +17,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class EditConfigGui extends GuiHolder {
-    private final ItemStack enabledEnabled = GuiManager.buildSingleLore(Material.LIME_STAINED_GLASS_PANE, "Enabled", "Click to toggle");
-    private final ItemStack enabledDisabled = GuiManager.buildSingleLore(Material.RED_STAINED_GLASS_PANE, "Disabled", "Click to toggle");
-    private final ItemStack randomizedEnabled = GuiManager.buildSingleLore(Material.LIME_STAINED_GLASS_PANE, "Randomized", "Click to toggle");
-    private final ItemStack randomizedDisabled = GuiManager.buildSingleLore(Material.RED_STAINED_GLASS_PANE, "Not Randomized", "Click to toggle");
-    private final ItemStack invEnabled = GuiManager.buildSingleLore(Material.LIME_STAINED_GLASS_PANE, "Invincible", "Click to toggle");
-    private final ItemStack invDisabled = GuiManager.buildSingleLore(Material.RED_STAINED_GLASS_PANE, "Not Invincible", "Click to toggle");
-    private final ItemStack randAmount = GuiManager.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Random Amount");
-    private final ItemStack chance = GuiManager.build(Material.PURPLE_STAINED_GLASS_PANE, "Chance");
-    private final ItemStack customName = GuiManager.build(Material.PINK_STAINED_GLASS_PANE, "Custom Name");
+    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Enabled", "Click to toggle");
+    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Disabled", "Click to toggle");
+    private final ItemStack randomizedEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Randomized", "Click to toggle");
+    private final ItemStack randomizedDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Not Randomized", "Click to toggle");
+    private final ItemStack invEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Invincible", "Click to toggle");
+    private final ItemStack invDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Not Invincible", "Click to toggle");
+    private final ItemStack randAmount = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Random Amount");
+    private final ItemStack chance = Gui.build(Material.PURPLE_STAINED_GLASS_PANE, "Chance");
+    private final ItemStack customName = Gui.build(Material.PINK_STAINED_GLASS_PANE, "Custom Name");
 
     private final String tradeConfig;
 
@@ -33,7 +34,6 @@ public class EditConfigGui extends GuiHolder {
         this.tradeConfig = tradeConfig;
     }
 
-    @Override
     public Inventory getInventory() {
         inventory.clear();
 
@@ -89,14 +89,13 @@ public class EditConfigGui extends GuiHolder {
 
         for (int i = 0; i < inventory.getSize(); i++) {
             if (inventory.getItem(i) == null) {
-                inventory.setItem(i, GuiManager.buildBlank(Material.GRAY_STAINED_GLASS_PANE));
+                inventory.setItem(i, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
             }
         }
 
         return inventory;
     }
 
-    @Override
     public void onInventoryClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
@@ -111,7 +110,7 @@ public class EditConfigGui extends GuiHolder {
 
         if (backButton.isSimilar(item)) {
             p.closeInventory();
-            WanderingTrades.getInstance().getGuiMgr().openTradeListGui(p, tradeConfig);
+            new TradeListGui(tradeConfig).open(p);
         }
 
         TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
@@ -209,8 +208,6 @@ public class EditConfigGui extends GuiHolder {
     }
 
     private void reOpen(Player player) {
-        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> {
-            WanderingTrades.getInstance().getGuiMgr().openConfigEditGui(player, tradeConfig);
-        }, 1L);
+        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new EditConfigGui(tradeConfig).open(player), 1L);
     }
 }

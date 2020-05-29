@@ -4,7 +4,6 @@ import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.util.WeightedRandom;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
@@ -44,8 +43,7 @@ public class AcquireTradeListener implements Listener {
                         selectedPlayers.add(offlinePlayers.get(i));
                     }
                     selectedPlayers.forEach(player -> {
-                        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-                        SkullCreator.withName(head, player.getName());
+                        ItemStack head = SkullCreator.itemFromUuid(player.getUniqueId());
                         ItemMeta meta = head.getItemMeta();
                         meta.setDisplayName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", player.getName()));
                         meta.setLore(plugin.getCfg().getPlayerHeadConfig().getLore());

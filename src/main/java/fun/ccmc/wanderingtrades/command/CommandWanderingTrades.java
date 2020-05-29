@@ -6,6 +6,7 @@ import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
+import fun.ccmc.wanderingtrades.gui.ConfigListGui;
 import fun.ccmc.wanderingtrades.util.Chat;
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import org.bukkit.Location;
@@ -78,7 +79,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandPermission("wanderingtrades.gui")
     @Description("Lists the loaded trade configs.")
     public void onGui(Player p) {
-        plugin.getGuiMgr().openConfigListGui(p);
+        new ConfigListGui().open(p);
     }
 
     private Location resolveLocation(CommandSender sender, Location loc) {
