@@ -200,7 +200,7 @@ public class TradeCreateGui extends GuiHolder {
                     ingred2 = i2;
                 }
                 t.writeTrade(tradeConfig, tradeName, maxUses, experienceReward, i1, ingred2, result);
-                WanderingTrades.getInstance().getCfg().read();
+                WanderingTrades.getInstance().getCfg().load();
                 p.closeInventory();
                 new TradeListGui(tradeConfig).open(p);
             }

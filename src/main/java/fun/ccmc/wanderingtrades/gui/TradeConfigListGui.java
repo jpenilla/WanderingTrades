@@ -81,7 +81,7 @@ public class TradeConfigListGui extends PaginatedGui {
                             if (!text.contains(" ")) {
                                 try {
                                     FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + text + ".yml"));
-                                    WanderingTrades.getInstance().getCfg().read();
+                                    WanderingTrades.getInstance().getCfg().load();
                                     Chat.sendCenteredMessage(p, "&aSuccessfully created new config and reloaded");
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
