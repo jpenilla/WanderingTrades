@@ -3,6 +3,7 @@ package fun.ccmc.wanderingtrades.config;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -12,13 +13,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+@FieldNameConstants
 public class Config {
     private final WanderingTrades plugin;
 
     @Getter @Setter
     private boolean debug;
     @Getter @Setter
-    private boolean pluginEnabled;
+    private boolean enabled;
     @Getter @Setter
     private boolean removeOriginalTrades;
     @Getter @Setter
@@ -45,14 +47,14 @@ public class Config {
     public void write() {
         FileConfiguration config = plugin.getConfig();
 
-        config.set("debug", debug);
-        config.set("enabled", pluginEnabled);
-        config.set("removeOriginalTrades", removeOriginalTrades);
-        config.set("allowMultipleSets", allowMultipleSets);
-        config.set("refreshCommandTraders", refreshCommandTraders);
-        config.set("refreshCommandTradersMinutes", refreshCommandTradersMinutes);
-        config.set("wgRegionList", wgRegionList);
-        config.set("wgWhitelist", wgWhitelist);
+        config.set(Fields.debug, debug);
+        config.set(Fields.enabled, enabled);
+        config.set(Fields.removeOriginalTrades, removeOriginalTrades);
+        config.set(Fields.allowMultipleSets, allowMultipleSets);
+        config.set(Fields.refreshCommandTraders, refreshCommandTraders);
+        config.set(Fields.refreshCommandTradersMinutes, refreshCommandTradersMinutes);
+        config.set(Fields.wgRegionList, wgRegionList);
+        config.set(Fields.wgWhitelist, wgWhitelist);
 
         String path = plugin.getDataFolder() + "/config.yml";
         try {
@@ -68,14 +70,14 @@ public class Config {
         plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
 
-        debug = config.getBoolean("debug");
-        pluginEnabled = config.getBoolean("enabled");
-        removeOriginalTrades = config.getBoolean("removeOriginalTrades");
-        allowMultipleSets = config.getBoolean("allowMultipleSets");
-        refreshCommandTraders = config.getBoolean("refreshCommandTraders");
-        refreshCommandTradersMinutes = config.getInt("refreshCommandTradersMinutes");
-        wgRegionList = config.getStringList("wgRegionList");
-        wgWhitelist = config.getBoolean("wgWhitelist");
+        debug = config.getBoolean(Fields.debug);
+        enabled = config.getBoolean(Fields.enabled);
+        removeOriginalTrades = config.getBoolean(Fields.removeOriginalTrades);
+        allowMultipleSets = config.getBoolean(Fields.allowMultipleSets);
+        refreshCommandTraders = config.getBoolean(Fields.refreshCommandTraders);
+        refreshCommandTradersMinutes = config.getInt(Fields.refreshCommandTradersMinutes);
+        wgRegionList = config.getStringList(Fields.wgRegionList);
+        wgWhitelist = config.getBoolean(Fields.wgWhitelist);
 
         loadTradeConfigs();
         loadPlayerHeadConfig();

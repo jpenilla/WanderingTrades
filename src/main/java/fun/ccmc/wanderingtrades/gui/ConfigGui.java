@@ -48,7 +48,7 @@ public class ConfigGui extends GuiHolder {
 
         Config c = WanderingTrades.getInstance().getCfg();
 
-        if (c.isPluginEnabled()) {
+        if (c.isEnabled()) {
             inventory.setItem(10, enabledEnabled);
         } else {
             inventory.setItem(10, enabledDisabled);
@@ -128,9 +128,9 @@ public class ConfigGui extends GuiHolder {
         Config c = WanderingTrades.getInstance().getCfg();
 
         if (enabledEnabled.isSimilar(item)) {
-            c.setPluginEnabled(false);
+            c.setEnabled(false);
         } else if (enabledDisabled.isSimilar(item)) {
-            c.setPluginEnabled(true);
+            c.setEnabled(true);
         }
 
         if (allowMultipleSets.isSimilar(item)) {

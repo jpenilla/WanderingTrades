@@ -17,7 +17,7 @@ public class Listeners {
     public void register() {
         plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
 
-        if (plugin.getCfg().isPluginEnabled()) {
+        if (plugin.getCfg().isEnabled()) {
             plugin.getServer().getPluginManager().registerEvents(new AcquireTradeListener(plugin), plugin);
             plugin.getServer().getPluginManager().registerEvents(new ProtectTradersListener(plugin), plugin);
         }
