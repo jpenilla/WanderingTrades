@@ -60,7 +60,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Description("Reloads all config files for WanderingTrades")
     public void onReload(CommandSender sender) {
         Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
-        plugin.getCfg().read();
+        plugin.getCfg().load();
         plugin.getListeners().reload();
         plugin.getTabCompletions().register();
         Chat.sendCenteredMessage(sender, "&aDone.");

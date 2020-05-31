@@ -194,7 +194,7 @@ public class ConfigGui extends GuiHolder {
                                 List<String> temp = c.getWgRegionList();
                                 temp.add(text);
                                 c.setWgRegionList(temp);
-                                c.write();
+                                c.save();
                             } else {
                                 return AnvilGUI.Response.text("No spaces");
                             }
@@ -208,7 +208,7 @@ public class ConfigGui extends GuiHolder {
             }
         }
 
-        c.write();
+        c.save();
 
         getInventory();
     }

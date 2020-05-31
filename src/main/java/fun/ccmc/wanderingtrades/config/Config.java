@@ -41,10 +41,27 @@ public class Config {
     public Config(WanderingTrades instance) {
         plugin = instance;
         plugin.saveDefaultConfig();
-        read();
+        load();
     }
 
-    public void write() {
+    public void load() {
+        plugin.reloadConfig();
+        FileConfiguration config = plugin.getConfig();
+
+        debug = config.getBoolean(Fields.debug);
+        enabled = config.getBoolean(Fields.enabled);
+        removeOriginalTrades = config.getBoolean(Fields.removeOriginalTrades);
+        allowMultipleSets = config.getBoolean(Fields.allowMultipleSets);
+        refreshCommandTraders = config.getBoolean(Fields.refreshCommandTraders);
+        refreshCommandTradersMinutes = config.getInt(Fields.refreshCommandTradersMinutes);
+        wgRegionList = config.getStringList(Fields.wgRegionList);
+        wgWhitelist = config.getBoolean(Fields.wgWhitelist);
+
+        loadTradeConfigs();
+        loadPlayerHeadConfig();
+    }
+
+    public void save() {
         FileConfiguration config = plugin.getConfig();
 
         config.set(Fields.debug, debug);
@@ -63,24 +80,7 @@ public class Config {
             plugin.getLog().warn(e.getMessage());
         }
 
-        read();
-    }
-
-    public void read() {
-        plugin.reloadConfig();
-        FileConfiguration config = plugin.getConfig();
-
-        debug = config.getBoolean(Fields.debug);
-        enabled = config.getBoolean(Fields.enabled);
-        removeOriginalTrades = config.getBoolean(Fields.removeOriginalTrades);
-        allowMultipleSets = config.getBoolean(Fields.allowMultipleSets);
-        refreshCommandTraders = config.getBoolean(Fields.refreshCommandTraders);
-        refreshCommandTradersMinutes = config.getInt(Fields.refreshCommandTradersMinutes);
-        wgRegionList = config.getStringList(Fields.wgRegionList);
-        wgWhitelist = config.getBoolean(Fields.wgWhitelist);
-
-        loadTradeConfigs();
-        loadPlayerHeadConfig();
+        load();
     }
 
     private void loadPlayerHeadConfig() {
