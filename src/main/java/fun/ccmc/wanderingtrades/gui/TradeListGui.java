@@ -41,10 +41,10 @@ public class TradeListGui extends PaginatedGui {
     public void onClick(Player p, ItemStack i) {
         if (backButton.isSimilar(i)) {
             p.closeInventory();
-            new ConfigListGui().open(p);
+            new TradeConfigListGui().open(p);
         } else if (editButton.isSimilar(i)) {
             p.closeInventory();
-            new ConfigEditGui(tradeConfig).open(p);
+            new TradeConfigEditGui(tradeConfig).open(p);
         } else if (plus.isSimilar(i)) {
             p.closeInventory();
             new TradeCreateGui(tradeConfig).open(p);
@@ -61,6 +61,7 @@ public class TradeListGui extends PaginatedGui {
             ItemStack s = TradeConfig.getStack(tc.getFile(), "trades." + key + ".result");
             ItemMeta m = s.getItemMeta();
             m.setDisplayName(key);
+            m.getEnchants().keySet().forEach(m::removeEnchant);
             s.setItemMeta(m);
             trades.add(s);
         });

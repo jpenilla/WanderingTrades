@@ -2,10 +2,12 @@ package fun.ccmc.wanderingtrades.config;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,24 +15,56 @@ import java.util.List;
 public class Config {
     private final WanderingTrades plugin;
 
-    @Getter private boolean debug;
-    @Getter private boolean pluginEnabled;
-    @Getter private boolean removeOriginalTrades;
-    @Getter private boolean allowMultipleSets;
-    @Getter private boolean refreshCommandTraders;
-    @Getter private boolean wgWhitelist;
-    @Getter private List<String> wgRegionList;
-    @Getter private int refreshCommandTradersMinutes;
-    @Getter private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
-    @Getter private PlayerHeadConfig playerHeadConfig;
+    @Getter @Setter
+    private boolean debug;
+    @Getter @Setter
+    private boolean pluginEnabled;
+    @Getter @Setter
+    private boolean removeOriginalTrades;
+    @Getter @Setter
+    private boolean allowMultipleSets;
+    @Getter @Setter
+    private boolean refreshCommandTraders;
+    @Getter @Setter
+    private boolean wgWhitelist;
+    @Getter @Setter
+    private List<String> wgRegionList;
+    @Getter @Setter
+    private int refreshCommandTradersMinutes;
+    @Getter
+    private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
+    @Getter @Setter
+    private PlayerHeadConfig playerHeadConfig;
 
     public Config(WanderingTrades instance) {
         plugin = instance;
         plugin.saveDefaultConfig();
-        reload();
+        read();
     }
 
-    public void reload() {
+    public void write() {
+        FileConfiguration config = plugin.getConfig();
+
+        config.set("debug", debug);
+        config.set("enabled", pluginEnabled);
+        config.set("removeOriginalTrades", removeOriginalTrades);
+        config.set("allowMultipleSets", allowMultipleSets);
+        config.set("refreshCommandTraders", refreshCommandTraders);
+        config.set("refreshCommandTradersMinutes", refreshCommandTradersMinutes);
+        config.set("wgRegionList", wgRegionList);
+        config.set("wgWhitelist", wgWhitelist);
+
+        String path = plugin.getDataFolder() + "/config.yml";
+        try {
+            config.save(path);
+        } catch (IOException e) {
+            plugin.getLog().warn(e.getMessage());
+        }
+
+        read();
+    }
+
+    public void read() {
         plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
 
