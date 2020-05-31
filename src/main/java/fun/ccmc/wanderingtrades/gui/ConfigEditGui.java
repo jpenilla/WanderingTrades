@@ -15,8 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
-public class EditConfigGui extends GuiHolder {
+public class ConfigEditGui extends GuiHolder {
     private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Enabled", "Click to toggle");
     private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Disabled", "Click to toggle");
     private final ItemStack randomizedEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Randomized", "Click to toggle");
@@ -29,7 +30,7 @@ public class EditConfigGui extends GuiHolder {
 
     private final String tradeConfig;
 
-    public EditConfigGui(String tradeConfig) {
+    public ConfigEditGui(String tradeConfig) {
         super("&e&lEditing Config&7: &f" + tradeConfig, 45);
         this.tradeConfig = tradeConfig;
     }
@@ -87,11 +88,11 @@ public class EditConfigGui extends GuiHolder {
         customName.setItemMeta(customNameMeta);
         inventory.setItem(30, customName);
 
-        for (int i = 0; i < inventory.getSize(); i++) {
-            if (inventory.getItem(i) == null) {
-                inventory.setItem(i, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+        IntStream.range(0, inventory.getSize()).forEach(slot -> {
+            if (inventory.getItem(slot) == null) {
+                inventory.setItem(slot, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
             }
-        }
+        });
 
         return inventory;
     }
@@ -208,6 +209,6 @@ public class EditConfigGui extends GuiHolder {
     }
 
     private void reOpen(Player player) {
-        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new EditConfigGui(tradeConfig).open(player), 1L);
+        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new ConfigEditGui(tradeConfig).open(player), 1L);
     }
 }
