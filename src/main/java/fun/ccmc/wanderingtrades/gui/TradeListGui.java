@@ -44,7 +44,13 @@ public class TradeListGui extends PaginatedGui {
             new ConfigListGui().open(p);
         } else if (editButton.isSimilar(i)) {
             p.closeInventory();
-            new EditConfigGui(tradeConfig).open(p);
+            new ConfigEditGui(tradeConfig).open(p);
+        } else if (plus.isSimilar(i)) {
+            p.closeInventory();
+            new TradeCreateGui(tradeConfig).open(p);
+        } else if (getTradeStacks(tradeConfig).contains(i)) {
+            p.closeInventory();
+            new TradeEditGui(tradeConfig, i.getItemMeta().getDisplayName()).open(p);
         }
     }
 

@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.gui.ConfigListGui;
+import fun.ccmc.wanderingtrades.gui.TradeListGui;
 import fun.ccmc.wanderingtrades.util.Chat;
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import org.bukkit.Location;
@@ -68,19 +69,47 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandPermission("wanderingtrades.list")
     @Description("Lists the loaded trade configs.")
     public void onList(CommandSender sender) {
-        Object[] objects = plugin.getCfg().getTradeConfigs().keySet().toArray();
-        String[] strings = Arrays.stream(objects).toArray(String[]::new);
-        String string = String.join("&7, &r", strings);
+        String[] strings = Arrays.stream(plugin.getCfg().getTradeConfigs().keySet().toArray()).toArray(String[]::new);
+        String commaSeparatedConfigs = String.join("&7, &r", strings);
         Chat.sendMsg(sender, "&d&oLoaded Trade Configs:");
-        Chat.sendMsg(sender, string);
+        Chat.sendMsg(sender, commaSeparatedConfigs);
     }
 
-    @Subcommand("gui|g")
-    @CommandPermission("wanderingtrades.gui")
-    @Description("Lists the loaded trade configs.")
-    public void onGui(Player p) {
-        new ConfigListGui().open(p);
+    @Subcommand("edit|e")
+    @CommandPermission("wanderingtrades.edit")
+    public class Edit extends BaseCommand {
+        @Default
+        @Subcommand("trade")
+        @Description("Opens a GUI menu to edit and create trade configs")
+        @CommandCompletion("@wtConfigs")
+        @Syntax("<tradeConfig>")
+        public void onEditTrades(Player p, @Optional @Values("@wtConfigs") String tradeConfig) {
+            if(tradeConfig == null) {
+                new ConfigListGui().open(p);
+            } else {
+                new TradeListGui(tradeConfig).open(p);
+            }
+        }
+
+        @Subcommand("config|c")
+        @Description("Opens a GUI menu to edit the config.yml settings")
+        public class EditConfigCmd extends BaseCommand {
+            @Default
+            public void onEditConfig(Player p) {
+                Chat.sendCenteredMessage(p, "&4not yet in this build");
+            }
+        }
+
+        @Subcommand("playerheads|ph")
+        @Description("Opens a GUI menu to edit the playerheads.yml settings")
+        public class EditPH extends BaseCommand {
+            @Default
+            public void onEditPH(Player p) {
+                Chat.sendCenteredMessage(p, "&4not yet in this build");
+            }
+        }
     }
+
 
     private Location resolveLocation(CommandSender sender, Location loc) {
         Location location;

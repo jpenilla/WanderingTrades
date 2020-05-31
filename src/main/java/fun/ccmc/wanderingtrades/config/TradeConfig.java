@@ -21,14 +21,21 @@ import java.util.List;
 
 public class TradeConfig {
     private final WanderingTrades plugin;
-    @Getter private boolean randomized;
-    @Getter private boolean enabled;
-    @Getter private int randomAmount;
+    @Getter
+    private boolean randomized;
+    @Getter
+    private boolean enabled;
+    @Getter
+    private int randomAmount;
     private List<MerchantRecipe> allTrades;
-    @Getter private double chance;
-    @Getter private boolean invincible;
-    @Getter private String customName;
-    @Getter private final FileConfiguration file;
+    @Getter
+    private double chance;
+    @Getter
+    private boolean invincible;
+    @Getter
+    private String customName;
+    @Getter
+    private final FileConfiguration file;
 
     public TradeConfig(WanderingTrades instance, FileConfiguration config) {
         plugin = instance;
@@ -38,7 +45,7 @@ public class TradeConfig {
 
     public boolean writeTrade(String configName, ItemStack is, String name, int maxUses, boolean experienceReward) {
         String parent = "trades";
-        if(!file.getConfigurationSection(parent).getKeys(false).contains(name)) {
+        if (!file.getConfigurationSection(parent).getKeys(false).contains(name)) {
             String child = parent + "." + name;
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
@@ -84,12 +91,12 @@ public class TradeConfig {
 
     public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
         String parent = "trades";
-        if(file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
+        if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
             String child = parent + "." + tradeName;
-            if(is != null) {
+            if (is != null) {
                 file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
             } else {
-                if(i == 2) {
+                if (i == 2) {
                     file.set(child + ".ingredients.2", null);
                 } else {
                     return false;
@@ -99,6 +106,27 @@ public class TradeConfig {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void deleteTrade(String configName, String tradeName) {
+        file.set("trades." + tradeName, null);
+        save(configName);
+    }
+
+    public boolean writeTrade(String configName, String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
+        String parent = "trades";
+        String child = parent + "." + tradeName;
+        if (i1 == null && i2 == null) {
+            return false;
+        } else {
+            file.set(child + ".maxUses", maxUses);
+            file.set(child + ".experienceReward", experienceReward);
+            file.set(child + ".result.itemStack", result.serialize());
+            save(configName);
+            writeIngredient(configName, tradeName, 1, i1);
+            writeIngredient(configName, tradeName, 2, i2);
+            return true;
         }
     }
 
@@ -136,9 +164,9 @@ public class TradeConfig {
             MerchantRecipe recipe = new MerchantRecipe(result, 0, maxUses, config.getBoolean(prefix + "experienceReward"));
 
             int ingredientNumber = 1;
-            while( ingredientNumber < 3 ) {
+            while (ingredientNumber < 3) {
                 ItemStack ingredient = getStack(config, prefix + "ingredients." + ingredientNumber);
-                if(ingredient != null) {
+                if (ingredient != null) {
                     recipe.addIngredient(ingredient);
                 }
                 ingredientNumber++;
@@ -154,7 +182,7 @@ public class TradeConfig {
         Collections.shuffle(copy);
         List<MerchantRecipe> f = new LinkedList<>(lst);
         int i = 0;
-        while(i < amount) {
+        while (i < amount) {
             Collections.shuffle(f);
             copy.addAll(f);
             i++;
@@ -164,14 +192,14 @@ public class TradeConfig {
 
     public ArrayList<MerchantRecipe> getTrades(boolean bypassDisabled) {
         ArrayList<MerchantRecipe> h = new ArrayList<>();
-        if(enabled || bypassDisabled) {
-            if(randomized) {
+        if (enabled || bypassDisabled) {
+            if (randomized) {
                 h.addAll(pickTrades(allTrades, randomAmount));
             } else {
                 h.addAll(allTrades);
             }
         }
-        if(plugin.getMcRPG() != null) {
+        if (plugin.getMcRPG() != null) {
             return plugin.getMcRPG().replacePlaceholders(h);
         } else {
             return h;
@@ -184,19 +212,19 @@ public class TradeConfig {
 
         try {
             is = ItemStack.deserialize(config.getConfigurationSection(key + ".itemStack").getValues(true));
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             is = null;
         }
 
-        if(is == null) {
-            if(config.getString(key + ".material") != null) {
-                if(config.getString(key + ".material").contains("head-")) {
+        if (is == null) {
+            if (config.getString(key + ".material") != null) {
+                if (config.getString(key + ".material").contains("head-")) {
                     is = SkullCreator.itemFromBase64(config.getString(key + ".material").replace("head-", ""));
                 } else {
-                    if(config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
+                    if (config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
                         is = new ItemStack(Material.CHIPPED_ANVIL);
                         ItemMeta im = is.getItemMeta();
-                        if(config.getString(key + ".material").toUpperCase().contains("SKILL")) {
+                        if (config.getString(key + ".material").toUpperCase().contains("SKILL")) {
                             im.setDisplayName("mcrpg_skill_book_placeholder_");
                         } else {
                             im.setDisplayName("mcrpg_upgrade_book_placeholder_");
@@ -205,7 +233,7 @@ public class TradeConfig {
                         is.setItemMeta(im);
                         is.setAmount(config.getInt(key + ".amount"));
                     } else {
-                        if(Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
+                        if (Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
                             is = new ItemStack(Material.getMaterial(config.getString(key + ".material").toUpperCase()), config.getInt(key + ".amount"));
                         } else {
                             is = new ItemStack(Material.STONE);
@@ -214,23 +242,23 @@ public class TradeConfig {
                     }
                 }
 
-                if(!McRPG) {
+                if (!McRPG) {
                     ItemMeta iMeta = is.getItemMeta();
 
                     String cname = config.getString(key + ".customname");
-                    if(cname != null && !cname.equals("NONE")) {
+                    if (cname != null && !cname.equals("NONE")) {
                         iMeta.setDisplayName(TextUtil.colorize(cname));
                     }
 
-                    if(config.getStringList(key + ".lore").size() != 0) {
+                    if (config.getStringList(key + ".lore").size() != 0) {
                         iMeta.setLore(TextUtil.colorize(config.getStringList(key + ".lore")));
                     }
 
                     config.getStringList(key + ".enchantments").forEach(s -> {
-                        if(s.contains(":")) {
+                        if (s.contains(":")) {
                             String[] e = s.split(":");
                             Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
-                            if(ench != null) {
+                            if (ench != null) {
                                 iMeta.addEnchant(ench, Integer.parseInt(e[1]), true);
                             }
                         }
