@@ -4,6 +4,8 @@ import com.deanveloper.skullcreator.SkullCreator;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,23 +21,26 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+@FieldNameConstants
 public class TradeConfig {
     private final WanderingTrades plugin;
     @Getter
+    private final FileConfiguration file;
+    @Getter @Setter
     private boolean randomized;
-    @Getter
+    @Getter @Setter
     private boolean enabled;
-    @Getter
+    @Getter @Setter
     private int randomAmount;
     private List<MerchantRecipe> allTrades;
-    @Getter
+    @Getter @Setter
     private double chance;
-    @Getter
+    @Getter @Setter
     private boolean invincible;
-    @Getter
+    @Getter @Setter
     private String customName;
-    @Getter
-    private final FileConfiguration file;
+
+    private final String parent = "trades";
 
     public TradeConfig(WanderingTrades instance, FileConfiguration config) {
         plugin = instance;
@@ -43,167 +48,32 @@ public class TradeConfig {
         load();
     }
 
-    public boolean writeTrade(String configName, ItemStack is, String name, int maxUses, boolean experienceReward) {
-        String parent = "trades";
-        if (!file.getConfigurationSection(parent).getKeys(false).contains(name)) {
-            String child = parent + "." + name;
-            file.set(child + ".maxUses", maxUses);
-            file.set(child + ".experienceReward", experienceReward);
-            file.set(child + ".ingredients.1.material", "DIAMOND");
-            file.set(child + ".ingredients.1.amount", 64);
-            file.set(child + ".result.itemStack", is.serialize());
-            save(configName);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void setEnabled(String configName, boolean b) {
-        file.set("enabled", b);
-        save(configName);
-    }
-
-    public void setRandomized(String configName, boolean b) {
-        file.set("randomized", b);
-        save(configName);
-    }
-
-    public void setInvincible(String configName, boolean b) {
-        file.set("invincible", b);
-        save(configName);
-    }
-
-    public void setRandomAmount(String configName, int i) {
-        file.set("randomAmount", i);
-        save(configName);
-    }
-
-    public void setChance(String configName, double d) {
-        file.set("chance", d);
-        save(configName);
-    }
-
-    public void setCustomName(String configName, String customName) {
-        file.set("customName", customName);
-        save(configName);
-    }
-
-    public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
-        String parent = "trades";
-        if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
-            String child = parent + "." + tradeName;
-            if (is != null) {
-                file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
-            } else {
-                if (i == 2) {
-                    file.set(child + ".ingredients.2", null);
-                } else {
-                    return false;
-                }
-            }
-            save(configName);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void deleteTrade(String configName, String tradeName) {
-        file.set("trades." + tradeName, null);
-        save(configName);
-    }
-
-    public boolean writeTrade(String configName, String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
-        String parent = "trades";
-        String child = parent + "." + tradeName;
-        if (i1 == null && i2 == null) {
-            return false;
-        } else {
-            file.set(child + ".maxUses", maxUses);
-            file.set(child + ".experienceReward", experienceReward);
-            file.set(child + ".result.itemStack", result.serialize());
-            save(configName);
-            writeIngredient(configName, tradeName, 1, i1);
-            writeIngredient(configName, tradeName, 2, i2);
-            return true;
-        }
-    }
-
     public void load() {
         allTrades = readTrades(file);
-        randomized = file.getBoolean("randomized");
-        randomAmount = file.getInt("randomAmount");
-        enabled = file.getBoolean("enabled");
-        chance = file.getDouble("chance");
-        invincible = file.getBoolean("invincible", false);
-        customName = file.getString("customName", null);
+        randomized = file.getBoolean(Fields.randomized);
+        randomAmount = file.getInt(Fields.randomAmount);
+        enabled = file.getBoolean(Fields.enabled);
+        chance = file.getDouble(Fields.chance);
+        invincible = file.getBoolean(Fields.invincible, false);
+        customName = file.getString(Fields.customName, null);
     }
 
-    private void save(String configName) {
+    public void save(String configName) {
+        file.set(Fields.enabled, enabled);
+        file.set(Fields.randomized, randomized);
+        file.set(Fields.invincible, invincible);
+        file.set(Fields.randomAmount, randomAmount);
+        file.set(Fields.chance, chance);
+        file.set(Fields.customName, customName);
+
         String path = plugin.getDataFolder() + "/trades/" + configName + ".yml";
         try {
             file.save(path);
         } catch (IOException e) {
             plugin.getLog().warn(e.getMessage());
         }
-    }
 
-    private ArrayList<MerchantRecipe> readTrades(FileConfiguration config) {
-        ArrayList<MerchantRecipe> tradeList = new ArrayList<>();
-        String parent = "trades";
-        config.getConfigurationSection(parent).getKeys(false).forEach(key -> {
-            String prefix = parent + "." + key + ".";
-
-            int maxUses = 1;
-            if (config.getInt(prefix + "maxUses") != 0) {
-                maxUses = config.getInt(prefix + "maxUses");
-            }
-
-            ItemStack result = getStack(config, prefix + "result");
-            MerchantRecipe recipe = new MerchantRecipe(result, 0, maxUses, config.getBoolean(prefix + "experienceReward"));
-
-            int ingredientNumber = 1;
-            while (ingredientNumber < 3) {
-                ItemStack ingredient = getStack(config, prefix + "ingredients." + ingredientNumber);
-                if (ingredient != null) {
-                    recipe.addIngredient(ingredient);
-                }
-                ingredientNumber++;
-            }
-
-            tradeList.add(recipe);
-        });
-        return tradeList;
-    }
-
-    private List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int amount) {
-        List<MerchantRecipe> copy = new LinkedList<>(lst);
-        Collections.shuffle(copy);
-        List<MerchantRecipe> f = new LinkedList<>(lst);
-        int i = 0;
-        while (i < amount) {
-            Collections.shuffle(f);
-            copy.addAll(f);
-            i++;
-        }
-        return copy.subList(0, amount);
-    }
-
-    public ArrayList<MerchantRecipe> getTrades(boolean bypassDisabled) {
-        ArrayList<MerchantRecipe> h = new ArrayList<>();
-        if (enabled || bypassDisabled) {
-            if (randomized) {
-                h.addAll(pickTrades(allTrades, randomAmount));
-            } else {
-                h.addAll(allTrades);
-            }
-        }
-        if (plugin.getMcRPG() != null) {
-            return plugin.getMcRPG().replacePlaceholders(h);
-        } else {
-            return h;
-        }
+        load();
     }
 
     public static ItemStack getStack(FileConfiguration config, String key) {
@@ -269,5 +139,115 @@ public class TradeConfig {
             }
         }
         return is;
+    }
+
+    public boolean writeTrade(String configName, ItemStack is, String name, int maxUses, boolean experienceReward) {
+        if (!file.getConfigurationSection(parent).getKeys(false).contains(name)) {
+            String child = parent + "." + name;
+            file.set(child + ".maxUses", maxUses);
+            file.set(child + ".experienceReward", experienceReward);
+            file.set(child + ".ingredients.1.material", "DIAMOND");
+            file.set(child + ".ingredients.1.amount", 64);
+            file.set(child + ".result.itemStack", is.serialize());
+            save(configName);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
+        if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
+            String child = parent + "." + tradeName;
+            if (is != null) {
+                file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
+            } else {
+                if (i == 2) {
+                    file.set(child + ".ingredients.2", null);
+                } else {
+                    return false;
+                }
+            }
+            save(configName);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void deleteTrade(String configName, String tradeName) {
+        file.set(parent + "." + tradeName, null);
+        save(configName);
+    }
+
+    public boolean writeTrade(String configName, String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
+        String child = parent + "." + tradeName;
+        if (i1 == null && i2 == null) {
+            return false;
+        } else {
+            file.set(child + ".maxUses", maxUses);
+            file.set(child + ".experienceReward", experienceReward);
+            file.set(child + ".result.itemStack", result.serialize());
+            save(configName);
+            writeIngredient(configName, tradeName, 1, i1);
+            writeIngredient(configName, tradeName, 2, i2);
+            return true;
+        }
+    }
+
+    private ArrayList<MerchantRecipe> readTrades(FileConfiguration config) {
+        ArrayList<MerchantRecipe> tradeList = new ArrayList<>();
+        config.getConfigurationSection(parent).getKeys(false).forEach(key -> {
+            String prefix = parent + "." + key + ".";
+
+            int maxUses = 1;
+            if (config.getInt(prefix + "maxUses") != 0) {
+                maxUses = config.getInt(prefix + "maxUses");
+            }
+
+            ItemStack result = getStack(config, prefix + "result");
+            MerchantRecipe recipe = new MerchantRecipe(result, 0, maxUses, config.getBoolean(prefix + "experienceReward"));
+
+            int ingredientNumber = 1;
+            while (ingredientNumber < 3) {
+                ItemStack ingredient = getStack(config, prefix + "ingredients." + ingredientNumber);
+                if (ingredient != null) {
+                    recipe.addIngredient(ingredient);
+                }
+                ingredientNumber++;
+            }
+
+            tradeList.add(recipe);
+        });
+        return tradeList;
+    }
+
+    private List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int amount) {
+        List<MerchantRecipe> copy = new LinkedList<>(lst);
+        Collections.shuffle(copy);
+        List<MerchantRecipe> f = new LinkedList<>(lst);
+        int i = 0;
+        while (i < amount) {
+            Collections.shuffle(f);
+            copy.addAll(f);
+            i++;
+        }
+        return copy.subList(0, amount);
+    }
+
+    public ArrayList<MerchantRecipe> getTrades(boolean bypassDisabled) {
+        ArrayList<MerchantRecipe> h = new ArrayList<>();
+        if (enabled || bypassDisabled) {
+            if (randomized) {
+                h.addAll(pickTrades(allTrades, randomAmount));
+            } else {
+                h.addAll(allTrades);
+            }
+        }
+        if (plugin.getMcRPG() != null) {
+            return plugin.getMcRPG().replacePlaceholders(h);
+        } else {
+            return h;
+        }
     }
 }

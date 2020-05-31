@@ -117,24 +117,24 @@ public class TradeConfigEditGui extends GuiHolder {
         TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
 
         if (enabledEnabled.isSimilar(item)) {
-            t.setEnabled(tradeConfig, false);
+            t.setEnabled(false);
         }
         if (enabledDisabled.isSimilar(item)) {
-            t.setEnabled(tradeConfig, true);
+            t.setEnabled(true);
         }
 
         if (randomizedEnabled.isSimilar(item)) {
-            t.setRandomized(tradeConfig, false);
+            t.setRandomized(false);
         }
         if (randomizedDisabled.isSimilar(item)) {
-            t.setRandomized(tradeConfig, true);
+            t.setRandomized(true);
         }
 
         if (invEnabled.isSimilar(item)) {
-            t.setInvincible(tradeConfig, false);
+            t.setInvincible(false);
         }
         if (invDisabled.isSimilar(item)) {
-            t.setInvincible(tradeConfig, true);
+            t.setInvincible(true);
         }
 
         if (randAmount.isSimilar(item)) {
@@ -147,8 +147,8 @@ public class TradeConfigEditGui extends GuiHolder {
                             if (i < 1) {
                                 return AnvilGUI.Response.text("Number must be > 0");
                             } else {
-                                t.setRandomAmount(tradeConfig, i);
-                                t.load();
+                                t.setRandomAmount(i);
+                                t.save(tradeConfig);
                             }
                         } catch (NumberFormatException ex) {
                             return AnvilGUI.Response.text("Enter a number");
@@ -172,8 +172,8 @@ public class TradeConfigEditGui extends GuiHolder {
                             if (d < 0 || d > 1) {
                                 return AnvilGUI.Response.text("Number must be 0.00-1.00");
                             } else {
-                                t.setChance(tradeConfig, d);
-                                t.load();
+                                t.setChance(d);
+                                t.save(tradeConfig);
                             }
                         } catch (NumberFormatException ex) {
                             return AnvilGUI.Response.text("Enter a number 0.00-1.00");
@@ -198,8 +198,8 @@ public class TradeConfigEditGui extends GuiHolder {
             new AnvilGUI.Builder()
                     .onClose(this::reOpen)
                     .onComplete((player, text) -> {
-                        t.setCustomName(tradeConfig, text);
-                        t.load();
+                        t.setCustomName(text);
+                        t.save(tradeConfig);
                         return AnvilGUI.Response.close();
                     })
                     .text(cN)
@@ -209,7 +209,7 @@ public class TradeConfigEditGui extends GuiHolder {
                     .open(p);
         }
 
-        t.load();
+        t.save(tradeConfig);
 
         getInventory();
     }
