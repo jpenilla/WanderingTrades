@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-public class ConfigEditGui extends GuiHolder {
+public class TradeConfigEditGui extends GuiHolder {
     private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Enabled", "Click to toggle");
     private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Disabled", "Click to toggle");
     private final ItemStack randomizedEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Randomized", "Click to toggle");
@@ -30,7 +30,7 @@ public class ConfigEditGui extends GuiHolder {
 
     private final String tradeConfig;
 
-    public ConfigEditGui(String tradeConfig) {
+    public TradeConfigEditGui(String tradeConfig) {
         super("&e&lEditing Config&7: &f" + tradeConfig, 45);
         this.tradeConfig = tradeConfig;
     }
@@ -189,6 +189,12 @@ public class ConfigEditGui extends GuiHolder {
 
         if (customName.isSimilar(item)) {
             p.closeInventory();
+            String cN;
+            if(t.getCustomName() == null) {
+                cN = "Enter name here";
+            } else {
+                cN = t.getCustomName();
+            }
             new AnvilGUI.Builder()
                     .onClose(this::reOpen)
                     .onComplete((player, text) -> {
@@ -196,7 +202,7 @@ public class ConfigEditGui extends GuiHolder {
                         t.load();
                         return AnvilGUI.Response.close();
                     })
-                    .text(t.getCustomName())
+                    .text(cN)
                     .item(new ItemStack(Material.WRITABLE_BOOK))
                     .title("Enter a Name or 'NONE'")
                     .plugin(WanderingTrades.getInstance())
@@ -209,6 +215,6 @@ public class ConfigEditGui extends GuiHolder {
     }
 
     private void reOpen(Player player) {
-        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new ConfigEditGui(tradeConfig).open(player), 1L);
+        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new TradeConfigEditGui(tradeConfig).open(player), 1L);
     }
 }

@@ -19,12 +19,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class ConfigListGui extends PaginatedGui {
+public class TradeConfigListGui extends PaginatedGui {
     private final ItemStack newConfig = Gui.buildLore(Material.WRITABLE_BOOK, "&aAdd config", "&7&o  Click to add a new config");
     private final ArrayList<String> configNames = new ArrayList<>();
 
-    public ConfigListGui() {
-        super("&a&lTrade Configs", 54, getConfigStacks());
+    public TradeConfigListGui() {
+        super("&a&lTrade Configs", 36, getConfigStacks());
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
 
@@ -75,13 +75,13 @@ public class ConfigListGui extends PaginatedGui {
         } else if (newConfig.isSimilar(i)) {
             p.closeInventory();
             new AnvilGUI.Builder()
-                    .onClose(player -> Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new ConfigListGui().open(player), 1L))
+                    .onClose(player -> Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new TradeConfigListGui().open(player), 1L))
                     .onComplete((player, text) -> {
                         if (!TextUtil.containsCaseInsensitive(text, configNames)) {
                             if (!text.contains(" ")) {
                                 try {
                                     FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + text + ".yml"));
-                                    WanderingTrades.getInstance().getCfg().reload();
+                                    WanderingTrades.getInstance().getCfg().read();
                                     Chat.sendCenteredMessage(p, "&aSuccessfully created new config and reloaded");
                                 } catch (IOException ex) {
                                     ex.printStackTrace();

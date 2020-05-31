@@ -204,7 +204,7 @@ public class TradeEditGui extends GuiHolder {
                     ingred2 = i2;
                 }
                 t.writeTrade(tradeConfig, tradeName, maxUses, experienceReward, i1, ingred2, result);
-                WanderingTrades.getInstance().getCfg().reload();
+                WanderingTrades.getInstance().getCfg().read();
                 p.closeInventory();
                 new TradeListGui(tradeConfig).open(p);
             }
@@ -219,7 +219,7 @@ public class TradeEditGui extends GuiHolder {
                     .onComplete((player, text) -> {
                         if (text.equals("yes")) {
                             t.deleteTrade(tradeConfig, tradeName);
-                            WanderingTrades.getInstance().getCfg().reload();
+                            WanderingTrades.getInstance().getCfg().read();
                             return AnvilGUI.Response.close();
                         } else {
                             return AnvilGUI.Response.text("Type 'yes' to confirm");
@@ -246,6 +246,9 @@ public class TradeEditGui extends GuiHolder {
                 event.getView().setCursor(null);
                 return cursor;
             } else {
+                if (!def.isSimilar(event.getCurrentItem())) {
+                    event.getView().setCursor(event.getCurrentItem());
+                }
                 return def;
             }
         } else {

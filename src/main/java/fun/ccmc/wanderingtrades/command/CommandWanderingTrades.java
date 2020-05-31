@@ -6,7 +6,8 @@ import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
-import fun.ccmc.wanderingtrades.gui.ConfigListGui;
+import fun.ccmc.wanderingtrades.gui.ConfigGui;
+import fun.ccmc.wanderingtrades.gui.TradeConfigListGui;
 import fun.ccmc.wanderingtrades.gui.TradeListGui;
 import fun.ccmc.wanderingtrades.util.Chat;
 import fun.ccmc.wanderingtrades.util.TextUtil;
@@ -59,7 +60,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Description("Reloads all config files for WanderingTrades")
     public void onReload(CommandSender sender) {
         Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
-        plugin.getCfg().reload();
+        plugin.getCfg().read();
         plugin.getListeners().reload();
         plugin.getTabCompletions().register();
         Chat.sendCenteredMessage(sender, "&aDone.");
@@ -85,27 +86,27 @@ public class CommandWanderingTrades extends BaseCommand {
         @Syntax("<tradeConfig>")
         public void onEditTrades(Player p, @Optional @Values("@wtConfigs") String tradeConfig) {
             if(tradeConfig == null) {
-                new ConfigListGui().open(p);
+                new TradeConfigListGui().open(p);
             } else {
                 new TradeListGui(tradeConfig).open(p);
             }
         }
 
         @Subcommand("config|c")
-        @Description("Opens a GUI menu to edit the config.yml settings")
         public class EditConfigCmd extends BaseCommand {
             @Default
+            @Description("Opens a GUI menu to edit the config.yml settings")
             public void onEditConfig(Player p) {
-                Chat.sendCenteredMessage(p, "&4not yet in this build");
+                new ConfigGui().open(p);
             }
         }
 
         @Subcommand("playerheads|ph")
-        @Description("Opens a GUI menu to edit the playerheads.yml settings")
         public class EditPH extends BaseCommand {
             @Default
+            @Description("Opens a GUI menu to edit the playerheads.yml settings")
             public void onEditPH(Player p) {
-                Chat.sendCenteredMessage(p, "&4not yet in this build");
+                Chat.sendCenteredMessage(p, "&4Sorry, this command is not yet implemented. Please manually edit the playerheads.yml file.");
             }
         }
     }
