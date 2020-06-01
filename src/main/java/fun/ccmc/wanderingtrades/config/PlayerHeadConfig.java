@@ -2,11 +2,13 @@ package fun.ccmc.wanderingtrades.config;
 
 import fun.ccmc.wanderingtrades.util.TextUtil;
 import lombok.Getter;
+import lombok.experimental.FieldNameConstants;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
+@FieldNameConstants
 public class PlayerHeadConfig {
     @Getter private int maxUses = 1;
     @Getter private final boolean experienceReward;
@@ -20,14 +22,14 @@ public class PlayerHeadConfig {
     @Getter private final ItemStack ingredient2;
 
     public PlayerHeadConfig(FileConfiguration config) {
-        playerHeadsFromServer = config.getBoolean("playerHeadsFromServer");
-        playerHeadsFromServerChance = config.getDouble("playerHeadsFromServerChance");
-        playerHeadsFromServerAmount = config.getInt("playerHeadsFromServerAmount");
+        playerHeadsFromServer = config.getBoolean(Fields.playerHeadsFromServer);
+        playerHeadsFromServerChance = config.getDouble(Fields.playerHeadsFromServerChance);
+        playerHeadsFromServerAmount = config.getInt(Fields.playerHeadsFromServerAmount);
         String prefix = "headTrade.";
-        if (config.getInt(prefix + "maxUses") != 0) {
-            maxUses = config.getInt(prefix + "maxUses");
+        if (config.getInt(prefix + Fields.maxUses) != 0) {
+            maxUses = config.getInt(prefix + Fields.maxUses);
         }
-        experienceReward = config.getBoolean(prefix + "experienceReward");
+        experienceReward = config.getBoolean(prefix + Fields.experienceReward);
         ingredient1 = TradeConfig.getStack(config, prefix + "ingredients.1");
         ingredient2 = TradeConfig.getStack(config, prefix + "ingredients.2");
         amountOfHeadsPerTrade = config.getInt(prefix + "head.amount");

@@ -65,26 +65,10 @@ public final class WanderingTrades extends JavaPlugin {
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
 
-        new UpdateChecker(this, 79068).getVersion(version -> {
-            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                log.info("&aYou are running the latest version of " + this.getName() + "! :)");
-            } else if(this.getDescription().getVersion().contains("SNAPSHOT")) {
-                log.info("&e[!] &6You are running a development build of " + this.getName() + " &e[!]");
-            } else {
-                log.info("&e[!] &6You are running an outdated version of " + this.getName() + " (" + this.getDescription().getVersion() + ") &e[!]");
-                log.info("&bVersion " + version + " is available at &b&ohttps://www.spigotmc.org/resources/wanderingtrades.79068/");
-            }
-        });
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->new UpdateChecker(this, 79068).getVersion(version -> {
-            if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                if (this.getDescription().getVersion().contains("SNAPSHOT")) {
-                    log.info("&e[!] &6You are running a development build of " + this.getName() + " &e[!]");
-                } else {
-                    log.info("&e[!] &6You are running an outdated version of " + this.getName() + " (" + this.getDescription().getVersion() + ") &e[!]");
-                    log.info("&bVersion " + version + " is available at &b&ohttps://www.spigotmc.org/resources/wanderingtrades.79068/");
-                }
-            }
-        }), 20L * 60L * 30L, 20L * 60L * 60L);
+        new UpdateChecker(this, 79068).getVersion(UpdateChecker::updateCheck);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
+                new UpdateChecker(this, 79068)
+                        .getVersion(UpdateChecker::updateCheck), 20L * 60L * 30L, 20L * 60L * 120L);
 
         log.info("&d[ON]");
     }
