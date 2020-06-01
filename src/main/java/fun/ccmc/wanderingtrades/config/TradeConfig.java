@@ -135,44 +135,11 @@ public class TradeConfig {
                     });
 
                     is.setItemMeta(iMeta);
+                    is.setAmount(config.getInt(key + ".amount"));
                 }
             }
         }
         return is;
-    }
-
-    public boolean writeTrade(String configName, ItemStack is, String name, int maxUses, boolean experienceReward) {
-        if (!file.getConfigurationSection(parent).getKeys(false).contains(name)) {
-            String child = parent + "." + name;
-            file.set(child + ".maxUses", maxUses);
-            file.set(child + ".experienceReward", experienceReward);
-            file.set(child + ".ingredients.1.material", "DIAMOND");
-            file.set(child + ".ingredients.1.amount", 64);
-            file.set(child + ".result.itemStack", is.serialize());
-            save(configName);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
-        if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
-            String child = parent + "." + tradeName;
-            if (is != null) {
-                file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
-            } else {
-                if (i == 2) {
-                    file.set(child + ".ingredients.2", null);
-                } else {
-                    return false;
-                }
-            }
-            save(configName);
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public void deleteTrade(String configName, String tradeName) {
@@ -188,10 +155,28 @@ public class TradeConfig {
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
             file.set(child + ".result.itemStack", result.serialize());
-            save(configName);
             writeIngredient(configName, tradeName, 1, i1);
             writeIngredient(configName, tradeName, 2, i2);
+            save(configName);
             return true;
+        }
+    }
+
+    public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
+        if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
+            String child = parent + "." + tradeName;
+            if (is != null) {
+                file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
+            } else {
+                if (i == 2) {
+                    file.set(child + ".ingredients.2", null);
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 

@@ -3,7 +3,9 @@ package fun.ccmc.wanderingtrades.util;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TextUtil {
     public static String colorize(String s) {
@@ -11,20 +13,11 @@ public class TextUtil {
     }
 
     public static String[] colorize(String[] s) {
-        int index = 0;
-        for (String e: s) {
-            s[index] = colorize(e);
-            index++;
-        }
-        return s;
+        return (String[]) Arrays.stream(s).map(TextUtil::colorize).toArray();
     }
 
     public static ArrayList<String> colorize(List<String> stringArray) {
-        ArrayList<String> colorizedArray = new ArrayList<>();
-        stringArray.forEach(s -> {
-            colorizedArray.add(colorize(s));
-        });
-        return colorizedArray;
+        return stringArray.stream().map(TextUtil::colorize).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static boolean containsCaseInsensitive(String s, List<String> l){

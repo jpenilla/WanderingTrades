@@ -30,4 +30,15 @@ public class UpdateChecker {
             }
         });
     }
+
+    public static void updateCheck(String version) {
+        if (WanderingTrades.getInstance().getDescription().getVersion().equalsIgnoreCase(version)) {
+            WanderingTrades.getInstance().getLog().info("&aYou are running the latest version of " + WanderingTrades.getInstance().getName() + "! :)");
+        } else if(WanderingTrades.getInstance().getDescription().getVersion().contains("SNAPSHOT")) {
+            WanderingTrades.getInstance().getLog().info("&e[!] &6You are running a development build of " + WanderingTrades.getInstance().getName() + " (" + WanderingTrades.getInstance().getDescription().getVersion() + ") &e[!]");
+        } else {
+            WanderingTrades.getInstance().getLog().info("&e[!] &6You are running an outdated version of " + WanderingTrades.getInstance().getName() + " (" + WanderingTrades.getInstance().getDescription().getVersion() + ") &e[!]");
+            WanderingTrades.getInstance().getLog().info("&bVersion " + version + " is available at &b&ohttps://www.spigotmc.org/resources/wanderingtrades.79068/");
+        }
+    };
 }

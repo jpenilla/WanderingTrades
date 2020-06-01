@@ -4,12 +4,13 @@ import co.aikar.commands.PaperCommandManager;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TabCompletions {
     private WanderingTrades plugin;
@@ -48,11 +49,7 @@ public class TabCompletions {
 
         mgr.getCommandCompletions().registerCompletion("wtWorlds", c -> {
             CommandSender s = c.getSender();
-            ArrayList<String> completions = new ArrayList<>();
-            String[] worlds = Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
-            Arrays.stream(worlds).forEach(world -> {
-                completions.add(world + ":x,y,z");
-            });
+            List<String> completions = Bukkit.getWorlds().stream().map(world -> world.getName() + ":x,y,z").collect(Collectors.toList());
             if(s instanceof Player) {
                 Location l = ((Player) s).getLocation();
                 double x = (double) Math.round(l.getX() * 100) / 100;
