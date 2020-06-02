@@ -1,9 +1,10 @@
 package fun.ccmc.wanderingtrades.listener;
 
-import com.deanveloper.skullcreator.SkullCreator;
+import fun.ccmc.jmplib.SkullCreator;
+import fun.ccmc.jmplib.TextUtil;
+import fun.ccmc.jmplib.WeightedRandom;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
-import fun.ccmc.wanderingtrades.util.WeightedRandom;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
@@ -18,7 +19,8 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class AcquireTradeListener implements Listener {
-    WanderingTrades plugin;
+    private final WanderingTrades plugin;
+
     public AcquireTradeListener(WanderingTrades p) {
         plugin = p;
     }
@@ -76,8 +78,8 @@ public class AcquireTradeListener implements Listener {
         selectedPlayers.forEach(player -> {
             ItemStack head = SkullCreator.itemFromUuid(player.getUniqueId());
             ItemMeta meta = head.getItemMeta();
-            meta.setDisplayName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", player.getName()));
-            meta.setLore(plugin.getCfg().getPlayerHeadConfig().getLore());
+            meta.setDisplayName(TextUtil.colorize(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", player.getName())));
+            meta.setLore(TextUtil.colorize(plugin.getCfg().getPlayerHeadConfig().getLore()));
             head.setItemMeta(meta);
             head.setAmount(plugin.getCfg().getPlayerHeadConfig().getAmountOfHeadsPerTrade());
             MerchantRecipe recipe = new MerchantRecipe(head, 0, plugin.getCfg().getPlayerHeadConfig().getMaxUses(), plugin.getCfg().getPlayerHeadConfig().isExperienceReward());

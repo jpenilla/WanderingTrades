@@ -6,7 +6,7 @@
 
     <groupId>fun.ccmc.wanderingtrades</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2-SNAPSHOT.{BUILDID}</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
@@ -41,6 +41,10 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>fun.ccmc.wanderingtrades</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>fun.ccmc.jmplib</pattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades.jmplib</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
@@ -131,9 +135,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.deanveloper</groupId>
-            <artifactId>SkullCreator</artifactId>
-            <version>master-3b59220bc2-1</version>
+            <groupId>com.github.jmanpenilla</groupId>
+            <artifactId>jmplib</artifactId>
+            <version>69d07d55c0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

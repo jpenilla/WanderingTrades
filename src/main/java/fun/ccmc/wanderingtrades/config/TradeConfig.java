@@ -1,8 +1,8 @@
 package fun.ccmc.wanderingtrades.config;
 
-import com.deanveloper.skullcreator.SkullCreator;
+import fun.ccmc.jmplib.SkullCreator;
+import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import fun.ccmc.wanderingtrades.util.TextUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;

@@ -12,6 +12,7 @@ import fun.ccmc.wanderingtrades.util.UpdateChecker;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public final class WanderingTrades extends JavaPlugin {
     @Getter private static WanderingTrades instance;
@@ -66,9 +67,13 @@ public final class WanderingTrades extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
 
         new UpdateChecker(this, 79068).getVersion(UpdateChecker::updateCheck);
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
-                new UpdateChecker(this, 79068)
-                        .getVersion(UpdateChecker::updateCheck), 20L * 60L * 30L, 20L * 60L * 120L);
+        class UpdateCheck extends BukkitRunnable {
+            @Override
+            public void run() {
+                new UpdateChecker(instance, 79068).getVersion(UpdateChecker::updateCheck);
+            }
+        }
+        new UpdateCheck().runTaskTimer(this,20L * 60L * 30L, 20L * 60L * 120L);
 
         log.info("&d[ON]");
     }

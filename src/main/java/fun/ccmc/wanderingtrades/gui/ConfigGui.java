@@ -1,9 +1,10 @@
 package fun.ccmc.wanderingtrades.gui;
 
+import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.GuiHolder;
+import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Config;
-import fun.ccmc.wanderingtrades.util.Gui;
-import fun.ccmc.wanderingtrades.util.TextUtil;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

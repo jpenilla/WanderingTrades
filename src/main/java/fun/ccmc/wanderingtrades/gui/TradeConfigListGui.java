@@ -1,10 +1,10 @@
 package fun.ccmc.wanderingtrades.gui;
 
+import fun.ccmc.jmplib.Chat;
+import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
-import fun.ccmc.wanderingtrades.util.Chat;
-import fun.ccmc.wanderingtrades.util.Gui;
-import fun.ccmc.wanderingtrades.util.TextUtil;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;

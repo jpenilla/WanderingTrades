@@ -8,7 +8,7 @@ import fun.ccmc.wanderingtrades.listener.RefreshTradesListener;
 import org.bukkit.event.HandlerList;
 
 public class Listeners {
-    private WanderingTrades plugin;
+    private final WanderingTrades plugin;
 
     public Listeners(WanderingTrades inst) {
         plugin = inst;

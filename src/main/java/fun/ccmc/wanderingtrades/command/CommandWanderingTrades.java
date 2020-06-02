@@ -4,21 +4,19 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
+import fun.ccmc.jmplib.Chat;
+import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.gui.ConfigGui;
 import fun.ccmc.wanderingtrades.gui.TradeConfigListGui;
 import fun.ccmc.wanderingtrades.gui.TradeListGui;
-import fun.ccmc.wanderingtrades.util.Chat;
-import fun.ccmc.wanderingtrades.util.TextUtil;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -110,7 +108,6 @@ public class CommandWanderingTrades extends BaseCommand {
             }
         }
     }
-
 
     private Location resolveLocation(CommandSender sender, Location loc) {
         Location location;
