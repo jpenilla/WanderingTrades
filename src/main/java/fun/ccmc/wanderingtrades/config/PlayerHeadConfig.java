@@ -32,6 +32,8 @@ public class PlayerHeadConfig {
     private ItemStack ingredient1;
     @Getter
     private ItemStack ingredient2;
+    @Getter
+    private List<String> usernameBlacklist;
 
     private final String prefix = "headTrade.";
 
@@ -53,12 +55,14 @@ public class PlayerHeadConfig {
         amountOfHeadsPerTrade = config.getInt(prefix + "head.amount");
         name = config.getString(prefix + "head.customname");
         lore = config.getStringList(prefix + "head.lore");
+        usernameBlacklist = config.getStringList(Fields.usernameBlacklist);
     }
 
     public void save() {
         config.set(Fields.playerHeadsFromServer, playerHeadsFromServer);
         config.set(Fields.playerHeadsFromServerChance, playerHeadsFromServerChance);
         config.set(Fields.playerHeadsFromServerAmount, playerHeadsFromServerAmount);
+        config.set(Fields.usernameBlacklist, usernameBlacklist);
         config.set(prefix + Fields.maxUses, maxUses);
         config.set(prefix + Fields.experienceReward, experienceReward);
         config.set(prefix + "ingredients.1", ingredient1.serialize());

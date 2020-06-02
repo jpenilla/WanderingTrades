@@ -28,22 +28,22 @@ public class AcquireTradeListener implements Listener {
     @EventHandler
     public void onAcquireTrade(VillagerAcquireTradeEvent e) {
 
-        if(e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
-            if(e.getEntity().getRecipes().size() == 0) {
+        if (e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
+            if (e.getEntity().getRecipes().size() == 0) {
                 AbstractVillager trader = e.getEntity();
 
                 ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
-                if(plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
+                if (plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
                     newTrades.addAll(getPlayerHeadsFromServer());
                 }
 
-                if(plugin.getCfg().isAllowMultipleSets()) {
+                if (plugin.getCfg().isAllowMultipleSets()) {
                     HashMap<String, TradeConfig> m = new HashMap<>(plugin.getCfg().getTradeConfigs());
                     Iterator it = m.entrySet().iterator();
                     while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        if(randBoolean(((TradeConfig) pair.getValue()).getChance())) {
+                        Map.Entry pair = (Map.Entry) it.next();
+                        if (randBoolean(((TradeConfig) pair.getValue()).getChance())) {
                             newTrades.addAll(((TradeConfig) pair.getValue()).getTrades(false));
                         }
                         it.remove();
@@ -53,14 +53,14 @@ public class AcquireTradeListener implements Listener {
                     WeightedRandom<String> weightedRandom = new WeightedRandom<>();
                     keys.forEach(config -> weightedRandom.addEntry(config, plugin.getCfg().getTradeConfigs().get(config).getChance()));
                     String chosenConfig = weightedRandom.getRandom();
-                    if(chosenConfig != null) {
+                    if (chosenConfig != null) {
                         newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
                     }
                 }
 
                 trader.setRecipes(newTrades);
             }
-            if(plugin.getCfg().isRemoveOriginalTrades()) {
+            if (plugin.getCfg().isRemoveOriginalTrades()) {
                 e.setCancelled(true);
             }
         }
@@ -73,7 +73,19 @@ public class AcquireTradeListener implements Listener {
         Collections.shuffle(offlinePlayers);
 
         ArrayList<OfflinePlayer> selectedPlayers = new ArrayList<>();
-        IntStream.range(0, plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount()).forEach(i -> selectedPlayers.add(offlinePlayers.get(i)));
+        IntStream.range(0, plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount()).forEach(i -> {
+            if (!TextUtil.containsCaseInsensitive(offlinePlayers.get(i).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
+                selectedPlayers.add(offlinePlayers.get(i));
+            } else {
+                while (inBounds(i, selectedPlayers)) {
+                    Random r = new Random();
+                    int num = r.ints(0, (offlinePlayers.size() + 1)).findFirst().getAsInt();
+                    if(!TextUtil.containsCaseInsensitive(offlinePlayers.get(num).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
+                        selectedPlayers.add(offlinePlayers.get(num));
+                    }
+                }
+            }
+        });
 
         selectedPlayers.forEach(player -> {
             ItemStack head = SkullCreator.itemFromUuid(player.getUniqueId());
@@ -84,7 +96,7 @@ public class AcquireTradeListener implements Listener {
             head.setAmount(plugin.getCfg().getPlayerHeadConfig().getAmountOfHeadsPerTrade());
             MerchantRecipe recipe = new MerchantRecipe(head, 0, plugin.getCfg().getPlayerHeadConfig().getMaxUses(), plugin.getCfg().getPlayerHeadConfig().isExperienceReward());
             recipe.addIngredient(plugin.getCfg().getPlayerHeadConfig().getIngredient1());
-            if(plugin.getCfg().getPlayerHeadConfig().getIngredient2() != null) {
+            if (plugin.getCfg().getPlayerHeadConfig().getIngredient2() != null) {
                 recipe.addIngredient(plugin.getCfg().getPlayerHeadConfig().getIngredient2());
             }
             newTrades.add(recipe);
@@ -94,5 +106,9 @@ public class AcquireTradeListener implements Listener {
 
     public static boolean randBoolean(double p) {
         return Math.random() < p;
+    }
+
+    public static boolean inBounds(int index, List l){
+        return (index >= 0) && (index < l.size());
     }
 }
