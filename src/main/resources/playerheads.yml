@@ -14,6 +14,11 @@ playerHeadsFromServerChance: 0.5
 # recommended range [1 - 4]
 playerHeadsFromServerAmount: 1
 
+# usernames listed here will not be used for player head trades\
+# for exmaple put your staff or OPs name so players cannot buy their head
+usernameBlacklist:
+  - Notch
+
 # the ingredients are fully customizable, and the second one is optional
 # for the heads the name, amount, and lore are customizable
 headTrade:
