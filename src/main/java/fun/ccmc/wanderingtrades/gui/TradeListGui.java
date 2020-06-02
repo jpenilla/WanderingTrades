@@ -1,6 +1,7 @@
 package fun.ccmc.wanderingtrades.gui;
 
 import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.PaginatedGui;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import org.bukkit.Material;
