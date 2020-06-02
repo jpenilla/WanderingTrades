@@ -1,0 +1,4 @@
+# Wandering Trades ${project.version} en_US language config
+COMMAND_LIST_LOADED: '&d&oLoaded Trade Configs:'
+COMMAND_SUMMON_NO_CONFIG: '&4&oThere are no trade configs with that name loaded.'
+COMMAND_SUMMON_MALFORMED_CONFIG: '&4That config is malformed. Make sure recipes have at least one ingredient.'
