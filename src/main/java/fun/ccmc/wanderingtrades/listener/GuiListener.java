@@ -1,6 +1,6 @@
 package fun.ccmc.wanderingtrades.listener;
 
-import fun.ccmc.jmplib.GuiHolder;
+import fun.ccmc.wanderingtrades.gui.GuiHolder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;

@@ -40,7 +40,15 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>fun.ccmc.wanderingtrades</shadedPattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.apache.commons.io</pattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades.apachecommonsio</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.wesjd</pattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades.wesjd</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>fun.ccmc.jmplib</pattern>
@@ -137,7 +145,7 @@
         <dependency>
             <groupId>com.github.jmanpenilla</groupId>
             <artifactId>jmplib</artifactId>
-            <version>0aad673548</version>
+            <version>29f3670cd5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
