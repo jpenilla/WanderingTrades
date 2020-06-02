@@ -1,8 +1,8 @@
 package fun.ccmc.wanderingtrades.gui;
 
+import fun.ccmc.jmplib.Gui;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
-import fun.ccmc.wanderingtrades.util.Gui;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

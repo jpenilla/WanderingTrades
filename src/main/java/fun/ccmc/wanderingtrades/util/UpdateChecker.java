@@ -1,7 +1,7 @@
 package fun.ccmc.wanderingtrades.util;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Consumer;
 
 import java.io.IOException;
@@ -20,15 +20,19 @@ public class UpdateChecker {
     }
 
     public void getVersion(final Consumer<String> consumer) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
-                if (scanner.hasNext()) {
-                    consumer.accept(scanner.next());
+        class GetVersionTask extends BukkitRunnable {
+            @Override
+            public void run() {
+                try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
+                    if (scanner.hasNext()) {
+                        consumer.accept(scanner.next());
+                    }
+                } catch (IOException exception) {
+                    plugin.getLog().info("&eCannot look for updates:&r " + exception.getMessage());
                 }
-            } catch (IOException exception) {
-                plugin.getLog().info("&eCannot look for updates:&r " + exception.getMessage());
             }
-        });
+        }
+        new GetVersionTask().runTaskAsynchronously(plugin);
     }
 
     public static void updateCheck(String version) {

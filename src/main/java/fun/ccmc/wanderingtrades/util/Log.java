@@ -1,5 +1,6 @@
 package fun.ccmc.wanderingtrades.util;
 
+import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 
 public class Log {
