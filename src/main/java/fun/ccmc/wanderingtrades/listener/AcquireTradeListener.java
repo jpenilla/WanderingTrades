@@ -74,16 +74,20 @@ public class AcquireTradeListener implements Listener {
 
         ArrayList<OfflinePlayer> selectedPlayers = new ArrayList<>();
         IntStream.range(0, plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount()).forEach(i -> {
-            if (!TextUtil.containsCaseInsensitive(offlinePlayers.get(i).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
-                selectedPlayers.add(offlinePlayers.get(i));
-            } else {
-                while (inBounds(i, selectedPlayers)) {
-                    Random r = new Random();
-                    int num = r.ints(0, (offlinePlayers.size() + 1)).findFirst().getAsInt();
-                    if(!TextUtil.containsCaseInsensitive(offlinePlayers.get(num).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
-                        selectedPlayers.add(offlinePlayers.get(num));
+            try {
+                if (!TextUtil.containsCaseInsensitive(offlinePlayers.get(i).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
+                    selectedPlayers.add(offlinePlayers.get(i));
+                } else {
+                    while (!inBounds(i, selectedPlayers)) {
+                        Random r = new Random();
+                        int num = r.ints(0, (offlinePlayers.size() + 1)).findFirst().getAsInt();
+                        if (!TextUtil.containsCaseInsensitive(offlinePlayers.get(num).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
+                            selectedPlayers.add(offlinePlayers.get(num));
+                        }
                     }
                 }
+            } catch (IndexOutOfBoundsException e) {
+                plugin.getLog().warn("'playerHeadsFromServerAmount' in playerheads.yml is higher than the amount of players that ever joined this server! Player heads from the server will not be added to Wandering Traders until this is corrected.");
             }
         });
 
@@ -108,7 +112,7 @@ public class AcquireTradeListener implements Listener {
         return Math.random() < p;
     }
 
-    public static boolean inBounds(int index, List l){
+    public static boolean inBounds(int index, List l) {
         return (index >= 0) && (index < l.size());
     }
 }
