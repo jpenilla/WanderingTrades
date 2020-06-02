@@ -29,6 +29,10 @@ public class Config {
     private boolean refreshCommandTraders;
     @Getter @Setter
     private boolean wgWhitelist;
+    @Getter
+    private boolean updateLang;
+    @Getter
+    private String language;
     @Getter @Setter
     private List<String> wgRegionList;
     @Getter @Setter
@@ -56,6 +60,8 @@ public class Config {
         refreshCommandTradersMinutes = config.getInt(Fields.refreshCommandTradersMinutes);
         wgRegionList = config.getStringList(Fields.wgRegionList);
         wgWhitelist = config.getBoolean(Fields.wgWhitelist);
+        language = config.getString(Fields.language);
+        updateLang = config.getBoolean(Fields.updateLang);
 
         loadTradeConfigs();
         loadPlayerHeadConfig();

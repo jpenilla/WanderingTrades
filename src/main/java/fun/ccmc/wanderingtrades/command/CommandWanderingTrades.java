@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.*;
 import fun.ccmc.jmplib.Chat;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.gui.ConfigGui;
 import fun.ccmc.wanderingtrades.gui.TradeConfigListGui;
@@ -59,6 +60,7 @@ public class CommandWanderingTrades extends BaseCommand {
     public void onReload(CommandSender sender) {
         Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
         plugin.getCfg().load();
+        plugin.getLang().load();
         plugin.getListeners().reload();
         plugin.getTabCompletions().register();
         Chat.sendCenteredMessage(sender, "&aDone.");
@@ -70,7 +72,7 @@ public class CommandWanderingTrades extends BaseCommand {
     public void onList(CommandSender sender) {
         List<String> configs = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
         String commaSeparatedConfigs = String.join("&7, &r", configs);
-        Chat.sendMsg(sender, "&d&oLoaded Trade Configs:");
+        Chat.sendMsg(sender, plugin.getLang().getString(Lang.COMMAND_LIST_LOADED));
         Chat.sendMsg(sender, commaSeparatedConfigs);
     }
 
@@ -148,10 +150,10 @@ public class CommandWanderingTrades extends BaseCommand {
             });
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
+                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                Chat.sendCenteredMessage(sender, "&4That config is malformed. Make sure recipes have at least one ingredient.");
+                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
@@ -186,10 +188,10 @@ public class CommandWanderingTrades extends BaseCommand {
             });
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                Chat.sendCenteredMessage(sender, "&4&oThere are no trade configs with that name loaded.");
+                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                Chat.sendCenteredMessage(sender, "&4That config is malformed. Make sure recipes have at least one ingredient.");
+                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }

@@ -1,9 +1,11 @@
 package fun.ccmc.wanderingtrades.listener;
 
+import fun.ccmc.jmplib.Chat;
 import fun.ccmc.jmplib.SkullCreator;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.jmplib.WeightedRandom;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
@@ -27,7 +29,6 @@ public class AcquireTradeListener implements Listener {
 
     @EventHandler
     public void onAcquireTrade(VillagerAcquireTradeEvent e) {
-
         if (e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
             if (e.getEntity().getRecipes().size() == 0) {
                 AbstractVillager trader = e.getEntity();

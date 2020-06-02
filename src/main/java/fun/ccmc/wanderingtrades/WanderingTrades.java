@@ -6,6 +6,7 @@ import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.compat.McRPG;
 import fun.ccmc.wanderingtrades.compat.WorldGuardCompat;
 import fun.ccmc.wanderingtrades.config.Config;
+import fun.ccmc.wanderingtrades.config.LangConfig;
 import fun.ccmc.wanderingtrades.util.Listeners;
 import fun.ccmc.wanderingtrades.util.Log;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
@@ -18,6 +19,7 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private static WanderingTrades instance;
 
     @Getter private Config cfg;
+    @Getter private LangConfig lang;
     @Getter private Log log;
     @Getter private Listeners listeners;
     @Getter private TabCompletions tabCompletions;
@@ -47,6 +49,7 @@ public final class WanderingTrades extends JavaPlugin {
         }
 
         cfg = new Config(this);
+        lang = new LangConfig(this);
         tabCompletions = new TabCompletions(this);
         tabCompletions.register();
 

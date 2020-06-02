@@ -1,6 +1,13 @@
 # WanderingTrades Config ${project.version}
 debug: false
 
+# Languages currently included: en_US
+# Contribute translations for the menus and command on GitHub
+language: 'en_US'
+
+# Set to true to overwrite the existing lang file to update it
+updateLang: true
+
 # Enable adding trades to natural spawned Wandering Traders
 # Summoning Villagers or Traders through commands will bypass this
 #     requires server restart to turn on/off
