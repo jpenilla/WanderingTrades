@@ -4,6 +4,7 @@ import fun.ccmc.jmplib.Gui;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Config;
+import fun.ccmc.wanderingtrades.config.Lang;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,27 +21,27 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ConfigGui extends GuiHolder {
-    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "&aAdding Trades to Natural Spawned Traders", "  &7&oClick to toggle");
-    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "&4Not Adding Trades to Natural Spawned Traders", "  &7&oClick to toggle");
+    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_ENABLED), gui_toggle_lore);
+    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_DISABLED), gui_toggle_lore);
 
-    private final ItemStack allowMultipleSets = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "&aAllowing more than one trade config per trader", "  &7&oClick to toggle");
-    private final ItemStack disallowMultipleSets = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "&4Not allowing more than one trade config per trader", "  &7&oClick to toggle");
+    private final ItemStack allowMultipleSets = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_ALLOW_MULTIPLE_SETS), gui_toggle_lore);
+    private final ItemStack disallowMultipleSets = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_DISALLOW_MULTIPLE_SETS), gui_toggle_lore);
 
-    private final ItemStack removeOriginalTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "&aRemoving original Wandering Trader trades", "  &7&oClick to toggle");
-    private final ItemStack removeOriginalTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "&4Not removing original Wandering Trader trades", "  &7&oClick to toggle");
+    private final ItemStack removeOriginalTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_REMOVE_ORIGINAL), gui_toggle_lore);
+    private final ItemStack removeOriginalTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_KEEP_ORIGINAL), gui_toggle_lore);
 
-    private final ItemStack refreshTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "&aAuto-refreshing trades of /wt summoned traders", "  &7&oClick to toggle");
-    private final ItemStack refreshTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "&4Not auto-refreshing trades of /wt summoned traders", "  &7&oClick to toggle");
+    private final ItemStack refreshTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_REFRESH), gui_toggle_lore);
+    private final ItemStack refreshTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_NO_REFRESH), gui_toggle_lore);
 
-    private final ItemStack wgWhitelist = Gui.buildLore(Material.WHITE_STAINED_GLASS_PANE, "&bMode&7: &fWorldGuard Region Whitelist", "  &7&oClick to toggle");
-    private final ItemStack wgBlacklist = Gui.buildLore(Material.BEDROCK, "&bMode&7: &fWorldGuard Region Blacklist", "  &7&oClick to toggle");
+    private final ItemStack wgWhitelist = Gui.buildLore(Material.WHITE_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_WG_WHITE), gui_toggle_lore);
+    private final ItemStack wgBlacklist = Gui.buildLore(Material.BEDROCK, lang.getString(Lang.GUI_CONFIG_WG_BLACK), gui_toggle_lore);
 
-    private final ItemStack wgList = Gui.build(Material.PAPER, "&bList of regions for White/Black list");
+    private final ItemStack wgList = Gui.build(Material.PAPER, lang.getString(Lang.GUI_CONFIG_WG_LIST));
 
-    private final ItemStack refreshTradersMinutes = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "&aHow many minutes between trade refreshes if enabled");
+    private final ItemStack refreshTradersMinutes = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_REFRESH_MINUTES));
 
     public ConfigGui() {
-        super("&d&lWanderingTrades&7: &fConfig", 45);
+        super(WanderingTrades.getInstance().getLang().getString(Lang.GUI_CONFIG_TITLE), 45);
     }
 
     public Inventory getInventory() {
@@ -75,8 +76,8 @@ public class ConfigGui extends GuiHolder {
         ItemMeta refreshMinsMeta = refreshTradersMinutes.getItemMeta();
         ArrayList<String> refreshLore =
                 new ArrayList<>(Arrays.asList(
-                        "Value&7: &b" + c.getRefreshCommandTradersMinutes() + " minutes",
-                        "  &7&oClick to edit"
+                        lang.getString(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.getRefreshCommandTradersMinutes())),
+                        lang.getString(Lang.GUI_EDIT_LORE)
                 ));
         refreshMinsMeta.setLore(TextUtil.colorize(refreshLore));
         refreshTradersMinutes.setItemMeta(refreshMinsMeta);
@@ -89,8 +90,8 @@ public class ConfigGui extends GuiHolder {
         }
 
         ItemMeta wgListMeta = wgList.getItemMeta();
-        ArrayList<String> wgListLore = new ArrayList<String>(Arrays.asList(
-                "  &7Left-click to add, Right-click to remove",
+        ArrayList<String> wgListLore = new ArrayList<>(Arrays.asList(
+                lang.getString(Lang.GUI_CONFIG_WG_LIST_LORE),
                 ""
         ));
         c.getWgRegionList().forEach(region -> wgListLore.add(" &b- &f" + region));

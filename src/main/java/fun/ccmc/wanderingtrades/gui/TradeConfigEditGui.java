@@ -3,6 +3,7 @@ package fun.ccmc.wanderingtrades.gui;
 import fun.ccmc.jmplib.Gui;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -18,20 +19,20 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public class TradeConfigEditGui extends GuiHolder {
-    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Enabled", "Click to toggle");
-    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Disabled", "Click to toggle");
-    private final ItemStack randomizedEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Randomized", "Click to toggle");
-    private final ItemStack randomizedDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Not Randomized", "Click to toggle");
-    private final ItemStack invEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Invincible", "Click to toggle");
-    private final ItemStack invDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "Not Invincible", "Click to toggle");
-    private final ItemStack randAmount = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Random Amount");
-    private final ItemStack chance = Gui.build(Material.PURPLE_STAINED_GLASS_PANE, "Chance");
-    private final ItemStack customName = Gui.build(Material.PINK_STAINED_GLASS_PANE, "Custom Name");
+    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_ENABLED), gui_toggle_lore);
+    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_DISABLED), gui_toggle_lore);
+    private final ItemStack randomizedEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_RANDOMIZED), gui_toggle_lore);
+    private final ItemStack randomizedDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_NOT_RANDOMIZED), gui_toggle_lore);
+    private final ItemStack invEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_INVINCIBLE), gui_toggle_lore);
+    private final ItemStack invDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_NOT_INVINCIBLE), gui_toggle_lore);
+    private final ItemStack randAmount = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_RANDOM_AMOUNT));
+    private final ItemStack chance = Gui.build(Material.PURPLE_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_CHANCE));
+    private final ItemStack customName = Gui.build(Material.PINK_STAINED_GLASS_PANE, lang.getString(Lang.GUI_TC_EDIT_CUSTOM_NAME));
 
     private final String tradeConfig;
 
     public TradeConfigEditGui(String tradeConfig) {
-        super("&e&lEditing Config&7: &f" + tradeConfig, 45);
+        super(WanderingTrades.getInstance().getLang().getString(Lang.GUI_TC_EDIT_TITLE) + tradeConfig, 45);
         this.tradeConfig = tradeConfig;
     }
 
@@ -65,25 +66,25 @@ public class TradeConfigEditGui extends GuiHolder {
         inventory.setItem(14, inv);
 
         ItemMeta randAmountMeta = randAmount.getItemMeta();
-        ArrayList<String> randAmountlore = new ArrayList<>();
-        randAmountlore.add("Value&7: &b" + t.getRandomAmount());
-        randAmountlore.add("  &7&oClick to edit");
-        randAmountMeta.setLore(TextUtil.colorize(randAmountlore));
+        ArrayList<String> randAmountLore = new ArrayList<>();
+        randAmountLore.add(lang.getString(Lang.GUI_VALUE_LORE) + "&b" + t.getRandomAmount());
+        randAmountLore.add(lang.getString(Lang.GUI_EDIT_LORE));
+        randAmountMeta.setLore(TextUtil.colorize(randAmountLore));
         randAmount.setItemMeta(randAmountMeta);
         inventory.setItem(16, randAmount);
 
         ItemMeta chanceMeta = chance.getItemMeta();
         ArrayList<String> chanceLore = new ArrayList<>();
-        chanceLore.add("Value&7: &b" + t.getChance());
-        chanceLore.add("  &7&oClick to edit");
+        chanceLore.add(lang.getString(Lang.GUI_VALUE_LORE) + "&b" + t.getChance());
+        chanceLore.add(lang.getString(Lang.GUI_EDIT_LORE));
         chanceMeta.setLore(TextUtil.colorize(chanceLore));
         chance.setItemMeta(chanceMeta);
         inventory.setItem(28, chance);
 
         ItemMeta customNameMeta = customName.getItemMeta();
         ArrayList<String> customNameLore = new ArrayList<>();
-        customNameLore.add("Value&7: &r" + t.getCustomName());
-        customNameLore.add("  &7&oClick to edit");
+        customNameLore.add(lang.getString(Lang.GUI_VALUE_LORE) + t.getCustomName());
+        customNameLore.add(lang.getString(Lang.GUI_EDIT_LORE));
         customNameMeta.setLore(TextUtil.colorize(customNameLore));
         customName.setItemMeta(customNameMeta);
         inventory.setItem(30, customName);

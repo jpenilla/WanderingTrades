@@ -1,6 +1,7 @@
 package fun.ccmc.wanderingtrades.gui;
 
 import fun.ccmc.jmplib.Gui;
+import fun.ccmc.wanderingtrades.config.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -11,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class PaginatedGui extends GuiHolder {
-    private final ItemStack nextPage = Gui.buildLore(Material.ARROW, "&aNext Page", "&7&o  Click for next page");
-    private final ItemStack previousPage = Gui.buildLore(Material.FEATHER, "&aLast Page", "&7&o  Click for previous page");
+    private final ItemStack nextPage = Gui.buildLore(Material.ARROW, lang.getString(Lang.GUI_PAGED_NEXT), lang.getString(Lang.GUI_PAGED_NEXT_LORE));
+    private final ItemStack previousPage = Gui.buildLore(Material.FEATHER, lang.getString(Lang.GUI_PAGED_LAST), lang.getString(Lang.GUI_PAGED_LAST_LORE));
 
     protected int page = 0;
     protected List<ItemStack> items;
