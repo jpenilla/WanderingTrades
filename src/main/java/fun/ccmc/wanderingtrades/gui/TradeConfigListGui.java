@@ -83,22 +83,22 @@ public class TradeConfigListGui extends PaginatedGui {
                                 try {
                                     FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + text + ".yml"));
                                     WanderingTrades.getInstance().getCfg().load();
-                                    Chat.sendCenteredMessage(p, "&aSuccessfully created new config and reloaded");
+                                    Chat.sendCenteredMessage(p, lang.get(Lang.GUI_CREATE_CONFIG_SUCCESS));
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
                                     Chat.sendCenteredMessage(p, "&4Error");
                                 }
                             } else {
-                                return AnvilGUI.Response.text("No spaces");
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
                             }
                             return AnvilGUI.Response.close();
                         } else {
-                            return AnvilGUI.Response.text("Name already taken");
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_CREATE_UNIQUE));
                         }
                     })
-                    .text("Type here")
+                    .text(lang.get(Lang.GUI_ANVIL_TYPE_HERE))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Name the config")
+                    .title(lang.get(Lang.GUI_ANVIL_CREATE_TITLE))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }

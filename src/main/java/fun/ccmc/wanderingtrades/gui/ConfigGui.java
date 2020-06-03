@@ -166,18 +166,18 @@ public class ConfigGui extends GuiHolder {
                         try {
                             int i = Integer.parseInt(text);
                             if (i < 0) {
-                                return AnvilGUI.Response.text("Number must be >= 0");
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GTE_0));
                             } else {
                                 c.setRefreshCommandTradersMinutes(i);
                             }
                         } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text("Enter a number");
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
                         }
                         return AnvilGUI.Response.close();
                     })
-                    .text(c.getRefreshCommandTradersMinutes() + "")
+                    .text(String.valueOf(c.getRefreshCommandTradersMinutes()))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Set Refresh Minutes Delay")
+                    .title(lang.get(Lang.GUI_ANVIL_SET_REFRESH_DELAY_TITLE))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
@@ -197,13 +197,13 @@ public class ConfigGui extends GuiHolder {
                                 c.setWgRegionList(temp);
                                 c.save();
                             } else {
-                                return AnvilGUI.Response.text("No spaces");
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
                             }
                             return AnvilGUI.Response.close();
                         })
-                        .text("Region name here")
+                        .text(lang.get(Lang.GUI_ANVIL_TYPE_HERE))
                         .item(new ItemStack(Material.WRITABLE_BOOK))
-                        .title("New list item")
+                        .title(lang.get(Lang.GUI_ANVIL_NEW_LIST_ITEM))
                         .plugin(WanderingTrades.getInstance())
                         .open(p);
             }

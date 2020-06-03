@@ -146,19 +146,19 @@ public class TradeConfigEditGui extends GuiHolder {
                         try {
                             int i = Integer.parseInt(text);
                             if (i < 1) {
-                                return AnvilGUI.Response.text("Number must be > 0");
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GT_0));
                             } else {
                                 t.setRandomAmount(i);
                                 t.save(tradeConfig);
                             }
                         } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text("Enter a number");
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
                         }
                         return AnvilGUI.Response.close();
                     })
-                    .text(t.getRandomAmount() + "")
+                    .text(String.valueOf(t.getRandomAmount()))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Set Random Amount")
+                    .title(lang.get(Lang.GUI_ANVIL_SET_RAND_AMOUNT_TITLE))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
@@ -171,19 +171,19 @@ public class TradeConfigEditGui extends GuiHolder {
                         try {
                             double d = Double.parseDouble(text);
                             if (d < 0 || d > 1) {
-                                return AnvilGUI.Response.text("Number must be 0.00-1.00");
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_0T1));
                             } else {
                                 t.setChance(d);
                                 t.save(tradeConfig);
                             }
                         } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text("Enter a number 0.00-1.00");
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
                         }
                         return AnvilGUI.Response.close();
                     })
-                    .text(t.getChance() + "")
+                    .text(String.valueOf(t.getChance()))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Set Chance 0.00-1.00")
+                    .title(lang.get(Lang.GUI_ANVIL_SET_CHANCE_TITLE))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
@@ -192,7 +192,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             String cN;
             if(t.getCustomName() == null) {
-                cN = "Enter name here";
+                cN = lang.get(Lang.GUI_ANVIL_TYPE_HERE);
             } else {
                 cN = t.getCustomName();
             }
@@ -205,7 +205,7 @@ public class TradeConfigEditGui extends GuiHolder {
                     })
                     .text(cN)
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Enter a Name or 'NONE'")
+                    .title(lang.get(Lang.GUI_ANVIL_CREATE_TITLE_OR_NONE))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }

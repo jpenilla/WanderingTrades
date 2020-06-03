@@ -58,12 +58,12 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandPermission("wanderingtrades.reload")
     @Description("Reloads all config files for WanderingTrades")
     public void onReload(CommandSender sender) {
-        Chat.sendCenteredMessage(sender, "&d&oReloading " + plugin.getName() + " config...");
+        Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD));
         plugin.getCfg().load();
         plugin.getLang().load();
         plugin.getListeners().reload();
         plugin.getTabCompletions().register();
-        Chat.sendCenteredMessage(sender, "&aDone.");
+        Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD_DONE));
     }
 
     @Subcommand("list|l")

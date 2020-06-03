@@ -58,15 +58,15 @@ public class TradeCreateGui extends TradeGui {
                                 tradeName = text;
                                 return AnvilGUI.Response.close();
                             } else {
-                                return AnvilGUI.Response.text("Must be a new name");
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_CREATE_UNIQUE));
                             }
                         } else {
-                            return AnvilGUI.Response.text("No spaces");
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
                         }
                     })
-                    .text("Type here")
+                    .text(lang.get(Lang.GUI_ANVIL_TYPE_HERE))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Enter a name")
+                    .title(lang.get(Lang.GUI_ANVIL_CREATE_TITLE))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
