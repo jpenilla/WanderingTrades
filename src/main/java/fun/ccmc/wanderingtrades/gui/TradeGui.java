@@ -121,18 +121,18 @@ public class TradeGui extends GuiHolder {
                         try {
                             int i = Integer.parseInt(text);
                             if (i < 1) {
-                                return AnvilGUI.Response.text("Number must be > 0");
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GT_0));
                             } else {
                                 maxUses = i;
                             }
                         } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text("Enter a number");
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
                         }
                         return AnvilGUI.Response.close();
                     })
-                    .text(maxUses + "")
+                    .text(String.valueOf(maxUses))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Set Max Uses")
+                    .title(lang.get(Lang.GUI_ANVIL_SET_MAX_USES))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }

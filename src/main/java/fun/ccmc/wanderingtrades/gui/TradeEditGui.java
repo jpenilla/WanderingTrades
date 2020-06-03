@@ -71,21 +71,21 @@ public class TradeEditGui extends TradeGui {
         if (deleteButton.isSimilar(item)) {
             p.closeInventory();
             new AnvilGUI.Builder()
-                    .onClose(player -> {
-                        new TradeListGui(tradeConfig).open(player);
-                    })
+                    .onClose(player -> new TradeListGui(tradeConfig).open(player))
                     .onComplete((player, text) -> {
-                        if (text.equals("yes")) {
+                        if (text.equals(lang.get(Lang.GUI_ANVIL_CONFIRM_KEY))) {
                             t.deleteTrade(tradeConfig, tradeName);
                             WanderingTrades.getInstance().getCfg().load();
                             return AnvilGUI.Response.close();
                         } else {
-                            return AnvilGUI.Response.text("Type 'yes' to confirm");
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_CONFIRM)
+                                    .replace("{KEY}", lang.get(Lang.GUI_ANVIL_CONFIRM_KEY)));
                         }
                     })
-                    .text("Type 'yes' to confirm")
+                    .text(lang.get(Lang.GUI_ANVIL_CONFIRM)
+                            .replace("{KEY}", lang.get(Lang.GUI_ANVIL_CONFIRM_KEY)))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title("Deleting trade: " + tradeName)
+                    .title(lang.get(Lang.GUI_ANVIL_DELETE_TITLE) + tradeName)
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
