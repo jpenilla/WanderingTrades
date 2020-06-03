@@ -1,12 +1,11 @@
 package fun.ccmc.wanderingtrades.listener;
 
-import fun.ccmc.jmplib.Chat;
 import fun.ccmc.jmplib.SkullCreator;
 import fun.ccmc.jmplib.TextUtil;
-import fun.ccmc.jmplib.WeightedRandom;
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
+import org.apache.commons.math3.distribution.EnumeratedDistribution;
+import org.apache.commons.math3.util.Pair;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
@@ -18,6 +17,7 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class AcquireTradeListener implements Listener {
@@ -51,9 +51,13 @@ public class AcquireTradeListener implements Listener {
                     }
                 } else {
                     ArrayList<String> keys = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
-                    WeightedRandom<String> weightedRandom = new WeightedRandom<>();
-                    keys.forEach(config -> weightedRandom.addEntry(config, plugin.getCfg().getTradeConfigs().get(config).getChance()));
-                    String chosenConfig = weightedRandom.getRandom();
+
+                    List<Pair<String, Double>> weights = keys.stream().map(config ->
+                            new Pair<>(config, plugin.getCfg().getTradeConfigs().get(config).getChance()))
+                            .collect(Collectors.toList());
+
+                    String chosenConfig = new EnumeratedDistribution<>(weights).sample();
+
                     if (chosenConfig != null) {
                         newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
                     }

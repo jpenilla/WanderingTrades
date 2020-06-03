@@ -36,8 +36,8 @@ public class TradeEditGui extends GuiHolder {
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzkyNzY2ZmVhNmMwNTc1MGU0MGRjODNjZDdlOTNhYjM0ODQ2ZDQ0MDkyMDk1MWRhMjYzNTk4MzZlY2YwOGY0YiJ9fX0=");
     private final ItemStack deleteButton = Gui.buildHeadLore("&4Delete", " &b- &fClick to delete this trade",
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19");
-    private final ItemStack experienceEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Experience Reward", "Click to toggle");
-    private final ItemStack experienceDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "No Experience Reward", "Click to toggle");
+    private final ItemStack experienceEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, "Experience Reward", gui_toggle_lore);
+    private final ItemStack experienceDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, "No Experience Reward", gui_toggle_lore);
     private final ItemStack maxUsesStack = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Max Uses");
     private final ItemStack tradeNameStack = Gui.build(Material.PINK_STAINED_GLASS_PANE, "Trade Name");
     private final ItemStack ingredient1 = Gui.build(Material.STRUCTURE_VOID, "&aIngredient One",

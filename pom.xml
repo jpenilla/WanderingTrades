@@ -45,7 +45,15 @@
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.io</pattern>
-                            <shadedPattern>fun.ccmc.wanderingtrades.apachecommonsio</shadedPattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades.apache.commonsio</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.apache.commons.math3</pattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades.apache.commonsmath3</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>assets.org.apache.commons.math3</pattern>
+                            <shadedPattern>fun.ccmc.wanderingtrades.apache.assets.commonsmath3</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>net.wesjd</pattern>
@@ -127,6 +135,11 @@
             <version>2.6</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.15.2-R0.1-SNAPSHOT</version>
@@ -146,7 +159,7 @@
         <dependency>
             <groupId>com.github.jmanpenilla</groupId>
             <artifactId>jmplib</artifactId>
-            <version>96727181b6</version>
+            <version>b85b8a6ee6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
