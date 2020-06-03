@@ -21,27 +21,27 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ConfigGui extends GuiHolder {
-    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_ENABLED), gui_toggle_lore);
-    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_DISABLED), gui_toggle_lore);
+    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_ENABLED), gui_toggle_lore);
+    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_DISABLED), gui_toggle_lore);
 
-    private final ItemStack allowMultipleSets = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_ALLOW_MULTIPLE_SETS), gui_toggle_lore);
-    private final ItemStack disallowMultipleSets = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_DISALLOW_MULTIPLE_SETS), gui_toggle_lore);
+    private final ItemStack allowMultipleSets = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_ALLOW_MULTIPLE_SETS), gui_toggle_lore);
+    private final ItemStack disallowMultipleSets = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_DISALLOW_MULTIPLE_SETS), gui_toggle_lore);
 
-    private final ItemStack removeOriginalTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_REMOVE_ORIGINAL), gui_toggle_lore);
-    private final ItemStack removeOriginalTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_KEEP_ORIGINAL), gui_toggle_lore);
+    private final ItemStack removeOriginalTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_REMOVE_ORIGINAL), gui_toggle_lore);
+    private final ItemStack removeOriginalTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_KEEP_ORIGINAL), gui_toggle_lore);
 
-    private final ItemStack refreshTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_REFRESH), gui_toggle_lore);
-    private final ItemStack refreshTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_NO_REFRESH), gui_toggle_lore);
+    private final ItemStack refreshTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_REFRESH), gui_toggle_lore);
+    private final ItemStack refreshTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_NO_REFRESH), gui_toggle_lore);
 
-    private final ItemStack wgWhitelist = Gui.buildLore(Material.WHITE_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_WG_WHITE), gui_toggle_lore);
-    private final ItemStack wgBlacklist = Gui.buildLore(Material.BEDROCK, lang.getString(Lang.GUI_CONFIG_WG_BLACK), gui_toggle_lore);
+    private final ItemStack wgWhitelist = Gui.buildLore(Material.WHITE_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_WG_WHITE), gui_toggle_lore);
+    private final ItemStack wgBlacklist = Gui.buildLore(Material.BEDROCK, lang.get(Lang.GUI_CONFIG_WG_BLACK), gui_toggle_lore);
 
-    private final ItemStack wgList = Gui.build(Material.PAPER, lang.getString(Lang.GUI_CONFIG_WG_LIST));
+    private final ItemStack wgList = Gui.build(Material.PAPER, lang.get(Lang.GUI_CONFIG_WG_LIST));
 
-    private final ItemStack refreshTradersMinutes = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, lang.getString(Lang.GUI_CONFIG_REFRESH_MINUTES));
+    private final ItemStack refreshTradersMinutes = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES));
 
     public ConfigGui() {
-        super(WanderingTrades.getInstance().getLang().getString(Lang.GUI_CONFIG_TITLE), 45);
+        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_CONFIG_TITLE), 45);
     }
 
     public Inventory getInventory() {
@@ -76,8 +76,8 @@ public class ConfigGui extends GuiHolder {
         ItemMeta refreshMinsMeta = refreshTradersMinutes.getItemMeta();
         ArrayList<String> refreshLore =
                 new ArrayList<>(Arrays.asList(
-                        lang.getString(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.getRefreshCommandTradersMinutes())),
-                        lang.getString(Lang.GUI_EDIT_LORE)
+                        lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.getRefreshCommandTradersMinutes())),
+                        lang.get(Lang.GUI_EDIT_LORE)
                 ));
         refreshMinsMeta.setLore(TextUtil.colorize(refreshLore));
         refreshTradersMinutes.setItemMeta(refreshMinsMeta);
@@ -91,7 +91,7 @@ public class ConfigGui extends GuiHolder {
 
         ItemMeta wgListMeta = wgList.getItemMeta();
         ArrayList<String> wgListLore = new ArrayList<>(Arrays.asList(
-                lang.getString(Lang.GUI_CONFIG_WG_LIST_LORE),
+                lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
                 ""
         ));
         c.getWgRegionList().forEach(region -> wgListLore.add(" &b- &f" + region));

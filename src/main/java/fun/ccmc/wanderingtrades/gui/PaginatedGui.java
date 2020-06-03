@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class PaginatedGui extends GuiHolder {
-    private final ItemStack nextPage = Gui.buildLore(Material.ARROW, lang.getString(Lang.GUI_PAGED_NEXT), lang.getString(Lang.GUI_PAGED_NEXT_LORE));
-    private final ItemStack previousPage = Gui.buildLore(Material.FEATHER, lang.getString(Lang.GUI_PAGED_LAST), lang.getString(Lang.GUI_PAGED_LAST_LORE));
+    private final ItemStack nextPage = Gui.buildLore(Material.ARROW, lang.get(Lang.GUI_PAGED_NEXT), lang.get(Lang.GUI_PAGED_NEXT_LORE));
+    private final ItemStack previousPage = Gui.buildLore(Material.FEATHER, lang.get(Lang.GUI_PAGED_LAST), lang.get(Lang.GUI_PAGED_LAST_LORE));
 
     protected int page = 0;
     protected List<ItemStack> items;

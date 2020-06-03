@@ -19,9 +19,9 @@ import org.bukkit.inventory.ItemStack;
 public abstract class GuiHolder implements InventoryHolder {
     protected Inventory inventory;
     public final LangConfig lang = WanderingTrades.getInstance().getLang();
-    public final String gui_toggle_lore = lang.getString(Lang.GUI_TOGGLE_LORE);
-    public final ItemStack backButton = Gui.buildLore(Material.BARRIER, lang.getString(Lang.GUI_BACK), lang.getString(Lang.GUI_BACK_LORE));
-    public final ItemStack closeButton = Gui.buildLore(Material.BARRIER, lang.getString(Lang.GUI_CLOSE), lang.getString(Lang.GUI_CLOSE_LORE));
+    public final String gui_toggle_lore = lang.get(Lang.GUI_TOGGLE_LORE);
+    public final ItemStack backButton = Gui.buildLore(Material.BARRIER, lang.get(Lang.GUI_BACK), lang.get(Lang.GUI_BACK_LORE));
+    public final ItemStack closeButton = Gui.buildLore(Material.BARRIER, lang.get(Lang.GUI_CLOSE), lang.get(Lang.GUI_CLOSE_LORE));
 
     public GuiHolder(String name, int size) {
         inventory = Bukkit.createInventory(this, size, TextUtil.colorize(name));
