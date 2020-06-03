@@ -4,6 +4,7 @@ import fun.ccmc.jmplib.Chat;
 import fun.ccmc.jmplib.Gui;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.apache.commons.io.FileUtils;
@@ -20,11 +21,11 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class TradeConfigListGui extends PaginatedGui {
-    private final ItemStack newConfig = Gui.buildLore(Material.WRITABLE_BOOK, "&aAdd config", "&7&o  Click to add a new config");
+    private final ItemStack newConfig = Gui.buildLore(Material.WRITABLE_BOOK, lang.get(Lang.GUI_TC_LIST_ADD_CONFIG), lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE));
     private final ArrayList<String> configNames = new ArrayList<>();
 
     public TradeConfigListGui() {
-        super("&a&lTrade Configs", 36, getConfigStacks());
+        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_TITLE), 36, getConfigStacks());
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
 
@@ -49,7 +50,7 @@ public class TradeConfigListGui extends PaginatedGui {
                 }
             }
             if (lores.length > 10) {
-                finalLores.add("  &7&o...and " + (lores.length - 10) + " more");
+                finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(lores.length - 10)));
             }
             items.add(Gui.build(Material.PAPER, "" + config, finalLores));
             i++;

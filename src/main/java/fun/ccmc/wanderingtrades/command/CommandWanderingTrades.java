@@ -72,7 +72,7 @@ public class CommandWanderingTrades extends BaseCommand {
     public void onList(CommandSender sender) {
         List<String> configs = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
         String commaSeparatedConfigs = String.join("&7, &r", configs);
-        Chat.sendMsg(sender, plugin.getLang().getString(Lang.COMMAND_LIST_LOADED));
+        Chat.sendMsg(sender, plugin.getLang().get(Lang.COMMAND_LIST_LOADED));
         Chat.sendMsg(sender, commaSeparatedConfigs);
     }
 
@@ -150,10 +150,10 @@ public class CommandWanderingTrades extends BaseCommand {
             });
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_NO_CONFIG));
+                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
@@ -188,10 +188,10 @@ public class CommandWanderingTrades extends BaseCommand {
             });
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_NO_CONFIG));
+                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                Chat.sendCenteredMessage(sender, plugin.getLang().getString(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }

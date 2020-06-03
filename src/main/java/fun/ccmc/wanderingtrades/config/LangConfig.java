@@ -5,7 +5,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class LangConfig {
     private final WanderingTrades plugin;
@@ -27,12 +30,16 @@ public class LangConfig {
         });
     }
 
-    public String getString(Lang key) {
+    public String get(Lang key) {
         try {
             return messages.get(key.toString());
         } catch (NullPointerException e) {
             plugin.getLog().warn("The message '" + key + "' is missing from your lang file. Use 'updateLang: true' in config.yml to fix this");
             return "";
         }
+    }
+
+    public ArrayList<String> getList(Lang key) {
+        return Arrays.stream(get(key).split("\\|")).collect(Collectors.toCollection(ArrayList::new));
     }
 }

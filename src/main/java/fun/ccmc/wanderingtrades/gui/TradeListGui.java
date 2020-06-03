@@ -2,6 +2,7 @@ package fun.ccmc.wanderingtrades.gui;
 
 import fun.ccmc.jmplib.Gui;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,12 +16,12 @@ import java.util.stream.IntStream;
 
 public class TradeListGui extends PaginatedGui {
     private final ArrayList<String> configNames = new ArrayList<>();
-    private final ItemStack editButton = Gui.buildLore(Material.CHEST, "&aEdit Config Settings", "&7&o  Click to edit settings for this config");
-    private final ItemStack plus = Gui.buildHeadLore("New Trade", "  &7Click to create new trade", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19");
+    private final ItemStack editButton = Gui.buildLore(Material.CHEST, lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG), lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE));
+    private final ItemStack newTradeStack = Gui.buildHeadLore(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE), lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19");
     private final String tradeConfig;
 
     public TradeListGui(String tradeConfig) {
-        super("&e&lConfig&7: &f" + tradeConfig, 54, getTradeStacks(tradeConfig));
+        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig, 54, getTradeStacks(tradeConfig));
         this.tradeConfig = tradeConfig;
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
@@ -29,7 +30,7 @@ public class TradeListGui extends PaginatedGui {
         Inventory i = super.getInventory();
         i.setItem(inventory.getSize() - 1, backButton);
         i.setItem(inventory.getSize() - 2, editButton);
-        i.setItem(inventory.getSize() - 5, plus);
+        i.setItem(inventory.getSize() - 5, newTradeStack);
         IntStream.range(i.getSize() - 9, i.getSize() - 1).forEach(s -> {
             if (inventory.getItem(s) == null) {
                 inventory.setItem(s, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
@@ -45,7 +46,7 @@ public class TradeListGui extends PaginatedGui {
         } else if (editButton.isSimilar(i)) {
             p.closeInventory();
             new TradeConfigEditGui(tradeConfig).open(p);
-        } else if (plus.isSimilar(i)) {
+        } else if (newTradeStack.isSimilar(i)) {
             p.closeInventory();
             new TradeCreateGui(tradeConfig).open(p);
         } else if (getTradeStacks(tradeConfig).contains(i)) {
