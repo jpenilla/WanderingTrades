@@ -118,17 +118,15 @@ public class TradeConfig {
                     }
                     itemBuilder.setAmount(config.getInt(key + ".amount"));
 
-                    ItemMeta iMeta = itemBuilder.getMeta();
-                    config.getStringList(key + ".enchantments").forEach(s -> {
+                    for (String s : config.getStringList(key + ".enchantments")) {
                         if (s.contains(":")) {
                             String[] e = s.split(":");
                             Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
                             if (ench != null) {
-                                iMeta.addEnchant(ench, Integer.parseInt(e[1]), true);
+                                itemBuilder.addEnchant(ench, Integer.parseInt(e[1]));
                             }
                         }
-                    });
-                    itemBuilder.setMeta(iMeta);
+                    }
                 }
             }
         }
