@@ -30,14 +30,11 @@ public abstract class GuiHolder implements InventoryHolder {
 
     public abstract void onInventoryClick(InventoryClickEvent event);
 
-    public void onInventoryDrag(InventoryDragEvent event) {
-    }
+    public abstract void onInventoryDrag(InventoryDragEvent event);
 
-    public void onInventoryOpen(InventoryOpenEvent event) {
-    }
+    public abstract void onInventoryOpen(InventoryOpenEvent event);
 
-    public void onInventoryClose(InventoryCloseEvent event) {
-    }
+    public abstract void onInventoryClose(InventoryCloseEvent event);
 
     public void open(Player p) {
         p.openInventory(getInventory());

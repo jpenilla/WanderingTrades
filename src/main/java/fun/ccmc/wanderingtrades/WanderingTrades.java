@@ -69,7 +69,8 @@ public final class WanderingTrades extends JavaPlugin {
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
 
-        new UpdateChecker(this, 79068).getVersion(UpdateChecker::updateCheck);
+        new UpdateChecker(this, 79068).getVersion(version ->
+                UpdateChecker.updateCheck(version, true));
         class UpdateCheck extends BukkitRunnable {
             @Override
             public void run() {
