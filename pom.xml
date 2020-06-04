@@ -121,7 +121,7 @@
         </repository>
         <repository>
             <id>jmp-repo</id>
-            <url>http://mvn.ccmc.fun/repository/internal</url>
+            <url>https://mvn.ccmc.fun/repository/internal</url>
         </repository>
     </repositories>
 
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>fun.ccmc.jmplib</groupId>
             <artifactId>jmplib</artifactId>
-            <version>1.0.0-SNAPSHOT.19</version>
+            <version>1.0.0-SNAPSHOT.20</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
