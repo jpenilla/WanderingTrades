@@ -159,7 +159,7 @@
         <dependency>
             <groupId>com.github.jmanpenilla</groupId>
             <artifactId>jmplib</artifactId>
-            <version>b2c7c99cec</version>
+            <version>3639025b31</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
