@@ -1,7 +1,7 @@
 package fun.ccmc.wanderingtrades.gui;
 
 import fun.ccmc.jmplib.Chat;
-import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class TradeConfigListGui extends PaginatedGui {
-    private final ItemStack newConfig = Gui.buildLore(Material.WRITABLE_BOOK, lang.get(Lang.GUI_TC_LIST_ADD_CONFIG), lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE));
+    private final ItemStack newConfig = new ItemBuilder(Material.WRITABLE_BOOK).setName(lang.get(Lang.GUI_TC_LIST_ADD_CONFIG)).setLore(lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE)).build();
     private final ArrayList<String> configNames = new ArrayList<>();
 
     public TradeConfigListGui() {
@@ -33,7 +33,6 @@ public class TradeConfigListGui extends PaginatedGui {
         ArrayList<ItemStack> items = new ArrayList<>();
         ArrayList<String> configs = new ArrayList<>();
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configs.add((String) completion));
-        int i = 0;
         for (String config : configs) {
             TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(config);
             ArrayList<String> lore = new ArrayList<>();
@@ -52,8 +51,7 @@ public class TradeConfigListGui extends PaginatedGui {
             if (lores.length > 10) {
                 finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(lores.length - 10)));
             }
-            items.add(Gui.build(Material.PAPER, "" + config, finalLores));
-            i++;
+            items.add(new ItemBuilder(Material.PAPER).setName("" + config).setLore(finalLores).build());
         }
         return items;
     }
@@ -64,7 +62,7 @@ public class TradeConfigListGui extends PaginatedGui {
         i.setItem(inventory.getSize() - 1, closeButton);
         IntStream.range(i.getSize()-9, i.getSize()-1).forEach(s -> {
             if (inventory.getItem(s) == null) {
-                inventory.setItem(s, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+                inventory.setItem(s, filler);
             }
         });
         return i;

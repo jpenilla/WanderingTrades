@@ -147,36 +147,26 @@ public class TradeConfig {
         save(configName);
     }
 
-    public boolean writeTrade(String configName, String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
+    public void writeTrade(String configName, String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
         String child = parent + "." + tradeName;
-        if (i1 == null && i2 == null) {
-            return false;
-        } else {
+        if (i1 != null) {
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
             file.set(child + ".result.itemStack", result.serialize());
             writeIngredient(configName, tradeName, 1, i1);
             writeIngredient(configName, tradeName, 2, i2);
             save(configName);
-            return true;
         }
     }
 
-    public boolean writeIngredient(String configName, String tradeName, int i, ItemStack is) {
+    public void writeIngredient(String configName, String tradeName, int i, ItemStack is) {
         if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
             String child = parent + "." + tradeName;
             if (is != null) {
                 file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
-            } else {
-                if (i == 2) {
-                    file.set(child + ".ingredients.2", null);
-                } else {
-                    return false;
-                }
+            } else if (i == 2) {
+                file.set(child + ".ingredients.2", null);
             }
-            return true;
-        } else {
-            return false;
         }
     }
 

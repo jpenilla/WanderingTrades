@@ -1,6 +1,6 @@
 package fun.ccmc.wanderingtrades.gui;
 
-import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
@@ -20,8 +20,9 @@ public abstract class GuiHolder implements InventoryHolder {
     protected Inventory inventory;
     public final LangConfig lang = WanderingTrades.getInstance().getLang();
     public final String gui_toggle_lore = lang.get(Lang.GUI_TOGGLE_LORE);
-    public final ItemStack backButton = Gui.buildLore(Material.BARRIER, lang.get(Lang.GUI_BACK), lang.get(Lang.GUI_BACK_LORE));
-    public final ItemStack closeButton = Gui.buildLore(Material.BARRIER, lang.get(Lang.GUI_CLOSE), lang.get(Lang.GUI_CLOSE_LORE));
+    public final ItemStack backButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_BACK)).setLore(lang.get(Lang.GUI_BACK_LORE)).build();
+    public final ItemStack closeButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_CLOSE)).setLore(lang.get(Lang.GUI_CLOSE_LORE)).build();
+    public final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
 
     public GuiHolder(String name, int size) {
         inventory = Bukkit.createInventory(this, size, TextUtil.colorize(name));

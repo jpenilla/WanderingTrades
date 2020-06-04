@@ -1,7 +1,6 @@
 package fun.ccmc.wanderingtrades.gui;
 
-import fun.ccmc.jmplib.Gui;
-import fun.ccmc.jmplib.TextUtil;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
@@ -11,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
@@ -25,17 +23,14 @@ public class TradeCreateGui extends TradeGui {
     public Inventory getInventory() {
         inventory = super.getInventory();
 
-        ItemMeta tradeNameStackItemMeta = tradeNameStack.getItemMeta();
         ArrayList<String> tradeNameLore = new ArrayList<>();
         tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + tradeName);
         tradeNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        tradeNameStackItemMeta.setLore(TextUtil.colorize(tradeNameLore));
-        tradeNameStack.setItemMeta(tradeNameStackItemMeta);
-        inventory.setItem(10, tradeNameStack);
+        inventory.setItem(10, new ItemBuilder(tradeNameStack).setLore(tradeNameLore).build());
 
         IntStream.range(0, inventory.getSize()).forEach(slot -> {
             if (inventory.getItem(slot) == null) {
-                inventory.setItem(slot, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+                inventory.setItem(slot, filler);
             }
         });
 

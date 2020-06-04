@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TabCompletions {
-    private WanderingTrades plugin;
+    private final WanderingTrades plugin;
 
     public TabCompletions(WanderingTrades instance) {
         plugin = instance;

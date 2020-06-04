@@ -1,6 +1,6 @@
 package fun.ccmc.wanderingtrades.gui;
 
-import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
@@ -19,15 +19,15 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 public class TradeConfigEditGui extends GuiHolder {
-    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_ENABLED), gui_toggle_lore);
-    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_DISABLED), gui_toggle_lore);
-    private final ItemStack randomizedEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_RANDOMIZED), gui_toggle_lore);
-    private final ItemStack randomizedDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_NOT_RANDOMIZED), gui_toggle_lore);
-    private final ItemStack invEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_INVINCIBLE), gui_toggle_lore);
-    private final ItemStack invDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_NOT_INVINCIBLE), gui_toggle_lore);
-    private final ItemStack randAmount = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT));
-    private final ItemStack chance = Gui.build(Material.PURPLE_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_CHANCE));
-    private final ItemStack customName = Gui.build(Material.PINK_STAINED_GLASS_PANE, lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME));
+    private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_ENABLED)).setLore(gui_toggle_lore).build();
+    private final ItemStack enabledDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_DISABLED)).setLore(gui_toggle_lore).build();
+    private final ItemStack randomizedEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_RANDOMIZED)).setLore(gui_toggle_lore).build();
+    private final ItemStack randomizedDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_NOT_RANDOMIZED)).setLore(gui_toggle_lore).build();
+    private final ItemStack invEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_INVINCIBLE)).setLore(gui_toggle_lore).build();
+    private final ItemStack invDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_NOT_INVINCIBLE)).setLore(gui_toggle_lore).build();
+    private final ItemStack randAmount = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT)).build();
+    private final ItemStack chance = new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CHANCE)).build();
+    private final ItemStack customName = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME)).build();
 
     private final String tradeConfig;
 
@@ -91,7 +91,7 @@ public class TradeConfigEditGui extends GuiHolder {
 
         IntStream.range(0, inventory.getSize()).forEach(slot -> {
             if (inventory.getItem(slot) == null) {
-                inventory.setItem(slot, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+                inventory.setItem(slot, filler);
             }
         });
 

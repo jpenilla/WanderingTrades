@@ -1,6 +1,6 @@
 package fun.ccmc.wanderingtrades.gui;
 
-import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
@@ -16,8 +16,9 @@ import java.util.stream.IntStream;
 
 public class TradeListGui extends PaginatedGui {
     private final ArrayList<String> configNames = new ArrayList<>();
-    private final ItemStack editButton = Gui.buildLore(Material.CHEST, lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG), lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE));
-    private final ItemStack newTradeStack = Gui.buildHeadLore(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE), lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19");
+    private final ItemStack editButton = new ItemBuilder(Material.CHEST).setName(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG)).setLore(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE)).build();
+    private final ItemStack newTradeStack = new ItemBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19")
+            .setName(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE)).setLore(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE)).build();
     private final String tradeConfig;
 
     public TradeListGui(String tradeConfig) {
@@ -33,7 +34,7 @@ public class TradeListGui extends PaginatedGui {
         i.setItem(inventory.getSize() - 5, newTradeStack);
         IntStream.range(i.getSize() - 9, i.getSize() - 1).forEach(s -> {
             if (inventory.getItem(s) == null) {
-                inventory.setItem(s, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+                inventory.setItem(s, filler);
             }
         });
         return i;

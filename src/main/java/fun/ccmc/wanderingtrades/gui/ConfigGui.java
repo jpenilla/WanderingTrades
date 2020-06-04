@@ -1,7 +1,6 @@
 package fun.ccmc.wanderingtrades.gui;
 
-import fun.ccmc.jmplib.Gui;
-import fun.ccmc.jmplib.TextUtil;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Config;
 import fun.ccmc.wanderingtrades.config.Lang;
@@ -13,7 +12,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,24 +19,24 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ConfigGui extends GuiHolder {
-    private final ItemStack enabledEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_ENABLED), gui_toggle_lore);
-    private final ItemStack enabledDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_DISABLED), gui_toggle_lore);
+    private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_ENABLED)).setLore(gui_toggle_lore).build();
+    private final ItemStack enabledDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_DISABLED)).setLore(gui_toggle_lore).build();
 
-    private final ItemStack allowMultipleSets = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_ALLOW_MULTIPLE_SETS), gui_toggle_lore);
-    private final ItemStack disallowMultipleSets = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_DISALLOW_MULTIPLE_SETS), gui_toggle_lore);
+    private final ItemStack allowMultipleSets = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_ALLOW_MULTIPLE_SETS)).setLore(gui_toggle_lore).build();
+    private final ItemStack disallowMultipleSets = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_DISALLOW_MULTIPLE_SETS)).setLore(gui_toggle_lore).build();
 
-    private final ItemStack removeOriginalTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_REMOVE_ORIGINAL), gui_toggle_lore);
-    private final ItemStack removeOriginalTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_KEEP_ORIGINAL), gui_toggle_lore);
+    private final ItemStack removeOriginalTradesEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_REMOVE_ORIGINAL)).setLore(gui_toggle_lore).build();
+    private final ItemStack removeOriginalTradesDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_KEEP_ORIGINAL)).setLore(gui_toggle_lore).build();
 
-    private final ItemStack refreshTradesEnabled = Gui.buildLore(Material.LIME_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_REFRESH), gui_toggle_lore);
-    private final ItemStack refreshTradesDisabled = Gui.buildLore(Material.RED_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_NO_REFRESH), gui_toggle_lore);
+    private final ItemStack refreshTradesEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_REFRESH)).setLore(gui_toggle_lore).build();
+    private final ItemStack refreshTradesDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_NO_REFRESH)).setLore(gui_toggle_lore).build();
 
-    private final ItemStack wgWhitelist = Gui.buildLore(Material.WHITE_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_WG_WHITE), gui_toggle_lore);
-    private final ItemStack wgBlacklist = Gui.buildLore(Material.BEDROCK, lang.get(Lang.GUI_CONFIG_WG_BLACK), gui_toggle_lore);
+    private final ItemStack wgWhitelist = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_WG_WHITE)).setLore(gui_toggle_lore).build();
+    private final ItemStack wgBlacklist = new ItemBuilder(Material.BEDROCK).setName(lang.get(Lang.GUI_CONFIG_WG_BLACK)).setLore(gui_toggle_lore).build();
 
-    private final ItemStack wgList = Gui.build(Material.PAPER, lang.get(Lang.GUI_CONFIG_WG_LIST));
+    private final ItemStack wgList = new ItemBuilder(Material.PAPER).setName(lang.get(Lang.GUI_CONFIG_WG_LIST)).build();
 
-    private final ItemStack refreshTradersMinutes = Gui.build(Material.LIGHT_BLUE_STAINED_GLASS_PANE, lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES));
+    private final ItemStack refreshTradersMinutes = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES)).build();
 
     public ConfigGui() {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_CONFIG_TITLE), 45);
@@ -73,15 +71,12 @@ public class ConfigGui extends GuiHolder {
             inventory.setItem(16, refreshTradesDisabled);
         }
 
-        ItemMeta refreshMinsMeta = refreshTradersMinutes.getItemMeta();
         ArrayList<String> refreshLore =
                 new ArrayList<>(Arrays.asList(
                         lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.getRefreshCommandTradersMinutes())),
                         lang.get(Lang.GUI_EDIT_LORE)
                 ));
-        refreshMinsMeta.setLore(TextUtil.colorize(refreshLore));
-        refreshTradersMinutes.setItemMeta(refreshMinsMeta);
-        inventory.setItem(28, refreshTradersMinutes);
+        inventory.setItem(28, new ItemBuilder(refreshTradersMinutes).setLore(refreshLore).build());
 
         if (c.isWgWhitelist()) {
             inventory.setItem(30, wgWhitelist);
@@ -89,21 +84,18 @@ public class ConfigGui extends GuiHolder {
             inventory.setItem(30, wgBlacklist);
         }
 
-        ItemMeta wgListMeta = wgList.getItemMeta();
         ArrayList<String> wgListLore = new ArrayList<>(Arrays.asList(
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
                 ""
         ));
         c.getWgRegionList().forEach(region -> wgListLore.add(" &b- &f" + region));
-        wgListMeta.setLore(TextUtil.colorize(wgListLore));
-        wgList.setItemMeta(wgListMeta);
-        inventory.setItem(32, wgList);
+        inventory.setItem(32, new ItemBuilder(wgList).setLore(wgListLore).build());
 
         inventory.setItem(inventory.getSize() - 1, closeButton);
 
         IntStream.range(0, inventory.getSize()).forEach(slot -> {
             if (inventory.getItem(slot) == null) {
-                inventory.setItem(slot, Gui.build(Material.GRAY_STAINED_GLASS_PANE));
+                inventory.setItem(slot, filler);
             }
         });
 
