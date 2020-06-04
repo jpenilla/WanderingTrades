@@ -1,6 +1,6 @@
 package fun.ccmc.wanderingtrades.listener;
 
-import fun.ccmc.jmplib.SkullCreator;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,11 +40,11 @@ public class AcquireTradeListener implements Listener {
 
                 if (plugin.getCfg().isAllowMultipleSets()) {
                     HashMap<String, TradeConfig> m = new HashMap<>(plugin.getCfg().getTradeConfigs());
-                    Iterator it = m.entrySet().iterator();
+                    Iterator<Map.Entry<String,TradeConfig>> it = m.entrySet().iterator();
                     while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry) it.next();
-                        if (randBoolean(((TradeConfig) pair.getValue()).getChance())) {
-                            newTrades.addAll(((TradeConfig) pair.getValue()).getTrades(false));
+                        Map.Entry<String,TradeConfig> pair = it.next();
+                        if (randBoolean(pair.getValue().getChance())) {
+                            newTrades.addAll(pair.getValue().getTrades(false));
                         }
                         it.remove();
                     }
@@ -97,12 +96,10 @@ public class AcquireTradeListener implements Listener {
         });
 
         selectedPlayers.forEach(player -> {
-            ItemStack head = SkullCreator.itemFromUuid(player.getUniqueId());
-            ItemMeta meta = head.getItemMeta();
-            meta.setDisplayName(TextUtil.colorize(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", player.getName())));
-            meta.setLore(TextUtil.colorize(plugin.getCfg().getPlayerHeadConfig().getLore()));
-            head.setItemMeta(meta);
-            head.setAmount(plugin.getCfg().getPlayerHeadConfig().getAmountOfHeadsPerTrade());
+            ItemStack head = new ItemBuilder(player.getUniqueId())
+                    .setName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", player.getName()))
+                    .setLore(plugin.getCfg().getPlayerHeadConfig().getLore())
+                    .setAmount(plugin.getCfg().getPlayerHeadConfig().getAmountOfHeadsPerTrade()).build();
             MerchantRecipe recipe = new MerchantRecipe(head, 0, plugin.getCfg().getPlayerHeadConfig().getMaxUses(), plugin.getCfg().getPlayerHeadConfig().isExperienceReward());
             recipe.addIngredient(plugin.getCfg().getPlayerHeadConfig().getIngredient1());
             if (plugin.getCfg().getPlayerHeadConfig().getIngredient2() != null) {
@@ -117,7 +114,7 @@ public class AcquireTradeListener implements Listener {
         return Math.random() < p;
     }
 
-    public static boolean inBounds(int index, List l) {
+    public static boolean inBounds(int index, List<OfflinePlayer> l) {
         return (index >= 0) && (index < l.size());
     }
 }

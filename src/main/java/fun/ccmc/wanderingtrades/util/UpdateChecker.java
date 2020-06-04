@@ -36,7 +36,11 @@ public class UpdateChecker {
     }
 
     public static void updateCheck(String version) {
-        if (WanderingTrades.getInstance().getDescription().getVersion().equalsIgnoreCase(version)) {
+        updateCheck(version, false);
+    }
+
+    public static void updateCheck(String version, boolean startup) {
+        if (WanderingTrades.getInstance().getDescription().getVersion().equalsIgnoreCase(version) && startup) {
             WanderingTrades.getInstance().getLog().info("&aYou are running the latest version of " + WanderingTrades.getInstance().getName() + "! :)");
         } else if(WanderingTrades.getInstance().getDescription().getVersion().contains("SNAPSHOT")) {
             WanderingTrades.getInstance().getLog().info("&e[!] &6You are running a development build of " + WanderingTrades.getInstance().getName() + " (" + WanderingTrades.getInstance().getDescription().getVersion() + ") &e[!]");
