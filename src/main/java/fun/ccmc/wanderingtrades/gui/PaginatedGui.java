@@ -1,6 +1,6 @@
 package fun.ccmc.wanderingtrades.gui;
 
-import fun.ccmc.jmplib.Gui;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.wanderingtrades.config.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,11 +12,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class PaginatedGui extends GuiHolder {
-    private final ItemStack nextPage = Gui.buildLore(Material.ARROW, lang.get(Lang.GUI_PAGED_NEXT), lang.get(Lang.GUI_PAGED_NEXT_LORE));
-    private final ItemStack previousPage = Gui.buildLore(Material.FEATHER, lang.get(Lang.GUI_PAGED_LAST), lang.get(Lang.GUI_PAGED_LAST_LORE));
+    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(lang.get(Lang.GUI_PAGED_NEXT)).setLore(lang.get(Lang.GUI_PAGED_NEXT_LORE)).build();
+    private final ItemStack previousPage = new ItemBuilder(Material.FEATHER).setName(lang.get(Lang.GUI_PAGED_LAST)).setLore(lang.get(Lang.GUI_PAGED_LAST_LORE)).build();
 
     protected int page = 0;
-    protected List<ItemStack> items;
+    protected final List<ItemStack> items;
 
     public PaginatedGui(String name, int size, List<ItemStack> itemsToDisplay) {
         super(name, size);

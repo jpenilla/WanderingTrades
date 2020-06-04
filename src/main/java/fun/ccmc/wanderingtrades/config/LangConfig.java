@@ -25,9 +25,7 @@ public class LangConfig {
         FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
         messages.clear();
-        config.getKeys(false).forEach(message -> {
-            messages.put(message, config.getString(message));
-        });
+        config.getKeys(false).forEach(message -> messages.put(message, config.getString(message)));
     }
 
     public String get(Lang key) {
