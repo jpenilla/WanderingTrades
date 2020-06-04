@@ -61,11 +61,13 @@ public class TradeListGui extends PaginatedGui {
         TradeConfig tc = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(configName);
         tc.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> {
             ItemStack s = TradeConfig.getStack(tc.getFile(), "trades." + key + ".result");
-            ItemMeta m = s.getItemMeta();
-            m.setDisplayName(key);
-            m.getEnchants().keySet().forEach(m::removeEnchant);
-            s.setItemMeta(m);
-            trades.add(s);
+            if(s != null) {
+                ItemBuilder b = new ItemBuilder(s);
+                b.setName(key);
+                b.clearEnchants();
+                b.clearLore();
+                trades.add(b.build());
+            }
         });
         return trades;
     }
