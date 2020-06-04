@@ -6,7 +6,7 @@
 
     <groupId>fun.ccmc.wanderingtrades</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.4.2.1</version>
+    <version>1.4.3-SNAPSHOT.${env.BUILD_NUMBER}</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
@@ -119,6 +119,10 @@
             <id>sk89q-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
+        <repository>
+            <id>jmp-repo</id>
+            <url>http://mvn.ccmc.fun/repository/internal</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -157,9 +161,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.jmanpenilla</groupId>
+            <groupId>fun.ccmc.jmplib</groupId>
             <artifactId>jmplib</artifactId>
-            <version>3639025b31</version>
+            <version>1.0.0-SNAPSHOT.16</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
