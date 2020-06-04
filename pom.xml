@@ -6,7 +6,7 @@
 
     <groupId>fun.ccmc.wanderingtrades</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.4.3-SNAPSHOT.${env.BUILD_NUMBER}</version>
+    <version>1.4.3-SNAPSHOT.{BUILD_NUMBER}</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
@@ -163,7 +163,7 @@
         <dependency>
             <groupId>fun.ccmc.jmplib</groupId>
             <artifactId>jmplib</artifactId>
-            <version>1.0.0-SNAPSHOT.16</version>
+            <version>1.0.0-SNAPSHOT.19</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
