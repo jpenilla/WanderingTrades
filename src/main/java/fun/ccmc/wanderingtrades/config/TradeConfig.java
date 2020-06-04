@@ -1,7 +1,6 @@
 package fun.ccmc.wanderingtrades.config;
 
-import fun.ccmc.jmplib.SkullCreator;
-import fun.ccmc.jmplib.TextUtil;
+import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,53 +76,49 @@ public class TradeConfig {
     }
 
     public static ItemStack getStack(FileConfiguration config, String key) {
-        ItemStack is;
+        ItemBuilder itemBuilder;
         boolean McRPG = false;
 
         try {
-            is = ItemStack.deserialize(config.getConfigurationSection(key + ".itemStack").getValues(true));
+            itemBuilder = new ItemBuilder(ItemStack.deserialize(config.getConfigurationSection(key + ".itemStack").getValues(true)));
         } catch (NullPointerException e) {
-            is = null;
+            itemBuilder = null;
         }
 
-        if (is == null) {
+        if (itemBuilder == null) {
             if (config.getString(key + ".material") != null) {
                 if (config.getString(key + ".material").contains("head-")) {
-                    is = SkullCreator.itemFromBase64(config.getString(key + ".material").replace("head-", ""));
+                    itemBuilder = new ItemBuilder(config.getString(key + ".material").replace("head-", ""));
                 } else {
                     if (config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
-                        is = new ItemStack(Material.CHIPPED_ANVIL);
-                        ItemMeta im = is.getItemMeta();
+                        itemBuilder = new ItemBuilder(Material.CHIPPED_ANVIL).setAmount(config.getInt(key + ".amount"));
                         if (config.getString(key + ".material").toUpperCase().contains("SKILL")) {
-                            im.setDisplayName("mcrpg_skill_book_placeholder_");
+                            itemBuilder.setName("mcrpg_skill_book_placeholder_");
                         } else {
-                            im.setDisplayName("mcrpg_upgrade_book_placeholder_");
+                            itemBuilder.setName("mcrpg_upgrade_book_placeholder_");
                         }
                         McRPG = true;
-                        is.setItemMeta(im);
-                        is.setAmount(config.getInt(key + ".amount"));
                     } else {
                         if (Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
-                            is = new ItemStack(Material.getMaterial(config.getString(key + ".material").toUpperCase()), config.getInt(key + ".amount"));
+                            itemBuilder = new ItemBuilder(Material.getMaterial(config.getString(key + ".material").toUpperCase())).setAmount(config.getInt(key + ".amount"));
                         } else {
-                            is = new ItemStack(Material.STONE);
+                            itemBuilder = new ItemBuilder(Material.STONE);
                             WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
                         }
                     }
                 }
 
                 if (!McRPG) {
-                    ItemMeta iMeta = is.getItemMeta();
-
                     String cname = config.getString(key + ".customname");
                     if (cname != null && !cname.equals("NONE")) {
-                        iMeta.setDisplayName(TextUtil.colorize(cname));
+                        itemBuilder.setName(cname);
                     }
-
                     if (config.getStringList(key + ".lore").size() != 0) {
-                        iMeta.setLore(TextUtil.colorize(config.getStringList(key + ".lore")));
+                        itemBuilder.setLore(config.getStringList(key + ".lore"));
                     }
+                    itemBuilder.setAmount(config.getInt(key + ".amount"));
 
+                    ItemMeta iMeta = itemBuilder.getMeta();
                     config.getStringList(key + ".enchantments").forEach(s -> {
                         if (s.contains(":")) {
                             String[] e = s.split(":");
@@ -133,13 +128,15 @@ public class TradeConfig {
                             }
                         }
                     });
-
-                    is.setItemMeta(iMeta);
-                    is.setAmount(config.getInt(key + ".amount"));
+                    itemBuilder.setMeta(iMeta);
                 }
             }
         }
-        return is;
+        if(itemBuilder != null) {
+            return itemBuilder.build();
+        } else {
+            return null;
+        }
     }
 
     public void deleteTrade(String configName, String tradeName) {
