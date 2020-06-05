@@ -10,6 +10,7 @@ import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import fun.ccmc.wanderingtrades.gui.ConfigGui;
+import fun.ccmc.wanderingtrades.gui.PlayerHeadGui;
 import fun.ccmc.wanderingtrades.gui.TradeConfigListGui;
 import fun.ccmc.wanderingtrades.gui.TradeListGui;
 import org.bukkit.Location;
@@ -106,7 +107,7 @@ public class CommandWanderingTrades extends BaseCommand {
             @Default
             @Description("Opens a GUI menu to edit the playerheads.yml settings")
             public void onEditPH(Player p) {
-                Chat.sendCenteredMessage(p, "&4Sorry, this command is not yet implemented. Please manually edit the playerheads.yml file.");
+                new PlayerHeadGui().open(p);
             }
         }
     }
