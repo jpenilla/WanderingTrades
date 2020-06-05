@@ -1,11 +1,14 @@
 package fun.ccmc.wanderingtrades.config;
 
+import fun.ccmc.wanderingtrades.WanderingTrades;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.List;
 
 @FieldNameConstants
@@ -23,16 +26,16 @@ public class PlayerHeadConfig {
     @Getter @Setter
     private int playerHeadsFromServerAmount;
     @Getter @Setter
-    private int amountOfHeadsPerTrade;
+    private int headsPerTrade;
     @Getter @Setter
     private String name;
     @Getter @Setter
     private List<String> lore;
-    @Getter
+    @Getter @Setter
     private ItemStack ingredient1;
-    @Getter
+    @Getter @Setter
     private ItemStack ingredient2;
-    @Getter
+    @Getter @Setter
     private List<String> usernameBlacklist;
 
     private final String prefix = "headTrade.";
@@ -52,7 +55,7 @@ public class PlayerHeadConfig {
         experienceReward = config.getBoolean(prefix + Fields.experienceReward);
         ingredient1 = TradeConfig.getStack(config, prefix + "ingredients.1");
         ingredient2 = TradeConfig.getStack(config, prefix + "ingredients.2");
-        amountOfHeadsPerTrade = config.getInt(prefix + "head.amount");
+        headsPerTrade = config.getInt(prefix + "head.amount");
         name = config.getString(prefix + "head.customname");
         lore = config.getStringList(prefix + "head.lore");
         usernameBlacklist = config.getStringList(Fields.usernameBlacklist);
@@ -65,14 +68,29 @@ public class PlayerHeadConfig {
         config.set(Fields.usernameBlacklist, usernameBlacklist);
         config.set(prefix + Fields.maxUses, maxUses);
         config.set(prefix + Fields.experienceReward, experienceReward);
-        config.set(prefix + "ingredients.1", ingredient1.serialize());
+        config.set(prefix + "ingredients.1.itemStack", ingredient1.serialize());
         if(ingredient2 != null) {
-            config.set(prefix + "ingredients.2", ingredient2.serialize());
+            config.set(prefix + "ingredients.2.itemStack", ingredient2.serialize());
         } else {
             config.set(prefix + "ingredients.2", null);
         }
-        config.set(prefix + "head.amount", amountOfHeadsPerTrade);
+        config.set(prefix + "head.amount", headsPerTrade);
         config.set(prefix + "head.customname", name);
         config.set(prefix + "head.lore", lore);
+
+        String path = WanderingTrades.getInstance().getDataFolder() + "/playerheads.yml";
+        try {
+            config.save(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            config.load(path);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        load();
     }
 }

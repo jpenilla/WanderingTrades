@@ -161,6 +161,7 @@ public class ConfigGui extends GuiHolder {
                                 return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GTE_0));
                             } else {
                                 c.setRefreshCommandTradersMinutes(i);
+                                c.save();
                             }
                         } catch (NumberFormatException ex) {
                             return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
