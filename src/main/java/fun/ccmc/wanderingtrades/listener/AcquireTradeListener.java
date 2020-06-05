@@ -99,7 +99,7 @@ public class AcquireTradeListener implements Listener {
             ItemStack head = new ItemBuilder(player.getUniqueId())
                     .setName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", player.getName()))
                     .setLore(plugin.getCfg().getPlayerHeadConfig().getLore())
-                    .setAmount(plugin.getCfg().getPlayerHeadConfig().getAmountOfHeadsPerTrade()).build();
+                    .setAmount(plugin.getCfg().getPlayerHeadConfig().getHeadsPerTrade()).build();
             MerchantRecipe recipe = new MerchantRecipe(head, 0, plugin.getCfg().getPlayerHeadConfig().getMaxUses(), plugin.getCfg().getPlayerHeadConfig().isExperienceReward());
             recipe.addIngredient(plugin.getCfg().getPlayerHeadConfig().getIngredient1());
             if (plugin.getCfg().getPlayerHeadConfig().getIngredient2() != null) {
