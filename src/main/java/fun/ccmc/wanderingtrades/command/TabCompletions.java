@@ -29,9 +29,9 @@ public class TabCompletions {
         });
 
         mgr.getCommandCompletions().registerCompletion("angles", c -> {
-            ArrayList<String> completions =  new ArrayList<>(Arrays.asList(
+            List<String> completions = Arrays.asList(
                     "30", "45", "60", "90", "120", "135", "150", "180",
-                    "210", "225", "240", "270", "300", "315", "330", "360"));
+                    "210", "225", "240", "270", "300", "315", "330", "360");
             if(c.getSender() instanceof Player) {
                 completions.add(
                         String.valueOf(Math.round(((Player) c.getSender()).getLocation().getYaw() * 100) / 100)
