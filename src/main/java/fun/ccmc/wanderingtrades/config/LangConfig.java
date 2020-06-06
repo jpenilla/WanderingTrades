@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class LangConfig {
     private final WanderingTrades plugin;
-    private final HashMap<String, String> messages = new HashMap<>();
+    private final HashMap<Lang, String> messages = new HashMap<>();
 
     public LangConfig(WanderingTrades plugin) {
         this.plugin = plugin;
@@ -25,12 +25,12 @@ public class LangConfig {
         FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
         messages.clear();
-        config.getKeys(false).forEach(message -> messages.put(message, config.getString(message)));
+        config.getKeys(false).forEach(message -> messages.put(Lang.valueOf(message), config.getString(message)));
     }
 
     public String get(Lang key) {
         try {
-            return messages.get(key.toString());
+            return messages.get(key);
         } catch (NullPointerException e) {
             plugin.getLog().warn("The message '" + key + "' is missing from your lang file. Use 'updateLang: true' in config.yml to fix this");
             return "";
