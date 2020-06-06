@@ -22,16 +22,9 @@ public class TabCompletions {
     public void register() {
         PaperCommandManager mgr = plugin.getCommandManager();
 
-        mgr.getCommandCompletions().registerCompletion("wtConfigs", c -> {
+        mgr.getCommandCompletions().registerAsyncCompletion("wtConfigs", c -> {
             ArrayList<String> completions = new ArrayList<>();
             Arrays.stream(plugin.getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> completions.add((String) completion));
-            return completions;
-        });
-
-        mgr.getCommandCompletions().registerCompletion("boolean", c -> {
-            ArrayList<String> completions = new ArrayList<>();
-            completions.add("true");
-            completions.add("false");
             return completions;
         });
 
