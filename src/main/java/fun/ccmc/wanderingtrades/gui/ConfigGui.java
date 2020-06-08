@@ -4,6 +4,7 @@ import fun.ccmc.jmplib.ItemBuilder;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Config;
 import fun.ccmc.wanderingtrades.config.Lang;
+import lombok.NonNull;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -42,6 +43,7 @@ public class ConfigGui extends GuiHolder {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_CONFIG_TITLE), 45);
     }
 
+    @NonNull
     public Inventory getInventory() {
         inventory.clear();
 

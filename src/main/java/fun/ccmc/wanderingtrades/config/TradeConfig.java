@@ -14,10 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @FieldNameConstants
 public class TradeConfig {
@@ -98,8 +95,19 @@ public class TradeConfig {
                         }
                         McRPG = true;
                     } else {
-                        if (Material.getMaterial(config.getString(key + ".material").toUpperCase()) != null) {
-                            itemBuilder = new ItemBuilder(Material.getMaterial(config.getString(key + ".material").toUpperCase())).setAmount(config.getInt(key + ".amount"));
+                        String matName;
+
+                        try {
+                            matName = Objects.requireNonNull(config.getString(key + ".material")).toUpperCase();
+                        } catch (NullPointerException e) {
+                            matName = Material.STONE.toString();
+                            WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
+                        }
+
+                        Material m = Material.getMaterial(matName);
+
+                        if (m != null) {
+                            itemBuilder = new ItemBuilder(m).setAmount(config.getInt(key + ".amount"));
                         } else {
                             itemBuilder = new ItemBuilder(Material.STONE);
                             WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
@@ -147,13 +155,13 @@ public class TradeConfig {
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
             file.set(child + ".result.itemStack", result.serialize());
-            writeIngredient(configName, tradeName, 1, i1);
-            writeIngredient(configName, tradeName, 2, i2);
+            writeIngredient(tradeName, 1, i1);
+            writeIngredient(tradeName, 2, i2);
             save(configName);
         }
     }
 
-    public void writeIngredient(String configName, String tradeName, int i, ItemStack is) {
+    public void writeIngredient(String tradeName, int i, ItemStack is) {
         if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
             String child = parent + "." + tradeName;
             if (is != null) {

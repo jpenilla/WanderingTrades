@@ -42,7 +42,7 @@ public final class WanderingTrades extends JavaPlugin {
         commandManager.registerCommand(new CommandWanderingTrades(this));
 
         if(getServer().getPluginManager().isPluginEnabled("McRPG")) {
-            McRPG = new McRPG(this);
+            McRPG = new McRPG();
         }
         if(getServer().getPluginManager().isPluginEnabled("WorldGuard") && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
             worldGuard = new WorldGuardCompat(this);
