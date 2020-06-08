@@ -5,6 +5,7 @@ import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
 import fun.ccmc.wanderingtrades.config.LangConfig;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public abstract class GuiHolder implements InventoryHolder {
     public void onInventoryClose(InventoryCloseEvent event){
     }
 
-    public void open(Player p) {
+    public void open(@NonNull Player p) {
         p.openInventory(getInventory());
     }
 }

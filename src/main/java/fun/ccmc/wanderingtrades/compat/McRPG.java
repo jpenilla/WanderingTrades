@@ -1,6 +1,5 @@
 package fun.ccmc.wanderingtrades.compat;
 
-import fun.ccmc.wanderingtrades.WanderingTrades;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -11,12 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class McRPG {
-    private final WanderingTrades plugin;
-
-    public McRPG(WanderingTrades instance) {
-        plugin = instance;
-    }
-
     public ArrayList<MerchantRecipe> replacePlaceholders(List<MerchantRecipe> recipes) {
         ArrayList<MerchantRecipe> fixed = new ArrayList<>();
         recipes.forEach(recipe -> {
@@ -25,12 +18,12 @@ public class McRPG {
             ItemStack fixedResult = result;
             int maxUses = recipe.getMaxUses();
             boolean experienceReward = recipe.hasExperienceReward();
-            if(result.getType().equals(Material.CHIPPED_ANVIL)) {
+            if (result.getType().equals(Material.CHIPPED_ANVIL)) {
                 ItemMeta meta = result.getItemMeta();
-                if(meta.getDisplayName().equals("mcrpg_skill_book_placeholder_")) {
+                if (meta.getDisplayName().equals("mcrpg_skill_book_placeholder_")) {
                     fixedResult = SkillBookFactory.generateUnlockBook();
                 }
-                if(meta.getDisplayName().equals("mcrpg_upgrade_book_placeholder_")) {
+                if (meta.getDisplayName().equals("mcrpg_upgrade_book_placeholder_")) {
                     fixedResult = SkillBookFactory.generateUpgradeBook();
                 }
             }

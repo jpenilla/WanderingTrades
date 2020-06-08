@@ -10,11 +10,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class TradeListGui extends PaginatedGui {
-    private final ArrayList<String> configNames = new ArrayList<>();
     private final ItemStack editButton = new ItemBuilder(Material.CHEST).setName(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG)).setLore(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE)).build();
     private final ItemStack newTradeStack = new ItemBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19")
             .setName(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE)).setLore(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE)).build();
@@ -23,7 +21,6 @@ public class TradeListGui extends PaginatedGui {
     public TradeListGui(String tradeConfig) {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig, 54, getTradeStacks(tradeConfig));
         this.tradeConfig = tradeConfig;
-        Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
 
     public Inventory getInventory() {
@@ -60,7 +57,7 @@ public class TradeListGui extends PaginatedGui {
         TradeConfig tc = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(configName);
         tc.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> {
             ItemStack s = TradeConfig.getStack(tc.getFile(), "trades." + key + ".result");
-            if(s != null) {
+            if (s != null) {
                 ItemBuilder b = new ItemBuilder(s);
                 b.setName(key);
                 b.clearEnchants();
