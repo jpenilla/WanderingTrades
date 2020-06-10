@@ -1,8 +1,8 @@
 package fun.ccmc.wanderingtrades;
 
 import co.aikar.commands.PaperCommandManager;
+import fun.ccmc.wanderingtrades.command.CommandHelper;
 import fun.ccmc.wanderingtrades.command.CommandWanderingTrades;
-import fun.ccmc.wanderingtrades.command.TabCompletions;
 import fun.ccmc.wanderingtrades.compat.McRPG;
 import fun.ccmc.wanderingtrades.compat.WorldGuardCompat;
 import fun.ccmc.wanderingtrades.config.Config;
@@ -22,7 +22,7 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private LangConfig lang;
     @Getter private Log log;
     @Getter private Listeners listeners;
-    @Getter private TabCompletions tabCompletions;
+    @Getter private CommandHelper commandHelper;
 
     @Getter private McRPG McRPG = null;
     @Getter private WorldGuardCompat worldGuard = null;
@@ -37,10 +37,6 @@ public final class WanderingTrades extends JavaPlugin {
         log = new Log(this);
         log.info("&d[STARTING]");
 
-        commandManager = new PaperCommandManager(this);
-        commandManager.enableUnstableAPI("help");
-        commandManager.registerCommand(new CommandWanderingTrades(this));
-
         if(getServer().getPluginManager().isPluginEnabled("McRPG")) {
             McRPG = new McRPG();
         }
@@ -50,8 +46,13 @@ public final class WanderingTrades extends JavaPlugin {
 
         cfg = new Config(this);
         lang = new LangConfig(this);
-        tabCompletions = new TabCompletions(this);
-        tabCompletions.register();
+
+        commandManager = new PaperCommandManager(this);
+        commandManager.enableUnstableAPI("help");
+        commandManager.setDefaultHelpPerPage(6);
+        commandHelper = new CommandHelper(this);
+        commandHelper.register();
+        commandManager.registerCommand(new CommandWanderingTrades(this));
 
         paper = false;
         try {

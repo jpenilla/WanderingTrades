@@ -36,7 +36,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Default
     @HelpCommand
-    @Description("WanderingTrades Help")
+    @Description("%COMMAND_WT_HELP")
     public void onHelp(CommandSender sender, CommandHelp help) {
         String m = "&f---&a[ &d&l" + plugin.getName() + " Help &a]&f---";
         Chat.sendMsg(sender, m);
@@ -44,7 +44,7 @@ public class CommandWanderingTrades extends BaseCommand {
     }
 
     @Subcommand("about")
-    @Description("About WanderingTrades")
+    @Description("%COMMAND_WT_ABOUT")
     public void onAbout(CommandSender sender) {
         String[] m = new String[]{
                 "&a==========================",
@@ -57,19 +57,19 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Subcommand("reload")
     @CommandPermission("wanderingtrades.reload")
-    @Description("Reloads all config files for WanderingTrades")
+    @Description("%COMMAND_WT_RELOAD")
     public void onReload(CommandSender sender) {
         Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD));
         plugin.getCfg().load();
         plugin.getLang().load();
         plugin.getListeners().reload();
-        plugin.getTabCompletions().register();
+        plugin.getCommandHelper().register();
         Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD_DONE));
     }
 
     @Subcommand("list|l")
     @CommandPermission("wanderingtrades.list")
-    @Description("Lists the loaded trade configs.")
+    @Description("%COMMAND_WT_LIST")
     public void onList(CommandSender sender) {
         List<String> configs = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
         String commaSeparatedConfigs = String.join("&7, &r", configs);
@@ -77,39 +77,31 @@ public class CommandWanderingTrades extends BaseCommand {
         Chat.sendMsg(sender, commaSeparatedConfigs);
     }
 
-    @Subcommand("edit|e")
     @CommandPermission("wanderingtrades.edit")
-    public class Edit extends BaseCommand {
-        @Default
-        @Subcommand("trade")
-        @Description("Opens a GUI menu to edit and create trade configs")
-        @CommandCompletion("@wtConfigs")
-        @Syntax("<tradeConfig>")
-        public void onEditTrades(Player p, @Optional @Values("@wtConfigs") String tradeConfig) {
-            if(tradeConfig == null) {
-                new TradeConfigListGui().open(p);
-            } else {
-                new TradeListGui(tradeConfig).open(p);
-            }
+    @Subcommand("edit|e")
+    @Description("%COMMAND_WT_EDIT")
+    @CommandCompletion("@wtConfigs")
+    @Syntax("<tradeConfig>")
+    public void onEditTrades(Player p, @Optional @Values("@wtConfigs") String tradeConfig) {
+        if(tradeConfig == null) {
+            new TradeConfigListGui().open(p);
+        } else {
+            new TradeListGui(tradeConfig).open(p);
         }
+    }
 
-        @Subcommand("config|c")
-        public class EditConfigCmd extends BaseCommand {
-            @Default
-            @Description("Opens a GUI menu to edit the config.yml settings")
-            public void onEditConfig(Player p) {
-                new ConfigGui().open(p);
-            }
-        }
+    @CommandPermission("wanderingtrades.edit")
+    @Subcommand("editconfig|ec")
+    @Description("%COMMAND_WT_CONFIG")
+    public void onEditConfig(Player p) {
+        new ConfigGui().open(p);
+    }
 
-        @Subcommand("playerheads|ph")
-        public class EditPH extends BaseCommand {
-            @Default
-            @Description("Opens a GUI menu to edit the playerheads.yml settings")
-            public void onEditPH(Player p) {
-                new PlayerHeadGui().open(p);
-            }
-        }
+    @CommandPermission("wanderingtrades.edit")
+    @Subcommand("editplayerheads|eph")
+    @Description("%COMMAND_WT_PH_CONFIG")
+    public void onEditPH(Player p) {
+        new PlayerHeadGui().open(p);
     }
 
     private Location resolveLocation(CommandSender sender, Location loc) {
@@ -119,7 +111,7 @@ public class CommandWanderingTrades extends BaseCommand {
         } else if (sender instanceof Player) {
             location = ((Player) sender).getLocation();
         } else {
-            throw new InvalidCommandArgument("Console must provide world and coordinates", true);
+            throw new InvalidCommandArgument(plugin.getLang().get(Lang.COMMAND_ERROR_CONSOLE_NEEDS_COORDS), true);
         }
         return location;
     }
@@ -201,7 +193,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandPermission("wanderingtrades.summon")
     public class SummonTrader extends BaseCommand {
         @Default
-        @Description("Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.")
+        @Description("%COMMAND_SUMMON")
         @CommandCompletion("@wtConfigs @wtWorlds")
         @Syntax("<tradeConfig> [world:x,y,z]")
         public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
@@ -210,9 +202,9 @@ public class CommandWanderingTrades extends BaseCommand {
         }
 
         @Subcommand("noai|n")
-        @Description("Same as /wt summon but with AI disabled")
         public class NoAI extends BaseCommand {
             @Default
+            @Description("")
             @CommandCompletion("@wtConfigs @angles @wtWorlds")
             @Syntax("<tradeConfig> [rotation] [world:x,y,z]")
             public void onSummonNoAI(CommandSender sender, String tradeConfig, @Optional Float rotation, @Optional Location location) {
@@ -229,7 +221,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandPermission("wanderingtrades.summonvillager")
     public class SummonVillager extends BaseCommand {
         @Default
-        @Description("Summons a Villager with the specified config. Ignores whether the config is disabled.")
+        @Description("%COMMAND_VSUMMON")
         @CommandCompletion("@wtConfigs * * @wtWorlds")
         @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
         public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
@@ -238,9 +230,9 @@ public class CommandWanderingTrades extends BaseCommand {
         }
 
         @Subcommand("noai|n")
-        @Description("Same as /wt summonvillager but with AI disabled")
         public class NoAI extends BaseCommand {
             @Default
+            @Description("%COMMAND_VSUMMON_NOAI")
             @CommandCompletion("@wtConfigs * * @angles @wtWorlds")
             @Syntax("<tradeConfig> <profession> <type> [rotation] [world:x,y,z]")
             public void onSummonNoAI(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Float rotation, @Optional Location location) {
