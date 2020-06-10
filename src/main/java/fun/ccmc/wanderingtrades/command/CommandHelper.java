@@ -1,7 +1,9 @@
 package fun.ccmc.wanderingtrades.command;
 
+import co.aikar.commands.CommandReplacements;
 import co.aikar.commands.PaperCommandManager;
 import fun.ccmc.wanderingtrades.WanderingTrades;
+import fun.ccmc.wanderingtrades.config.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -12,10 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TabCompletions {
+public class CommandHelper {
     private final WanderingTrades plugin;
 
-    public TabCompletions(WanderingTrades instance) {
+    public CommandHelper(WanderingTrades instance) {
         plugin = instance;
     }
 
@@ -52,5 +54,20 @@ public class TabCompletions {
             }
             return completions;
         });
+
+        CommandReplacements replacements = mgr.getCommandReplacements();
+        replacements.addReplacements(
+                "COMMAND_WT_HELP", plugin.getLang().get(Lang.COMMAND_WT_HELP),
+                "COMMAND_WT_ABOUT", plugin.getLang().get(Lang.COMMAND_WT_ABOUT),
+                "COMMAND_WT_RELOAD", plugin.getLang().get(Lang.COMMAND_WT_RELOAD),
+                "COMMAND_WT_LIST", plugin.getLang().get(Lang.COMMAND_WT_LIST),
+                "COMMAND_WT_EDIT", plugin.getLang().get(Lang.COMMAND_WT_EDIT),
+                "COMMAND_WT_CONFIG", plugin.getLang().get(Lang.COMMAND_WT_CONFIG),
+                "COMMAND_WT_PH_CONFIG", plugin.getLang().get(Lang.COMMAND_WT_PH_CONFIG),
+                "COMMAND_SUMMON", plugin.getLang().get(Lang.COMMAND_SUMMON),
+                "COMMAND_SUMMON_NOAI", plugin.getLang().get(Lang.COMMAND_SUMMON_NOAI),
+                "COMMAND_VSUMMON", plugin.getLang().get(Lang.COMMAND_VSUMMON),
+                "COMMAND_VSUMMON_NOAI", plugin.getLang().get(Lang.COMMAND_VSUMMON_NOAI)
+        );
     }
 }
