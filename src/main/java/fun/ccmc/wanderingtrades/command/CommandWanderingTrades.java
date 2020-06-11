@@ -38,7 +38,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @HelpCommand
     @Description("%COMMAND_WT_HELP")
     public void onHelp(CommandSender sender, CommandHelp help) {
-        String m = "&f---&a[ &d&l" + plugin.getName() + " Help &a]&f---";
+        String m = "&f---&a[ &5&l" + plugin.getName() + "&d&l Help &a]&f---";
         Chat.sendMsg(sender, m);
         help.showHelp();
     }
