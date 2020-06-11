@@ -133,6 +133,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>15.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <artifactId>commons-io</artifactId>
             <groupId>commons-io</groupId>
             <scope>compile</scope>
