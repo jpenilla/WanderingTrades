@@ -6,7 +6,7 @@
 
     <groupId>fun.ccmc.wanderingtrades</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5-SNAPSHOT.{BUILD_NUMBER}</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
@@ -147,6 +147,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
+            <scope>compile</scope>
             <version>3.6.1</version>
         </dependency>
         <dependency>
