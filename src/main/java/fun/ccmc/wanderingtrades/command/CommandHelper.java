@@ -1,10 +1,14 @@
 package fun.ccmc.wanderingtrades.command;
 
+import co.aikar.commands.BukkitMessageFormatter;
 import co.aikar.commands.CommandReplacements;
+import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.Lang;
+import fun.ccmc.wanderingtrades.config.LangConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,6 +27,11 @@ public class CommandHelper {
 
     public void register() {
         PaperCommandManager mgr = plugin.getCommandManager();
+
+        mgr.setFormat(MessageType.ERROR, new BukkitMessageFormatter(ChatColor.RED, ChatColor.WHITE, ChatColor.RED));
+        mgr.setFormat(MessageType.SYNTAX, new BukkitMessageFormatter(ChatColor.LIGHT_PURPLE, ChatColor.GREEN, ChatColor.WHITE));
+        mgr.setFormat(MessageType.INFO, new BukkitMessageFormatter(ChatColor.LIGHT_PURPLE, ChatColor.GREEN, ChatColor.WHITE));
+        mgr.setFormat(MessageType.HELP, new BukkitMessageFormatter(ChatColor.LIGHT_PURPLE, ChatColor.GREEN, ChatColor.WHITE));
 
         mgr.getCommandCompletions().registerAsyncCompletion("wtConfigs", c -> {
             ArrayList<String> completions = new ArrayList<>();
@@ -56,18 +65,19 @@ public class CommandHelper {
         });
 
         CommandReplacements replacements = mgr.getCommandReplacements();
+        LangConfig l = plugin.getLang();
         replacements.addReplacements(
-                "COMMAND_WT_HELP", plugin.getLang().get(Lang.COMMAND_WT_HELP),
-                "COMMAND_WT_ABOUT", plugin.getLang().get(Lang.COMMAND_WT_ABOUT),
-                "COMMAND_WT_RELOAD", plugin.getLang().get(Lang.COMMAND_WT_RELOAD),
-                "COMMAND_WT_LIST", plugin.getLang().get(Lang.COMMAND_WT_LIST),
-                "COMMAND_WT_EDIT", plugin.getLang().get(Lang.COMMAND_WT_EDIT),
-                "COMMAND_WT_CONFIG", plugin.getLang().get(Lang.COMMAND_WT_CONFIG),
-                "COMMAND_WT_PH_CONFIG", plugin.getLang().get(Lang.COMMAND_WT_PH_CONFIG),
-                "COMMAND_SUMMON", plugin.getLang().get(Lang.COMMAND_SUMMON),
-                "COMMAND_SUMMON_NOAI", plugin.getLang().get(Lang.COMMAND_SUMMON_NOAI),
-                "COMMAND_VSUMMON", plugin.getLang().get(Lang.COMMAND_VSUMMON),
-                "COMMAND_VSUMMON_NOAI", plugin.getLang().get(Lang.COMMAND_VSUMMON_NOAI)
+                Lang.COMMAND_WT_HELP.toString(), l.get(Lang.COMMAND_WT_HELP),
+                Lang.COMMAND_WT_ABOUT.toString(), l.get(Lang.COMMAND_WT_ABOUT),
+                Lang.COMMAND_WT_RELOAD.toString(), l.get(Lang.COMMAND_WT_RELOAD),
+                Lang.COMMAND_WT_LIST.toString(), l.get(Lang.COMMAND_WT_LIST),
+                Lang.COMMAND_WT_EDIT.toString(), l.get(Lang.COMMAND_WT_EDIT),
+                Lang.COMMAND_WT_CONFIG.toString(), l.get(Lang.COMMAND_WT_CONFIG),
+                Lang.COMMAND_WT_PH_CONFIG.toString(), l.get(Lang.COMMAND_WT_PH_CONFIG),
+                Lang.COMMAND_SUMMON.toString(), l.get(Lang.COMMAND_SUMMON),
+                Lang.COMMAND_SUMMON_NOAI.toString(), l.get(Lang.COMMAND_SUMMON_NOAI),
+                Lang.COMMAND_VSUMMON.toString(), l.get(Lang.COMMAND_VSUMMON),
+                Lang.COMMAND_VSUMMON_NOAI.toString(), l.get(Lang.COMMAND_VSUMMON_NOAI)
         );
     }
 }

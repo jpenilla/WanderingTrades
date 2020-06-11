@@ -49,7 +49,7 @@ public final class WanderingTrades extends JavaPlugin {
 
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
-        commandManager.setDefaultHelpPerPage(6);
+        commandManager.setDefaultHelpPerPage(5);
         commandHelper = new CommandHelper(this);
         commandHelper.register();
         commandManager.registerCommand(new CommandWanderingTrades(this));
