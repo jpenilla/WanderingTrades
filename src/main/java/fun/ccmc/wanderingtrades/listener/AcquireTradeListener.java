@@ -1,11 +1,11 @@
 package fun.ccmc.wanderingtrades.listener;
 
 import fun.ccmc.jmplib.ItemBuilder;
-import fun.ccmc.jmplib.TextUtil;
 import fun.ccmc.wanderingtrades.WanderingTrades;
 import fun.ccmc.wanderingtrades.config.TradeConfig;
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
@@ -73,31 +73,21 @@ public class AcquireTradeListener implements Listener {
     private ArrayList<MerchantRecipe> getPlayerHeadsFromServer() {
         ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
-        ArrayList<OfflinePlayer> offlinePlayers = new ArrayList<>(Arrays.asList(plugin.getServer().getOfflinePlayers()));
+        ArrayList<UUID> offlinePlayers = plugin.getStoredPlayers().getPlayers();
         Collections.shuffle(offlinePlayers);
 
-        ArrayList<OfflinePlayer> selectedPlayers = new ArrayList<>();
+        ArrayList<UUID> selectedPlayers = new ArrayList<>();
         IntStream.range(0, plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount()).forEach(i -> {
             try {
-                if (!TextUtil.containsCaseInsensitive(offlinePlayers.get(i).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
-                    selectedPlayers.add(offlinePlayers.get(i));
-                } else {
-                    while (!inBounds(i, selectedPlayers)) {
-                        Random r = new Random();
-                        int num = r.ints(0, (offlinePlayers.size() + 1)).findFirst().getAsInt();
-                        if (!TextUtil.containsCaseInsensitive(offlinePlayers.get(num).getName(), plugin.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
-                            selectedPlayers.add(offlinePlayers.get(num));
-                        }
-                    }
-                }
+                selectedPlayers.add(offlinePlayers.get(i));
             } catch (IndexOutOfBoundsException e) {
-                plugin.getLog().warn("'playerHeadsFromServerAmount' in playerheads.yml is higher than the amount of players that ever joined this server! Player heads from the server will not be added to Wandering Traders until this is corrected.");
+                plugin.getLog().debug("'playerHeadsFromServerAmount' in playerheads.yml is higher than the amount of recently active players. Not adding a head. Disable debug to hide this message.");
             }
         });
 
         selectedPlayers.forEach(player -> {
-            ItemStack head = new ItemBuilder(player.getUniqueId())
-                    .setName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", player.getName()))
+            ItemStack head = new ItemBuilder(player)
+                    .setName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", Bukkit.getOfflinePlayer(player).getName()))
                     .setLore(plugin.getCfg().getPlayerHeadConfig().getLore())
                     .setAmount(plugin.getCfg().getPlayerHeadConfig().getHeadsPerTrade()).build();
             MerchantRecipe recipe = new MerchantRecipe(head, 0, plugin.getCfg().getPlayerHeadConfig().getMaxUses(), plugin.getCfg().getPlayerHeadConfig().isExperienceReward());

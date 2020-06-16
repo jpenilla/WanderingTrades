@@ -9,6 +9,7 @@ import fun.ccmc.wanderingtrades.config.Config;
 import fun.ccmc.wanderingtrades.config.LangConfig;
 import fun.ccmc.wanderingtrades.util.Listeners;
 import fun.ccmc.wanderingtrades.util.Log;
+import fun.ccmc.wanderingtrades.util.StoredPlayers;
 import fun.ccmc.wanderingtrades.util.UpdateChecker;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
@@ -20,6 +21,7 @@ public final class WanderingTrades extends JavaPlugin {
 
     @Getter private Config cfg;
     @Getter private LangConfig lang;
+    @Getter private StoredPlayers storedPlayers;
     @Getter private Log log;
     @Getter private Listeners listeners;
     @Getter private CommandHelper commandHelper;
@@ -46,6 +48,9 @@ public final class WanderingTrades extends JavaPlugin {
 
         cfg = new Config(this);
         lang = new LangConfig(this);
+
+        storedPlayers = new StoredPlayers(this);
+        storedPlayers.load();
 
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");

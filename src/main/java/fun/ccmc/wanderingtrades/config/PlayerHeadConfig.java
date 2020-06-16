@@ -37,6 +37,8 @@ public class PlayerHeadConfig {
     private ItemStack ingredient2;
     @Getter @Setter
     private List<String> usernameBlacklist;
+    @Getter @Setter
+    private int days;
 
     private final String prefix = "headTrade.";
 
@@ -49,6 +51,7 @@ public class PlayerHeadConfig {
         playerHeadsFromServer = config.getBoolean(Fields.playerHeadsFromServer);
         playerHeadsFromServerChance = config.getDouble(Fields.playerHeadsFromServerChance);
         playerHeadsFromServerAmount = config.getInt(Fields.playerHeadsFromServerAmount);
+        days = config.getInt(Fields.days);
         if (config.getInt(prefix + Fields.maxUses) != 0) {
             maxUses = config.getInt(prefix + Fields.maxUses);
         }
@@ -65,6 +68,7 @@ public class PlayerHeadConfig {
         config.set(Fields.playerHeadsFromServer, playerHeadsFromServer);
         config.set(Fields.playerHeadsFromServerChance, playerHeadsFromServerChance);
         config.set(Fields.playerHeadsFromServerAmount, playerHeadsFromServerAmount);
+        config.set(Fields.days, days);
         config.set(Fields.usernameBlacklist, usernameBlacklist);
         config.set(prefix + Fields.maxUses, maxUses);
         config.set(prefix + Fields.experienceReward, experienceReward);
