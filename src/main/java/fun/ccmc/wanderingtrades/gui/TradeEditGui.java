@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
@@ -39,7 +40,7 @@ public class TradeEditGui extends TradeGui {
         }
     }
 
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
         inventory = super.getInventory();
 
         inventory.setItem(35, deleteButton);
