@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
@@ -20,7 +21,7 @@ public class TradeCreateGui extends TradeGui {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
     }
 
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
         inventory = super.getInventory();
 
         ArrayList<String> tradeNameLore = new ArrayList<>();

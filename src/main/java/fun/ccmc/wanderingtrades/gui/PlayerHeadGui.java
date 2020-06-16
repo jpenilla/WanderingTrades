@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ public class PlayerHeadGui extends TradeGui {
     private final ItemStack disabledStack = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_DISABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack amountTradesStack = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_AMOUNT)).build();
     private final ItemStack amountHeadsStack = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_AMOUNT_HEADS)).build();
+    private final ItemStack days = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_DAYS)).build();
     private final ItemStack chanceStack = new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_CHANCE)).build();
     private final ItemStack blacklistStack = new ItemBuilder(Material.PAPER).setName(lang.get(Lang.GUI_PH_CONFIG_BLACKLIST)).build();
     private final ItemStack loreStack = new ItemBuilder(Material.PAPER).setName(lang.get(Lang.GUI_PH_CONFIG_RESULT_LORE)).build();
@@ -38,7 +40,7 @@ public class PlayerHeadGui extends TradeGui {
     }
 
     @Override
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
         inventory.clear();
         inventory.setItem(inventory.getSize() - 1, closeButton);
         inventory.setItem(inventory.getSize() - 9, new ItemBuilder(saveButton).setLore(lang.get(Lang.GUI_PH_CONFIG_SAVE_LORE)).build());
@@ -46,16 +48,19 @@ public class PlayerHeadGui extends TradeGui {
         PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
 
         if (config.isPlayerHeadsFromServer()) {
-            inventory.setItem(10, enabledStack);
+            inventory.setItem(9, enabledStack);
         } else {
-            inventory.setItem(10, disabledStack);
+            inventory.setItem(9, disabledStack);
         }
 
         if (config.isExperienceReward()) {
-            inventory.setItem(11, experienceEnabled);
+            inventory.setItem(10, experienceEnabled);
         } else {
-            inventory.setItem(11, experienceDisabled);
+            inventory.setItem(10, experienceDisabled);
         }
+
+        ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
+        inventory.setItem(11, k);
 
         ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getPlayerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(12, a);
@@ -301,6 +306,32 @@ public class PlayerHeadGui extends TradeGui {
                         .plugin(WanderingTrades.getInstance())
                         .open(p);
             }
+        }
+
+        if (days.isSimilar(item)) {
+            p.closeInventory();
+            new AnvilGUI.Builder()
+                    .onClose(this::reOpen)
+                    .onComplete((player, text) -> {
+                        try {
+                            int i = Integer.parseInt(text);
+                            if (i < -1) {
+                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GTE_N1));
+                            } else {
+                                config.setDays(i);
+                                config.save();
+                                WanderingTrades.getInstance().getStoredPlayers().load();
+                            }
+                        } catch (NumberFormatException ex) {
+                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
+                        }
+                        return AnvilGUI.Response.close();
+                    })
+                    .text(String.valueOf(config.getDays()))
+                    .item(new ItemStack(Material.WRITABLE_BOOK))
+                    .title(lang.get(Lang.GUI_ANVIL_SET_HEADS_DAYS_TITLE))
+                    .plugin(WanderingTrades.getInstance())
+                    .open(p);
         }
 
         int rS = event.getRawSlot();
