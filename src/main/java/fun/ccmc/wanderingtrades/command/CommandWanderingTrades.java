@@ -64,6 +64,7 @@ public class CommandWanderingTrades extends BaseCommand {
         plugin.getLang().load();
         plugin.getListeners().reload();
         plugin.getCommandHelper().register();
+        plugin.getStoredPlayers().load();
         Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD_DONE));
     }
 

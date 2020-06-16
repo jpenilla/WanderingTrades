@@ -256,6 +256,7 @@ public class PlayerHeadGui extends TradeGui {
                 List<String> l = config.getUsernameBlacklist();
                 l.remove(l.size() - 1);
                 config.setUsernameBlacklist(l);
+                WanderingTrades.getInstance().getStoredPlayers().load();
             } else {
                 new AnvilGUI.Builder()
                         .onClose(this::reOpen)
@@ -265,6 +266,7 @@ public class PlayerHeadGui extends TradeGui {
                                 temp.add(text);
                                 config.setUsernameBlacklist(temp);
                                 config.save();
+                                WanderingTrades.getInstance().getStoredPlayers().load();
                             } else {
                                 return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
                             }
