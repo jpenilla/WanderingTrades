@@ -65,19 +65,17 @@ public class CommandHelper {
         });
 
         CommandReplacements replacements = mgr.getCommandReplacements();
-        LangConfig l = plugin.getLang();
-        replacements.addReplacements(
-                Lang.COMMAND_WT_HELP.toString(), l.get(Lang.COMMAND_WT_HELP),
-                Lang.COMMAND_WT_ABOUT.toString(), l.get(Lang.COMMAND_WT_ABOUT),
-                Lang.COMMAND_WT_RELOAD.toString(), l.get(Lang.COMMAND_WT_RELOAD),
-                Lang.COMMAND_WT_LIST.toString(), l.get(Lang.COMMAND_WT_LIST),
-                Lang.COMMAND_WT_EDIT.toString(), l.get(Lang.COMMAND_WT_EDIT),
-                Lang.COMMAND_WT_CONFIG.toString(), l.get(Lang.COMMAND_WT_CONFIG),
-                Lang.COMMAND_WT_PH_CONFIG.toString(), l.get(Lang.COMMAND_WT_PH_CONFIG),
-                Lang.COMMAND_SUMMON.toString(), l.get(Lang.COMMAND_SUMMON),
-                Lang.COMMAND_SUMMON_NOAI.toString(), l.get(Lang.COMMAND_SUMMON_NOAI),
-                Lang.COMMAND_VSUMMON.toString(), l.get(Lang.COMMAND_VSUMMON),
-                Lang.COMMAND_VSUMMON_NOAI.toString(), l.get(Lang.COMMAND_VSUMMON_NOAI)
+        registerReplacements(replacements,
+                Lang.COMMAND_WT_HELP, Lang.COMMAND_WT_ABOUT, Lang.COMMAND_WT_RELOAD, Lang.COMMAND_WT_LIST,
+                Lang.COMMAND_WT_EDIT, Lang.COMMAND_WT_CONFIG, Lang.COMMAND_WT_PH_CONFIG, Lang.COMMAND_SUMMON,
+                Lang.COMMAND_SUMMON_NOAI, Lang.COMMAND_VSUMMON, Lang.COMMAND_VSUMMON_NOAI
         );
+    }
+
+    private void registerReplacements(CommandReplacements replacements, Lang ... keys) {
+        LangConfig l = plugin.getLang();
+        Arrays.stream(keys).forEach(key -> {
+            replacements.addReplacement(key.toString(), l.get(key));
+        });
     }
 }
