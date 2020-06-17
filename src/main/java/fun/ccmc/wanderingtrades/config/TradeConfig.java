@@ -137,7 +137,7 @@ public class TradeConfig {
                 }
             }
         }
-        if(itemBuilder != null) {
+        if (itemBuilder != null) {
             return itemBuilder.build();
         } else {
             return null;

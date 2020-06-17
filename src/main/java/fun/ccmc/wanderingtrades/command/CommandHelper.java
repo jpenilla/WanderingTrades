@@ -43,7 +43,7 @@ public class CommandHelper {
             List<String> completions = Arrays.asList(
                     "30", "45", "60", "90", "120", "135", "150", "180",
                     "210", "225", "240", "270", "300", "315", "330", "360");
-            if(c.getSender() instanceof Player) {
+            if (c.getSender() instanceof Player) {
                 completions.add(
                         String.valueOf(Math.round(((Player) c.getSender()).getLocation().getYaw() * 100) / 100)
                 );
@@ -54,7 +54,7 @@ public class CommandHelper {
         mgr.getCommandCompletions().registerCompletion("wtWorlds", c -> {
             CommandSender s = c.getSender();
             List<String> completions = Bukkit.getWorlds().stream().map(world -> world.getName() + ":x,y,z").collect(Collectors.toList());
-            if(s instanceof Player) {
+            if (s instanceof Player) {
                 Location l = ((Player) s).getLocation();
                 double x = (double) Math.round(l.getX() * 100) / 100;
                 double y = (double) Math.round(l.getY() * 100) / 100;
@@ -72,7 +72,7 @@ public class CommandHelper {
         );
     }
 
-    private void registerReplacements(CommandReplacements replacements, Lang ... keys) {
+    private void registerReplacements(CommandReplacements replacements, Lang... keys) {
         LangConfig l = plugin.getLang();
         Arrays.stream(keys).forEach(key -> {
             replacements.addReplacement(key.toString(), l.get(key));
