@@ -1,10 +1,7 @@
 package fun.ccmc.wanderingtrades.util;
 
 import fun.ccmc.wanderingtrades.WanderingTrades;
-import fun.ccmc.wanderingtrades.listener.AcquireTradeListener;
-import fun.ccmc.wanderingtrades.listener.GuiListener;
-import fun.ccmc.wanderingtrades.listener.ProtectTradersListener;
-import fun.ccmc.wanderingtrades.listener.RefreshTradesListener;
+import fun.ccmc.wanderingtrades.listener.*;
 import org.bukkit.event.HandlerList;
 
 public class Listeners {
@@ -16,6 +13,7 @@ public class Listeners {
 
     public void register() {
         plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new JoinQuitListener(), plugin);
 
         if (plugin.getCfg().isEnabled()) {
             plugin.getServer().getPluginManager().registerEvents(new AcquireTradeListener(plugin), plugin);
