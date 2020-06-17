@@ -29,17 +29,17 @@ public class WorldGuardCompat {
 
     public boolean passesWhiteBlackList(Location loc) {
         boolean passed = false;
-        for(ProtectedRegion region : getRegions(loc)) {
-            if(TextUtil.containsCaseInsensitive(region.getId(), plugin.getCfg().getWgRegionList())) {
-                if(plugin.getCfg().isWgWhitelist()) {
+        for (ProtectedRegion region : getRegions(loc)) {
+            if (TextUtil.containsCaseInsensitive(region.getId(), plugin.getCfg().getWgRegionList())) {
+                if (plugin.getCfg().isWgWhitelist()) {
                     passed = true;
                 }
-            } else if(!plugin.getCfg().isWgWhitelist()) {
+            } else if (!plugin.getCfg().isWgWhitelist()) {
                 passed = true;
             }
         }
-        if(getRegions(loc).size() == 0) {
-            if(!plugin.getCfg().isWgWhitelist()) {
+        if (getRegions(loc).size() == 0) {
+            if (!plugin.getCfg().isWgWhitelist()) {
                 passed = true;
             }
         }

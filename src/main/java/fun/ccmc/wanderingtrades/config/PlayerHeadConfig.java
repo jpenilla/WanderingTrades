@@ -73,7 +73,7 @@ public class PlayerHeadConfig {
         config.set(prefix + Fields.maxUses, maxUses);
         config.set(prefix + Fields.experienceReward, experienceReward);
         config.set(prefix + "ingredients.1.itemStack", ingredient1.serialize());
-        if(ingredient2 != null) {
+        if (ingredient2 != null) {
             config.set(prefix + "ingredients.2.itemStack", ingredient2.serialize());
         } else {
             config.set(prefix + "ingredients.2", null);

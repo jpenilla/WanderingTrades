@@ -84,7 +84,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandCompletion("@wtConfigs")
     @Syntax("<tradeConfig>")
     public void onEditTrades(Player p, @Optional @Values("@wtConfigs") String tradeConfig) {
-        if(tradeConfig == null) {
+        if (tradeConfig == null) {
             new TradeConfigListGui().open(p);
         } else {
             new TradeListGui(tradeConfig).open(p);

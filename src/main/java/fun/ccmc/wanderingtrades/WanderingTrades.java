@@ -49,7 +49,7 @@ public final class WanderingTrades extends JavaPlugin {
         cfg = new Config(this);
         lang = new LangConfig(this);
 
-        storedPlayers = new StoredPlayers(this);
+        storedPlayers = new StoredPlayers();
         storedPlayers.load();
 
         commandManager = new PaperCommandManager(this);

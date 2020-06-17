@@ -17,9 +17,6 @@ public class StoredPlayers {
     @Getter
     private final ArrayList<UUID> players = new ArrayList<>();
 
-    public StoredPlayers(WanderingTrades wt) {
-    }
-
     public void load() {
         players.clear();
         OfflinePlayer[] op = Bukkit.getOfflinePlayers().clone();
