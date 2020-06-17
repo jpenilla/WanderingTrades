@@ -50,7 +50,14 @@ public final class WanderingTrades extends JavaPlugin {
         lang = new LangConfig(this);
 
         storedPlayers = new StoredPlayers();
-        storedPlayers.load();
+        class RefreshPlayers extends BukkitRunnable {
+            @Override
+            public void run() {
+                storedPlayers.load();
+            }
+        }
+        new RefreshPlayers().runTaskTimer(this, 20L * 60L * 60L * 12L, 20L * 60L * 60L * 12L);
+
 
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
