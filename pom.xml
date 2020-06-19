@@ -170,7 +170,7 @@
         <dependency>
             <groupId>fun.ccmc.jmplib</groupId>
             <artifactId>jmplib</artifactId>
-            <version>1.0.0-SNAPSHOT.35</version>
+            <version>1.0.0-SNAPSHOT.38</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
