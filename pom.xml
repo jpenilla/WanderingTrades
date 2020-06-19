@@ -168,9 +168,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>fun.ccmc.jmplib</groupId>
+            <groupId>fun.ccmc</groupId>
             <artifactId>jmplib</artifactId>
-            <version>1.0.0-SNAPSHOT.38</version>
+            <version>1.0.0-SNAPSHOT.40</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
