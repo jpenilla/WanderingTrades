@@ -16,6 +16,10 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+
 public final class WanderingTrades extends JavaPlugin {
     @Getter private static WanderingTrades instance;
 
@@ -58,7 +62,6 @@ public final class WanderingTrades extends JavaPlugin {
         }
         new RefreshPlayers().runTaskTimer(this, 20L * 60L * 60L * 12L, 20L * 60L * 60L * 12L);
 
-
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
         commandManager.setDefaultHelpPerPage(5);
@@ -79,9 +82,6 @@ public final class WanderingTrades extends JavaPlugin {
         listeners = new Listeners(this);
         listeners.register();
 
-        int pluginId = 7597;
-        Metrics metrics = new Metrics(this, pluginId);
-
         new UpdateChecker(this, 79068).getVersion(version ->
                 UpdateChecker.updateCheck(version, true));
         class UpdateCheck extends BukkitRunnable {
@@ -91,6 +91,23 @@ public final class WanderingTrades extends JavaPlugin {
             }
         }
         new UpdateCheck().runTaskTimer(this,20L * 60L * 30L, 20L * 60L * 120L);
+
+        int pluginId = 7597;
+        Metrics metrics = new Metrics(this, pluginId);
+
+        metrics.addCustomChart(new Metrics.SimplePie("player_heads", () -> {
+            if (cfg.getPlayerHeadConfig().isPlayerHeadsFromServer()) {
+                return "On";
+            } else {
+                return "Off";
+            }
+        }));
+
+        metrics.addCustomChart(new Metrics.SimplePie("plugin_language", () -> cfg.getLanguage()));
+
+        metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> {
+            return String.valueOf(cfg.getTradeConfigs().size());
+        }));
 
         log.info("&d[ON]");
     }
