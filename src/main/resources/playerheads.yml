@@ -26,6 +26,11 @@ playerHeadsFromServerAmount: 1
 usernameBlacklist:
   - Notch
 
+# if Vault is installed and this is enabled, players must have
+# the wanderingtrades.headavailable permission for their
+# head to show up in Wandering Traders
+permissionWhitelist: false
+
 # the ingredients are fully customizable, and the second one is optional
 # for the heads the name, amount, and lore are customizable
 headTrade:

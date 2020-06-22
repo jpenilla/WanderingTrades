@@ -1,9 +1,15 @@
 package xyz.jpenilla.wanderingtrades;
 
 import co.aikar.commands.PaperCommandManager;
+import lombok.Getter;
+import lombok.Setter;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.jpenilla.wanderingtrades.command.CommandHelper;
 import xyz.jpenilla.wanderingtrades.command.CommandWanderingTrades;
 import xyz.jpenilla.wanderingtrades.compat.McRPG;
+import xyz.jpenilla.wanderingtrades.compat.VaultCompat;
 import xyz.jpenilla.wanderingtrades.compat.WorldGuardCompat;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
@@ -11,13 +17,10 @@ import xyz.jpenilla.wanderingtrades.util.Listeners;
 import xyz.jpenilla.wanderingtrades.util.Log;
 import xyz.jpenilla.wanderingtrades.util.StoredPlayers;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
-import lombok.Getter;
-import org.bstats.bukkit.Metrics;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public final class WanderingTrades extends JavaPlugin {
-    @Getter private static WanderingTrades instance;
+    @Getter
+    private static WanderingTrades instance;
 
     @Getter private Config cfg;
     @Getter private LangConfig lang;
@@ -28,10 +31,13 @@ public final class WanderingTrades extends JavaPlugin {
 
     @Getter private xyz.jpenilla.wanderingtrades.compat.McRPG McRPG = null;
     @Getter private WorldGuardCompat worldGuard = null;
+    @Getter private VaultCompat vault = null;
 
     @Getter private PaperCommandManager commandManager;
 
     @Getter private boolean paper;
+    @Getter @Setter
+    private boolean vaultPermissions = false;
 
     @Override
     public void onEnable() {
@@ -39,17 +45,20 @@ public final class WanderingTrades extends JavaPlugin {
         log = new Log(this);
         log.info("&d[STARTING]");
 
-        if(getServer().getPluginManager().isPluginEnabled("McRPG")) {
+        if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+            vault = new VaultCompat(this);
+        }
+        if (getServer().getPluginManager().isPluginEnabled("McRPG")) {
             McRPG = new McRPG();
         }
-        if(getServer().getPluginManager().isPluginEnabled("WorldGuard") && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+        if (getServer().getPluginManager().isPluginEnabled("WorldGuard") && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
             worldGuard = new WorldGuardCompat(this);
         }
 
         cfg = new Config(this);
         lang = new LangConfig(this);
 
-        storedPlayers = new StoredPlayers();
+        storedPlayers = new StoredPlayers(this);
         class RefreshPlayers extends BukkitRunnable {
             @Override
             public void run() {
@@ -86,7 +95,7 @@ public final class WanderingTrades extends JavaPlugin {
                 new UpdateChecker(instance, 79068).getVersion(UpdateChecker::updateCheck);
             }
         }
-        new UpdateCheck().runTaskTimer(this,20L * 60L * 30L, 20L * 60L * 120L);
+        new UpdateCheck().runTaskTimer(this, 20L * 60L * 30L, 20L * 60L * 120L);
 
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
@@ -101,9 +110,7 @@ public final class WanderingTrades extends JavaPlugin {
 
         metrics.addCustomChart(new Metrics.SimplePie("plugin_language", () -> cfg.getLanguage()));
 
-        metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> {
-            return String.valueOf(cfg.getTradeConfigs().size());
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.getTradeConfigs().size())));
 
         log.info("&d[ON]");
     }

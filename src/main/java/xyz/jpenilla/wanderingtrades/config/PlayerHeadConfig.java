@@ -22,6 +22,8 @@ public class PlayerHeadConfig {
     @Getter @Setter
     private boolean playerHeadsFromServer;
     @Getter @Setter
+    private boolean permissionWhitelist;
+    @Getter @Setter
     private double playerHeadsFromServerChance;
     @Getter @Setter
     private int playerHeadsFromServerAmount;
@@ -62,6 +64,7 @@ public class PlayerHeadConfig {
         name = config.getString(prefix + "head.customname");
         lore = config.getStringList(prefix + "head.lore");
         usernameBlacklist = config.getStringList(Fields.usernameBlacklist);
+        permissionWhitelist = config.getBoolean(Fields.permissionWhitelist);
     }
 
     public void save() {
@@ -70,6 +73,7 @@ public class PlayerHeadConfig {
         config.set(Fields.playerHeadsFromServerAmount, playerHeadsFromServerAmount);
         config.set(Fields.days, days);
         config.set(Fields.usernameBlacklist, usernameBlacklist);
+        config.set(Fields.permissionWhitelist, permissionWhitelist);
         config.set(prefix + Fields.maxUses, maxUses);
         config.set(prefix + Fields.experienceReward, experienceReward);
         config.set(prefix + "ingredients.1.itemStack", ingredient1.serialize());
