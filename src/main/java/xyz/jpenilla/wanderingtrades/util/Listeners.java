@@ -13,7 +13,7 @@ public class Listeners {
 
     public void register() {
         plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new JoinQuitListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new JoinQuitListener(plugin), plugin);
 
         if (plugin.getCfg().isEnabled()) {
             plugin.getServer().getPluginManager().registerEvents(new AcquireTradeListener(plugin), plugin);
