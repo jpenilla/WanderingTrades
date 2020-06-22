@@ -11,6 +11,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class GuiListener implements Listener {
+
+    @EventHandler
+    private void onTest() {
+
+    }
+
     @EventHandler
     private void onInventoryClickEvent(InventoryClickEvent event) {
         if (event.getRawSlot() < 0) {
