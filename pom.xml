@@ -41,35 +41,35 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.bstats</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.bstats</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.io</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.apache.commonsio</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.apache.commonsio</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.math3</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.apache.commonsmath3</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.apache.commonsmath3</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>assets.org.apache.commons.math3</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.apache.assets.commonsmath3</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.apache.assets.commonsmath3</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>net.wesjd</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.wesjd</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.wesjd</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>xyz.jpenilla.jmplib</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.jmplib</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.jmplib</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.acf</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.acf</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>xyz.jpenilla.wanderingtrades.locales</shadedPattern>
+                            <shadedPattern>xyz.jpenilla.wanderingtrades.lib.acflocales</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -170,7 +170,7 @@
         <dependency>
             <groupId>xyz.jpenilla</groupId>
             <artifactId>jmplib</artifactId>
-            <version>1.0.0-SNAPSHOT.41</version>
+            <version>1.0.0-SNAPSHOT.44</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
