@@ -37,9 +37,11 @@ public class StoredPlayers {
                         players.add(offlinePlayer.getUniqueId());
                     } else {
                         if (wanderingTrades.getCfg().getPlayerHeadConfig().isPermissionWhitelist()) {
-                            if (wanderingTrades.getVault().getPerms().playerHas(null, offlinePlayer, "wanderingtrades.headavailable")) {
-                                players.add(offlinePlayer.getUniqueId());
-                            }
+                            Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
+                                if (wanderingTrades.getVault().getPerms().playerHas(null, offlinePlayer, "wanderingtrades.headavailable")) {
+                                    players.add(offlinePlayer.getUniqueId());
+                                }
+                            });
                         } else {
                             players.add(offlinePlayer.getUniqueId());
                         }
