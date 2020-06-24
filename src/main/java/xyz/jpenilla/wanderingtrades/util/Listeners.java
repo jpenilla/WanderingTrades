@@ -17,6 +17,7 @@ public class Listeners {
 
         if (plugin.getCfg().isEnabled()) {
             plugin.getServer().getPluginManager().registerEvents(new AcquireTradeListener(plugin), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new EntitySpawnListener(plugin), plugin);
             plugin.getServer().getPluginManager().registerEvents(new ProtectTradersListener(plugin), plugin);
         }
 
