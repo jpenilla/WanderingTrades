@@ -9,13 +9,13 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class StoredPlayers {
     private final WanderingTrades wanderingTrades;
     @Getter
-    private final ArrayList<UUID> players = new ArrayList<>();
+    private final HashMap<UUID, String> players = new HashMap<>();
 
     public StoredPlayers(WanderingTrades wanderingTrades) {
         this.wanderingTrades = wanderingTrades;
@@ -34,16 +34,16 @@ public class StoredPlayers {
             if (logout.isAfter(cutoff) || wanderingTrades.getCfg().getPlayerHeadConfig().getDays() == -1) {
                 if (!TextUtil.containsCaseInsensitive(offlinePlayer.getName(), wanderingTrades.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
                     if (!wanderingTrades.isVaultPermissions()) {
-                        players.add(offlinePlayer.getUniqueId());
+                        players.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
                     } else {
                         if (wanderingTrades.getCfg().getPlayerHeadConfig().isPermissionWhitelist()) {
                             Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
                                 if (wanderingTrades.getVault().getPerms().playerHas(null, offlinePlayer, "wanderingtrades.headavailable")) {
-                                    players.add(offlinePlayer.getUniqueId());
+                                    players.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
                                 }
                             });
                         } else {
-                            players.add(offlinePlayer.getUniqueId());
+                            players.put(offlinePlayer.getUniqueId(), offlinePlayer.getName());
                         }
                     }
                 }

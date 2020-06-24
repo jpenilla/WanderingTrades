@@ -34,15 +34,15 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
         if (wanderingTrades.isVaultPermissions() && wanderingTrades.getCfg().getPlayerHeadConfig().isPermissionWhitelist()) {
-            if (!e.getPlayer().hasPermission("wanderingtrades.headavailable") && wanderingTrades.getStoredPlayers().getPlayers().contains(e.getPlayer().getUniqueId())) {
+            if (!e.getPlayer().hasPermission("wanderingtrades.headavailable")) {
                 wanderingTrades.getStoredPlayers().getPlayers().remove(e.getPlayer().getUniqueId());
             }
         }
     }
 
     private void addHead(Player player) {
-        if (!wanderingTrades.getStoredPlayers().getPlayers().contains(player.getUniqueId()) && !TextUtil.containsCaseInsensitive(player.getName(), wanderingTrades.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
-            wanderingTrades.getStoredPlayers().getPlayers().add(player.getUniqueId());
+        if (!wanderingTrades.getStoredPlayers().getPlayers().containsKey(player.getUniqueId()) && !TextUtil.containsCaseInsensitive(player.getName(), wanderingTrades.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
+            wanderingTrades.getStoredPlayers().getPlayers().put(player.getUniqueId(), player.getName());
         }
     }
 }

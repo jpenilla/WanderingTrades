@@ -1,12 +1,8 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
-import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -14,16 +10,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class AcquireTradeListener implements Listener {
     private final WanderingTrades plugin;
 
     public AcquireTradeListener(WanderingTrades p) {
         plugin = p;
+    }
+
+    public static boolean randBoolean(double p) {
+        return Math.random() < p;
     }
 
     @EventHandler
@@ -39,14 +41,11 @@ public class AcquireTradeListener implements Listener {
                 }
 
                 if (plugin.getCfg().isAllowMultipleSets()) {
-                    HashMap<String, TradeConfig> m = new HashMap<>(plugin.getCfg().getTradeConfigs());
-                    Iterator<Map.Entry<String,TradeConfig>> it = m.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry<String,TradeConfig> pair = it.next();
-                        if (randBoolean(pair.getValue().getChance())) {
-                            newTrades.addAll(pair.getValue().getTrades(false));
+                    ArrayList<TradeConfig> m = new ArrayList<>(plugin.getCfg().getTradeConfigs().values());
+                    for (TradeConfig config : m) {
+                        if (randBoolean(config.getChance())) {
+                            newTrades.addAll(config.getTrades(false));
                         }
-                        it.remove();
                     }
                 } else {
                     ArrayList<String> keys = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
@@ -73,21 +72,21 @@ public class AcquireTradeListener implements Listener {
     private ArrayList<MerchantRecipe> getPlayerHeadsFromServer() {
         ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
-        ArrayList<UUID> offlinePlayers = plugin.getStoredPlayers().getPlayers();
+        ArrayList<UUID> offlinePlayers = new ArrayList<>(plugin.getStoredPlayers().getPlayers().keySet());
         Collections.shuffle(offlinePlayers);
 
         ArrayList<UUID> selectedPlayers = new ArrayList<>();
-        IntStream.range(0, plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount()).forEach(i -> {
+        for (int i = 0; i < plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount(); i++) {
             try {
                 selectedPlayers.add(offlinePlayers.get(i));
             } catch (IndexOutOfBoundsException e) {
                 plugin.getLog().debug("'playerHeadsFromServerAmount' in playerheads.yml is higher than the amount of recently active players. Not adding a head. Disable debug to hide this message.");
             }
-        });
+        }
 
-        selectedPlayers.forEach(player -> {
+        for (UUID player : selectedPlayers) {
             ItemStack head = new ItemBuilder(player)
-                    .setName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", Bukkit.getOfflinePlayer(player).getName()))
+                    .setName(plugin.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", plugin.getStoredPlayers().getPlayers().get(player)))
                     .setLore(plugin.getCfg().getPlayerHeadConfig().getLore())
                     .setAmount(plugin.getCfg().getPlayerHeadConfig().getHeadsPerTrade()).build();
             MerchantRecipe recipe = new MerchantRecipe(head, 0, plugin.getCfg().getPlayerHeadConfig().getMaxUses(), plugin.getCfg().getPlayerHeadConfig().isExperienceReward());
@@ -96,15 +95,7 @@ public class AcquireTradeListener implements Listener {
                 recipe.addIngredient(plugin.getCfg().getPlayerHeadConfig().getIngredient2());
             }
             newTrades.add(recipe);
-        });
+        }
         return newTrades;
-    }
-
-    public static boolean randBoolean(double p) {
-        return Math.random() < p;
-    }
-
-    public static boolean inBounds(int index, List<OfflinePlayer> l) {
-        return (index >= 0) && (index < l.size());
     }
 }
