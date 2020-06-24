@@ -99,7 +99,6 @@ public final class WanderingTrades extends JavaPlugin {
 
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
-
         metrics.addCustomChart(new Metrics.SimplePie("player_heads", () -> {
             if (cfg.getPlayerHeadConfig().isPlayerHeadsFromServer()) {
                 return "On";
@@ -107,11 +106,8 @@ public final class WanderingTrades extends JavaPlugin {
                 return "Off";
             }
         }));
-
         metrics.addCustomChart(new Metrics.SimplePie("plugin_language", () -> cfg.getLanguage()));
-
         metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.getTradeConfigs().size())));
-
         log.info("&d[ON]");
     }
 

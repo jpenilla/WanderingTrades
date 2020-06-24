@@ -3,6 +3,7 @@ package xyz.jpenilla.wanderingtrades.listener;
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -31,8 +34,16 @@ public class AcquireTradeListener implements Listener {
     @EventHandler
     public void onAcquireTrade(VillagerAcquireTradeEvent e) {
         if (e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
-            if (e.getEntity().getRecipes().size() == 0) {
-                AbstractVillager trader = e.getEntity();
+            if (plugin.getCfg().isRemoveOriginalTrades()) {
+                e.setCancelled(true);
+            }
+
+            NamespacedKey key = new NamespacedKey(plugin, "acquireTradeEventFired");
+
+            AbstractVillager trader = e.getEntity();
+            PersistentDataContainer container = trader.getPersistentDataContainer();
+            if (container.getOrDefault(key, PersistentDataType.INTEGER, 0) == 0) {
+                container.set(key, PersistentDataType.INTEGER, 1);
                 ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -62,12 +73,10 @@ public class AcquireTradeListener implements Listener {
                     }
 
                     Bukkit.getScheduler().runTask(plugin, () -> {
+                        newTrades.addAll(trader.getRecipes());
                         trader.setRecipes(newTrades);
                     });
                 });
-            }
-            if (plugin.getCfg().isRemoveOriginalTrades()) {
-                e.setCancelled(true);
             }
         }
     }
