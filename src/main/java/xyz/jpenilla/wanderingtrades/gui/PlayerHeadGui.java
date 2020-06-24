@@ -21,6 +21,8 @@ import java.util.stream.IntStream;
 public class PlayerHeadGui extends TradeGui {
     private final ItemStack enabledStack = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_ENABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack disabledStack = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_DISABLED)).setLore(gui_toggle_lore).build();
+    private final ItemStack permissionWhitelistStack = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_PWL_ENABLED)).setLore(gui_toggle_lore, lang.get(Lang.GUI_PH_CONFIG_PWL_LORE)).build();
+    private final ItemStack noPermissionsWhitelistStack = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_PWL_DISABLED)).setLore(gui_toggle_lore, lang.get(Lang.GUI_PH_CONFIG_PWL_LORE)).build();
     private final ItemStack amountTradesStack = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_AMOUNT)).build();
     private final ItemStack amountHeadsStack = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_AMOUNT_HEADS)).build();
     private final ItemStack days = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_DAYS)).build();
@@ -47,35 +49,41 @@ public class PlayerHeadGui extends TradeGui {
 
         PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
 
-        if (config.isPlayerHeadsFromServer()) {
-            inventory.setItem(9, enabledStack);
+        if (config.isPermissionWhitelist()) {
+            inventory.setItem(9, permissionWhitelistStack);
         } else {
-            inventory.setItem(9, disabledStack);
+            inventory.setItem(9, noPermissionsWhitelistStack);
+        }
+
+        if (config.isPlayerHeadsFromServer()) {
+            inventory.setItem(10, enabledStack);
+        } else {
+            inventory.setItem(10, disabledStack);
         }
 
         if (config.isExperienceReward()) {
-            inventory.setItem(10, experienceEnabled);
+            inventory.setItem(11, experienceEnabled);
         } else {
-            inventory.setItem(10, experienceDisabled);
+            inventory.setItem(11, experienceDisabled);
         }
 
         ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
-        inventory.setItem(11, k);
+        inventory.setItem(12, k);
 
         ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getPlayerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
-        inventory.setItem(12, a);
+        inventory.setItem(13, a);
 
         ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getHeadsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
-        inventory.setItem(13, f);
+        inventory.setItem(14, f);
 
         ItemStack e = new ItemBuilder(maxUsesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
-        inventory.setItem(14, e);
+        inventory.setItem(15, e);
 
         ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getPlayerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
-        inventory.setItem(15, b);
+        inventory.setItem(16, b);
 
         ItemStack g = new ItemBuilder(customName).setLore(lang.get(Lang.GUI_VALUE_LORE) + config.getName(), lang.get(Lang.GUI_EDIT_LORE)).build();
-        inventory.setItem(16, g);
+        inventory.setItem(17, g);
 
         ArrayList<String> resultLore = new ArrayList<>(Arrays.asList(
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
@@ -138,6 +146,12 @@ public class PlayerHeadGui extends TradeGui {
             config.setExperienceReward(false);
         } else if (experienceDisabled.isSimilar(item)) {
             config.setExperienceReward(true);
+        }
+
+        if (permissionWhitelistStack.isSimilar(item)) {
+            config.setPermissionWhitelist(false);
+        } else if (noPermissionsWhitelistStack.isSimilar(item)) {
+            config.setPermissionWhitelist(true);
         }
 
         if (maxUsesStack.isSimilar(item)) {
