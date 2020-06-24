@@ -33,35 +33,38 @@ public class AcquireTradeListener implements Listener {
         if (e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
             if (e.getEntity().getRecipes().size() == 0) {
                 AbstractVillager trader = e.getEntity();
-
                 ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
 
-                if (plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
-                    newTrades.addAll(getPlayerHeadsFromServer());
-                }
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    if (plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
+                        newTrades.addAll(getPlayerHeadsFromServer());
+                    }
 
-                if (plugin.getCfg().isAllowMultipleSets()) {
-                    ArrayList<TradeConfig> m = new ArrayList<>(plugin.getCfg().getTradeConfigs().values());
-                    for (TradeConfig config : m) {
-                        if (randBoolean(config.getChance())) {
-                            newTrades.addAll(config.getTrades(false));
+                    if (plugin.getCfg().isAllowMultipleSets()) {
+                        ArrayList<TradeConfig> m = new ArrayList<>(plugin.getCfg().getTradeConfigs().values());
+                        for (TradeConfig config : m) {
+                            if (randBoolean(config.getChance())) {
+                                newTrades.addAll(config.getTrades(false));
+                            }
+                        }
+                    } else {
+                        ArrayList<String> keys = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
+
+                        List<Pair<String, Double>> weights = keys.stream().map(config ->
+                                new Pair<>(config, plugin.getCfg().getTradeConfigs().get(config).getChance()))
+                                .collect(Collectors.toList());
+
+                        String chosenConfig = new EnumeratedDistribution<>(weights).sample();
+
+                        if (chosenConfig != null) {
+                            newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
                         }
                     }
-                } else {
-                    ArrayList<String> keys = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
 
-                    List<Pair<String, Double>> weights = keys.stream().map(config ->
-                            new Pair<>(config, plugin.getCfg().getTradeConfigs().get(config).getChance()))
-                            .collect(Collectors.toList());
-
-                    String chosenConfig = new EnumeratedDistribution<>(weights).sample();
-
-                    if (chosenConfig != null) {
-                        newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
-                    }
-                }
-
-                trader.setRecipes(newTrades);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        trader.setRecipes(newTrades);
+                    });
+                });
             }
             if (plugin.getCfg().isRemoveOriginalTrades()) {
                 e.setCancelled(true);
