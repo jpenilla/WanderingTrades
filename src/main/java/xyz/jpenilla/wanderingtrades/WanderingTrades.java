@@ -35,7 +35,6 @@ public final class WanderingTrades extends JavaPlugin {
 
     @Getter private PaperCommandManager commandManager;
 
-    @Getter private boolean paper;
     @Getter @Setter
     private boolean vaultPermissions = false;
 
@@ -73,16 +72,6 @@ public final class WanderingTrades extends JavaPlugin {
         commandHelper = new CommandHelper(this);
         commandHelper.register();
         commandManager.registerCommand(new CommandWanderingTrades(this));
-
-        paper = false;
-        try {
-            paper = Class.forName("com.destroystokyo.paper.VersionHistoryManager$VersionData") != null;
-        } catch (ClassNotFoundException e) {
-            getLog().debug("Paper not detected. Install Paper from https://papermc.io");
-        }
-        if (paper) {
-            getLog().info("Got Paper!");
-        }
 
         listeners = new Listeners(this);
         listeners.register();
