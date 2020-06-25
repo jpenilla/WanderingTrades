@@ -40,9 +40,9 @@ public class CommandHelper {
         });
 
         mgr.getCommandCompletions().registerCompletion("angles", c -> {
-            List<String> completions = Arrays.asList(
+            ArrayList<String> completions = new ArrayList<>(Arrays.asList(
                     "30", "45", "60", "90", "120", "135", "150", "180",
-                    "210", "225", "240", "270", "300", "315", "330", "360");
+                    "210", "225", "240", "270", "300", "315", "330", "360"));
             if (c.getSender() instanceof Player) {
                 completions.add(
                         String.valueOf(Math.round(((Player) c.getSender()).getLocation().getYaw() * 100) / 100)
@@ -74,8 +74,6 @@ public class CommandHelper {
 
     private void registerReplacements(CommandReplacements replacements, Lang... keys) {
         LangConfig l = plugin.getLang();
-        Arrays.stream(keys).forEach(key -> {
-            replacements.addReplacement(key.toString(), l.get(key));
-        });
+        Arrays.stream(keys).forEach(key -> replacements.addReplacement(key.toString(), l.get(key)));
     }
 }
