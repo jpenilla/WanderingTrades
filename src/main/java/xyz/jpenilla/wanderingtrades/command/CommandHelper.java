@@ -4,14 +4,14 @@ import co.aikar.commands.BukkitMessageFormatter;
 import co.aikar.commands.CommandReplacements;
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.LangConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.LangConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;

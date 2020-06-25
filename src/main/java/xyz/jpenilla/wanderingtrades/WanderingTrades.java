@@ -43,7 +43,7 @@ public final class WanderingTrades extends JavaPlugin {
     public void onEnable() {
         instance = this;
         log = new Log(this);
-        log.info("&d[STARTING]");
+        log.info("[STARTING]");
 
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {
             vault = new VaultCompat(this);
@@ -108,7 +108,7 @@ public final class WanderingTrades extends JavaPlugin {
         }));
         metrics.addCustomChart(new Metrics.SimplePie("plugin_language", () -> cfg.getLanguage()));
         metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.getTradeConfigs().size())));
-        log.info("&d[ON]");
+        log.info("[ON]");
     }
 
     @Override

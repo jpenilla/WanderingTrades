@@ -1,6 +1,6 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import xyz.jpenilla.jmplib.TextUtil;
+import org.bukkit.ChatColor;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public class Log {
@@ -11,20 +11,20 @@ public class Log {
     }
 
     public void info(String s) {
-        plugin.getLogger().info(TextUtil.colorize(s));
+        plugin.getLogger().info(s);
     }
 
     public void warn(String s) {
-        plugin.getLogger().warning(TextUtil.colorize(s));
+        plugin.getLogger().warning(s);
     }
 
     public void err(String s) {
-        plugin.getLogger().severe(TextUtil.colorize(s));
+        plugin.getLogger().severe(s);
     }
 
     public void debug(String s) {
-        if(plugin.getCfg().isDebug()) {
-            plugin.getLogger().info(TextUtil.colorize("&e[DEBUG] &r" + s));
+        if (plugin.getCfg().isDebug()) {
+            plugin.getLogger().info("[DEBUG] " + s);
         }
     }
 }
