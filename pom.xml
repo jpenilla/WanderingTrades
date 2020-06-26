@@ -174,9 +174,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.Sytm.AnvilGUI</groupId>
-            <artifactId>anvilgui</artifactId>
-            <version>mc-1.16-7524f00209-1</version>
+            <groupId>com.github.WesJD</groupId>
+            <artifactId>AnvilGUI</artifactId>
+            <version>ef71db62ec</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
