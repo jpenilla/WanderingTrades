@@ -6,7 +6,7 @@
 
     <groupId>fun.ccmc.wanderingtrades</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.5.1-SNAPSHOT.{BUILD_NUMBER}</version>
+    <version>1.5.0.4</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
@@ -174,9 +174,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.WesJD.AnvilGUI</groupId>
+            <groupId>com.github.Sytm.AnvilGUI</groupId>
             <artifactId>anvilgui</artifactId>
-            <version>61aa6d8080</version>
+            <version>mc-1.16-7524f00209-1</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
