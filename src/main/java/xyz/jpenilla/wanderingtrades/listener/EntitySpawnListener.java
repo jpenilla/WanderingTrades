@@ -33,8 +33,7 @@ public class EntitySpawnListener implements Listener {
 
     @EventHandler
     public void onSpawn(EntitySpawnEvent e) {
-        if (e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
-            AbstractVillager trader = (AbstractVillager) e.getEntity();
+        if (EntityType.WANDERING_TRADER.equals(e.getEntityType())) {
             ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
             Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
                 if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
@@ -61,6 +60,7 @@ public class EntitySpawnListener implements Listener {
                     }
                 }
                 Bukkit.getScheduler().runTask(wanderingTrades, () -> {
+                    AbstractVillager trader = (AbstractVillager) e.getEntity();
                     newTrades.addAll(trader.getRecipes());
                     trader.setRecipes(newTrades);
                 });
@@ -69,11 +69,8 @@ public class EntitySpawnListener implements Listener {
     }
 
     private ArrayList<MerchantRecipe> getPlayerHeadsFromServer() {
-        ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
-
         ArrayList<UUID> offlinePlayers = new ArrayList<>(wanderingTrades.getStoredPlayers().getPlayers().keySet());
         Collections.shuffle(offlinePlayers);
-
         ArrayList<UUID> selectedPlayers = new ArrayList<>();
         for (int i = 0; i < wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount(); i++) {
             try {
@@ -83,6 +80,7 @@ public class EntitySpawnListener implements Listener {
             }
         }
 
+        ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
         for (UUID player : selectedPlayers) {
             ItemStack head = new ItemBuilder(player)
                     .setName(wanderingTrades.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", wanderingTrades.getStoredPlayers().getPlayers().get(player)))

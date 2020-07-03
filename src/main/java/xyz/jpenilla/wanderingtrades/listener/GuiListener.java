@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
-import xyz.jpenilla.wanderingtrades.gui.GuiHolder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -9,6 +8,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import xyz.jpenilla.wanderingtrades.gui.GuiHolder;
 
 public class GuiListener implements Listener {
 

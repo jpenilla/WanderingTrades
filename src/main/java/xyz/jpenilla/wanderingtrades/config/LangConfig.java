@@ -1,8 +1,8 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.File;
 import java.util.ArrayList;

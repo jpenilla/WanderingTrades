@@ -1,12 +1,12 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.IOException;
 import java.util.List;

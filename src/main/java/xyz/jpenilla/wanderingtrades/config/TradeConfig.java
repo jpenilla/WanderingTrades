@@ -1,7 +1,5 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
@@ -12,6 +10,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.IOException;
 import java.util.*;

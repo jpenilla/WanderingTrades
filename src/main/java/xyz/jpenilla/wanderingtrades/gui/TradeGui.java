@@ -1,10 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.jmplib.TextUtil;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +10,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.jmplib.TextUtil;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import java.util.ArrayList;
 

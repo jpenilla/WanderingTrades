@@ -1,11 +1,11 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +91,7 @@ public class Config {
 
     private void loadPlayerHeadConfig() {
         File f = new File(plugin.getDataFolder() + "/playerheads.yml");
-        if(!f.exists()) {
+        if (!f.exists()) {
             plugin.saveResource("playerheads.yml", false);
         }
         f = new File(plugin.getDataFolder() + "/playerheads.yml");
@@ -105,12 +105,12 @@ public class Config {
         String path = plugin.getDataFolder() + "/trades";
 
         File folder = new File(path);
-        if(!folder.exists()) {
-            if(folder.mkdir()) {
+        if (!folder.exists()) {
+            if (folder.mkdir()) {
                 plugin.getLog().info("Creating trades folder");
             }
         }
-        if(folder.listFiles().length == 0) {
+        if (folder.listFiles().length == 0) {
             plugin.getLog().info("No trade configs found, copying example.yml");
             plugin.saveResource("trades/example.yml", false);
         }

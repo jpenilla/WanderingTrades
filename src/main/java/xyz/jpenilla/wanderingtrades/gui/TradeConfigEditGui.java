@@ -1,10 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.jmplib.TextUtil;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +9,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.jmplib.TextUtil;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
@@ -191,7 +191,7 @@ public class TradeConfigEditGui extends GuiHolder {
         if (customName.isSimilar(item)) {
             p.closeInventory();
             String cN;
-            if(t.getCustomName() == null) {
+            if (t.getCustomName() == null) {
                 cN = lang.get(Lang.GUI_ANVIL_TYPE_HERE);
             } else {
                 cN = t.getCustomName();

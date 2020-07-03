@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import org.bukkit.ChatColor;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public class Log {

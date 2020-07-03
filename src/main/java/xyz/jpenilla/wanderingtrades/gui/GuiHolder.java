@@ -1,10 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.jmplib.TextUtil;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.LangConfig;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +11,11 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.jmplib.TextUtil;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.LangConfig;
 
 public abstract class GuiHolder implements InventoryHolder {
     protected Inventory inventory;
@@ -34,10 +34,10 @@ public abstract class GuiHolder implements InventoryHolder {
     public void onInventoryDrag(InventoryDragEvent event) {
     }
 
-    public void onInventoryOpen(InventoryOpenEvent event){
+    public void onInventoryOpen(InventoryOpenEvent event) {
     }
 
-    public void onInventoryClose(InventoryCloseEvent event){
+    public void onInventoryClose(InventoryCloseEvent event) {
     }
 
     public void open(@NonNull Player p) {

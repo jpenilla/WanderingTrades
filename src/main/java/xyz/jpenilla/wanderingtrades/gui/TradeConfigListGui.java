@@ -7,8 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.jmplib.LegacyChat;
 import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -81,10 +81,10 @@ public class TradeConfigListGui extends PaginatedGui {
                                 try {
                                     FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + text + ".yml"));
                                     WanderingTrades.getInstance().getCfg().load();
-                                    Chat.sendCenteredMessage(p, lang.get(Lang.GUI_CREATE_CONFIG_SUCCESS));
+                                    LegacyChat.sendCenteredMessage(p, lang.get(Lang.GUI_CREATE_CONFIG_SUCCESS));
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
-                                    Chat.sendCenteredMessage(p, "&4Error");
+                                    LegacyChat.sendCenteredMessage(p, "&4Error");
                                 }
                             } else {
                                 return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));

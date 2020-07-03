@@ -4,15 +4,6 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
-import xyz.jpenilla.jmplib.Chat;
-import xyz.jpenilla.jmplib.TextUtil;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-import xyz.jpenilla.wanderingtrades.gui.ConfigGui;
-import xyz.jpenilla.wanderingtrades.gui.PlayerHeadGui;
-import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
-import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -22,6 +13,15 @@ import org.bukkit.entity.WanderingTrader;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import xyz.jpenilla.jmplib.LegacyChat;
+import xyz.jpenilla.jmplib.TextUtil;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.gui.ConfigGui;
+import xyz.jpenilla.wanderingtrades.gui.PlayerHeadGui;
+import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
+import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Description("%COMMAND_WT_HELP")
     public void onHelp(CommandSender sender, CommandHelp help) {
         String m = "&f---&a[ &5&l" + plugin.getName() + "&d&l Help &a]&f---";
-        Chat.sendMsg(sender, m);
+        LegacyChat.sendMsg(sender, m);
         help.showHelp();
     }
 
@@ -52,20 +52,20 @@ public class CommandWanderingTrades extends BaseCommand {
                 "&7By &bjmp",
                 "&a=========================="
         };
-        Chat.sendCenteredMessage(sender, m);
+        LegacyChat.sendCenteredMessage(sender, m);
     }
 
     @Subcommand("reload")
     @CommandPermission("wanderingtrades.reload")
     @Description("%COMMAND_WT_RELOAD")
     public void onReload(CommandSender sender) {
-        Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD));
+        LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD));
         plugin.getCfg().load();
         plugin.getLang().load();
         plugin.getListeners().reload();
         plugin.getCommandHelper().register();
         plugin.getStoredPlayers().load();
-        Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD_DONE));
+        LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD_DONE));
     }
 
     @Subcommand("list|l")
@@ -74,8 +74,8 @@ public class CommandWanderingTrades extends BaseCommand {
     public void onList(CommandSender sender) {
         List<String> configs = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
         String commaSeparatedConfigs = String.join("&7, &r", configs);
-        Chat.sendMsg(sender, plugin.getLang().get(Lang.COMMAND_LIST_LOADED));
-        Chat.sendMsg(sender, commaSeparatedConfigs);
+        LegacyChat.sendMsg(sender, plugin.getLang().get(Lang.COMMAND_LIST_LOADED));
+        LegacyChat.sendMsg(sender, commaSeparatedConfigs);
     }
 
     @CommandPermission("wanderingtrades.edit")
@@ -144,10 +144,10 @@ public class CommandWanderingTrades extends BaseCommand {
             });
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
@@ -182,10 +182,10 @@ public class CommandWanderingTrades extends BaseCommand {
             });
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                Chat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
