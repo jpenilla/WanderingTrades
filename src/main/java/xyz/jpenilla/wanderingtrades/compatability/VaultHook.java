@@ -1,15 +1,15 @@
-package xyz.jpenilla.wanderingtrades.compat;
+package xyz.jpenilla.wanderingtrades.compatability;
 
 import lombok.Getter;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public class VaultCompat {
+public class VaultHook {
     private final WanderingTrades wanderingTrades;
     @Getter private Permission perms;
 
-    public VaultCompat(WanderingTrades wanderingTrades) {
+    public VaultHook(WanderingTrades wanderingTrades) {
         this.wanderingTrades = wanderingTrades;
         wanderingTrades.setVaultPermissions(setupPermissions());
     }

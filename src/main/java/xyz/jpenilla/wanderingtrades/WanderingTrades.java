@@ -8,9 +8,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.jpenilla.wanderingtrades.command.CommandHelper;
 import xyz.jpenilla.wanderingtrades.command.CommandWanderingTrades;
-import xyz.jpenilla.wanderingtrades.compat.McRPG;
-import xyz.jpenilla.wanderingtrades.compat.VaultCompat;
-import xyz.jpenilla.wanderingtrades.compat.WorldGuardCompat;
+import xyz.jpenilla.wanderingtrades.compatability.McRPGHook;
+import xyz.jpenilla.wanderingtrades.compatability.VaultHook;
+import xyz.jpenilla.wanderingtrades.compatability.WorldGuardHook;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
 import xyz.jpenilla.wanderingtrades.util.Listeners;
@@ -29,9 +29,9 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private Listeners listeners;
     @Getter private CommandHelper commandHelper;
 
-    @Getter private xyz.jpenilla.wanderingtrades.compat.McRPG McRPG = null;
-    @Getter private WorldGuardCompat worldGuard = null;
-    @Getter private VaultCompat vault = null;
+    @Getter private McRPGHook McRPG = null;
+    @Getter private WorldGuardHook worldGuard = null;
+    @Getter private VaultHook vault = null;
 
     @Getter private PaperCommandManager commandManager;
 
@@ -45,13 +45,13 @@ public final class WanderingTrades extends JavaPlugin {
         log.info("[STARTING]");
 
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-            vault = new VaultCompat(this);
+            vault = new VaultHook(this);
         }
         if (getServer().getPluginManager().isPluginEnabled("McRPG")) {
-            McRPG = new McRPG();
+            McRPG = new McRPGHook();
         }
         if (getServer().getPluginManager().isPluginEnabled("WorldGuard") && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
-            worldGuard = new WorldGuardCompat(this);
+            worldGuard = new WorldGuardHook(this);
         }
 
         cfg = new Config(this);

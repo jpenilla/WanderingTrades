@@ -10,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
@@ -81,57 +82,55 @@ public class TradeConfig {
             itemBuilder = null;
         }
 
-        if (itemBuilder == null) {
-            if (config.getString(key + ".material") != null) {
-                if (config.getString(key + ".material").contains("head-")) {
-                    itemBuilder = new ItemBuilder(config.getString(key + ".material").replace("head-", ""));
-                } else {
-                    if (config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
-                        itemBuilder = new ItemBuilder(Material.CHIPPED_ANVIL).setAmount(config.getInt(key + ".amount"));
-                        if (config.getString(key + ".material").toUpperCase().contains("SKILL")) {
-                            itemBuilder.setName("mcrpg_skill_book_placeholder_");
-                        } else {
-                            itemBuilder.setName("mcrpg_upgrade_book_placeholder_");
-                        }
-                        McRPG = true;
+        if (itemBuilder == null && config.getString(key + ".material") != null) {
+            if (config.getString(key + ".material").contains("head-")) {
+                itemBuilder = new HeadBuilder(config.getString(key + ".material").replace("head-", ""));
+            } else {
+                if (config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
+                    itemBuilder = new ItemBuilder(Material.CHIPPED_ANVIL).setAmount(config.getInt(key + ".amount"));
+                    if (config.getString(key + ".material").toUpperCase().contains("SKILL")) {
+                        itemBuilder.setName("mcrpg_skill_book_placeholder_");
                     } else {
-                        String matName;
+                        itemBuilder.setName("mcrpg_upgrade_book_placeholder_");
+                    }
+                    McRPG = true;
+                } else {
+                    String matName;
 
-                        try {
-                            matName = Objects.requireNonNull(config.getString(key + ".material")).toUpperCase();
-                        } catch (NullPointerException e) {
-                            matName = Material.STONE.toString();
-                            WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
-                        }
+                    try {
+                        matName = Objects.requireNonNull(config.getString(key + ".material")).toUpperCase();
+                    } catch (NullPointerException e) {
+                        matName = Material.STONE.toString();
+                        WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
+                    }
 
-                        Material m = Material.getMaterial(matName);
+                    Material m = Material.getMaterial(matName);
 
-                        if (m != null) {
-                            itemBuilder = new ItemBuilder(m).setAmount(config.getInt(key + ".amount"));
-                        } else {
-                            itemBuilder = new ItemBuilder(Material.STONE);
-                            WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
-                        }
+                    if (m != null) {
+                        itemBuilder = new ItemBuilder(m).setAmount(config.getInt(key + ".amount"));
+                    } else {
+                        itemBuilder = new ItemBuilder(Material.STONE);
+                        WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
                     }
                 }
+            }
 
-                if (!McRPG) {
-                    String cname = config.getString(key + ".customname");
-                    if (cname != null && !cname.equals("NONE")) {
-                        itemBuilder.setName(cname);
-                    }
-                    if (config.getStringList(key + ".lore").size() != 0) {
-                        itemBuilder.setLore(config.getStringList(key + ".lore"));
-                    }
-                    itemBuilder.setAmount(config.getInt(key + ".amount"));
+            if (!McRPG) {
+                String cname = config.getString(key + ".customname");
+                if (cname != null && !cname.equals("NONE")) {
+                    itemBuilder.setName(cname);
+                }
+                if (config.getStringList(key + ".lore").size() != 0) {
+                    itemBuilder.setLore(config.getStringList(key + ".lore"));
+                }
+                itemBuilder.setAmount(config.getInt(key + ".amount"));
 
-                    for (String s : config.getStringList(key + ".enchantments")) {
-                        if (s.contains(":")) {
-                            String[] e = s.split(":");
-                            Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
-                            if (ench != null) {
-                                itemBuilder.addEnchant(ench, Integer.parseInt(e[1]));
-                            }
+                for (String s : config.getStringList(key + ".enchantments")) {
+                    if (s.contains(":")) {
+                        String[] e = s.split(":");
+                        Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
+                        if (ench != null) {
+                            itemBuilder.addEnchant(ench, Integer.parseInt(e[1]));
                         }
                     }
                 }

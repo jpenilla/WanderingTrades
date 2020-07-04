@@ -1,4 +1,4 @@
-package xyz.jpenilla.wanderingtrades.compat;
+package xyz.jpenilla.wanderingtrades.compatability;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -10,10 +10,10 @@ import org.bukkit.Location;
 import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public class WorldGuardCompat {
+public class WorldGuardHook {
     private final WanderingTrades plugin;
 
-    public WorldGuardCompat(WanderingTrades instance) {
+    public WorldGuardHook(WanderingTrades instance) {
         plugin = instance;
     }
 
@@ -38,10 +38,8 @@ public class WorldGuardCompat {
                 passed = true;
             }
         }
-        if (getRegions(loc).size() == 0) {
-            if (!plugin.getCfg().isWgWhitelist()) {
-                passed = true;
-            }
+        if (getRegions(loc).size() == 0 && !plugin.getCfg().isWgWhitelist()) {
+            passed = true;
         }
         return passed;
     }

@@ -1,4 +1,4 @@
-package xyz.jpenilla.wanderingtrades.compat;
+package xyz.jpenilla.wanderingtrades.compatability;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +9,7 @@ import us.eunoians.mcrpg.api.util.books.SkillBookFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class McRPG {
+public class McRPGHook {
     public ArrayList<MerchantRecipe> replacePlaceholders(List<MerchantRecipe> recipes) {
         ArrayList<MerchantRecipe> fixed = new ArrayList<>();
         recipes.forEach(recipe -> {

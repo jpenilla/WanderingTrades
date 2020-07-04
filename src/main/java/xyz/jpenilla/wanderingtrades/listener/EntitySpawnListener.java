@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataType;
-import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
@@ -86,7 +86,7 @@ public class EntitySpawnListener implements Listener {
 
         ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
         for (UUID player : selectedPlayers) {
-            ItemStack head = new ItemBuilder(player)
+            ItemStack head = new HeadBuilder(player)
                     .setName(wanderingTrades.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", wanderingTrades.getStoredPlayers().getPlayers().get(player)))
                     .setLore(wanderingTrades.getCfg().getPlayerHeadConfig().getLore())
                     .setAmount(wanderingTrades.getCfg().getPlayerHeadConfig().getHeadsPerTrade()).build();
