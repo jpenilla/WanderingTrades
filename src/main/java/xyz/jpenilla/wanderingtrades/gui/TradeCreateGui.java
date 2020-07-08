@@ -25,7 +25,7 @@ public class TradeCreateGui extends TradeGui {
         inventory = super.getInventory();
 
         ArrayList<String> tradeNameLore = new ArrayList<>();
-        tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + tradeName);
+        tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + tradeName);
         tradeNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(10, new ItemBuilder(tradeNameStack).setLore(tradeNameLore).build());
 

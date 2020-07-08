@@ -46,7 +46,7 @@ public class TradeEditGui extends TradeGui {
         inventory.setItem(35, deleteButton);
 
         ArrayList<String> tradeNameLore = new ArrayList<>();
-        tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + tradeName);
+        tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + tradeName);
         inventory.setItem(10, new ItemBuilder(tradeNameStack).setLore(tradeNameLore).build());
 
         IntStream.range(0, inventory.getSize()).forEach(slot -> {

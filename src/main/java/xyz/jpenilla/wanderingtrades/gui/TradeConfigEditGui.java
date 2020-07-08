@@ -8,9 +8,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -66,17 +64,17 @@ public class TradeConfigEditGui extends GuiHolder {
         inventory.setItem(14, inv);
 
         ArrayList<String> randAmountLore = new ArrayList<>();
-        randAmountLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + t.getRandomAmount());
+        randAmountLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + t.getRandomAmount());
         randAmountLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(16, new ItemBuilder(randAmount).setLore(randAmountLore).build());
 
         ArrayList<String> chanceLore = new ArrayList<>();
-        chanceLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + t.getChance());
+        chanceLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + t.getChance());
         chanceLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(28, new ItemBuilder(chance).setLore(chanceLore).build());
 
         ArrayList<String> customNameLore = new ArrayList<>();
-        customNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + t.getCustomName());
+        customNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + t.getCustomName());
         customNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(30, new ItemBuilder(customName).setLore(customNameLore).build());
 

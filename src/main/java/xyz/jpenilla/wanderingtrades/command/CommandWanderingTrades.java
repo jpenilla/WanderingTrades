@@ -20,7 +20,7 @@ import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-import xyz.jpenilla.wanderingtrades.gui.ConfigGui;
+import xyz.jpenilla.wanderingtrades.gui.ConfigEditGui;
 import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
@@ -99,7 +99,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Subcommand("editconfig|ec")
     @Description("%COMMAND_WT_CONFIG")
     public void onEditConfig(Player p) {
-        new ConfigGui().open(p);
+        new ConfigEditGui().open(p);
     }
 
     @CommandPermission("wanderingtrades.edit")

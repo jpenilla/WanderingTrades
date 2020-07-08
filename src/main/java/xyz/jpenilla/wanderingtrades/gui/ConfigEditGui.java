@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class ConfigGui extends GuiHolder {
+public class ConfigEditGui extends GuiHolder {
     private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_ENABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack enabledDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_DISABLED)).setLore(gui_toggle_lore).build();
 
@@ -39,7 +39,7 @@ public class ConfigGui extends GuiHolder {
 
     private final ItemStack refreshTradersMinutes = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES)).build();
 
-    public ConfigGui() {
+    public ConfigEditGui() {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_CONFIG_TITLE), 45);
     }
 
@@ -210,6 +210,6 @@ public class ConfigGui extends GuiHolder {
     }
 
     private void reOpen(Player p) {
-        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new ConfigGui().open(p), 1L);
+        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new ConfigEditGui().open(p), 1L);
     }
 }

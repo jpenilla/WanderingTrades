@@ -68,19 +68,19 @@ public class PlayerHeadConfigGui extends TradeGui {
             inventory.setItem(11, experienceDisabled);
         }
 
-        ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
+        ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
         inventory.setItem(12, k);
 
-        ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getPlayerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getPlayerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(13, a);
 
-        ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getHeadsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getHeadsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(14, f);
 
-        ItemStack e = new ItemBuilder(maxUsesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack e = new ItemBuilder(maxUsesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(15, e);
 
-        ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getPlayerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getPlayerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(16, b);
 
         ItemStack g = new ItemBuilder(customName).setLore(lang.get(Lang.GUI_VALUE_LORE) + config.getName(), lang.get(Lang.GUI_EDIT_LORE)).build();
