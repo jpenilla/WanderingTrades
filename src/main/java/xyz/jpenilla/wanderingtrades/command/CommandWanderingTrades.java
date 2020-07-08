@@ -63,13 +63,13 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandPermission("wanderingtrades.reload")
     @Description("%COMMAND_WT_RELOAD")
     public void onReload(CommandSender sender) {
-        LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD));
+        chat.sendPlaceholders(sender, chat.getCenteredMessage(plugin.getLang().get(Lang.COMMAND_RELOAD)));
         plugin.getCfg().load();
         plugin.getLang().load();
         plugin.getListeners().reload();
         plugin.getCommandHelper().register();
         plugin.getStoredPlayers().load();
-        LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_RELOAD_DONE));
+        chat.sendPlaceholders(sender, chat.getCenteredMessage(plugin.getLang().get(Lang.COMMAND_RELOAD_DONE)));
     }
 
     @Subcommand("list|l")

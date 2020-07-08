@@ -46,7 +46,7 @@ public final class WanderingTrades extends JavaPlugin {
         log = new Log(this);
         log.info("[STARTING]");
 
-        this.chat = new Chat(this);
+        this.chat = Chat.get(this);
 
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {
             vault = new VaultHook(this);
