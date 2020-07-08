@@ -1,5 +1,6 @@
 package xyz.jpenilla.wanderingtrades.util;
 
+import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.listener.*;
@@ -7,22 +8,36 @@ import xyz.jpenilla.wanderingtrades.listener.*;
 public class Listeners {
     private final WanderingTrades plugin;
 
+    @Getter private GuiListener guiListener;
+    @Getter private JoinQuitListener joinQuitListener;
+    @Getter private AcquireTradeListener acquireTradeListener;
+    @Getter private EntitySpawnListener entitySpawnListener;
+    @Getter private ProtectTradersListener protectTradersListener;
+    @Getter private RefreshTradesListener refreshTradesListener;
+
     public Listeners(WanderingTrades inst) {
         plugin = inst;
     }
 
     public void register() {
-        plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new JoinQuitListener(plugin), plugin);
+        guiListener = new GuiListener();
+        joinQuitListener = new JoinQuitListener(plugin);
+        acquireTradeListener = new AcquireTradeListener(plugin);
+        entitySpawnListener = new EntitySpawnListener(plugin);
+        protectTradersListener = new ProtectTradersListener(plugin);
+        refreshTradesListener = new RefreshTradesListener(plugin);
+
+        plugin.getServer().getPluginManager().registerEvents(guiListener, plugin);
+        plugin.getServer().getPluginManager().registerEvents(joinQuitListener, plugin);
 
         if (plugin.getCfg().isEnabled()) {
-            plugin.getServer().getPluginManager().registerEvents(new AcquireTradeListener(plugin), plugin);
-            plugin.getServer().getPluginManager().registerEvents(new EntitySpawnListener(plugin), plugin);
-            plugin.getServer().getPluginManager().registerEvents(new ProtectTradersListener(plugin), plugin);
+            plugin.getServer().getPluginManager().registerEvents(acquireTradeListener, plugin);
+            plugin.getServer().getPluginManager().registerEvents(entitySpawnListener, plugin);
+            plugin.getServer().getPluginManager().registerEvents(protectTradersListener, plugin);
         }
 
         if (plugin.getCfg().isRefreshCommandTraders()) {
-            plugin.getServer().getPluginManager().registerEvents(new RefreshTradesListener(plugin), plugin);
+            plugin.getServer().getPluginManager().registerEvents(refreshTradesListener, plugin);
         }
     }
 

@@ -3,9 +3,8 @@ package xyz.jpenilla.wanderingtrades.listener;
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -15,6 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,39 +36,56 @@ public class EntitySpawnListener implements Listener {
     @EventHandler
     public void onSpawn(EntitySpawnEvent e) {
         if (EntityType.WANDERING_TRADER.equals(e.getEntityType())) {
-            if (!e.getEntity().getPersistentDataContainer().has(new NamespacedKey(wanderingTrades, "wtConfig"), PersistentDataType.STRING)) {
-                ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
-                Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
-                    if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
-                        newTrades.addAll(getPlayerHeadsFromServer());
+            addTrades((WanderingTrader) e.getEntity(), false);
+        }
+    }
+
+    public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
+        if (!wanderingTrader.getPersistentDataContainer().has(Constants.CONFIG, PersistentDataType.STRING)) {
+            ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
+            Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
+                if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
+                    newTrades.addAll(getPlayerHeadsFromServer());
+                }
+                if (wanderingTrades.getCfg().isAllowMultipleSets()) {
+                    ArrayList<TradeConfig> m = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().values());
+                    for (TradeConfig config : m) {
+                        if (randBoolean(config.getChance())) {
+                            newTrades.addAll(config.getTrades(false));
+                        }
                     }
-                    if (wanderingTrades.getCfg().isAllowMultipleSets()) {
-                        ArrayList<TradeConfig> m = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().values());
-                        for (TradeConfig config : m) {
-                            if (randBoolean(config.getChance())) {
-                                newTrades.addAll(config.getTrades(false));
+                } else {
+                    ArrayList<String> keys = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().keySet());
+
+                    List<Pair<String, Double>> weights = keys.stream().map(config ->
+                            new Pair<>(config, wanderingTrades.getCfg().getTradeConfigs().get(config).getChance()))
+                            .collect(Collectors.toList());
+
+                    String chosenConfig = new EnumeratedDistribution<>(weights).sample();
+
+                    if (chosenConfig != null) {
+                        newTrades.addAll(wanderingTrades.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
+                    }
+                }
+                Bukkit.getScheduler().runTask(wanderingTrades, () -> {
+                    if (!refresh) {
+                        newTrades.addAll(wanderingTrader.getRecipes());
+                    } /*else { TODO: Find a way to get the vanilla trades
+                        if (!wanderingTrades.getCfg().isRemoveOriginalTrades()) {
+                            ArrayList<MerchantRecipe> newRecipes = new ArrayList<>();
+                            Collection<ItemStack> stacks = wanderingTrader.getLootTable().populateLoot(new Random(), new LootContext.Builder(wanderingTrader.getLocation()).lootedEntity(wanderingTrader).build());
+                            for (ItemStack stack : stacks) {
+                                wanderingTrades.getLog().info(stack.toString());
+                                MerchantRecipe recipe = new MerchantRecipe(stack, 0, 1, true);
+                                recipe.addIngredient(new ItemStack(Material.EMERALD, new Random().nextInt(5)));
+                                newRecipes.add(recipe);
                             }
+                            newTrades.addAll(newRecipes);
                         }
-                    } else {
-                        ArrayList<String> keys = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().keySet());
-
-                        List<Pair<String, Double>> weights = keys.stream().map(config ->
-                                new Pair<>(config, wanderingTrades.getCfg().getTradeConfigs().get(config).getChance()))
-                                .collect(Collectors.toList());
-
-                        String chosenConfig = new EnumeratedDistribution<>(weights).sample();
-
-                        if (chosenConfig != null) {
-                            newTrades.addAll(wanderingTrades.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
-                        }
-                    }
-                    Bukkit.getScheduler().runTask(wanderingTrades, () -> {
-                        AbstractVillager trader = (AbstractVillager) e.getEntity();
-                        newTrades.addAll(trader.getRecipes());
-                        trader.setRecipes(newTrades);
-                    });
+                    }*/
+                    wanderingTrader.setRecipes(newTrades);
                 });
-            }
+            });
         }
     }
 

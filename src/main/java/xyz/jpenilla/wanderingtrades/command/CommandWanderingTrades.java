@@ -6,7 +6,6 @@ import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.MerchantRecipe;
@@ -24,6 +23,7 @@ import xyz.jpenilla.wanderingtrades.gui.ConfigEditGui;
 import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
+import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,28 +124,25 @@ public class CommandWanderingTrades extends BaseCommand {
     private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {
         try {
             ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            loc.getWorld().spawn(loc, WanderingTrader.class, wt -> {
-                wt.setRecipes(recipes);
-                wt.setAI(!disableAI);
+            final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
+            wt.setRecipes(recipes);
+            wt.setAI(!disableAI);
 
-                PersistentDataContainer p = wt.getPersistentDataContainer();
+            PersistentDataContainer p = wt.getPersistentDataContainer();
 
-                TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                    wt.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
-                    wt.setCustomNameVisible(true);
-                }
-                if (t.isInvincible()) {
-                    wt.setInvulnerable(true);
-                    wt.setRemoveWhenFarAway(false);
-                    wt.setPersistent(true);
-                    NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
-                    p.set(k, PersistentDataType.STRING, "true");
-                }
+            TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+            if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
+                wt.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
+                wt.setCustomNameVisible(true);
+            }
+            if (t.isInvincible()) {
+                wt.setInvulnerable(true);
+                wt.setRemoveWhenFarAway(false);
+                wt.setPersistent(true);
+                p.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+            }
 
-                NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
-                p.set(key, PersistentDataType.STRING, tradeConfig);
-            });
+            p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
                 LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
@@ -159,31 +156,28 @@ public class CommandWanderingTrades extends BaseCommand {
     private void summonVillager(CommandSender sender, String tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
         try {
             ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            loc.getWorld().spawn(loc, Villager.class, v -> {
-                v.setVillagerType(type);
-                v.setProfession(profession);
-                v.setVillagerLevel(5);
-                v.setRecipes(recipes);
-                v.setAI(!disableAI);
+            final Villager v = (Villager) loc.getWorld().spawnEntity(loc, EntityType.VILLAGER);
+            v.setVillagerType(type);
+            v.setProfession(profession);
+            v.setVillagerLevel(5);
+            v.setRecipes(recipes);
+            v.setAI(!disableAI);
 
-                PersistentDataContainer p = v.getPersistentDataContainer();
+            PersistentDataContainer p = v.getPersistentDataContainer();
 
-                TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
-                if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                    v.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
-                    v.setCustomNameVisible(true);
-                }
-                if (t.isInvincible()) {
-                    v.setInvulnerable(true);
-                    v.setRemoveWhenFarAway(false);
-                    v.setPersistent(true);
-                    NamespacedKey k = new NamespacedKey(plugin, "wtProtect");
-                    p.set(k, PersistentDataType.STRING, "true");
-                }
+            TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+            if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
+                v.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
+                v.setCustomNameVisible(true);
+            }
+            if (t.isInvincible()) {
+                v.setInvulnerable(true);
+                v.setRemoveWhenFarAway(false);
+                v.setPersistent(true);
+                p.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+            }
 
-                NamespacedKey key = new NamespacedKey(plugin, "wtConfig");
-                p.set(key, PersistentDataType.STRING, tradeConfig);
-            });
+            p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
                 LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
@@ -249,6 +243,32 @@ public class CommandWanderingTrades extends BaseCommand {
                 }
                 summonTrader(sender, tradeConfig, loc, true);
             }
+        }
+    }
+
+    @Subcommand("summonnatural|sn")
+    @Description("%COMMAND_SUMMON_NATURAL")
+    @Syntax("<ai> <protect> <refresh> <NONE|custom name> [rotation] [world:x,y,z]")
+    @CommandCompletion("true|false true|false true|false NONE @angles @wtWorlds")
+    public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, String customName, @Optional Float rotation, @Optional Location location) {
+        Location loc = resolveLocation(sender, location);
+        if (rotation != null) {
+            loc.setYaw(rotation);
+        }
+        final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
+        if (!customName.equals("NONE")) {
+            wt.setCustomNameVisible(true);
+            wt.setCustomName(MiniMessageUtil.miniMessageToLegacy(customName));
+        }
+        PersistentDataContainer persistentDataContainer = wt.getPersistentDataContainer();
+        if (refresh) {
+            persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
+        }
+        if (!ai) {
+            wt.setAI(false);
+        }
+        if (protect) {
+            persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
         }
     }
 
