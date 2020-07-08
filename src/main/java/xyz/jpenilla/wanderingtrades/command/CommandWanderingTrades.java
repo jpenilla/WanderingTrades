@@ -250,6 +250,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Description("%COMMAND_SUMMON_NATURAL")
     @Syntax("<ai> <protect> <refresh> <NONE|custom name> [rotation] [world:x,y,z]")
     @CommandCompletion("true|false true|false true|false NONE @angles @wtWorlds")
+    @CommandPermission("wanderingtrades.summonnatural")
     public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, String customName, @Optional Float rotation, @Optional Location location) {
         Location loc = resolveLocation(sender, location);
         if (rotation != null) {

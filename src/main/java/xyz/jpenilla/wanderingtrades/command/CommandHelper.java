@@ -68,7 +68,7 @@ public class CommandHelper {
         registerReplacements(replacements,
                 Lang.COMMAND_WT_HELP, Lang.COMMAND_WT_ABOUT, Lang.COMMAND_WT_RELOAD, Lang.COMMAND_WT_LIST,
                 Lang.COMMAND_WT_EDIT, Lang.COMMAND_WT_CONFIG, Lang.COMMAND_WT_PH_CONFIG, Lang.COMMAND_SUMMON,
-                Lang.COMMAND_SUMMON_NOAI, Lang.COMMAND_VSUMMON, Lang.COMMAND_VSUMMON_NOAI
+                Lang.COMMAND_SUMMON_NOAI, Lang.COMMAND_VSUMMON, Lang.COMMAND_VSUMMON_NOAI, Lang.COMMAND_SUMMON_NATURAL
         );
     }
 
