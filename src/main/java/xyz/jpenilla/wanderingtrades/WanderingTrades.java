@@ -68,7 +68,7 @@ public final class WanderingTrades extends JavaPlugin {
                 storedPlayers.load();
             }
         }
-        new RefreshPlayers().runTaskTimer(this, 20L * 60L * 60L * 12L, 20L * 60L * 60L * 12L);
+        new RefreshPlayers().runTaskTimer(this, 0L, 20L * 60L * 60L * 12L);
 
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
