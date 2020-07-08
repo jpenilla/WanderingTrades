@@ -60,7 +60,7 @@ public class TradeListGui extends PaginatedGui {
             ItemStack s = TradeConfig.getStack(tc.getFile(), "trades." + key + ".result");
             if (s != null) {
                 ItemBuilder b = new ItemBuilder(s);
-                b.setName(key);
+                b.setName("§r" + key);
                 b.clearEnchants();
                 b.clearLore();
                 trades.add(b.build());

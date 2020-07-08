@@ -5,21 +5,23 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.WanderingTrader;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
+import xyz.jpenilla.jmplib.Chat;
+import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.LegacyChat;
-import xyz.jpenilla.jmplib.TextUtil;
+import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.gui.ConfigGui;
-import xyz.jpenilla.wanderingtrades.gui.PlayerHeadGui;
+import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 
@@ -29,6 +31,8 @@ import java.util.List;
 @CommandAlias("wanderingtrades|wt")
 public class CommandWanderingTrades extends BaseCommand {
     private final WanderingTrades plugin;
+    @Dependency
+    private Chat chat;
 
     public CommandWanderingTrades(WanderingTrades p) {
         plugin = p;
@@ -102,7 +106,7 @@ public class CommandWanderingTrades extends BaseCommand {
     @Subcommand("editplayerheads|eph")
     @Description("%COMMAND_WT_PH_CONFIG")
     public void onEditPH(Player p) {
-        new PlayerHeadGui().open(p);
+        new PlayerHeadConfigGui().open(p);
     }
 
     private Location resolveLocation(CommandSender sender, Location loc) {
@@ -128,7 +132,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
                 if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                    wt.setCustomName(TextUtil.colorize(t.getCustomName()));
+                    wt.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
                     wt.setCustomNameVisible(true);
                 }
                 if (t.isInvincible()) {
@@ -166,7 +170,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
                 TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
                 if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                    v.setCustomName(TextUtil.colorize(t.getCustomName()));
+                    v.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
                     v.setCustomNameVisible(true);
                 }
                 if (t.isInvincible()) {
@@ -188,6 +192,36 @@ public class CommandWanderingTrades extends BaseCommand {
                 LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
+    }
+
+    @Subcommand("name")
+    @Description("Set the name of entities in line of sight")
+    @CommandPermission("wt.admin.name")
+    public void onName(Player player, String name) {
+        for (Entity e : player.getNearbyEntities(10, 10, 10)) {
+            if (e instanceof LivingEntity) {
+                if (isLookingAt(player, (LivingEntity) e)) {
+                    e.setCustomName(MiniMessageUtil.miniMessageToLegacy(name));
+                    e.setCustomNameVisible(true);
+                }
+            }
+        }
+    }
+
+    @Subcommand("namehand")
+    @Description("Set the name of the held item")
+    @CommandPermission("wt.admin.namehand")
+    public void onNameHand(Player player, String name) {
+        if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
+            player.getInventory().setItemInMainHand(new ItemBuilder(player.getInventory().getItemInMainHand()).setName(name).build());
+        }
+    }
+
+    private boolean isLookingAt(Player player, LivingEntity entity) {
+        Location eye = player.getEyeLocation();
+        Vector toEntity = entity.getEyeLocation().toVector().subtract(eye.toVector());
+        double dot = toEntity.normalize().dot(eye.getDirection());
+        return dot > 0.99D;
     }
 
     @Subcommand("summon|s")

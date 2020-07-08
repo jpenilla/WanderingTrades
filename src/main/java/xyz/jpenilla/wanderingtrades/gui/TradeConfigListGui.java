@@ -36,7 +36,7 @@ public class TradeConfigListGui extends PaginatedGui {
         for (String config : configs) {
             TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(config);
             ArrayList<String> lore = new ArrayList<>();
-            t.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> lore.add("&7&o  " + key));
+            t.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> lore.add("<gray><italic>  " + key));
             String[] lores = new String[lore.size()];
             for (int j = 0; j < lore.size(); j++) {
                 lores[j] = lore.get(j);
@@ -44,14 +44,14 @@ public class TradeConfigListGui extends PaginatedGui {
             ArrayList<String> finalLores = new ArrayList<>();
             for (int x = 0; x < 10; ++x) {
                 try {
-                    finalLores.add("&7" + lores[x]);
+                    finalLores.add("<gray>" + lores[x]);
                 } catch (ArrayIndexOutOfBoundsException ignored) {
                 }
             }
             if (lores.length > 10) {
                 finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(lores.length - 10)));
             }
-            items.add(new ItemBuilder(Material.PAPER).setName("" + config).setLore(finalLores).build());
+            items.add(new ItemBuilder(Material.PAPER).setName("§r" + config).setLore(finalLores).build());
         }
         return items;
     }

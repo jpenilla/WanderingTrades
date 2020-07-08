@@ -28,9 +28,9 @@ public class TradeGui extends GuiHolder {
     public final ItemStack info = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTY0MzlkMmUzMDZiMjI1NTE2YWE5YTZkMDA3YTdlNzVlZGQyZDUwMTVkMTEzYjQyZjQ0YmU2MmE1MTdlNTc0ZiJ9fX0=")
             .setName(lang.get(Lang.GUI_TRADE_INFO)).setLore(lang.getList(Lang.GUI_TRADE_INFO_LORE)).build();
     public final ItemStack plus = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzIzMzJiNzcwYTQ4NzQ2OTg4NjI4NTVkYTViM2ZlNDdmMTlhYjI5MWRmNzY2YjYwODNiNWY5YTBjM2M2ODQ3ZSJ9fX0=")
-            .setName("&e+").build();
+            .setName("<yellow>+").build();
     public final ItemStack equals = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzkyNzY2ZmVhNmMwNTc1MGU0MGRjODNjZDdlOTNhYjM0ODQ2ZDQ0MDkyMDk1MWRhMjYzNTk4MzZlY2YwOGY0YiJ9fX0=")
-            .setName("&e=").build();
+            .setName("<yellow>=").build();
     public final ItemStack deleteButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19")
             .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_TRADE_DELETE_LORE)).build();
     public final ItemStack experienceEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_EXP_REWARD)).setLore(gui_toggle_lore).build();
@@ -77,7 +77,7 @@ public class TradeGui extends GuiHolder {
 
         ItemMeta maxUsesMeta = maxUsesStack.getItemMeta();
         ArrayList<String> maxUsesLore = new ArrayList<>();
-        maxUsesLore.add(lang.get(Lang.GUI_VALUE_LORE) + "&b" + maxUses);
+        maxUsesLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + maxUses);
         maxUsesLore.add(lang.get(Lang.GUI_EDIT_LORE));
         maxUsesMeta.setLore(TextUtil.colorize(maxUsesLore));
         maxUsesStack.setItemMeta(maxUsesMeta);

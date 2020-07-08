@@ -25,7 +25,7 @@ invincible: false
 # will display this custom name tag above their head
 #
 # set to 'NONE' to disable
-customName: '&a&lExample&b!'
+customName: '<gradient:red:yellow><bold>Example</gradient><blue>!'
 
 # you may define as many trades as you want
 # in this section. this example shows all of
@@ -60,7 +60,7 @@ trades:
         material: PACKED_ICE
         amount: 1
     result:
-      customname: '&b&lPacked Ice'
+      customname: '§r<aqua>Packed Ice'
       material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzE1NDIyODZkYTAzYWI3ZWVjYzRlNTYyYzNmOGI4YTFjZjc4MWRhMzA4YjA3OWUzYWMzMzE0NTYxYjljMWQ5OSJ9fX0=
       amount: 8
   loreExample:
@@ -72,7 +72,7 @@ trades:
         material: GLASS
         amount: 3
     result:
-      customname: '&e&lGod Axe'
+      customname: '<rainbow>-====- God Axe -====-'
       material: DIAMOND_AXE
       amount: 1
       enchantments:
@@ -80,5 +80,6 @@ trades:
         - efficiency:10
         - mending:1
       lore:
-        - '&b - &fVery Cool Axe'
-        - '   &a it mine wood very fast'
+        - "<gradient:black:white>||||||||||||||||||||||||||||||||</gradient><gradient:white:black>||||||||||||||||||||||||||||||||"
+        - '       <gradient:blue:green>Very Cool Axe'
+        - "<gradient:black:white>||||||||||||||||||||||||||||||||</gradient><gradient:white:black>||||||||||||||||||||||||||||||||"

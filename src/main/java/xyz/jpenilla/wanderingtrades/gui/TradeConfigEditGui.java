@@ -65,29 +65,20 @@ public class TradeConfigEditGui extends GuiHolder {
         inventory.setItem(12, randomized);
         inventory.setItem(14, inv);
 
-        ItemMeta randAmountMeta = randAmount.getItemMeta();
         ArrayList<String> randAmountLore = new ArrayList<>();
-        randAmountLore.add(lang.get(Lang.GUI_VALUE_LORE) + "&b" + t.getRandomAmount());
+        randAmountLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + t.getRandomAmount());
         randAmountLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        randAmountMeta.setLore(TextUtil.colorize(randAmountLore));
-        randAmount.setItemMeta(randAmountMeta);
-        inventory.setItem(16, randAmount);
+        inventory.setItem(16, new ItemBuilder(randAmount).setLore(randAmountLore).build());
 
-        ItemMeta chanceMeta = chance.getItemMeta();
         ArrayList<String> chanceLore = new ArrayList<>();
-        chanceLore.add(lang.get(Lang.GUI_VALUE_LORE) + "&b" + t.getChance());
+        chanceLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + t.getChance());
         chanceLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        chanceMeta.setLore(TextUtil.colorize(chanceLore));
-        chance.setItemMeta(chanceMeta);
-        inventory.setItem(28, chance);
+        inventory.setItem(28, new ItemBuilder(chance).setLore(chanceLore).build());
 
-        ItemMeta customNameMeta = customName.getItemMeta();
         ArrayList<String> customNameLore = new ArrayList<>();
         customNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + t.getCustomName());
         customNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        customNameMeta.setLore(TextUtil.colorize(customNameLore));
-        customName.setItemMeta(customNameMeta);
-        inventory.setItem(30, customName);
+        inventory.setItem(30, new ItemBuilder(customName).setLore(customNameLore).build());
 
         IntStream.range(0, inventory.getSize()).forEach(slot -> {
             if (inventory.getItem(slot) == null) {

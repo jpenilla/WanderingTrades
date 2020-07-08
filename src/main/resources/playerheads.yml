@@ -46,7 +46,7 @@ headTrade:
       material: IRON_INGOT
       amount: 1
   head:
-    customname: '&e{PLAYER}''s Head'
+    customname: '<yellow>{PLAYER}''s Head'
     amount: 1
     lore:
-      - '    &7Obtained from Wandering Trader'
+      - '    <gray>Obtained from Wandering Trader'

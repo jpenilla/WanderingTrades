@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.wanderingtrades.command.CommandHelper;
 import xyz.jpenilla.wanderingtrades.command.CommandWanderingTrades;
 import xyz.jpenilla.wanderingtrades.compatability.McRPGHook;
@@ -23,6 +24,7 @@ public final class WanderingTrades extends JavaPlugin {
     private static WanderingTrades instance;
 
     @Getter private Config cfg;
+    @Getter private Chat chat;
     @Getter private LangConfig lang;
     @Getter private StoredPlayers storedPlayers;
     @Getter private Log log;
@@ -43,6 +45,8 @@ public final class WanderingTrades extends JavaPlugin {
         instance = this;
         log = new Log(this);
         log.info("[STARTING]");
+
+        this.chat = new Chat(this);
 
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {
             vault = new VaultHook(this);
@@ -69,6 +73,7 @@ public final class WanderingTrades extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
         commandManager.setDefaultHelpPerPage(5);
+        commandManager.registerDependency(Chat.class, chat);
         commandHelper = new CommandHelper(this);
         commandHelper.register();
         commandManager.registerCommand(new CommandWanderingTrades(this));

@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class PlayerHeadGui extends TradeGui {
+public class PlayerHeadConfigGui extends TradeGui {
     private final ItemStack enabledStack = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_ENABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack disabledStack = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_DISABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack permissionWhitelistStack = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_PH_CONFIG_PWL_ENABLED)).setLore(gui_toggle_lore, lang.get(Lang.GUI_PH_CONFIG_PWL_LORE)).build();
@@ -33,7 +33,7 @@ public class PlayerHeadGui extends TradeGui {
     private final ItemStack notch = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTBiNTk0MzgwMTNlYTk1MzYyYzZmMTIyNGI3YzViYjZjMjc5MmIwYjljOWNlZmQ2ZDcwODc2N2ZkOTFlYyJ9fX0=").build();
     private final ItemStack customName = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME)).build();
 
-    public PlayerHeadGui() {
+    public PlayerHeadConfigGui() {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_PH_CONFIG_TITLE), null);
         PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
         i1 = config.getIngredient1();
@@ -68,19 +68,19 @@ public class PlayerHeadGui extends TradeGui {
             inventory.setItem(11, experienceDisabled);
         }
 
-        ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
+        ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
         inventory.setItem(12, k);
 
-        ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getPlayerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getPlayerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(13, a);
 
-        ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getHeadsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getHeadsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(14, f);
 
-        ItemStack e = new ItemBuilder(maxUsesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack e = new ItemBuilder(maxUsesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(15, e);
 
-        ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "&b" + config.getPlayerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<aqua>" + config.getPlayerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(16, b);
 
         ItemStack g = new ItemBuilder(customName).setLore(lang.get(Lang.GUI_VALUE_LORE) + config.getName(), lang.get(Lang.GUI_EDIT_LORE)).build();
@@ -88,7 +88,7 @@ public class PlayerHeadGui extends TradeGui {
 
         ArrayList<String> resultLore = new ArrayList<>(Arrays.asList(
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
-                "&f------------"
+                "<white>------------"
         ));
         resultLore.addAll(config.getLore());
         ItemStack h = new ItemBuilder(loreStack).setLore(resultLore).build();
@@ -105,7 +105,7 @@ public class PlayerHeadGui extends TradeGui {
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
                 ""
         ));
-        config.getUsernameBlacklist().forEach(name -> blacklistLore.add(" &4- &f" + name));
+        config.getUsernameBlacklist().forEach(name -> blacklistLore.add(" <red>-</red> <white>" + name));
         ItemStack d = new ItemBuilder(blacklistStack).setLore(blacklistLore).build();
         inventory.setItem(34, d);
 

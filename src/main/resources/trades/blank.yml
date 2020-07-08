@@ -25,7 +25,7 @@ invincible: false
 # will display this custom name tag above their head
 #
 # set to 'NONE' to disable
-customName: '&a&lExample&b!'
+customName: '<gradient:red:yellow><bold>Example</gradient><blue>!'
 
 # you may define as many trades as you want
 # in this section. this example shows all of

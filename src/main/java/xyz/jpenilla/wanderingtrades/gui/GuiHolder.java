@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -26,7 +27,7 @@ public abstract class GuiHolder implements InventoryHolder {
     public final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
 
     public GuiHolder(String name, int size) {
-        inventory = Bukkit.createInventory(this, size, TextUtil.colorize(name));
+        inventory = Bukkit.createInventory(this, size, MiniMessageUtil.miniMessageToLegacy(name));
     }
 
     public abstract void onInventoryClick(InventoryClickEvent event);

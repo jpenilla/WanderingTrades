@@ -6,7 +6,7 @@
 
     <groupId>fun.ccmc.wanderingtrades</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.5.2-SNAPSHOT.{BUILD_NUMBER}</version>
+    <version>1.6.0-SNAPSHOT.{BUILD_NUMBER}</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
@@ -129,13 +129,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>1.18.10</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>19.0.0</version>
+            <version>18.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -170,7 +170,7 @@
         <dependency>
             <groupId>xyz.jpenilla</groupId>
             <artifactId>jmplib</artifactId>
-            <version>1.0.0-SNAPSHOT.56</version>
+            <version>1.0.0-SNAPSHOT.71</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -199,7 +199,7 @@
         <dependency>
             <groupId>com.github.Eunoians</groupId>
             <artifactId>McRPG</artifactId>
-            <version>1.3.2.0</version>
+            <version>1.3.3.0-BETA</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
