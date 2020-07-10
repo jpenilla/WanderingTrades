@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class TradeConfigListGui extends PaginatedGui {
@@ -25,11 +26,11 @@ public class TradeConfigListGui extends PaginatedGui {
     private final ArrayList<String> configNames = new ArrayList<>();
 
     public TradeConfigListGui() {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_TITLE), 36, getConfigStacks());
+        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_TITLE), 36);
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
 
-    private static ArrayList<ItemStack> getConfigStacks() {
+    public List<ItemStack> getListItems() {
         ArrayList<ItemStack> items = new ArrayList<>();
         ArrayList<String> configs = new ArrayList<>();
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configs.add((String) completion));
@@ -51,7 +52,7 @@ public class TradeConfigListGui extends PaginatedGui {
             if (lores.length > 10) {
                 finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(lores.length - 10)));
             }
-            items.add(new ItemBuilder(Material.PAPER).setName("§r" + config).setLore(finalLores).build());
+            items.add(new ItemBuilder(Material.PAPER).setName(config).setLore(finalLores).build());
         }
         return items;
     }

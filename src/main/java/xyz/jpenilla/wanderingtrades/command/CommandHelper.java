@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
@@ -20,19 +21,24 @@ import java.util.stream.Collectors;
 
 public class CommandHelper {
     private final WanderingTrades plugin;
+    private final PaperCommandManager mgr;
 
     public CommandHelper(WanderingTrades instance) {
         plugin = instance;
+        mgr = new PaperCommandManager(plugin);
+        mgr.setFormat(MessageType.ERROR, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
+        mgr.setFormat(MessageType.SYNTAX, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
+        mgr.setFormat(MessageType.INFO, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
+        mgr.setFormat(MessageType.HELP, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
+        mgr.setHelpFormatter(new HelpFormatter(plugin, mgr));
+        mgr.enableUnstableAPI("help");
+        mgr.setDefaultHelpPerPage(4);
+        mgr.registerDependency(Chat.class, plugin.getChat());
+        reload();
+        mgr.registerCommand(new CommandWanderingTrades(plugin));
     }
 
-    public void register() {
-        PaperCommandManager mgr = plugin.getCommandManager();
-
-        mgr.setFormat(MessageType.ERROR, new BukkitMessageFormatter(ChatColor.RED, ChatColor.WHITE, ChatColor.RED));
-        mgr.setFormat(MessageType.SYNTAX, new BukkitMessageFormatter(ChatColor.LIGHT_PURPLE, ChatColor.GREEN, ChatColor.WHITE));
-        mgr.setFormat(MessageType.INFO, new BukkitMessageFormatter(ChatColor.LIGHT_PURPLE, ChatColor.GREEN, ChatColor.WHITE));
-        mgr.setFormat(MessageType.HELP, new BukkitMessageFormatter(ChatColor.LIGHT_PURPLE, ChatColor.GREEN, ChatColor.WHITE));
-
+    public void reload() {
         mgr.getCommandCompletions().registerAsyncCompletion("wtConfigs", c -> {
             ArrayList<String> completions = new ArrayList<>();
             Arrays.stream(plugin.getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> completions.add((String) completion));

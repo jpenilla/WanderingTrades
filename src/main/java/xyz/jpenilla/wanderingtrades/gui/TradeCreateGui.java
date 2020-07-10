@@ -25,9 +25,9 @@ public class TradeCreateGui extends TradeGui {
         inventory = super.getInventory();
 
         ArrayList<String> tradeNameLore = new ArrayList<>();
-        tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + tradeName);
+        tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + getTradeName());
         tradeNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        inventory.setItem(10, new ItemBuilder(tradeNameStack).setLore(tradeNameLore).build());
+        inventory.setItem(10, new ItemBuilder(getTradeNameStack()).setLore(tradeNameLore).build());
 
         IntStream.range(0, inventory.getSize()).forEach(slot -> {
             if (inventory.getItem(slot) == null) {
@@ -42,16 +42,16 @@ public class TradeCreateGui extends TradeGui {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
 
-        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
+        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(getTradeConfig());
 
-        if (tradeNameStack.isSimilar(item)) {
+        if (getTradeNameStack().isSimilar(item)) {
             p.closeInventory();
             new AnvilGUI.Builder()
                     .onClose(this::reOpen)
                     .onComplete((player, text) -> {
                         if (!text.contains(" ")) {
                             if (!t.getFile().getConfigurationSection("trades").contains(text)) {
-                                tradeName = text;
+                                setTradeName(text);
                                 return AnvilGUI.Response.close();
                             } else {
                                 return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_CREATE_UNIQUE));

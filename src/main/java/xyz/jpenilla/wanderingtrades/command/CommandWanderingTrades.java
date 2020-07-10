@@ -14,7 +14,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.jmplib.LegacyChat;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -42,21 +41,19 @@ public class CommandWanderingTrades extends BaseCommand {
     @HelpCommand
     @Description("%COMMAND_WT_HELP")
     public void onHelp(CommandSender sender, CommandHelp help) {
-        String m = "&f---&a[ &5&l" + plugin.getName() + "&d&l Help &a]&f---";
-        LegacyChat.sendMsg(sender, m);
         help.showHelp();
     }
 
     @Subcommand("about")
     @Description("%COMMAND_WT_ABOUT")
     public void onAbout(CommandSender sender) {
-        String[] m = new String[]{
-                "&a==========================",
-                plugin.getName() + " &d&o" + plugin.getDescription().getVersion(),
-                "&7By &bjmp",
-                "&a=========================="
-        };
-        LegacyChat.sendCenteredMessage(sender, m);
+        ArrayList<String> list = new ArrayList<>();
+        final String header = chat.getCenteredMessage("<gradient:white:blue>=============</gradient><gradient:blue:white>=============");
+        list.add(header);
+        list.add(chat.getCenteredMessage("<hover:show_text:'<rainbow>click me!'><click:open_url:https://www.spigotmc.org/resources/wandering-trades.79068/>" + plugin.getName() + " <gradient:blue:green>" + plugin.getDescription().getVersion()));
+        list.add(chat.getCenteredMessage("<gray>By <gradient:gold:yellow>jmp"));
+        list.add(header);
+        chat.sendPlaceholders(sender, list);
     }
 
     @Subcommand("reload")
@@ -67,7 +64,7 @@ public class CommandWanderingTrades extends BaseCommand {
         plugin.getCfg().load();
         plugin.getLang().load();
         plugin.getListeners().reload();
-        plugin.getCommandHelper().register();
+        plugin.getCommandHelper().reload();
         plugin.getStoredPlayers().load();
         chat.sendPlaceholders(sender, chat.getCenteredMessage(plugin.getLang().get(Lang.COMMAND_RELOAD_DONE)));
     }
@@ -77,9 +74,18 @@ public class CommandWanderingTrades extends BaseCommand {
     @Description("%COMMAND_WT_LIST")
     public void onList(CommandSender sender) {
         List<String> configs = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
-        String commaSeparatedConfigs = String.join("&7, &r", configs);
-        LegacyChat.sendMsg(sender, plugin.getLang().get(Lang.COMMAND_LIST_LOADED));
-        LegacyChat.sendMsg(sender, commaSeparatedConfigs);
+        StringBuilder sb = new StringBuilder();
+        for (String cfg : configs) {
+            sb.append("<hover:show_text:'<rainbow>Click to edit'><click:run_command:/wanderingtrades edit ");
+            sb.append(cfg);
+            sb.append(">");
+            sb.append(cfg);
+            if (configs.indexOf(cfg) != configs.size() - 1) {
+                sb.append("</click></hover><gray>,</gray> ");
+            }
+        }
+        chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_LIST_LOADED));
+        chat.sendPlaceholders(sender, sb.toString());
     }
 
     @CommandPermission("wanderingtrades.edit")
@@ -145,10 +151,10 @@ public class CommandWanderingTrades extends BaseCommand {
             p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
@@ -180,10 +186,10 @@ public class CommandWanderingTrades extends BaseCommand {
             p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                LegacyChat.sendCenteredMessage(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
@@ -248,8 +254,8 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Subcommand("summonnatural|sn")
     @Description("%COMMAND_SUMMON_NATURAL")
-    @Syntax("<ai> <protect> <refresh> <NONE|custom name> [rotation] [world:x,y,z]")
-    @CommandCompletion("true|false true|false true|false NONE @angles @wtWorlds")
+    @Syntax("<ai> <protect> <refresh> <custom name> [rotation] [world:x,y,z]")
+    @CommandCompletion("true|false true|false true|false NONE|customName @angles @wtWorlds")
     @CommandPermission("wanderingtrades.summonnatural")
     public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, String customName, @Optional Float rotation, @Optional Location location) {
         Location loc = resolveLocation(sender, location);

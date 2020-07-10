@@ -1,5 +1,7 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -11,20 +13,20 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 
 import java.util.List;
 
-public class PaginatedGui extends GuiHolder {
+public abstract class PaginatedGui extends GuiHolder {
     private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(lang.get(Lang.GUI_PAGED_NEXT)).setLore(lang.get(Lang.GUI_PAGED_NEXT_LORE)).build();
     private final ItemStack previousPage = new ItemBuilder(Material.FEATHER).setName(lang.get(Lang.GUI_PAGED_LAST)).setLore(lang.get(Lang.GUI_PAGED_LAST_LORE)).build();
 
-    protected int page = 0;
-    protected final List<ItemStack> items;
+    @Getter @Setter private int page = 0;
 
-    public PaginatedGui(String name, int size, List<ItemStack> itemsToDisplay) {
+    public PaginatedGui(String name, int size) {
         super(name, size);
-        this.items = itemsToDisplay;
     }
 
     public Inventory getInventory() {
         inventory.clear();
+
+        final List<ItemStack> items = getListItems();
 
         int maxPages = (int) Math.ceil(items.size() / (double) (inventory.getSize() - 9));
         page = Math.min(maxPages, page);
@@ -47,6 +49,8 @@ public class PaginatedGui extends GuiHolder {
         return inventory;
     }
 
+    public abstract List<ItemStack> getListItems();
+
     public void onInventoryClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
@@ -68,7 +72,6 @@ public class PaginatedGui extends GuiHolder {
         getInventory();
     }
 
-    public void onClick(Player p, ItemStack i) {
-    }
+    public abstract void onClick(Player p, ItemStack i);
 
 }

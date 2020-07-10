@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades;
 
-import co.aikar.commands.PaperCommandManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.bstats.bukkit.Metrics;
@@ -8,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.wanderingtrades.command.CommandHelper;
-import xyz.jpenilla.wanderingtrades.command.CommandWanderingTrades;
 import xyz.jpenilla.wanderingtrades.compatability.McRPGHook;
 import xyz.jpenilla.wanderingtrades.compatability.VaultHook;
 import xyz.jpenilla.wanderingtrades.compatability.WorldGuardHook;
@@ -34,8 +32,6 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private McRPGHook McRPG = null;
     @Getter private WorldGuardHook worldGuard = null;
     @Getter private VaultHook vault = null;
-
-    @Getter private PaperCommandManager commandManager;
 
     @Getter @Setter
     private boolean vaultPermissions = false;
@@ -70,13 +66,7 @@ public final class WanderingTrades extends JavaPlugin {
         }
         new RefreshPlayers().runTaskTimer(this, 0L, 20L * 60L * 60L * 12L);
 
-        commandManager = new PaperCommandManager(this);
-        commandManager.enableUnstableAPI("help");
-        commandManager.setDefaultHelpPerPage(5);
-        commandManager.registerDependency(Chat.class, chat);
         commandHelper = new CommandHelper(this);
-        commandHelper.register();
-        commandManager.registerCommand(new CommandWanderingTrades(this));
 
         listeners = new Listeners(this);
         listeners.register();

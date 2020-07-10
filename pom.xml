@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fun.ccmc.wanderingtrades</groupId>
+    <groupId>xyz.jpenilla</groupId>
     <artifactId>WanderingTrades</artifactId>
     <version>1.6.0-SNAPSHOT.{BUILD_NUMBER}</version>
     <packaging>jar</packaging>
@@ -170,7 +170,7 @@
         <dependency>
             <groupId>xyz.jpenilla</groupId>
             <artifactId>jmplib</artifactId>
-            <version>1.0.0-SNAPSHOT.72</version>
+            <version>1.0.0-SNAPSHOT.73</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

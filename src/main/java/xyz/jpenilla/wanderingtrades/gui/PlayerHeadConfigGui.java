@@ -36,9 +36,9 @@ public class PlayerHeadConfigGui extends TradeGui {
     public PlayerHeadConfigGui() {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_PH_CONFIG_TITLE), null);
         PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
-        i1 = config.getIngredient1();
+       setI1(config.getIngredient1());
         if (config.getIngredient2() != null) {
-            i2 = config.getIngredient2();
+            setI2(config.getIngredient2());
         }
     }
 
@@ -46,7 +46,7 @@ public class PlayerHeadConfigGui extends TradeGui {
     public @NotNull Inventory getInventory() {
         inventory.clear();
         inventory.setItem(inventory.getSize() - 1, closeButton);
-        inventory.setItem(inventory.getSize() - 9, new ItemBuilder(saveButton).setLore(lang.get(Lang.GUI_PH_CONFIG_SAVE_LORE)).build());
+        inventory.setItem(inventory.getSize() - 9, new ItemBuilder(getSaveButton()).setLore(lang.get(Lang.GUI_PH_CONFIG_SAVE_LORE)).build());
 
         PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
 
@@ -63,9 +63,9 @@ public class PlayerHeadConfigGui extends TradeGui {
         }
 
         if (config.isExperienceReward()) {
-            inventory.setItem(11, experienceEnabled);
+            inventory.setItem(11, getExperienceEnabled());
         } else {
-            inventory.setItem(11, experienceDisabled);
+            inventory.setItem(11, getExperienceDisabled());
         }
 
         ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
@@ -77,7 +77,7 @@ public class PlayerHeadConfigGui extends TradeGui {
         ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getHeadsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(14, f);
 
-        ItemStack e = new ItemBuilder(maxUsesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack e = new ItemBuilder(getMaxUsesStack()).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(15, e);
 
         ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getPlayerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
@@ -94,10 +94,10 @@ public class PlayerHeadConfigGui extends TradeGui {
         ItemStack h = new ItemBuilder(loreStack).setLore(resultLore).build();
         inventory.setItem(25, h);
 
-        inventory.setItem(28, i1);
-        inventory.setItem(29, plus);
-        inventory.setItem(30, i2);
-        inventory.setItem(31, equals);
+        inventory.setItem(28, getI1());
+        inventory.setItem(29, getPlus());
+        inventory.setItem(30, getI2());
+        inventory.setItem(31, getEquals());
         inventory.setItem(32, new ItemBuilder(notch).setName(config.getName().replace("{PLAYER}", "Notch"))
                 .setLore(config.getLore()).setAmount(config.getHeadsPerTrade()).build());
 
@@ -143,9 +143,9 @@ public class PlayerHeadConfigGui extends TradeGui {
             config.setPlayerHeadsFromServer(true);
         }
 
-        if (experienceEnabled.isSimilar(item)) {
+        if (getExperienceEnabled().isSimilar(item)) {
             config.setExperienceReward(false);
-        } else if (experienceDisabled.isSimilar(item)) {
+        } else if (getExperienceDisabled().isSimilar(item)) {
             config.setExperienceReward(true);
         }
 
@@ -155,7 +155,7 @@ public class PlayerHeadConfigGui extends TradeGui {
             config.setPermissionWhitelist(true);
         }
 
-        if (maxUsesStack.isSimilar(item)) {
+        if (getMaxUsesStack().isSimilar(item)) {
             p.closeInventory();
             new AnvilGUI.Builder()
                     .onClose(this::reOpen)
@@ -351,18 +351,18 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         int rS = event.getRawSlot();
         if (rS == 28) {
-            i1 = updateSlot(event, ingredient1);
+            setI1(updateSlot(event, getIngredient1()));
         } else if (rS == 30) {
-            i2 = updateSlot(event, ingredient2);
+            setI2(updateSlot(event, getIngredient2()));
         }
 
-        if (saveButton.isSimilar(item)) {
-            if (!i1.equals(ingredient1)) {
+        if (getSaveButton().isSimilar(item)) {
+            if (!getI1().equals(getIngredient1())) {
                 ItemStack temp = null;
-                if (!i2.equals(ingredient2)) {
-                    temp = i2;
+                if (!getI2().equals(getIngredient2())) {
+                    temp = getI2();
                 }
-                config.setIngredient1(i1);
+                config.setIngredient1(getI1());
                 config.setIngredient2(temp);
                 config.save();
                 WanderingTrades.getInstance().getCfg().load();
@@ -372,5 +372,9 @@ public class PlayerHeadConfigGui extends TradeGui {
         config.save();
 
         getInventory();
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent e) {
     }
 }

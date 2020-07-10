@@ -11,6 +11,7 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class TradeListGui extends PaginatedGui {
@@ -20,7 +21,7 @@ public class TradeListGui extends PaginatedGui {
     private final String tradeConfig;
 
     public TradeListGui(String tradeConfig) {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig, 54, getTradeStacks(tradeConfig));
+        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig, 54);
         this.tradeConfig = tradeConfig;
     }
 
@@ -47,20 +48,20 @@ public class TradeListGui extends PaginatedGui {
         } else if (newTradeStack.isSimilar(i)) {
             p.closeInventory();
             new TradeCreateGui(tradeConfig).open(p);
-        } else if (getTradeStacks(tradeConfig).contains(i)) {
+        } else if (getListItems().contains(i)) {
             p.closeInventory();
             new TradeEditGui(tradeConfig, i.getItemMeta().getDisplayName()).open(p);
         }
     }
 
-    private static ArrayList<ItemStack> getTradeStacks(String configName) {
+    public List<ItemStack> getListItems() {
         ArrayList<ItemStack> trades = new ArrayList<>();
-        TradeConfig tc = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(configName);
+        TradeConfig tc = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
         tc.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> {
             ItemStack s = TradeConfig.getStack(tc.getFile(), "trades." + key + ".result");
             if (s != null) {
                 ItemBuilder b = new ItemBuilder(s);
-                b.setName("§r" + key);
+                b.setName(key);
                 b.clearEnchants();
                 b.clearLore();
                 trades.add(b.build());
