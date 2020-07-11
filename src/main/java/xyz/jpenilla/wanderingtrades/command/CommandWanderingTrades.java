@@ -196,7 +196,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Subcommand("name")
     @Description("Set the name of entities in line of sight")
-    @CommandPermission("wt.admin.name")
+    @CommandPermission("wanderingtrades.name")
     public void onName(Player player, String name) {
         for (Entity e : player.getNearbyEntities(10, 10, 10)) {
             if (e instanceof LivingEntity) {
@@ -210,7 +210,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Subcommand("namehand")
     @Description("Set the name of the held item")
-    @CommandPermission("wt.admin.namehand")
+    @CommandPermission("wanderingtrades.namehand")
     public void onNameHand(Player player, String name) {
         if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
             player.getInventory().setItemInMainHand(new ItemBuilder(player.getInventory().getItemInMainHand()).setName(name).build());
