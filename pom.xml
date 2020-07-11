@@ -6,7 +6,7 @@
 
     <groupId>xyz.jpenilla</groupId>
     <artifactId>WanderingTrades</artifactId>
-    <version>1.6.0-SNAPSHOT.{BUILD_NUMBER}</version>
+    <version>1.6.0</version>
     <packaging>jar</packaging>
 
     <name>WanderingTrades</name>
@@ -129,13 +129,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.12</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>18.0.0</version>
+            <version>19.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -23,28 +23,25 @@ public class HelpFormatter extends CommandHelpFormatter {
     }
 
     public void printDetailedHelpHeader(CommandHelp help, CommandIssuer issuer, HelpEntry entry) {
-        String var10002 = "<color:" + getColor() + ">=====<white>[</white> {commandprefix}{command} <white>Detailed Help ]</white>=====";
-        String[] var10004 = this.getHeaderFooterFormatReplacements(help);
-        var10002 = TextUtil.replacePlaceholders(var10002, this.arrayToMap(var10004), false);
-        this.send(issuer, var10002);
+        String helpHeader = "<color:" + getColor() + ">=====<white>[</white> {commandprefix}{command} <white>Detailed Help ]</white>=====";
+        helpHeader = TextUtil.replacePlaceholders(helpHeader, arrayToMap(getHeaderFooterFormatReplacements(help)), false);
+        send(issuer, helpHeader);
     }
 
     public void printSearchHeader(CommandHelp help, CommandIssuer issuer) {
-        String var10002 = "<color:" + getColor() + ">=====<white>[</white> {commandprefix}{command} <italic>{search}</italic> <white>Search Results ]</white>=====";
-        String[] var10004 = this.getHeaderFooterFormatReplacements(help);
-        var10002 = TextUtil.replacePlaceholders(var10002, this.arrayToMap(var10004), false);
-        this.send(issuer, var10002);
+        String searchHeader = "<color:" + getColor() + ">=====<white>[</white> {commandprefix}{command} <italic>{search}</italic> <white>Search Results ]</white>=====";
+        searchHeader = TextUtil.replacePlaceholders(searchHeader, arrayToMap(getHeaderFooterFormatReplacements(help)), false);
+        send(issuer, searchHeader);
     }
 
     public void printHelpHeader(CommandHelp help, CommandIssuer issuer) {
-        String var10002 = "<color:" + getColor() + ">=====<white>[</white> {commandprefix}{command} <white>Help ]</white>=====";
-        String[] var10004 = this.getHeaderFooterFormatReplacements(help);
-        var10002 = TextUtil.replacePlaceholders(var10002, this.arrayToMap(var10004), false);
-        this.send(issuer, var10002);
+        String helpHeader = "<color:" + getColor() + ">=====<white>[</white> {commandprefix}{command} <white>Help ]</white>=====";
+        helpHeader = TextUtil.replacePlaceholders(helpHeader, arrayToMap(getHeaderFooterFormatReplacements(help)), false);
+        send(issuer, helpHeader);
     }
 
     private String getFooter(CommandHelp help) {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         if (help.getPage() > 1) {
             builder.append("<color:").append(getColor()).append("><bold><click:run_command:/wanderingtrades help ").append(this.listToSpaceSeparatedString(help.getSearch())).append(' ').append(help.getPage() - 1).append("><hover:show_text:'<italic>Click for previous page'><<</bold></click></hover> </color:").append(getColor()).append('>');
         }
@@ -58,45 +55,43 @@ public class HelpFormatter extends CommandHelpFormatter {
     }
 
     public void printSearchFooter(CommandHelp help, CommandIssuer issuer) {
-        String[] var10000 = new String[2];
-        String var10003 = this.getFooter(help);
-        String[] var10005 = this.getHeaderFooterFormatReplacements(help);
-        var10000[0] = TextUtil.replacePlaceholders(var10003, this.arrayToMap(var10005), false);
-        var10000[1] = "";
-        this.send(issuer, Arrays.asList(var10000));
+        List<String> footer = new ArrayList<>();
+        footer.add(TextUtil.replacePlaceholders(getFooter(help), arrayToMap(getHeaderFooterFormatReplacements(help)), false));
+        footer.add("");
+        send(issuer, footer);
     }
 
     public void printHelpFooter(CommandHelp help, CommandIssuer issuer) {
-        this.printSearchFooter(help, issuer);
+        printSearchFooter(help, issuer);
     }
 
     public void printDetailedHelpFooter(CommandHelp help, CommandIssuer issuer, HelpEntry entry) {
     }
 
     public void printDetailedHelpCommand(CommandHelp help, CommandIssuer issuer, HelpEntry entry) {
-        String var10002 = " <white>- <click:suggest_command:/{command} ><hover:show_text:'<italic>Click to suggest'>/</white><color:" + getColor() + ">{command}</color:" + getColor() + "> <gray>{parameters}</gray></hover></click> <color:" + getColor() + ">{separator}</color:" + getColor() + "> {description}";
-        String[] var10004 = this.getEntryFormatReplacements(help, entry);
-        var10002 = TextUtil.replacePlaceholders(var10002, this.arrayToMap(var10004), false);
-        this.send(issuer, var10002);
+        String detailedHelp;
+        detailedHelp = " <white>- <click:suggest_command:/{command} ><hover:show_text:'<italic>Click to suggest'>/</white><color:" + getColor() + ">{command}</color:" + getColor() + "> <gray>{parameters}</gray></hover></click> <color:" + getColor() + ">{separator}</color:" + getColor() + "> {description}";
+        detailedHelp = TextUtil.replacePlaceholders(detailedHelp, arrayToMap(getEntryFormatReplacements(help, entry)), false);
+        send(issuer, detailedHelp);
     }
 
     public void printHelpCommand(CommandHelp help, CommandIssuer issuer, HelpEntry entry) {
-        this.printDetailedHelpCommand(help, issuer, entry);
+        printDetailedHelpCommand(help, issuer, entry);
     }
 
     public void printSearchEntry(CommandHelp help, CommandIssuer issuer, HelpEntry entry) {
-        this.printDetailedHelpCommand(help, issuer, entry);
+        printDetailedHelpCommand(help, issuer, entry);
     }
 
-    private void send(CommandIssuer $this$send, String message) {
-        if ($this$send instanceof BukkitCommandIssuer && this.loaded && ($this$send.isPlayer() || ((BukkitCommandIssuer) $this$send).getIssuer() instanceof ConsoleCommandSender)) {
-            wanderingTrades.getChat().sendPlaceholders(((BukkitCommandIssuer) $this$send).getIssuer(), message);
+    private void send(CommandIssuer issuer, String message) {
+        if (loaded && (issuer.isPlayer() || issuer.getIssuer() instanceof ConsoleCommandSender)) {
+            wanderingTrades.getChat().sendPlaceholders((issuer).getIssuer(), message);
         }
     }
 
-    private void send(CommandIssuer $this$send, List<String> messages) {
+    private void send(CommandIssuer issuer, List<String> messages) {
         for (String m : messages) {
-            this.send($this$send, m);
+            send(issuer, m);
         }
     }
 
