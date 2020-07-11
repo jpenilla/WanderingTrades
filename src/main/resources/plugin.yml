@@ -2,6 +2,6 @@ name: WanderingTrades
 author: jmp
 version: ${project.version}
 main: xyz.jpenilla.wanderingtrades.WanderingTrades
-api-version: 1.15
+api-version: 1.14
 description: Customizable Trades for Wandering Traders. Inspired by Vanilla Tweaks
 softdepend: [McRPG, WorldEdit, WorldGuard, Vault, Prisma]
