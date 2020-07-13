@@ -54,15 +54,15 @@ public class TradeCreateGui extends TradeGui {
                                 setTradeName(text);
                                 return AnvilGUI.Response.close();
                             } else {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_CREATE_UNIQUE));
+                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                             }
                         } else {
-                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
+                            return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NO_SPACES));
                         }
                     })
                     .text(lang.get(Lang.GUI_ANVIL_TYPE_HERE))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_CREATE_TITLE))
+                    .title(lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }

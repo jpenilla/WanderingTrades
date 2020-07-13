@@ -3,6 +3,7 @@ package xyz.jpenilla.wanderingtrades;
 import lombok.Getter;
 import lombok.Setter;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.jpenilla.jmplib.Chat;
@@ -28,6 +29,7 @@ public final class WanderingTrades extends JavaPlugin {
     @Getter private Log log;
     @Getter private Listeners listeners;
     @Getter private CommandHelper commandHelper;
+    @Getter private ConversationFactory conversationFactory;
 
     @Getter private McRPGHook McRPG = null;
     @Getter private WorldGuardHook worldGuard = null;
@@ -70,6 +72,8 @@ public final class WanderingTrades extends JavaPlugin {
 
         listeners = new Listeners(this);
         listeners.register();
+
+        conversationFactory = new ConversationFactory(this);
 
         new UpdateChecker(this, 79068).getVersion(version ->
                 UpdateChecker.updateCheck(version, true));

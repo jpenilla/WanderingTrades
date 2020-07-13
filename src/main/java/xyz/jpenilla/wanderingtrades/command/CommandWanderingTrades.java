@@ -13,6 +13,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import xyz.jpenilla.jmplib.Chat;
+import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -50,7 +51,7 @@ public class CommandWanderingTrades extends BaseCommand {
         ArrayList<String> list = new ArrayList<>();
         final String header = chat.getCenteredMessage("<gradient:white:blue>=============</gradient><gradient:blue:white>=============");
         list.add(header);
-        list.add(chat.getCenteredMessage("<hover:show_text:'<rainbow>click me!'><click:open_url:https://www.spigotmc.org/resources/wandering-trades.79068/>" + plugin.getName() + " <gradient:blue:green>" + plugin.getDescription().getVersion()));
+        list.add(chat.getCenteredMessage("<hover:show_text:'<rainbow>click me!'><click:open_url:" + plugin.getDescription().getWebsite() + ">" + plugin.getName() + " <gradient:blue:green>" + plugin.getDescription().getVersion()));
         list.add(chat.getCenteredMessage("<gray>By <gradient:gold:yellow>jmp"));
         list.add(header);
         chat.sendPlaceholders(sender, list);

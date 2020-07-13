@@ -192,7 +192,7 @@ public class ConfigEditGui extends GuiHolder {
                                 c.setWgRegionList(temp);
                                 c.save();
                             } else {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
+                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NO_SPACES));
                             }
                             return AnvilGUI.Response.close();
                         })

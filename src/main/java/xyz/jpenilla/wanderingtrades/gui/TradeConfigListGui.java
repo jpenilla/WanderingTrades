@@ -1,14 +1,12 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import net.wesjd.anvilgui.AnvilGUI;
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.jmplib.LegacyChat;
 import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -74,32 +72,42 @@ public class TradeConfigListGui extends PaginatedGui {
             p.closeInventory();
         } else if (newConfig.isSimilar(i)) {
             p.closeInventory();
-            new AnvilGUI.Builder()
-                    .onClose(player -> Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new TradeConfigListGui().open(player), 1L))
-                    .onComplete((player, text) -> {
-                        if (!TextUtil.containsCaseInsensitive(text, configNames)) {
-                            if (!text.contains(" ")) {
-                                try {
-                                    FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + text + ".yml"));
-                                    WanderingTrades.getInstance().getCfg().load();
-                                    LegacyChat.sendCenteredMessage(p, lang.get(Lang.GUI_CREATE_CONFIG_SUCCESS));
-                                } catch (IOException ex) {
-                                    ex.printStackTrace();
-                                    LegacyChat.sendCenteredMessage(p, "&4Error");
-                                }
-                            } else {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
-                            }
-                            return AnvilGUI.Response.close();
-                        } else {
-                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_CREATE_UNIQUE));
-                        }
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText(player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
+                        return "";
                     })
-                    .text(lang.get(Lang.GUI_ANVIL_TYPE_HERE))
-                    .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_CREATE_TITLE))
-                    .plugin(WanderingTrades.getInstance())
-                    .open(p);
+                    .onValidateInput((player, input) -> {
+                        if (input.contains(" ")) {
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            return false;
+                        }
+                        if (TextUtil.containsCaseInsensitive(input, configNames)) {
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            return false;
+                        }
+                        return true;
+                    })
+                    .onConfirmText((player, s) -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s + lang.get(Lang.MESSAGE_YES_NO));
+                        return "";
+                    })
+                    .onAccepted((player, s) -> {
+                        try {
+                            FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + s + ".yml"));
+                            WanderingTrades.getInstance().getCfg().load();
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, "<red>Error");
+                        }
+                        open(p);
+                    })
+                    .onDenied((player, s) -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
+                        open(p);
+                    })
+                    .start(p);
         }
         if (i != null) {
             //try {

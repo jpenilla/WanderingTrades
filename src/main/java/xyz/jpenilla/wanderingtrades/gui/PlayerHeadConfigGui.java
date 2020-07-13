@@ -266,7 +266,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                     })
                     .text(config.getName())
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_CREATE_TITLE))
+                    .title(lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
@@ -288,7 +288,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                                 config.save();
                                 WanderingTrades.getInstance().getStoredPlayers().load();
                             } else {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NO_SPACES));
+                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NO_SPACES));
                             }
                             return AnvilGUI.Response.close();
                         })
