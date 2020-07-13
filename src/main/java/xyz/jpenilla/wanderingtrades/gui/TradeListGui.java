@@ -69,4 +69,9 @@ public class TradeListGui extends PaginatedGui {
         });
         return trades;
     }
+
+    @Override
+    public void reOpen(Player p) {
+        new TradeListGui(tradeConfig).open(p);
+    }
 }

@@ -13,7 +13,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import xyz.jpenilla.jmplib.Chat;
-import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;

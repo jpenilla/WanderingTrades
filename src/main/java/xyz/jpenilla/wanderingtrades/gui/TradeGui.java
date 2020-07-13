@@ -116,18 +116,18 @@ public abstract class TradeGui extends GuiHolder {
                         try {
                             int i = Integer.parseInt(text);
                             if (i < 1) {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GT_0));
+                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NUMBER_GT_0));
                             } else {
                                 maxUses = i;
                             }
                         } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
+                            return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         }
                         return AnvilGUI.Response.close();
                     })
                     .text(String.valueOf(maxUses))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_SET_MAX_USES))
+                    .title(lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }

@@ -1,15 +1,15 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import lombok.NonNull;
-import net.wesjd.anvilgui.AnvilGUI;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -43,7 +43,7 @@ public class ConfigEditGui extends GuiHolder {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_CONFIG_TITLE), 45);
     }
 
-    @NonNull
+    @NotNull
     public Inventory getInventory() {
         inventory.clear();
 
@@ -90,7 +90,7 @@ public class ConfigEditGui extends GuiHolder {
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
                 ""
         ));
-        c.getWgRegionList().forEach(region -> wgListLore.add(" &b- &f" + region));
+        c.getWgRegionList().forEach(region -> wgListLore.add(" <aqua>-</aqua> <white>" + region));
         inventory.setItem(32, new ItemBuilder(wgList).setLore(wgListLore).build());
 
         inventory.setItem(inventory.getSize() - 1, closeButton);
@@ -154,53 +154,62 @@ public class ConfigEditGui extends GuiHolder {
 
         if (refreshTradersMinutes.isSimilar(item)) {
             p.closeInventory();
-            new AnvilGUI.Builder()
-                    .onClose(this::reOpen)
-                    .onComplete((player, text) -> {
-                        try {
-                            int i = Integer.parseInt(text);
-                            if (i < 0) {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GTE_0));
-                            } else {
-                                c.setRefreshCommandTradersMinutes(i);
-                                c.save();
-                            }
-                        } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
-                        }
-                        return AnvilGUI.Response.close();
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText(player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                                lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + c.getRefreshCommandTradersMinutes()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                        return "";
                     })
-                    .text(String.valueOf(c.getRefreshCommandTradersMinutes()))
-                    .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_SET_REFRESH_DELAY_TITLE))
-                    .plugin(WanderingTrades.getInstance())
-                    .open(p);
+                    .onValidateInput(this::onValidateIntGTE0)
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, s) -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        c.setRefreshCommandTradersMinutes(Integer.parseInt(s));
+                        c.save();
+                        open(p);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
         }
 
         if (wgList.isSimilar(item)) {
             if (click.isRightClick()) {
                 List<String> l = c.getWgRegionList();
-                l.remove(l.size() - 1);
+                if (!(l.size() - 1 < 0)) {
+                    l.remove(l.size() - 1);
+                }
                 c.setWgRegionList(c.getWgRegionList());
             } else {
-                new AnvilGUI.Builder()
-                        .onClose(this::reOpen)
-                        .onComplete((player, text) -> {
-                            if (!text.contains(" ")) {
-                                List<String> temp = c.getWgRegionList();
-                                temp.add(text);
-                                c.setWgRegionList(temp);
-                                c.save();
-                            } else {
-                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NO_SPACES));
-                            }
-                            return AnvilGUI.Response.close();
+                p.closeInventory();
+                new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                        .onPromptText(player -> {
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
+                            return "";
                         })
-                        .text(lang.get(Lang.GUI_ANVIL_TYPE_HERE))
-                        .item(new ItemStack(Material.WRITABLE_BOOK))
-                        .title(lang.get(Lang.GUI_ANVIL_NEW_LIST_ITEM))
-                        .plugin(WanderingTrades.getInstance())
-                        .open(p);
+                        .onValidateInput((player, input) -> {
+                            if (input.contains(" ")) {
+                                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                                return false;
+                            }
+                            if (TextUtil.containsCaseInsensitive(input, c.getWgRegionList())) {
+                                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                                return false;
+                            }
+                            return true;
+                        })
+                        .onConfirmText(this::onConfirmYesNo)
+                        .onAccepted((player, s) -> {
+                            List<String> temp = c.getWgRegionList();
+                            temp.add(s);
+                            c.setWgRegionList(temp);
+                            c.save();
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            open(p);
+                        })
+                        .onDenied(this::onEditCancelled)
+                        .start(p);
             }
         }
 
@@ -209,7 +218,7 @@ public class ConfigEditGui extends GuiHolder {
         getInventory();
     }
 
-    private void reOpen(Player p) {
-        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new ConfigEditGui().open(p), 1L);
+    public void reOpen(Player p) {
+        new ConfigEditGui().open(p);
     }
 }

@@ -70,7 +70,9 @@ public class TradeConfigListGui extends PaginatedGui {
     public void onClick(Player p, ItemStack i) {
         if (closeButton.isSimilar(i)) {
             p.closeInventory();
-        } else if (newConfig.isSimilar(i)) {
+            return;
+        }
+        if (newConfig.isSimilar(i)) {
             p.closeInventory();
             new InputConversation(WanderingTrades.getInstance().getConversationFactory())
                     .onPromptText(player -> {
@@ -88,10 +90,7 @@ public class TradeConfigListGui extends PaginatedGui {
                         }
                         return true;
                     })
-                    .onConfirmText((player, s) -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s + lang.get(Lang.MESSAGE_YES_NO));
-                        return "";
-                    })
+                    .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
                         try {
                             FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + s + ".yml"));
@@ -101,13 +100,14 @@ public class TradeConfigListGui extends PaginatedGui {
                             ex.printStackTrace();
                             WanderingTrades.getInstance().getChat().sendPlaceholders(player, "<red>Error");
                         }
-                        open(p);
+                        reOpen(p);
                     })
                     .onDenied((player, s) -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
-                        open(p);
+                        reOpen(p);
                     })
                     .start(p);
+            return;
         }
         if (i != null) {
             //try {
@@ -116,5 +116,10 @@ public class TradeConfigListGui extends PaginatedGui {
                 new TradeListGui(i.getItemMeta().getDisplayName()).open(p);
             }
         } //catch (NullPointerException ignored) {}
+    }
+
+    @Override
+    public void reOpen(Player p) {
+        new TradeConfigListGui().open(p);
     }
 }

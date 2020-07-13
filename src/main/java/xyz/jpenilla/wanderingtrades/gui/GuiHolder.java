@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,6 +10,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -40,7 +40,76 @@ public abstract class GuiHolder implements InventoryHolder {
     public void onInventoryClose(InventoryCloseEvent event) {
     }
 
-    public void open(@NonNull Player p) {
+    public void open(@NotNull Player p) {
         p.openInventory(getInventory());
+    }
+
+    public abstract void reOpen(Player p);
+
+    public boolean onValidateIntGT0(Player player, String input) {
+        try {
+            int i = Integer.parseInt(input);
+            if (i < 1) {
+                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            return false;
+        }
+        return true;
+    }
+
+    public boolean onValidateIntGTE0(Player player, String input) {
+        try {
+            int i = Integer.parseInt(input);
+            if (i < 0) {
+                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            return false;
+        }
+        return true;
+    }
+
+    public boolean onValidateIntGTEN1(Player player, String input) {
+        try {
+            int i = Integer.parseInt(input);
+            if (i < -1) {
+                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            return false;
+        }
+        return true;
+    }
+
+    public boolean onValidateDouble0T1(Player player, String input) {
+        try {
+            double d = Double.parseDouble(input);
+            if (d < 0 || d > 1) {
+                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            return false;
+        }
+        return true;
+    }
+
+    public String onConfirmYesNo(Player player, String s) {
+        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
+        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_YES_NO));
+        return "";
+    }
+
+    public void onEditCancelled(Player p, String s) {
+        WanderingTrades.getInstance().getChat().sendPlaceholders(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
+        open(p);
     }
 }

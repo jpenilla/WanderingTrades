@@ -135,13 +135,13 @@ public class TradeConfigEditGui extends GuiHolder {
                         try {
                             int i = Integer.parseInt(text);
                             if (i < 1) {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_GT_0));
+                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NUMBER_GT_0));
                             } else {
                                 t.setRandomAmount(i);
                                 t.save(tradeConfig);
                             }
                         } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
+                            return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         }
                         return AnvilGUI.Response.close();
                     })
@@ -160,19 +160,19 @@ public class TradeConfigEditGui extends GuiHolder {
                         try {
                             double d = Double.parseDouble(text);
                             if (d < 0 || d > 1) {
-                                return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_NUMBER_0T1));
+                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NUMBER_0T1));
                             } else {
                                 t.setChance(d);
                                 t.save(tradeConfig);
                             }
                         } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_ENTER_NUMBER));
+                            return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         }
                         return AnvilGUI.Response.close();
                     })
                     .text(String.valueOf(t.getChance()))
                     .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_SET_CHANCE_TITLE))
+                    .title(lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT))
                     .plugin(WanderingTrades.getInstance())
                     .open(p);
         }
@@ -204,7 +204,7 @@ public class TradeConfigEditGui extends GuiHolder {
         getInventory();
     }
 
-    private void reOpen(Player player) {
+    public void reOpen(Player player) {
         Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new TradeConfigEditGui(tradeConfig).open(player), 1L);
     }
 }
