@@ -1,12 +1,11 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import net.wesjd.anvilgui.AnvilGUI;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -46,25 +45,29 @@ public class TradeCreateGui extends TradeGui {
 
         if (getTradeNameStack().isSimilar(item)) {
             p.closeInventory();
-            new AnvilGUI.Builder()
-                    .onClose(this::reOpen)
-                    .onComplete((player, text) -> {
-                        if (!text.contains(" ")) {
-                            if (!t.getFile().getConfigurationSection("trades").contains(text)) {
-                                setTradeName(text);
-                                return AnvilGUI.Response.close();
-                            } else {
-                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_CREATE_UNIQUE));
-                            }
-                        } else {
-                            return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NO_SPACES));
-                        }
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText(player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
+                        return "";
                     })
-                    .text(lang.get(Lang.GUI_ANVIL_TYPE_HERE))
-                    .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT))
-                    .plugin(WanderingTrades.getInstance())
-                    .open(p);
+                    .onValidateInput((player, input) -> {
+                        if (input.contains(" ")) {
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            return false;
+                        }
+                        if (t.getFile().getConfigurationSection("trades").contains(input)) {
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            return false;
+                        }
+                        return true;
+                    })
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, s) -> {
+                        setTradeName(s);
+                        open(player);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
         }
     }
 }

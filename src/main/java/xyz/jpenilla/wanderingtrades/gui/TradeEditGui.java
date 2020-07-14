@@ -1,12 +1,11 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import net.wesjd.anvilgui.AnvilGUI;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -66,24 +65,24 @@ public class TradeEditGui extends TradeGui {
 
         if (getDeleteButton().isSimilar(item)) {
             p.closeInventory();
-            new AnvilGUI.Builder()
-                    .onClose(player -> new TradeListGui(getTradeConfig()).open(player))
-                    .onComplete((player, text) -> {
-                        if (text.equals(lang.get(Lang.GUI_ANVIL_CONFIRM_KEY))) {
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText((player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", getTradeName()));
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                        return "";
+                    }))
+                    .onValidateInput(((player, s) -> {
+                        if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
                             t.deleteTrade(getTradeConfig(), getTradeName());
                             WanderingTrades.getInstance().getCfg().load();
-                            return AnvilGUI.Response.close();
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            new TradeListGui(getTradeConfig()).open(player);
                         } else {
-                            return AnvilGUI.Response.text(lang.get(Lang.GUI_ANVIL_CONFIRM)
-                                    .replace("{KEY}", lang.get(Lang.GUI_ANVIL_CONFIRM_KEY)));
+                            onEditCancelled(player, s);
                         }
-                    })
-                    .text(lang.get(Lang.GUI_ANVIL_CONFIRM)
-                            .replace("{KEY}", lang.get(Lang.GUI_ANVIL_CONFIRM_KEY)))
-                    .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_DELETE_TITLE) + getTradeName())
-                    .plugin(WanderingTrades.getInstance())
-                    .open(p);
+                        return true;
+                    }))
+                    .start(p);
         }
 
         getInventory();

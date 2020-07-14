@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,6 +7,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -129,74 +129,66 @@ public class TradeConfigEditGui extends GuiHolder {
 
         if (randAmount.isSimilar(item)) {
             p.closeInventory();
-            new AnvilGUI.Builder()
-                    .onClose(this::reOpen)
-                    .onComplete((player, text) -> {
-                        try {
-                            int i = Integer.parseInt(text);
-                            if (i < 1) {
-                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NUMBER_GT_0));
-                            } else {
-                                t.setRandomAmount(i);
-                                t.save(tradeConfig);
-                            }
-                        } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        }
-                        return AnvilGUI.Response.close();
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText(player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                                lang.get(Lang.MESSAGES_SET_RAND_AMOUNT_PROMPT)
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getRandomAmount()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                        return "";
                     })
-                    .text(String.valueOf(t.getRandomAmount()))
-                    .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_SET_RAND_AMOUNT_TITLE))
-                    .plugin(WanderingTrades.getInstance())
-                    .open(p);
+                    .onValidateInput(this::onValidateIntGT0)
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, s) -> {
+                        t.setRandomAmount(Integer.parseInt(s));
+                        t.save(tradeConfig);
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        open(player);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
         }
 
         if (chance.isSimilar(item)) {
             p.closeInventory();
-            new AnvilGUI.Builder()
-                    .onClose(this::reOpen)
-                    .onComplete((player, text) -> {
-                        try {
-                            double d = Double.parseDouble(text);
-                            if (d < 0 || d > 1) {
-                                return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_NUMBER_0T1));
-                            } else {
-                                t.setChance(d);
-                                t.save(tradeConfig);
-                            }
-                        } catch (NumberFormatException ex) {
-                            return AnvilGUI.Response.text(lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        }
-                        return AnvilGUI.Response.close();
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText(player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                                lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getChance()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                        return "";
                     })
-                    .text(String.valueOf(t.getChance()))
-                    .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT))
-                    .plugin(WanderingTrades.getInstance())
-                    .open(p);
+                    .onValidateInput(this::onValidateDouble0T1)
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, s) -> {
+                        t.setChance(Double.parseDouble(s));
+                        t.save(tradeConfig);
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        open(player);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
         }
 
         if (customName.isSimilar(item)) {
             p.closeInventory();
-            String cN;
-            if (t.getCustomName() == null) {
-                cN = lang.get(Lang.GUI_ANVIL_TYPE_HERE);
-            } else {
-                cN = t.getCustomName();
-            }
-            new AnvilGUI.Builder()
-                    .onClose(this::reOpen)
-                    .onComplete((player, text) -> {
-                        t.setCustomName(text);
-                        t.save(tradeConfig);
-                        return AnvilGUI.Response.close();
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText(player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                                lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + t.getCustomName());
+                        return "";
                     })
-                    .text(cN)
-                    .item(new ItemStack(Material.WRITABLE_BOOK))
-                    .title(lang.get(Lang.GUI_ANVIL_CREATE_TITLE_OR_NONE))
-                    .plugin(WanderingTrades.getInstance())
-                    .open(p);
+                    .onValidateInput((pl, s) -> true)
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, string) -> {
+                        t.setCustomName(string);
+                        t.save(tradeConfig);
+                        open(player);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
         }
 
         t.save(tradeConfig);

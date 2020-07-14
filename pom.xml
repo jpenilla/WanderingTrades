@@ -180,11 +180,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.WesJD</groupId>
-            <artifactId>AnvilGUI</artifactId>
-            <version>ef71db62ec</version>
-        </dependency>
-        <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.2</version>

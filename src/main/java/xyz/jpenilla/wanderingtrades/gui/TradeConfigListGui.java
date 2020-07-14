@@ -104,7 +104,7 @@ public class TradeConfigListGui extends PaginatedGui {
                     })
                     .onDenied((player, s) -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
-                        reOpen(p);
+                        reOpen(player);
                     })
                     .start(p);
             return;
