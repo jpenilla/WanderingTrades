@@ -132,7 +132,7 @@ public class TradeConfigEditGui extends GuiHolder {
             new InputConversation(WanderingTrades.getInstance().getConversationFactory())
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
-                                lang.get(Lang.MESSAGES_SET_RAND_AMOUNT_PROMPT)
+                                lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getRandomAmount()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         return "";

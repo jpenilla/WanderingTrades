@@ -36,7 +36,9 @@ public class EntitySpawnListener implements Listener {
     @EventHandler
     public void onSpawn(EntitySpawnEvent e) {
         if (EntityType.WANDERING_TRADER.equals(e.getEntityType())) {
-            addTrades((WanderingTrader) e.getEntity(), false);
+            Bukkit.getScheduler().runTaskLater(wanderingTrades, () -> {
+                addTrades((WanderingTrader) e.getEntity(), false);
+            }, 1L);
         }
     }
 
