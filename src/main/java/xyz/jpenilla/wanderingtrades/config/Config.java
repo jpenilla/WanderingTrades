@@ -111,8 +111,10 @@ public class Config {
             }
         }
         if (folder.listFiles().length == 0) {
-            plugin.getLog().info("No trade configs found, copying example.yml");
+            plugin.getLog().info("No trade configs found, copying example configs");
             plugin.saveResource("trades/example.yml", false);
+            plugin.saveResource("trades/microblocks.yml", false);
+            plugin.saveResource("trades/hermitheads.yml", false);
         }
 
         File[] tradeConfigFiles = new File(path).listFiles();

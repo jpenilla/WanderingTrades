@@ -7,12 +7,15 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
@@ -26,6 +29,8 @@ public class TradeConfigEditGui extends GuiHolder {
     private final ItemStack randAmount = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT)).build();
     private final ItemStack chance = new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CHANCE)).build();
     private final ItemStack customName = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME)).build();
+    private final ItemStack deleteButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19")
+            .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_CONFIG_DELETE_LORE)).build();
 
     private final String tradeConfig;
 
@@ -77,6 +82,8 @@ public class TradeConfigEditGui extends GuiHolder {
         customNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + t.getCustomName());
         customNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(30, new ItemBuilder(customName).setLore(customNameLore).build());
+
+        inventory.setItem(inventory.getSize() - 11, deleteButton);
 
         IntStream.range(0, inventory.getSize()).forEach(slot -> {
             if (inventory.getItem(slot) == null) {
@@ -188,6 +195,35 @@ public class TradeConfigEditGui extends GuiHolder {
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
+                    .start(p);
+        }
+
+        if (deleteButton.isSimilar(item)) {
+            p.closeInventory();
+            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                    .onPromptText((player -> {
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig));
+                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                        return "";
+                    }))
+                    .onValidateInput(((player, s) -> {
+                        if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
+                            final File tcFile = new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + tradeConfig + ".yml");
+                            try {
+                                if (!tcFile.delete()) {
+                                    WanderingTrades.getInstance().getLog().warn("File delete failed");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            WanderingTrades.getInstance().getCfg().load();
+                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            new TradeConfigListGui().open(player);
+                        } else {
+                            onEditCancelled(player, s);
+                        }
+                        return true;
+                    }))
                     .start(p);
         }
 

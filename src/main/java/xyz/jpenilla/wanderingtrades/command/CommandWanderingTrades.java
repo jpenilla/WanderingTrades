@@ -254,19 +254,15 @@ public class CommandWanderingTrades extends BaseCommand {
 
     @Subcommand("summonnatural|sn")
     @Description("%COMMAND_SUMMON_NATURAL")
-    @Syntax("<ai> <protect> <refresh> <custom name> [rotation] [world:x,y,z]")
-    @CommandCompletion("true|false true|false true|false NONE|customName @angles @wtWorlds")
+    @Syntax("<ai> <protect> <refresh> [rotation] [world:x,y,z]")
+    @CommandCompletion("true|false true|false true|false @angles @wtWorlds")
     @CommandPermission("wanderingtrades.summonnatural")
-    public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, String customName, @Optional Float rotation, @Optional Location location) {
+    public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, @Optional Float rotation, @Optional Location location) {
         Location loc = resolveLocation(sender, location);
         if (rotation != null) {
             loc.setYaw(rotation);
         }
         final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
-        if (!customName.equals("NONE")) {
-            wt.setCustomNameVisible(true);
-            wt.setCustomName(MiniMessageUtil.miniMessageToLegacy(customName));
-        }
         PersistentDataContainer persistentDataContainer = wt.getPersistentDataContainer();
         if (refresh) {
             persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");

@@ -13,7 +13,7 @@ days: 120
 
 # what is the chance a trader will have player head trades
 # range: [0.01 - 1] ie 0.5 for 50%
-playerHeadsFromServerChance: 0.5
+playerHeadsFromServerChance: 0.80
 
 # how many different player heads should each trader that has them have
 # WARNING!!! THIS MUST BE EQUAL TO OR BELOW THE AMOUNT OF PLAYERS
