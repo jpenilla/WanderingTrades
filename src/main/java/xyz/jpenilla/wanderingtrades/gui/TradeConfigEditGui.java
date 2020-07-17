@@ -15,7 +15,6 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
@@ -136,7 +135,7 @@ public class TradeConfigEditGui extends GuiHolder {
 
         if (randAmount.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
@@ -158,7 +157,7 @@ public class TradeConfigEditGui extends GuiHolder {
 
         if (chance.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
@@ -180,7 +179,7 @@ public class TradeConfigEditGui extends GuiHolder {
 
         if (customName.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
@@ -200,7 +199,7 @@ public class TradeConfigEditGui extends GuiHolder {
 
         if (deleteButton.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText((player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig));
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));

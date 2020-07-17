@@ -45,7 +45,7 @@ public class TradeCreateGui extends TradeGui {
 
         if (getTradeNameStack().isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
                         return "";

@@ -65,7 +65,7 @@ public class TradeEditGui extends TradeGui {
 
         if (getDeleteButton().isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText((player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", getTradeName()));
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));

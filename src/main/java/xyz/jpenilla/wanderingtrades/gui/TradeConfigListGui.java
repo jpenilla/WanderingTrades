@@ -74,7 +74,7 @@ public class TradeConfigListGui extends PaginatedGui {
         }
         if (newConfig.isSimilar(i)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
                         return "";

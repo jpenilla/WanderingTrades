@@ -154,7 +154,7 @@ public class ConfigEditGui extends GuiHolder {
 
         if (refreshTradersMinutes.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
@@ -183,7 +183,7 @@ public class ConfigEditGui extends GuiHolder {
                 c.setWgRegionList(c.getWgRegionList());
             } else {
                 p.closeInventory();
-                new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                new InputConversation()
                         .onPromptText(player -> {
                             WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
                             return "";

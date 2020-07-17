@@ -158,7 +158,7 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (getMaxUsesStack().isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
@@ -180,7 +180,7 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (chanceStack.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
@@ -202,7 +202,7 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (amountHeadsStack.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_HEADS_AMOUNT_PROMPT)
@@ -224,7 +224,7 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (amountTradesStack.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT)
@@ -246,7 +246,7 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (customName.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_CUSTOM_NAME_PROMPT)
@@ -274,7 +274,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                 WanderingTrades.getInstance().getStoredPlayers().load();
             } else {
                 p.closeInventory();
-                new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                new InputConversation()
                         .onPromptText(player -> {
                             WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ADD_BLACKLIST_PLAYER));
                             return "";
@@ -313,7 +313,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                 config.setLore(l);
             } else {
                 p.closeInventory();
-                new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+                new InputConversation()
                         .onPromptText(player -> {
                             WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ADD_LORE_PROMPT));
                             return "";
@@ -335,7 +335,7 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (days.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_HEADS_DAYS_PROMPT)

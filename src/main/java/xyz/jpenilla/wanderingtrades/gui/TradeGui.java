@@ -109,7 +109,7 @@ public abstract class TradeGui extends GuiHolder {
 
         if (maxUsesStack.isSimilar(item)) {
             p.closeInventory();
-            new InputConversation(WanderingTrades.getInstance().getConversationFactory())
+            new InputConversation()
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendPlaceholders(player,
                                 lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
