@@ -55,7 +55,7 @@ public class RefreshTradesListener implements Listener {
                     entity.setRecipes(tc.getTrades(true));
                 }
                 if (persistentDataContainer.has(Constants.REFRESH_NATURAL, PersistentDataType.STRING) && EntityType.WANDERING_TRADER.equals(entity.getType())) {
-                    plugin.getListeners().getEntitySpawnListener().addTrades((WanderingTrader) entity, true);
+                    plugin.getListeners().getTraderSpawnListener().addTrades((WanderingTrader) entity, true);
                 }
                 entity.setTicksLived(1);
             }

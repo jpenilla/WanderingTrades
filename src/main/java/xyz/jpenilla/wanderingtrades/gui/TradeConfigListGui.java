@@ -55,8 +55,7 @@ public class TradeConfigListGui extends PaginatedGui {
         return items;
     }
 
-    public Inventory getInventory() {
-        Inventory i = super.getInventory();
+    public Inventory getInv(Inventory i) {
         i.setItem(i.getSize() - 5, newConfig);
         i.setItem(inventory.getSize() - 1, closeButton);
         IntStream.range(i.getSize() - 9, i.getSize() - 1).forEach(s -> {

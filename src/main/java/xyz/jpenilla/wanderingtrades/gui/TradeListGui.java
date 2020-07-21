@@ -25,8 +25,7 @@ public class TradeListGui extends PaginatedGui {
         this.tradeConfig = tradeConfig;
     }
 
-    public Inventory getInventory() {
-        Inventory i = super.getInventory();
+    public Inventory getInv(Inventory i) {
         i.setItem(inventory.getSize() - 1, backButton);
         i.setItem(inventory.getSize() - 2, editButton);
         i.setItem(inventory.getSize() - 5, newTradeStack);

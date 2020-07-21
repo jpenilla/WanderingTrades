@@ -23,7 +23,7 @@ public abstract class PaginatedGui extends GuiHolder {
         super(name, size);
     }
 
-    public Inventory getInventory() {
+    public final Inventory getInventory() {
         inventory.clear();
 
         final List<ItemStack> items = getListItems();
@@ -46,12 +46,14 @@ public abstract class PaginatedGui extends GuiHolder {
             inventory.setItem(i, items.get(startIndex + i));
         }
 
-        return inventory;
+        return getInv(inventory);
     }
+
+    public abstract Inventory getInv(Inventory inv);
 
     public abstract List<ItemStack> getListItems();
 
-    public void onInventoryClick(InventoryClickEvent event) {
+    public final void onInventoryClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
         ClickType click = event.getClick();

@@ -11,7 +11,7 @@ public class Listeners {
     @Getter private GuiListener guiListener;
     @Getter private JoinQuitListener joinQuitListener;
     @Getter private AcquireTradeListener acquireTradeListener;
-    @Getter private EntitySpawnListener entitySpawnListener;
+    @Getter private TraderSpawnListener traderSpawnListener;
     @Getter private ProtectTradersListener protectTradersListener;
     @Getter private RefreshTradesListener refreshTradesListener;
 
@@ -23,7 +23,7 @@ public class Listeners {
         guiListener = new GuiListener();
         joinQuitListener = new JoinQuitListener(plugin);
         acquireTradeListener = new AcquireTradeListener(plugin);
-        entitySpawnListener = new EntitySpawnListener(plugin);
+        traderSpawnListener = new TraderSpawnListener(plugin);
         protectTradersListener = new ProtectTradersListener(plugin);
         refreshTradesListener = new RefreshTradesListener(plugin);
 
@@ -32,7 +32,7 @@ public class Listeners {
 
         if (plugin.getCfg().isEnabled()) {
             plugin.getServer().getPluginManager().registerEvents(acquireTradeListener, plugin);
-            plugin.getServer().getPluginManager().registerEvents(entitySpawnListener, plugin);
+            plugin.getServer().getPluginManager().registerEvents(traderSpawnListener, plugin);
             plugin.getServer().getPluginManager().registerEvents(protectTradersListener, plugin);
         }
 

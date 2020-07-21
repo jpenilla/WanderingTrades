@@ -29,12 +29,12 @@ import java.util.List;
 
 @CommandAlias("wanderingtrades|wt")
 public class CommandWanderingTrades extends BaseCommand {
-    private final WanderingTrades plugin;
+    private final WanderingTrades wanderingTrades;
     @Dependency
     private Chat chat;
 
     public CommandWanderingTrades(WanderingTrades p) {
-        plugin = p;
+        wanderingTrades = p;
     }
 
     @Default
@@ -50,7 +50,7 @@ public class CommandWanderingTrades extends BaseCommand {
         ArrayList<String> list = new ArrayList<>();
         final String header = chat.getCenteredMessage("<gradient:white:blue>=============</gradient><gradient:blue:white>=============");
         list.add(header);
-        list.add(chat.getCenteredMessage("<hover:show_text:'<rainbow>click me!'><click:open_url:" + plugin.getDescription().getWebsite() + ">" + plugin.getName() + " <gradient:blue:green>" + plugin.getDescription().getVersion()));
+        list.add(chat.getCenteredMessage("<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion()));
         list.add(chat.getCenteredMessage("<gray>By <gradient:gold:yellow>jmp"));
         list.add(header);
         chat.sendPlaceholders(sender, list);
@@ -60,20 +60,20 @@ public class CommandWanderingTrades extends BaseCommand {
     @CommandPermission("wanderingtrades.reload")
     @Description("%COMMAND_WT_RELOAD")
     public void onReload(CommandSender sender) {
-        chat.sendPlaceholders(sender, chat.getCenteredMessage(plugin.getLang().get(Lang.COMMAND_RELOAD)));
-        plugin.getCfg().load();
-        plugin.getLang().load();
-        plugin.getListeners().reload();
-        plugin.getCommandHelper().reload();
-        plugin.getStoredPlayers().load();
-        chat.sendPlaceholders(sender, chat.getCenteredMessage(plugin.getLang().get(Lang.COMMAND_RELOAD_DONE)));
+        chat.sendPlaceholders(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
+        wanderingTrades.getCfg().load();
+        wanderingTrades.getLang().load();
+        wanderingTrades.getListeners().reload();
+        wanderingTrades.getCommandHelper().reload();
+        wanderingTrades.getStoredPlayers().load();
+        chat.sendPlaceholders(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
     }
 
     @Subcommand("list|l")
     @CommandPermission("wanderingtrades.list")
     @Description("%COMMAND_WT_LIST")
     public void onList(CommandSender sender) {
-        List<String> configs = new ArrayList<>(plugin.getCfg().getTradeConfigs().keySet());
+        List<String> configs = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().keySet());
         StringBuilder sb = new StringBuilder();
         for (String cfg : configs) {
             sb.append("<hover:show_text:'<rainbow>Click to edit'><click:run_command:/wanderingtrades edit ");
@@ -84,7 +84,7 @@ public class CommandWanderingTrades extends BaseCommand {
                 sb.append("</click></hover><gray>,</gray> ");
             }
         }
-        chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_LIST_LOADED));
+        chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_LIST_LOADED));
         chat.sendPlaceholders(sender, sb.toString());
     }
 
@@ -122,21 +122,21 @@ public class CommandWanderingTrades extends BaseCommand {
         } else if (sender instanceof Player) {
             location = ((Player) sender).getLocation();
         } else {
-            throw new InvalidCommandArgument(plugin.getLang().get(Lang.COMMAND_ERROR_CONSOLE_NEEDS_COORDS), true);
+            throw new InvalidCommandArgument(wanderingTrades.getLang().get(Lang.COMMAND_ERROR_CONSOLE_NEEDS_COORDS), true);
         }
         return location;
     }
 
     private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {
         try {
-            ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
+            ArrayList<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
             final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
             wt.setRecipes(recipes);
             wt.setAI(!disableAI);
 
             PersistentDataContainer p = wt.getPersistentDataContainer();
 
-            TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+            TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
             if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
                 wt.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
                 wt.setCustomNameVisible(true);
@@ -149,19 +149,20 @@ public class CommandWanderingTrades extends BaseCommand {
             }
 
             p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
+            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wt.getUniqueId());
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
 
-    private void summonVillager(CommandSender sender, String tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
+    private void summonVillagerTrader(CommandSender sender, String tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
         try {
-            ArrayList<MerchantRecipe> recipes = plugin.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
+            ArrayList<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
             final Villager v = (Villager) loc.getWorld().spawnEntity(loc, EntityType.VILLAGER);
             v.setVillagerType(type);
             v.setProfession(profession);
@@ -171,7 +172,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
             PersistentDataContainer p = v.getPersistentDataContainer();
 
-            TradeConfig t = plugin.getCfg().getTradeConfigs().get(tradeConfig);
+            TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
             if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
                 v.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
                 v.setCustomNameVisible(true);
@@ -186,10 +187,10 @@ public class CommandWanderingTrades extends BaseCommand {
             p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                chat.sendPlaceholders(sender, plugin.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
@@ -224,6 +225,29 @@ public class CommandWanderingTrades extends BaseCommand {
         return dot > 0.99D;
     }
 
+    @Subcommand("summonnatural|sn")
+    @Description("%COMMAND_SUMMON_NATURAL")
+    @Syntax("<ai> <protect> <refresh> [rotation] [world:x,y,z]")
+    @CommandCompletion("true|false true|false true|false @angles @wtWorlds")
+    @CommandPermission("wanderingtrades.summonnatural")
+    public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, @Optional Float rotation, @Optional Location location) {
+        Location loc = resolveLocation(sender, location);
+        if (rotation != null) {
+            loc.setYaw(rotation);
+        }
+        final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
+        PersistentDataContainer persistentDataContainer = wt.getPersistentDataContainer();
+        if (refresh) {
+            persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
+        }
+        if (!ai) {
+            wt.setAI(false);
+        }
+        if (protect) {
+            persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+        }
+    }
+
     @Subcommand("summon|s")
     @CommandPermission("wanderingtrades.summon")
     public class SummonTrader extends BaseCommand {
@@ -252,29 +276,6 @@ public class CommandWanderingTrades extends BaseCommand {
         }
     }
 
-    @Subcommand("summonnatural|sn")
-    @Description("%COMMAND_SUMMON_NATURAL")
-    @Syntax("<ai> <protect> <refresh> [rotation] [world:x,y,z]")
-    @CommandCompletion("true|false true|false true|false @angles @wtWorlds")
-    @CommandPermission("wanderingtrades.summonnatural")
-    public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, @Optional Float rotation, @Optional Location location) {
-        Location loc = resolveLocation(sender, location);
-        if (rotation != null) {
-            loc.setYaw(rotation);
-        }
-        final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
-        PersistentDataContainer persistentDataContainer = wt.getPersistentDataContainer();
-        if (refresh) {
-            persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
-        }
-        if (!ai) {
-            wt.setAI(false);
-        }
-        if (protect) {
-            persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-        }
-    }
-
     @Subcommand("summonvillager|sv")
     @CommandPermission("wanderingtrades.summonvillager")
     public class SummonVillager extends BaseCommand {
@@ -284,7 +285,7 @@ public class CommandWanderingTrades extends BaseCommand {
         @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
         public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
             Location loc = resolveLocation(sender, location);
-            summonVillager(sender, tradeConfig, loc, type, profession, false);
+            summonVillagerTrader(sender, tradeConfig, loc, type, profession, false);
         }
 
         @Subcommand("noai|n")
@@ -298,7 +299,7 @@ public class CommandWanderingTrades extends BaseCommand {
                 if (rotation != null) {
                     loc.setYaw(rotation);
                 }
-                summonVillager(sender, tradeConfig, loc, type, profession, true);
+                summonVillagerTrader(sender, tradeConfig, loc, type, profession, true);
             }
         }
     }
