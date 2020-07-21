@@ -75,6 +75,7 @@ public final class WanderingTrades extends BasePlugin {
         int pluginId = 7597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new Metrics.SimplePie("player_heads", () -> cfg.getPlayerHeadConfig().isPlayerHeadsFromServer() ? "On" : "Off"));
+        metrics.addCustomChart(new Metrics.SimplePie("player_heads_per_trader", () -> String.valueOf(cfg.getPlayerHeadConfig().getPlayerHeadsFromServerAmount())));
         metrics.addCustomChart(new Metrics.SimplePie("plugin_language", () -> cfg.getLanguage()));
         metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.getTradeConfigs().size())));
         log.info("[ON]");
