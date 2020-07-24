@@ -53,20 +53,20 @@ public class CommandWanderingTrades extends BaseCommand {
         list.add(chat.getCenteredMessage("<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion()));
         list.add(chat.getCenteredMessage("<gray>By <gradient:gold:yellow>jmp"));
         list.add(header);
-        chat.sendPlaceholders(sender, list);
+        chat.sendParsed(sender, list);
     }
 
     @Subcommand("reload")
     @CommandPermission("wanderingtrades.reload")
     @Description("%COMMAND_WT_RELOAD")
     public void onReload(CommandSender sender) {
-        chat.sendPlaceholders(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
+        chat.sendParsed(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
         wanderingTrades.getCfg().load();
         wanderingTrades.getLang().load();
         wanderingTrades.getListeners().reload();
         wanderingTrades.getCommandHelper().reload();
         wanderingTrades.getStoredPlayers().load();
-        chat.sendPlaceholders(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
+        chat.sendParsed(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
     }
 
     @Subcommand("list|l")
@@ -84,8 +84,8 @@ public class CommandWanderingTrades extends BaseCommand {
                 sb.append("</click></hover><gray>,</gray> ");
             }
         }
-        chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_LIST_LOADED));
-        chat.sendPlaceholders(sender, sb.toString());
+        chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_LIST_LOADED));
+        chat.sendParsed(sender, sb.toString());
     }
 
     @CommandPermission("wanderingtrades.edit")
@@ -131,6 +131,7 @@ public class CommandWanderingTrades extends BaseCommand {
         try {
             ArrayList<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
             final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
+            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wt.getUniqueId());
             wt.setRecipes(recipes);
             wt.setAI(!disableAI);
 
@@ -149,13 +150,12 @@ public class CommandWanderingTrades extends BaseCommand {
             }
 
             p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
-            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wt.getUniqueId());
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }
@@ -187,10 +187,10 @@ public class CommandWanderingTrades extends BaseCommand {
             p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
         } catch (NullPointerException | IllegalStateException ex) {
             if (ex instanceof NullPointerException) {
-                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
+                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
                 onList(sender);
             } else {
-                chat.sendPlaceholders(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             }
         }
     }

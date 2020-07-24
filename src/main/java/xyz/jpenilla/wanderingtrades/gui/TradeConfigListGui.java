@@ -75,16 +75,16 @@ public class TradeConfigListGui extends PaginatedGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
                         return "";
                     })
                     .onValidateInput((player, input) -> {
                         if (input.contains(" ")) {
-                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                             return false;
                         }
                         if (TextUtil.containsCaseInsensitive(input, configNames)) {
-                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                             return false;
                         }
                         return true;
@@ -94,15 +94,15 @@ public class TradeConfigListGui extends PaginatedGui {
                         try {
                             FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + s + ".yml"));
                             WanderingTrades.getInstance().getCfg().load();
-                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
+                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
                         } catch (IOException ex) {
                             ex.printStackTrace();
-                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, "<red>Error");
+                            WanderingTrades.getInstance().getChat().sendParsed(player, "<red>Error");
                         }
                         reOpen(p);
                     })
                     .onDenied((player, s) -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
                         reOpen(player);
                     })
                     .start(p);

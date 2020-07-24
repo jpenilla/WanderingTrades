@@ -156,7 +156,7 @@ public class ConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                        WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + c.getRefreshCommandTradersMinutes()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
@@ -165,7 +165,7 @@ public class ConfigEditGui extends GuiHolder {
                     .onValidateInput(this::onValidateIntGTE0)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         c.setRefreshCommandTradersMinutes(Integer.parseInt(s));
                         c.save();
                         open(p);
@@ -185,16 +185,16 @@ public class ConfigEditGui extends GuiHolder {
                 p.closeInventory();
                 new InputConversation()
                         .onPromptText(player -> {
-                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
+                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
                             return "";
                         })
                         .onValidateInput((player, input) -> {
                             if (input.contains(" ")) {
-                                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                                 return false;
                             }
                             if (TextUtil.containsCaseInsensitive(input, c.getWgRegionList())) {
-                                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                                 return false;
                             }
                             return true;
@@ -205,7 +205,7 @@ public class ConfigEditGui extends GuiHolder {
                             temp.add(s);
                             c.setWgRegionList(temp);
                             c.save();
-                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                             open(p);
                         })
                         .onDenied(this::onEditCancelled)

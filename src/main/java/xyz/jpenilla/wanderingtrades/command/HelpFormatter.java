@@ -85,7 +85,7 @@ public class HelpFormatter extends CommandHelpFormatter {
 
     private void send(CommandIssuer issuer, String message) {
         if (loaded && (issuer.isPlayer() || issuer.getIssuer() instanceof ConsoleCommandSender)) {
-            wanderingTrades.getChat().sendPlaceholders((issuer).getIssuer(), message);
+            wanderingTrades.getChat().sendParsed((issuer).getIssuer(), message);
         }
     }
 

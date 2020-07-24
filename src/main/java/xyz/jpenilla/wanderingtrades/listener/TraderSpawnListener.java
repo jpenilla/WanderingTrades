@@ -33,13 +33,12 @@ public class TraderSpawnListener implements Listener {
     @EventHandler
     public void onSpawn(CreatureSpawnEvent e) {
         if (e.getEntityType() == EntityType.WANDERING_TRADER) {
-            addTrades((WanderingTrader) e.getEntity(), false);
+            Bukkit.getScheduler().runTaskLater(wanderingTrades, () -> addTrades((WanderingTrader) e.getEntity(), false), 1L);
         }
     }
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
         if (!traderBlacklistCache.contains(wanderingTrader.getUniqueId())) {
-            traderBlacklistCache.remove(wanderingTrader.getUniqueId());
             ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
             Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
                 if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
@@ -83,6 +82,8 @@ public class TraderSpawnListener implements Listener {
                     wanderingTrader.setRecipes(newTrades);
                 });
             });
+        } else {
+            traderBlacklistCache.remove(wanderingTrader.getUniqueId());
         }
     }
 }

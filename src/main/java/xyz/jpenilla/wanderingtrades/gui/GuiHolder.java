@@ -50,11 +50,11 @@ public abstract class GuiHolder implements InventoryHolder {
         try {
             int i = Integer.parseInt(input);
             if (i < 1) {
-                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
+                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
                 return false;
             }
         } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
         return true;
@@ -64,11 +64,11 @@ public abstract class GuiHolder implements InventoryHolder {
         try {
             int i = Integer.parseInt(input);
             if (i < 0) {
-                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
+                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
                 return false;
             }
         } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
         return true;
@@ -78,11 +78,11 @@ public abstract class GuiHolder implements InventoryHolder {
         try {
             int i = Integer.parseInt(input);
             if (i < -1) {
-                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
+                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
                 return false;
             }
         } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
         return true;
@@ -92,24 +92,24 @@ public abstract class GuiHolder implements InventoryHolder {
         try {
             double d = Double.parseDouble(input);
             if (d < 0 || d > 1) {
-                WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
+                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
                 return false;
             }
         } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
         return true;
     }
 
     public String onConfirmYesNo(Player player, String s) {
-        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
-        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_YES_NO));
+        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
+        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_YES_NO));
         return "";
     }
 
     public void onEditCancelled(Player p, String s) {
-        WanderingTrades.getInstance().getChat().sendPlaceholders(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
+        WanderingTrades.getInstance().getChat().sendParsed(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
         open(p);
     }
 }

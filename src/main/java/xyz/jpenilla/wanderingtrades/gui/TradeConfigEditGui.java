@@ -137,7 +137,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                        WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getRandomAmount()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
@@ -148,7 +148,7 @@ public class TradeConfigEditGui extends GuiHolder {
                     .onAccepted((player, s) -> {
                         t.setRandomAmount(Integer.parseInt(s));
                         t.save(tradeConfig);
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -159,7 +159,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                        WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getChance()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
@@ -170,7 +170,7 @@ public class TradeConfigEditGui extends GuiHolder {
                     .onAccepted((player, s) -> {
                         t.setChance(Double.parseDouble(s));
                         t.save(tradeConfig);
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -181,7 +181,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player,
+                        WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + t.getCustomName());
                         return "";
@@ -201,8 +201,8 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText((player -> {
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig));
-                        WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
                         return "";
                     }))
                     .onValidateInput(((player, s) -> {
@@ -216,7 +216,7 @@ public class TradeConfigEditGui extends GuiHolder {
                                 e.printStackTrace();
                             }
                             WanderingTrades.getInstance().getCfg().load();
-                            WanderingTrades.getInstance().getChat().sendPlaceholders(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                             new TradeConfigListGui().open(player);
                         } else {
                             onEditCancelled(player, s);
