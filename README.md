@@ -13,17 +13,10 @@
 * Commands: `````/wanderingtrades`````, `````/wanderingtrades reload````` (requires ```wanderingtrades.reload``` permission)
 * [VanillaTweaks](https://vanillatweaks.net) microblocks config: [microblocks.yml](https://gist.github.com/jmanpenilla/56120245992a7c4099c13b798c94b5e0)  (Place in ```plugins/WanderingTrades/trades```)
 * Default config file [config.yml](https://github.com/jmanpenilla/WanderingTrades/blob/master/src/main/resources/config.yml)
-* See the Spigot Resource Page for a more up to date overview
+* This is very outdated, see the Spigot Resource Page for a more up to date overview
 
 
 ## How to compile
 
 1. Clone and cd into this repository ```git clone https://github.com/jmanpenilla/WanderingTrades.git && cd WanderingTrades```
 2. Run ```mvn clean install```
-
-
-## Credits
-
-* Apache for Maven, IntelliJ for IDEA
-* Thank you to the Bukkit Spigot, and Paper communities for providing a better Minecraft server wrapper
-* Thanks to [Deanveloper SkullCreator](https://github.com/deanveloper/SkullCreator), [Aikar Annotation Command Framework](https://github.com/aikar/commands), and [WesJD AnvilGUI](https://github.com/WesJD/AnvilGUI)
