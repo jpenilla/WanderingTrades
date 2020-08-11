@@ -7,8 +7,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -30,9 +32,18 @@ public class TraderSpawnListener implements Listener {
         return Math.random() < p;
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntityPortal(EntityPortalEvent e) {
+        if (e.getEntityType() == EntityType.WANDERING_TRADER) {
+            wanderingTrades.getLog().warn("wt in portal");
+            traderBlacklistCache.add(e.getEntity().getUniqueId());
+        }
+    }
+
     @EventHandler
     public void onSpawn(CreatureSpawnEvent e) {
         if (e.getEntityType() == EntityType.WANDERING_TRADER) {
+            wanderingTrades.getLog().warn(e.getSpawnReason().toString());
             Bukkit.getScheduler().runTaskLater(wanderingTrades, () -> addTrades((WanderingTrader) e.getEntity(), false), 1L);
         }
     }
