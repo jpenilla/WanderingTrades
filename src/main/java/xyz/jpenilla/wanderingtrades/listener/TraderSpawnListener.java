@@ -35,7 +35,6 @@ public class TraderSpawnListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityPortal(EntityPortalEvent e) {
         if (e.getEntityType() == EntityType.WANDERING_TRADER) {
-            wanderingTrades.getLog().warn("wt in portal");
             traderBlacklistCache.add(e.getEntity().getUniqueId());
         }
     }
@@ -43,7 +42,6 @@ public class TraderSpawnListener implements Listener {
     @EventHandler
     public void onSpawn(CreatureSpawnEvent e) {
         if (e.getEntityType() == EntityType.WANDERING_TRADER) {
-            wanderingTrades.getLog().warn(e.getSpawnReason().toString());
             Bukkit.getScheduler().runTaskLater(wanderingTrades, () -> addTrades((WanderingTrader) e.getEntity(), false), 1L);
         }
     }
