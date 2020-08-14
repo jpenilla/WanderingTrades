@@ -32,6 +32,10 @@ public class StoredPlayers {
         OfflinePlayer[] op = Bukkit.getOfflinePlayers().clone();
 
         for (OfflinePlayer offlinePlayer : op) {
+            if (offlinePlayer.getName() == null || "".equals(offlinePlayer.getName())) {
+                continue;
+            }
+
             long lastLogout = offlinePlayer.getLastPlayed();
             LocalDateTime logout = Instant.ofEpochMilli(lastLogout)
                     .atZone(ZoneId.systemDefault())
