@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of what the bug is. Any logs should not be truncated (include the whole log, not just a small portion) and should be uploaded to a paste service like [paste.gg](https://paste.gg)
 
 **To Reproduce**
 Steps to reproduce the behavior:
