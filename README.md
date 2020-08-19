@@ -1,22 +1,11 @@
-# WanderingTrades ![WanderingTrades](https://github.com/jmanpenilla/WanderingTrades/workflows/WanderingTrades/badge.svg?branch=master)
+![logo](https://i.imgur.com/Ph27d08.png)
+# WanderingTrades ![WanderingTrades](https://github.com/jmanpenilla/WanderingTrades/workflows/WanderingTrades/badge.svg?branch=master) ![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fjenkins.jpenilla.xyz%2Fjob%2FWanderingTrades%2F&label=Jenkins)
 * [bStats](https://bstats.org/plugin/bukkit/WanderingTrades/7597)
 * [Spigot Resource Page](https://www.spigotmc.org/resources/wanderingtrades.79068/)
 * [Discord](https://discord.gg/g7CZdxt)
 
 
-## Summary
+## Building
 
-* WanderingTrades is a plugin for [Spigot](https://www.spigotmc.org/) Minecraft Servers (also works on [Paper](https://www.papermc.io/))
-* Adds trades defined in config files to wandering traders. Config files are located in ```plugins/WanderingTraders/trades``` in your server. You may create as many as you like. If you have no configs, an ```example.yml``` config file will be created for you.
-* Randomization options
-* Supports enchantments, and custom player heads
-* Commands: `````/wanderingtrades`````, `````/wanderingtrades reload````` (requires ```wanderingtrades.reload``` permission)
-* [VanillaTweaks](https://vanillatweaks.net) microblocks config: [microblocks.yml](https://gist.github.com/jmanpenilla/56120245992a7c4099c13b798c94b5e0)  (Place in ```plugins/WanderingTrades/trades```)
-* Default config file [config.yml](https://github.com/jmanpenilla/WanderingTrades/blob/master/src/main/resources/config.yml)
-* This is very outdated, see the Spigot Resource Page for a more up to date overview
-
-
-## How to compile
-
-1. Clone and cd into this repository ```git clone https://github.com/jmanpenilla/WanderingTrades.git && cd WanderingTrades```
-2. Run ```mvn clean install```
+1. ``git clone https://github.com/jmanpenilla/WanderingTrades.git && cd WanderingTrades``
+2. ``gradle clean shadowJar``
