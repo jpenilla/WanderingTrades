@@ -140,13 +140,13 @@ public class TradeConfigEditGui extends GuiHolder {
                         WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getRandomAmount()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
                         return "";
                     })
-                    .onValidateInput(this::onValidateIntGT0)
+                    .onValidateInput(TradeConfigEditGui::validateIntRange)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        t.setRandomAmount(Integer.parseInt(s));
+                        t.setRandomAmount(s);
                         t.save(tradeConfig);
                         WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
@@ -233,5 +233,37 @@ public class TradeConfigEditGui extends GuiHolder {
 
     public void reOpen(Player player) {
         Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.getInstance(), () -> new TradeConfigEditGui(tradeConfig).open(player), 1L);
+    }
+
+    public static boolean validateIntRange(Player p, String s) {
+        if (s.contains(":")) {
+            try {
+                String[] split = s.split(":");
+                if (validateInt(null, split[0]) && validateInt(null, split[1])) {
+                    return true;
+                } else {
+                    WanderingTrades.getInstance().getChat().sendParsed(p, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                    return false;
+                }
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            return validateInt(p, s);
+        }
+    }
+
+    public static boolean validateInt(Player player, String input) {
+        try {
+            int i = Integer.parseInt(input);
+            if (i < 0) {
+                WanderingTrades.getInstance().getChat().sendParsed(player, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_NUMBER_GTE_0));
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            WanderingTrades.getInstance().getChat().sendParsed(player, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+            return false;
+        }
+        return true;
     }
 }

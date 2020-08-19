@@ -229,13 +229,13 @@ public class PlayerHeadConfigGui extends TradeGui {
                         WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.getPlayerHeadsFromServerAmount()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
                         return "";
                     })
-                    .onValidateInput(this::onValidateIntGT0)
+                    .onValidateInput(TradeConfigEditGui::validateIntRange)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        config.setPlayerHeadsFromServerAmount(Integer.parseInt(s));
+                        config.setPlayerHeadsFromServerAmount(s);
                         config.save();
                         WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);

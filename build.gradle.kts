@@ -66,6 +66,11 @@ val autoRelocate by tasks.register<ConfigureShadowRelocation>("configureShadowRe
 }
 
 tasks {
+    compileJava {
+        options.compilerArgs.add("-parameters")
+        options.isFork = true
+        options.forkOptions.executable = "javac"
+    }
     withType<ShadowJar> {
         archiveClassifier.set("")
         archiveFileName.set("$projectName-${project.version}.jar")

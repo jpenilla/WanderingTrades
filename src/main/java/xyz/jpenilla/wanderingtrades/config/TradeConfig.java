@@ -16,6 +16,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @FieldNameConstants
 public class TradeConfig {
@@ -27,7 +28,7 @@ public class TradeConfig {
     @Getter @Setter
     private boolean enabled;
     @Getter @Setter
-    private int randomAmount;
+    private String randomAmount;
     private List<MerchantRecipe> allTrades;
     @Getter @Setter
     private double chance;
@@ -47,7 +48,7 @@ public class TradeConfig {
     public void load() {
         allTrades = readTrades(file);
         randomized = file.getBoolean(Fields.randomized);
-        randomAmount = file.getInt(Fields.randomAmount);
+        randomAmount = file.getString(Fields.randomAmount);
         enabled = file.getBoolean(Fields.enabled);
         chance = file.getDouble(Fields.chance);
         invincible = file.getBoolean(Fields.invincible, false);
@@ -215,7 +216,7 @@ public class TradeConfig {
         ArrayList<MerchantRecipe> h = new ArrayList<>();
         if (enabled || bypassDisabled) {
             if (randomized) {
-                h.addAll(pickTrades(allTrades, randomAmount));
+                h.addAll(pickTrades(allTrades, getRandAmount()));
             } else {
                 h.addAll(allTrades);
             }
@@ -224,6 +225,15 @@ public class TradeConfig {
             return plugin.getMcRPG().replacePlaceholders(h);
         } else {
             return h;
+        }
+    }
+
+    public int getRandAmount() {
+        if (randomAmount.contains(":")) {
+            String[] ints = randomAmount.split(":");
+            return ThreadLocalRandom.current().nextInt(Integer.parseInt(ints[0]), Integer.parseInt(ints[1]));
+        } else {
+            return Integer.parseInt(randomAmount);
         }
     }
 }

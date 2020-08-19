@@ -85,14 +85,15 @@ public class StoredPlayers {
     public ArrayList<MerchantRecipe> getPlayerHeadsFromServer() {
         ArrayList<UUID> selectedPlayers = new ArrayList<>();
         int count = 0;
+        final int amount = wanderingTrades.getCfg().getPlayerHeadConfig().getRandAmount();
         UUID[] UUIDs = players.keySet().toArray(new UUID[0]);
-        while (selectedPlayers.size() < wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount()) {
+        while (selectedPlayers.size() < amount) {
             UUID u = UUIDs[ThreadLocalRandom.current().nextInt(0, players.size())];
             if (!selectedPlayers.contains(u)) {
                 selectedPlayers.add(u);
             }
             count++;
-            if (count > 10 * wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerAmount()) {
+            if (count > 10 * amount) {
                 break;
             }
         }

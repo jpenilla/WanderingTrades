@@ -10,6 +10,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @FieldNameConstants
 public class PlayerHeadConfig {
@@ -26,7 +27,7 @@ public class PlayerHeadConfig {
     @Getter @Setter
     private double playerHeadsFromServerChance;
     @Getter @Setter
-    private int playerHeadsFromServerAmount;
+    private String playerHeadsFromServerAmount;
     @Getter @Setter
     private int headsPerTrade;
     @Getter @Setter
@@ -52,7 +53,7 @@ public class PlayerHeadConfig {
     public void load() {
         playerHeadsFromServer = config.getBoolean(Fields.playerHeadsFromServer);
         playerHeadsFromServerChance = config.getDouble(Fields.playerHeadsFromServerChance);
-        playerHeadsFromServerAmount = config.getInt(Fields.playerHeadsFromServerAmount);
+        playerHeadsFromServerAmount = config.getString(Fields.playerHeadsFromServerAmount);
         days = config.getInt(Fields.days);
         if (config.getInt(prefix + Fields.maxUses) != 0) {
             maxUses = config.getInt(prefix + Fields.maxUses);
@@ -100,5 +101,14 @@ public class PlayerHeadConfig {
         }
 
         load();
+    }
+
+    public int getRandAmount() {
+        if (playerHeadsFromServerAmount.contains(":")) {
+            String[] ints = playerHeadsFromServerAmount.split(":");
+            return ThreadLocalRandom.current().nextInt(Integer.parseInt(ints[0]), Integer.parseInt(ints[1]));
+        } else {
+            return Integer.parseInt(playerHeadsFromServerAmount);
+        }
     }
 }
