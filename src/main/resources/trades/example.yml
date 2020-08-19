@@ -13,6 +13,8 @@ randomized: true
 
 # if the above is true, how many random
 # trades to add
+# may be a number, or a range for random selection
+#   range example: " randomAmount: '0:5' " -> will pick a random number 0 to 5
 randomAmount: 2
 
 # if true, a trader spawned with this config by command

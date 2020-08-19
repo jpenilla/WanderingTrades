@@ -1,5 +1,6 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.apache.commons.io.output.ByteArrayOutputStream
 
 plugins {
     `java-library`
@@ -18,7 +19,7 @@ configurations.all {
 
 val projectName = "WanderingTrades"
 group = "xyz.jpenilla"
-version = "1.6.4+{BUILD_NUMBER}-SNAPSHOT"
+version = "1.6.4.1+${getLastCommitHash()}-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -77,4 +78,13 @@ tasks {
         dependsOn(autoRelocate)
         minimize()
     }
+}
+
+fun getLastCommitHash(): String {
+    val byteOut = ByteArrayOutputStream()
+    project.exec {
+        commandLine = listOf("git", "rev-parse", "--short", "HEAD")
+        standardOutput = byteOut
+    }
+    return byteOut.toString().trim()
 }
