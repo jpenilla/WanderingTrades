@@ -19,6 +19,8 @@ playerHeadsFromServerChance: 0.80
 # WARNING!!! THIS MUST BE EQUAL TO OR BELOW THE AMOUNT OF PLAYERS
 #     THAT HAVE EVER LOGGED INTO YOUR SERVER!
 # recommended range [1 - 4]
+# may be a number, or a range for random selection
+#   range example: " randomAmount: '0:5' " -> will pick a random number 0 to 5
 playerHeadsFromServerAmount: 1
 
 # usernames listed here will not be used for player head trades

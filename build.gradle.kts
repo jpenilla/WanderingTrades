@@ -18,7 +18,7 @@ configurations.all {
 
 val projectName = "WanderingTrades"
 group = "xyz.jpenilla"
-version = "1.6.3.3+{BUILD_NUMBER}-SNAPSHOT"
+version = "1.6.4+{BUILD_NUMBER}-SNAPSHOT"
 
 repositories {
     mavenLocal()
