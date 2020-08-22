@@ -82,7 +82,7 @@ tasks {
 
 fun getLastCommitHash(): String {
     val byteOut = ByteArrayOutputStream()
-    project.exec {
+    exec {
         commandLine = listOf("git", "rev-parse", "--short", "HEAD")
         standardOutput = byteOut
     }
