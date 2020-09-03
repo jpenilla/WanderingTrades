@@ -5,7 +5,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("kr.entree.spigradle") version "2.1.1"
+    id("kr.entree.spigradle") version "2.2.3"
 }
 
 java {
