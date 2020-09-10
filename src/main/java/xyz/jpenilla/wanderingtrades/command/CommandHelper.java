@@ -4,6 +4,7 @@ import co.aikar.commands.BukkitMessageFormatter;
 import co.aikar.commands.CommandReplacements;
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,14 +40,10 @@ public class CommandHelper {
     }
 
     public void reload() {
-        mgr.getCommandCompletions().registerAsyncCompletion("wtConfigs", c -> {
-            ArrayList<String> completions = new ArrayList<>();
-            Arrays.stream(plugin.getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> completions.add((String) completion));
-            return completions;
-        });
+        mgr.getCommandCompletions().registerAsyncCompletion("wtConfigs", c -> ImmutableList.copyOf(plugin.getCfg().getTradeConfigs().keySet()));
 
         mgr.getCommandCompletions().registerCompletion("angles", c -> {
-            ArrayList<String> completions = new ArrayList<>(Arrays.asList(
+            List<String> completions = new ArrayList<>(Arrays.asList(
                     "30", "45", "60", "90", "120", "135", "150", "180",
                     "210", "225", "240", "270", "300", "315", "330", "360"));
             if (c.getSender() instanceof Player) {

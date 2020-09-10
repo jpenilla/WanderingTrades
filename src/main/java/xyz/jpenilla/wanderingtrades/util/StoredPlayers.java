@@ -1,8 +1,8 @@
 package xyz.jpenilla.wanderingtrades.util;
 
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -14,14 +14,13 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class StoredPlayers {
     private final WanderingTrades wanderingTrades;
-    @Getter private final HashMap<UUID, MerchantRecipe> players = new HashMap<>();
+    @Getter private final Map<UUID, MerchantRecipe> players = new HashMap<>();
 
     public StoredPlayers(WanderingTrades wanderingTrades) {
         this.wanderingTrades = wanderingTrades;
@@ -29,36 +28,28 @@ public class StoredPlayers {
 
     public void load() {
         players.clear();
-        OfflinePlayer[] op = Bukkit.getOfflinePlayers().clone();
-
-        for (OfflinePlayer offlinePlayer : op) {
-            if (offlinePlayer.getName() == null || "".equals(offlinePlayer.getName())) {
-                continue;
-            }
-
-            long lastLogout = offlinePlayer.getLastPlayed();
-            LocalDateTime logout = Instant.ofEpochMilli(lastLogout)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
-            LocalDateTime cutoff = LocalDateTime.now().minusDays(wanderingTrades.getCfg().getPlayerHeadConfig().getDays());
-            if (logout.isAfter(cutoff) || wanderingTrades.getCfg().getPlayerHeadConfig().getDays() == -1) {
-                if (!TextUtil.containsCaseInsensitive(offlinePlayer.getName(), wanderingTrades.getCfg().getPlayerHeadConfig().getUsernameBlacklist())) {
+        ImmutableList.copyOf(Bukkit.getOfflinePlayers()).stream()
+                .filter(offlinePlayer -> offlinePlayer.getName() != null && !offlinePlayer.getName().equals("") && !TextUtil.containsCaseInsensitive(offlinePlayer.getName(), wanderingTrades.getCfg().getPlayerHeadConfig().getUsernameBlacklist()))
+                .filter(offlinePlayer -> {
+                    final LocalDateTime logout = Instant.ofEpochMilli(offlinePlayer.getLastSeen()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    final LocalDateTime cutoff = LocalDateTime.now().minusDays(wanderingTrades.getCfg().getPlayerHeadConfig().getDays());
+                    return logout.isAfter(cutoff) || wanderingTrades.getCfg().getPlayerHeadConfig().getDays() == -1;
+                })
+                .forEach(offlinePlayer -> {
                     if (!wanderingTrades.isVaultPermissions()) {
                         players.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer.getUniqueId(), offlinePlayer.getName()));
                     } else {
                         if (wanderingTrades.getCfg().getPlayerHeadConfig().isPermissionWhitelist()) {
                             Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
                                 if (wanderingTrades.getVault().getPerms().playerHas(null, offlinePlayer, "wanderingtrades.headavailable")) {
-                                    players.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer.getUniqueId(), offlinePlayer.getName()));
+                                    Bukkit.getScheduler().runTask(wanderingTrades, () -> players.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer.getUniqueId(), offlinePlayer.getName())));
                                 }
                             });
                         } else {
                             players.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer.getUniqueId(), offlinePlayer.getName()));
                         }
                     }
-                }
-            }
-        }
+                });
     }
 
     private MerchantRecipe getHeadRecipe(UUID uuid, String name) {
@@ -82,8 +73,8 @@ public class StoredPlayers {
         return recipe;
     }
 
-    public ArrayList<MerchantRecipe> getPlayerHeadsFromServer() {
-        ArrayList<UUID> selectedPlayers = new ArrayList<>();
+    public List<MerchantRecipe> getPlayerHeadsFromServer() {
+        final Collection<UUID> selectedPlayers = new LinkedHashSet<>();
         int count = 0;
         final int amount = wanderingTrades.getCfg().getPlayerHeadConfig().getRandAmount();
         UUID[] UUIDs = players.keySet().toArray(new UUID[0]);
@@ -97,12 +88,7 @@ public class StoredPlayers {
                 break;
             }
         }
-
-        ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
-        for (UUID player : selectedPlayers) {
-            newTrades.add(players.get(player));
-        }
-        return newTrades;
+        return selectedPlayers.stream().map(players::get).collect(Collectors.toList());
     }
 
     private void addHead(Player player) {
