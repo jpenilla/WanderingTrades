@@ -4,8 +4,6 @@ import kr.entree.spigradle.annotations.PluginMain;
 import lombok.Getter;
 import lombok.Setter;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.jpenilla.jmplib.BasePlugin;
 import xyz.jpenilla.wanderingtrades.command.CommandHelper;
 import xyz.jpenilla.wanderingtrades.compatability.McRPGHook;
@@ -41,7 +39,6 @@ public final class WanderingTrades extends BasePlugin {
     public void onPluginEnable() {
         instance = this;
         log = new Log(this);
-        log.info("[STARTING]");
 
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {
             vault = new VaultHook(this);
@@ -57,33 +54,19 @@ public final class WanderingTrades extends BasePlugin {
         lang = new LangConfig(this);
 
         storedPlayers = new StoredPlayers(this);
-        class RefreshPlayers extends BukkitRunnable {
-            @Override
-            public void run() {
-                storedPlayers.load();
-            }
-        }
-        new RefreshPlayers().runTaskTimer(this, 0L, 20L * 60L * 60L * 12L);
+        getServer().getScheduler().runTaskTimer(this, storedPlayers::load, 0L, 864000L);
 
         commandHelper = new CommandHelper(this);
 
         listeners = new Listeners(this);
         listeners.register();
+        new UpdateChecker(this, "jmanpenilla/WanderingTrades").checkVersion();
 
-        new UpdateChecker(this, 79068).getVersion(version ->
-                UpdateChecker.updateCheck(version, true));
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> new UpdateChecker(instance, 79068).getVersion(UpdateChecker::updateCheck), 20L * 60L * 30L, 20L * 60L * 120L);
-
-        int pluginId = 7597;
-        Metrics metrics = new Metrics(this, pluginId);
+        Metrics metrics = new Metrics(this, 7597);
         metrics.addCustomChart(new Metrics.SimplePie("player_heads", () -> cfg.getPlayerHeadConfig().isPlayerHeadsFromServer() ? "On" : "Off"));
         metrics.addCustomChart(new Metrics.SimplePie("player_heads_per_trader", () -> String.valueOf(cfg.getPlayerHeadConfig().getPlayerHeadsFromServerAmount())));
         metrics.addCustomChart(new Metrics.SimplePie("plugin_language", () -> cfg.getLanguage()));
         metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.getTradeConfigs().size())));
-        log.info("[ON]");
-    }
-
-    @Override
-    public void onDisable() {
+        log.info("Enabled");
     }
 }

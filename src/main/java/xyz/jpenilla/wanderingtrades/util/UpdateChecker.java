@@ -1,54 +1,56 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Consumer;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import org.apache.commons.io.IOUtils;
+import org.bukkit.Bukkit;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.Scanner;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class UpdateChecker {
-
     private final WanderingTrades plugin;
-    private final int resourceId;
+    private final JsonParser parser = new JsonParser();
+    private final String githubRepo;
 
-    public UpdateChecker(WanderingTrades plugin, int resourceId) {
+    public UpdateChecker(WanderingTrades plugin, String githubRepo) {
         this.plugin = plugin;
-        this.resourceId = resourceId;
+        this.githubRepo = githubRepo;
     }
 
-    public static void updateCheck(String version) {
-        updateCheck(version, false);
-    }
-
-    public static void updateCheck(String version, boolean startup) {
-        if (WanderingTrades.getInstance().getDescription().getVersion().equalsIgnoreCase(version)) {
-            if (startup) {
-                WanderingTrades.getInstance().getLog().info("You are running the latest version of " + WanderingTrades.getInstance().getName() + "! :)");
+    public void checkVersion() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            final JsonArray result;
+            try {
+                result = parser.parse(new String(IOUtils.toByteArray(new URL("https://api.github.com/repos/" + githubRepo + "/releases").openStream()))).getAsJsonArray();
+            } catch (IOException exception) {
+                plugin.getLogger().info("Cannot look for updates: " + exception.getMessage());
+                return;
             }
-        } else if (WanderingTrades.getInstance().getDescription().getVersion().contains("SNAPSHOT")) {
-            WanderingTrades.getInstance().getLog().info("[!] You are running a development build of " + WanderingTrades.getInstance().getName() + " (" + WanderingTrades.getInstance().getDescription().getVersion() + ") [!]");
-        } else {
-            WanderingTrades.getInstance().getLog().info("[!] You are running an outdated version of " + WanderingTrades.getInstance().getName() + " (" + WanderingTrades.getInstance().getDescription().getVersion() + ") [!]");
-            WanderingTrades.getInstance().getLog().info("Version " + version + " is available at https://www.spigotmc.org/resources/wanderingtrades.79068/");
-        }
-    }
 
-    public void getVersion(final Consumer<String> consumer) {
-        class GetVersionTask extends BukkitRunnable {
-            @Override
-            public void run() {
-                try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
-                    if (scanner.hasNext()) {
-                        consumer.accept(scanner.next());
-                    }
-                } catch (IOException exception) {
-                    plugin.getLog().info("Cannot look for updates: " + exception.getMessage());
-                }
+            final Map<String, String> versionMap = new LinkedHashMap<>();
+            result.forEach(element -> versionMap.put(element.getAsJsonObject().get("tag_name").getAsString(), element.getAsJsonObject().get("html_url").getAsString()));
+            final List<String> versionList = new LinkedList<>(versionMap.keySet());
+            final String currentVersion = "v" + plugin.getDescription().getVersion();
+            if (versionList.get(0).equals(currentVersion)) {
+                plugin.getLogger().info("You are running the latest version of " + plugin.getName() + "! :)");
+                return;
             }
-        }
-        new GetVersionTask().runTaskAsynchronously(plugin);
+            if (currentVersion.contains("SNAPSHOT")) {
+                plugin.getLogger().info("You are running a development build of " + plugin.getName() + "! (" + currentVersion + ")");
+                plugin.getLogger().info("The latest official release is " + versionList.get(0));
+                return;
+            }
+            final int versionsBehind = versionList.indexOf(currentVersion);
+            plugin.getLogger().info("There is an update available for " + plugin.getName() + "!");
+            plugin.getLogger().info("You are running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "many" : versionsBehind) + " versions outdated.");
+            plugin.getLogger().info("Download the latest version, " + versionList.get(0) + " from GitHub at the link below:");
+            plugin.getLogger().info(versionMap.get(versionList.get(0)));
+        });
     }
 }
