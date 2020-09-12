@@ -74,13 +74,21 @@ public class TradeConfig {
     }
 
     public static ItemStack getStack(FileConfiguration config, String key) {
-        ItemBuilder itemBuilder;
+        ItemBuilder itemBuilder = null;
         boolean McRPG = false;
 
-        try {
-            itemBuilder = new ItemBuilder(ItemStack.deserialize(config.getConfigurationSection(key + ".itemStack").getValues(true)));
-        } catch (NullPointerException e) {
-            itemBuilder = null;
+        if (WanderingTrades.getInstance().isPaperServer() && WanderingTrades.getInstance().getMajorMinecraftVersion() > 14) {
+            try {
+                itemBuilder = new ItemBuilder(ItemStack.deserializeBytes((byte[]) config.get(key + ".itemStackAsBytes")));
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (itemBuilder == null) {
+            try {
+                itemBuilder = new ItemBuilder(ItemStack.deserialize(config.getConfigurationSection(key + ".itemStack").getValues(true)));
+            } catch (NullPointerException ignored) {
+            }
         }
 
         if (itemBuilder == null && config.getString(key + ".material") != null) {
@@ -154,7 +162,11 @@ public class TradeConfig {
         if (i1 != null) {
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
-            file.set(child + ".result.itemStack", result.serialize());
+            if (plugin.isPaperServer() && plugin.getMajorMinecraftVersion() > 14) {
+                file.set(child + ".result.itemStackAsBytes", result.serializeAsBytes());
+            } else {
+                file.set(child + ".result.itemStack", result.serialize());
+            }
             writeIngredient(tradeName, 1, i1);
             writeIngredient(tradeName, 2, i2);
             save(configName);
@@ -165,7 +177,11 @@ public class TradeConfig {
         if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
             String child = parent + "." + tradeName;
             if (is != null) {
-                file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
+                if (plugin.isPaperServer() && plugin.getMajorMinecraftVersion() > 14) {
+                    file.set(child + ".ingredients." + i + ".itemStackAsBytes", is.serializeAsBytes());
+                } else {
+                    file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
+                }
             } else if (i == 2) {
                 file.set(child + ".ingredients.2", null);
             }

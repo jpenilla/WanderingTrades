@@ -1,12 +1,13 @@
 package xyz.jpenilla.wanderingtrades.util;
 
+import com.google.common.base.Charsets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ public class UpdateChecker {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             final JsonArray result;
             try {
-                result = parser.parse(new String(IOUtils.toByteArray(new URL("https://api.github.com/repos/" + githubRepo + "/releases").openStream()))).getAsJsonArray();
+                result = parser.parse(new InputStreamReader(new URL("https://api.github.com/repos/" + githubRepo + "/releases").openStream(), Charsets.UTF_8)).getAsJsonArray();
             } catch (IOException exception) {
                 plugin.getLogger().info("Cannot look for updates: " + exception.getMessage());
                 return;
