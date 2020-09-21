@@ -188,8 +188,8 @@ public class TradeConfig {
         }
     }
 
-    private ArrayList<MerchantRecipe> readTrades(FileConfiguration config) {
-        ArrayList<MerchantRecipe> tradeList = new ArrayList<>();
+    private List<MerchantRecipe> readTrades(FileConfiguration config) {
+        List<MerchantRecipe> tradeList = new ArrayList<>();
         config.getConfigurationSection(parent).getKeys(false).forEach(key -> {
             String prefix = parent + "." + key + ".";
 
@@ -228,8 +228,8 @@ public class TradeConfig {
         return copy.subList(0, amount);
     }
 
-    public ArrayList<MerchantRecipe> getTrades(boolean bypassDisabled) {
-        ArrayList<MerchantRecipe> h = new ArrayList<>();
+    public List<MerchantRecipe> getTrades(boolean bypassDisabled) {
+        List<MerchantRecipe> h = new ArrayList<>();
         if (enabled || bypassDisabled) {
             if (randomized) {
                 h.addAll(pickTrades(allTrades, getRandAmount()));

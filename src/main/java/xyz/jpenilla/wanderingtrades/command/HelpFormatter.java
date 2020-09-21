@@ -111,7 +111,7 @@ public class HelpFormatter extends CommandHelpFormatter {
     }
 
     private Map<String, String> arrayToMap(String[] list) {
-        HashMap<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         String entry = "";
         boolean first = true;
 

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class McRPGHook {
-    public ArrayList<MerchantRecipe> replacePlaceholders(List<MerchantRecipe> recipes) {
-        ArrayList<MerchantRecipe> fixed = new ArrayList<>();
+    public List<MerchantRecipe> replacePlaceholders(List<MerchantRecipe> recipes) {
+        List<MerchantRecipe> fixed = new ArrayList<>();
         recipes.forEach(recipe -> {
             List<ItemStack> ingredients = recipe.getIngredients();
             ItemStack result = recipe.getResult();

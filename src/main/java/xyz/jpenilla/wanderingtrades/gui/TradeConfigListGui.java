@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 
 public class TradeConfigListGui extends PaginatedGui {
     private final ItemStack newConfig = new ItemBuilder(Material.WRITABLE_BOOK).setName(lang.get(Lang.GUI_TC_LIST_ADD_CONFIG)).setLore(lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE)).build();
-    private final ArrayList<String> configNames = new ArrayList<>();
+    private final List<String> configNames = new ArrayList<>();
 
     public TradeConfigListGui() {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_TITLE), 36);
@@ -29,18 +29,18 @@ public class TradeConfigListGui extends PaginatedGui {
     }
 
     public List<ItemStack> getListItems() {
-        ArrayList<ItemStack> items = new ArrayList<>();
-        ArrayList<String> configs = new ArrayList<>();
+        List<ItemStack> items = new ArrayList<>();
+        List<String> configs = new ArrayList<>();
         Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configs.add((String) completion));
         for (String config : configs) {
             TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(config);
-            ArrayList<String> lore = new ArrayList<>();
+            List<String> lore = new ArrayList<>();
             t.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> lore.add("<gray><italic>  " + key));
             String[] lores = new String[lore.size()];
             for (int j = 0; j < lore.size(); j++) {
                 lores[j] = lore.get(j);
             }
-            ArrayList<String> finalLores = new ArrayList<>();
+            List<String> finalLores = new ArrayList<>();
             for (int x = 0; x < 10; ++x) {
                 try {
                     finalLores.add("<gray>" + lores[x]);

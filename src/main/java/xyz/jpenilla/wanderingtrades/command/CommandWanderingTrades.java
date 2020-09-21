@@ -129,7 +129,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
     private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {
         try {
-            ArrayList<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
+            List<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
             final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
             wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wt.getUniqueId());
             wt.setRecipes(recipes);
@@ -162,7 +162,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
     private void summonVillagerTrader(CommandSender sender, String tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
         try {
-            ArrayList<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
+            List<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
             final Villager v = (Villager) loc.getWorld().spawnEntity(loc, EntityType.VILLAGER);
             v.setVillagerType(type);
             v.setProfession(profession);

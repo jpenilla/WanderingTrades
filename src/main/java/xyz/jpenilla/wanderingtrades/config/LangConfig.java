@@ -5,14 +5,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.stream.Collectors;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public class LangConfig {
     private final WanderingTrades plugin;
-    private final HashMap<Lang, String> messages = new HashMap<>();
+    private final Map<Lang, String> messages = new EnumMap<>(Lang.class);
 
     public LangConfig(WanderingTrades plugin) {
         this.plugin = plugin;
@@ -20,8 +20,14 @@ public class LangConfig {
     }
 
     public void load() {
-        plugin.saveResource("lang/" + plugin.getCfg().getLanguage() + ".yml", plugin.getCfg().isUpdateLang());
         File f = new File(plugin.getDataFolder() + "/lang/" + plugin.getCfg().getLanguage() + ".yml");
+        if (plugin.getCfg().isUpdateLang() || !f.exists()) {
+            try {
+                plugin.saveResource("lang/" + plugin.getCfg().getLanguage() + ".yml", true);
+            } catch (IllegalArgumentException ignored) {
+                plugin.getLog().warn("Invalid/missing language file name");
+            }
+        }
         FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
         messages.clear();
@@ -37,7 +43,7 @@ public class LangConfig {
         }
     }
 
-    public ArrayList<String> getList(Lang key) {
-        return Arrays.stream(get(key).split("\\|")).collect(Collectors.toCollection(ArrayList::new));
+    public List<String> getList(Lang key) {
+        return Arrays.asList(get(key).split("\\|"));
     }
 }

@@ -48,13 +48,13 @@ public class TraderSpawnListener implements Listener {
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
         if (!traderBlacklistCache.contains(wanderingTrader.getUniqueId())) {
-            ArrayList<MerchantRecipe> newTrades = new ArrayList<>();
+            List<MerchantRecipe> newTrades = new ArrayList<>();
             Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
                 if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
                     newTrades.addAll(wanderingTrades.getStoredPlayers().getPlayerHeadsFromServer());
                 }
                 if (wanderingTrades.getCfg().isAllowMultipleSets()) {
-                    ArrayList<TradeConfig> m = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().values());
+                    List<TradeConfig> m = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().values());
                     for (TradeConfig config : m) {
                         if (randBoolean(config.getChance())) {
                             newTrades.addAll(config.getTrades(false));
