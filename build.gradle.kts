@@ -55,7 +55,7 @@ spigot {
     name = projectName
     apiVersion = "1.14"
     description = "Customizable Trades for Wandering Traders. Inspired by Vanilla Tweaks"
-    website = "https://www.spigotmc.org/resources/wandering-trades.79068/"
+    website = "https://github.com/jmanpenilla/WanderingTrades"
     authors("jmp")
     softDepends("McRPG", "WorldEdit", "WorldGuard", "Vault", "Prisma", "PlaceholderAPI")
 }
