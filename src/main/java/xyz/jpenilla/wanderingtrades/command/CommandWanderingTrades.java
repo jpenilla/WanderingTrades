@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.annotation.*;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,8 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
@@ -23,9 +26,13 @@ import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 import xyz.jpenilla.wanderingtrades.util.Constants;
+import xyz.jpenilla.wanderingtrades.util.Crafty;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @CommandAlias("wanderingtrades|wt")
 public class CommandWanderingTrades extends BaseCommand {
@@ -127,6 +134,44 @@ public class CommandWanderingTrades extends BaseCommand {
         return location;
     }
 
+    private static final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
+    //private static final BungeeCordComponentSerializer bungeeSerializer = BungeeCordComponentSerializer.get();
+
+    /**
+     * Set the custom name of an entity from a MiniMessage string using reflection. Falls back to Bukkit api using legacy text.
+     *
+     * @param entity      The Bukkit entity
+     * @param miniMessage The MiniMessage string. Clears the name if empty or null
+     */
+    private void setCustomName(@NotNull Entity entity, @Nullable String miniMessage) {
+        if (miniMessage == null || miniMessage.equals("")) {
+            entity.setCustomName(null);
+            return;
+        }
+        // TODO: prefer paper api to set name with components once the api exists https://github.com/PaperMC/Paper/pull/4357
+        //if (wanderingTrades.isPaperServer() && wanderingTrades.getMajorMinecraftVersion() > 15) {
+        //    entity.setCustomNameComponent(bungeeSerializer.serialize(wanderingTrades.getMiniMessage().parse(miniMessage)));
+        //    return;
+        //}
+        try {
+            Class<?> _CraftEntity = Crafty.needCraftClass("entity.CraftEntity");
+            Class<?> _Entity = Crafty.needNmsClass("Entity");
+            Class<?> _IChatBaseComponent = Crafty.needNmsClass("IChatBaseComponent");
+            Class<?> _ChatSerializer = Crafty.needNmsClass("IChatBaseComponent$ChatSerializer");
+            MethodHandle _getHandle = Crafty.findMethod(_CraftEntity, "getHandle", _Entity);
+            Method _jsonToComponent = _ChatSerializer.getMethod("a", String.class);
+            Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
+
+            Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
+            Object customName = Objects.requireNonNull(_jsonToComponent).invoke(null, gsonComponentSerializer.serialize(wanderingTrades.getMiniMessage().parse(miniMessage)));
+
+            _setCustomName.invoke(nmsEntity, customName);
+        } catch (Throwable throwable) {
+            wanderingTrades.getLog().debug("Failed to set entity name with reflection: " + throwable.getMessage());
+            entity.setCustomName(MiniMessageUtil.miniMessageToLegacy(miniMessage));
+        }
+    }
+
     private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {
         try {
             List<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
@@ -139,7 +184,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
             TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
             if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                wt.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
+                setCustomName(wt, t.getCustomName());
                 wt.setCustomNameVisible(true);
             }
             if (t.isInvincible()) {
@@ -174,7 +219,7 @@ public class CommandWanderingTrades extends BaseCommand {
 
             TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
             if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                v.setCustomName(MiniMessageUtil.miniMessageToLegacy(t.getCustomName()));
+                setCustomName(v, t.getCustomName());
                 v.setCustomNameVisible(true);
             }
             if (t.isInvincible()) {
@@ -202,7 +247,7 @@ public class CommandWanderingTrades extends BaseCommand {
         for (Entity e : player.getNearbyEntities(10, 10, 10)) {
             if (e instanceof LivingEntity) {
                 if (isLookingAt(player, (LivingEntity) e)) {
-                    e.setCustomName(MiniMessageUtil.miniMessageToLegacy(name));
+                    setCustomName(e, name);
                     e.setCustomNameVisible(true);
                 }
             }
