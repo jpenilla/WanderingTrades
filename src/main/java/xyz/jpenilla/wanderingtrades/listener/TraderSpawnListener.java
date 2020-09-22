@@ -14,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
-import xyz.jpenilla.jmplib.BasePlugin;
+import org.jetbrains.annotations.NotNull;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Crafty;
 
@@ -99,21 +99,11 @@ public class TraderSpawnListener implements Listener {
      *
      * @param trader the trader to act on
      */
-    private void resetOffers(AbstractVillager trader) {
+    private void resetOffers(@NotNull AbstractVillager trader) {
         try {
-            Class<?> craftAbstractVillager = Crafty.needCraftClass("entity.CraftAbstractVillager");
-            Class<?> entityVillagerAbstract = Crafty.needNmsClass("EntityVillagerAbstract");
-
-            MethodHandle getHandle = Crafty.findMethod(craftAbstractVillager, "getHandle", entityVillagerAbstract);
-            Object nmsTrader = Objects.requireNonNull(getHandle).bindTo(trader).invoke();
-
-            // Set trades to a new MerchantRecipeList
-            Field trades = Crafty.needField(entityVillagerAbstract, "trades");
-            trades.set(nmsTrader, Crafty.needNmsClass("MerchantRecipeList").newInstance());
-
             // TODO -> Check on new Minecraft Version/NMS Mappings
             String updateTradesMethodName = "eW";
-            switch (BasePlugin.getBasePlugin().getMajorMinecraftVersion()) {
+            switch (wanderingTrades.getMajorMinecraftVersion()) {
                 case 14:
                     updateTradesMethodName = "eh";
                     break;
@@ -125,11 +115,19 @@ public class TraderSpawnListener implements Listener {
                     break;
             }
 
-            // Call update trades method
-            Method resetTrades = entityVillagerAbstract.getDeclaredMethod(updateTradesMethodName);
-            resetTrades.setAccessible(true);
-            resetTrades.invoke(nmsTrader);
+            Class<?> _CraftAbstractVillager = Crafty.needCraftClass("entity.CraftAbstractVillager");
+            Class<?> _EntityVillagerAbstract = Crafty.needNmsClass("EntityVillagerAbstract");
+            MethodHandle _getHandle = Crafty.findMethod(_CraftAbstractVillager, "getHandle", _EntityVillagerAbstract);
+            Method _resetTrades = _EntityVillagerAbstract.getDeclaredMethod(updateTradesMethodName);
+            Field _trades = Crafty.needField(_EntityVillagerAbstract, "trades");
+
+            Object nmsTrader = Objects.requireNonNull(_getHandle).bindTo(trader).invoke();
+            _trades.set(nmsTrader, Crafty.needNmsClass("MerchantRecipeList").newInstance());
+
+            _resetTrades.setAccessible(true);
+            _resetTrades.invoke(nmsTrader);
         } catch (Throwable e) {
+            trader.setRecipes(new ArrayList<>());
             e.printStackTrace();
             wanderingTrades.getLog().warn("Failed to reset trades! Please report this bug to the issue tracker  at " + wanderingTrades.getDescription().getWebsite() + " !");
         }
