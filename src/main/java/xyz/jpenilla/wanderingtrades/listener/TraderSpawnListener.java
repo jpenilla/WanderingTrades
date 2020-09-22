@@ -1,9 +1,11 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
@@ -12,12 +14,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
+import xyz.jpenilla.jmplib.BasePlugin;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.Crafty;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class TraderSpawnListener implements Listener {
@@ -48,51 +54,84 @@ public class TraderSpawnListener implements Listener {
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
         if (!traderBlacklistCache.contains(wanderingTrader.getUniqueId())) {
-            List<MerchantRecipe> newTrades = new ArrayList<>();
             Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
+
+                List<MerchantRecipe> newTrades = new ArrayList<>();
                 if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
                     newTrades.addAll(wanderingTrades.getStoredPlayers().getPlayerHeadsFromServer());
                 }
                 if (wanderingTrades.getCfg().isAllowMultipleSets()) {
-                    List<TradeConfig> m = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().values());
-                    for (TradeConfig config : m) {
+                    ImmutableList.copyOf(wanderingTrades.getCfg().getTradeConfigs().values()).forEach(config -> {
                         if (randBoolean(config.getChance())) {
                             newTrades.addAll(config.getTrades(false));
                         }
-                    }
+                    });
                 } else {
                     List<Pair<String, Double>> weights = new ArrayList<>();
-                    for (Map.Entry<String, TradeConfig> tradeConfig : wanderingTrades.getCfg().getTradeConfigs().entrySet()) {
-                        weights.add(new Pair<>(tradeConfig.getKey(), tradeConfig.getValue().getChance()));
-                    }
-
+                    wanderingTrades.getCfg().getTradeConfigs().forEach((key, value) -> weights.add(new Pair<>(key, value.getChance())));
                     String chosenConfig = new EnumeratedDistribution<>(weights).sample();
-
                     if (chosenConfig != null) {
                         newTrades.addAll(wanderingTrades.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
                     }
                 }
+
                 Bukkit.getScheduler().runTask(wanderingTrades, () -> {
                     if (!refresh) {
                         newTrades.addAll(wanderingTrader.getRecipes());
-                    } /*else { TODO: Find a way to get the vanilla trades
-                        if (!wanderingTrades.getCfg().isRemoveOriginalTrades()) {
-                            ArrayList<MerchantRecipe> newRecipes = new ArrayList<>();
-                            Collection<ItemStack> stacks = wanderingTrader.getLootTable().populateLoot(new Random(), new LootContext.Builder(wanderingTrader.getLocation()).lootedEntity(wanderingTrader).build());
-                            for (ItemStack stack : stacks) {
-                                wanderingTrades.getLog().info(stack.toString());
-                                MerchantRecipe recipe = new MerchantRecipe(stack, 0, 1, true);
-                                recipe.addIngredient(new ItemStack(Material.EMERALD, new Random().nextInt(5)));
-                                newRecipes.add(recipe);
-                            }
-                            newTrades.addAll(newRecipes);
-                        }
-                    }*/
+                    } else if (wanderingTrades.getMajorMinecraftVersion() < 17 && !wanderingTrades.getCfg().isRemoveOriginalTrades()) { // TODO -> Check on new Minecraft Version/NMS Mappings
+                        resetOffers(wanderingTrader);
+                        newTrades.addAll(wanderingTrader.getRecipes());
+                    }
                     wanderingTrader.setRecipes(newTrades);
                 });
+
             });
         } else {
             traderBlacklistCache.remove(wanderingTrader.getUniqueId());
+        }
+    }
+
+    /**
+     * Clear this {@link AbstractVillager}'s offers and acquire new ones.
+     * <p>
+     * Reflection-based implementation of
+     * <a href="https://github.com/pl3xgaming/Purpur/blob/de30a3e5e293a5ece224bac0bb2301095ad6ddbf/patches/api/0016-Villager-resetOffers.patch#L19">Purpur's Villager-resetOffers API</a>
+     *
+     * @param trader the trader to act on
+     */
+    private void resetOffers(AbstractVillager trader) {
+        try {
+            Class<?> craftAbstractVillager = Crafty.needCraftClass("entity.CraftAbstractVillager");
+            Class<?> entityVillagerAbstract = Crafty.needNmsClass("EntityVillagerAbstract");
+
+            MethodHandle getHandle = Crafty.findMethod(craftAbstractVillager, "getHandle", entityVillagerAbstract);
+            Object nmsTrader = Objects.requireNonNull(getHandle).bindTo(trader).invoke();
+
+            // Set trades to a new MerchantRecipeList
+            Field trades = Crafty.needField(entityVillagerAbstract, "trades");
+            trades.set(nmsTrader, Crafty.needNmsClass("MerchantRecipeList").newInstance());
+
+            // TODO -> Check on new Minecraft Version/NMS Mappings
+            String updateTradesMethodName = "eW";
+            switch (BasePlugin.getBasePlugin().getMajorMinecraftVersion()) {
+                case 14:
+                    updateTradesMethodName = "eh";
+                    break;
+                case 15:
+                    updateTradesMethodName = "eC";
+                    break;
+                case 16:
+                    updateTradesMethodName = "eW";
+                    break;
+            }
+
+            // Call update trades method
+            Method resetTrades = entityVillagerAbstract.getDeclaredMethod(updateTradesMethodName);
+            resetTrades.setAccessible(true);
+            resetTrades.invoke(nmsTrader);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            wanderingTrades.getLog().warn("Failed to reset trades! Please report this bug to the issue tracker  at " + wanderingTrades.getDescription().getWebsite() + " !");
         }
     }
 }
