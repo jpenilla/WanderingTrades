@@ -15,8 +15,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.NotNull;
+import xyz.jpenilla.jmplib.Crafty;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.util.Crafty;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;

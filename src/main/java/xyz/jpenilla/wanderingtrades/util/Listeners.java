@@ -3,7 +3,12 @@ package xyz.jpenilla.wanderingtrades.util;
 import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.listener.*;
+import xyz.jpenilla.wanderingtrades.listener.AcquireTradeListener;
+import xyz.jpenilla.wanderingtrades.listener.GuiListener;
+import xyz.jpenilla.wanderingtrades.listener.JoinQuitListener;
+import xyz.jpenilla.wanderingtrades.listener.ProtectTradersListener;
+import xyz.jpenilla.wanderingtrades.listener.RefreshTradesListener;
+import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 
 public class Listeners {
     private final WanderingTrades plugin;
