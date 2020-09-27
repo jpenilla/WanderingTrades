@@ -1,12 +1,20 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import co.aikar.commands.*;
+import co.aikar.commands.CommandHelp;
+import co.aikar.commands.CommandHelpFormatter;
+import co.aikar.commands.CommandIssuer;
+import co.aikar.commands.HelpEntry;
+import co.aikar.commands.PaperCommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class HelpFormatter extends CommandHelpFormatter {
     private final WanderingTrades wanderingTrades;

@@ -44,7 +44,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
     compileOnly("com.github.Eunoians", "McRPG", "1.3.3.0-BETA")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+4-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+5-SNAPSHOT")
     implementation("co.aikar", "acf-paper", "0.5.0-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "1.7")
     implementation("commons-io", "commons-io", "2.7")
