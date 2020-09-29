@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -14,6 +13,7 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -92,7 +92,9 @@ public class TradeConfigListGui extends PaginatedGui {
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
                         try {
-                            FileUtils.copyToFile(WanderingTrades.getInstance().getResource("trades/blank.yml"), new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + s + ".yml"));
+                            Files.copy(WanderingTrades.getInstance().getResource("trades/blank.yml"),
+                                    new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + s + ".yml").toPath());
+
                             WanderingTrades.getInstance().getCfg().load();
                             WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
                         } catch (IOException ex) {

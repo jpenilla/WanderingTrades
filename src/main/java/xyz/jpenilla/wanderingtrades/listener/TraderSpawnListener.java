@@ -2,8 +2,6 @@ package xyz.jpenilla.wanderingtrades.listener;
 
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
-import org.apache.commons.math3.distribution.EnumeratedDistribution;
-import org.apache.commons.math3.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.EntityType;
@@ -16,6 +14,7 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.NotNull;
 import xyz.jpenilla.jmplib.Crafty;
+import xyz.jpenilla.jmplib.RandomCollection;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import java.lang.invoke.MethodHandle;
@@ -67,9 +66,9 @@ public class TraderSpawnListener implements Listener {
                         }
                     });
                 } else {
-                    List<Pair<String, Double>> weights = new ArrayList<>();
-                    wanderingTrades.getCfg().getTradeConfigs().forEach((key, value) -> weights.add(new Pair<>(key, value.getChance())));
-                    String chosenConfig = new EnumeratedDistribution<>(weights).sample();
+                    RandomCollection<String> configNames = new RandomCollection<>();
+                    wanderingTrades.getCfg().getTradeConfigs().forEach((key, value) -> configNames.add(value.getChance(), key));
+                    String chosenConfig = configNames.next();
                     if (chosenConfig != null) {
                         newTrades.addAll(wanderingTrades.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
                     }
