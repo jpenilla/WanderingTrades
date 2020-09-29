@@ -36,7 +36,7 @@ public class StoredPlayers {
         ImmutableList.copyOf(Bukkit.getOfflinePlayers()).stream()
                 .filter(offlinePlayer -> offlinePlayer.getName() != null && !offlinePlayer.getName().equals("") && !TextUtil.containsCaseInsensitive(offlinePlayer.getName(), wanderingTrades.getCfg().getPlayerHeadConfig().getUsernameBlacklist()))
                 .filter(offlinePlayer -> {
-                    final LocalDateTime logout = Instant.ofEpochMilli(offlinePlayer.getLastSeen()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    final LocalDateTime logout = Instant.ofEpochMilli(offlinePlayer.getLastPlayed()).atZone(ZoneId.systemDefault()).toLocalDateTime();
                     final LocalDateTime cutoff = LocalDateTime.now().minusDays(wanderingTrades.getCfg().getPlayerHeadConfig().getDays());
                     return logout.isAfter(cutoff) || wanderingTrades.getCfg().getPlayerHeadConfig().getDays() == -1;
                 })
