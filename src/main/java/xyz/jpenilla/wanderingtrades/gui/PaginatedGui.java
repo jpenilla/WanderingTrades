@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
@@ -23,6 +24,7 @@ public abstract class PaginatedGui extends GuiHolder {
         super(name, size);
     }
 
+    @NotNull
     public final Inventory getInventory() {
         inventory.clear();
 

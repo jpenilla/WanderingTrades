@@ -54,9 +54,9 @@ public class TradeListGui extends PaginatedGui {
     }
 
     public List<ItemStack> getListItems() {
-        ArrayList<ItemStack> trades = new ArrayList<>();
+        List<ItemStack> trades = new ArrayList<>();
         TradeConfig tc = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
-        tc.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> {
+        tc.getFile().getConfigurationSection("trades").getKeys(false).stream().sorted().forEach(key -> {
             ItemStack s = TradeConfig.getStack(tc.getFile(), "trades." + key + ".result");
             if (s != null) {
                 ItemBuilder b = new ItemBuilder(s);

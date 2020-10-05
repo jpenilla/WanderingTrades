@@ -31,7 +31,7 @@ public class TradeConfigListGui extends PaginatedGui {
     public List<ItemStack> getListItems() {
         List<ItemStack> items = new ArrayList<>();
         List<String> configs = new ArrayList<>();
-        Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configs.add((String) completion));
+        Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).sorted().forEach(completion -> configs.add((String) completion));
         for (String config : configs) {
             TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(config);
             List<String> lore = new ArrayList<>();

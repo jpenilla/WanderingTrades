@@ -19,13 +19,13 @@ configurations.all {
 
 val projectName = "WanderingTrades"
 group = "xyz.jpenilla"
-version = "1.6.4.2+${getLastCommitHash()}-SNAPSHOT"
+version = "1.6.4.3+${getLastCommitHash()}-SNAPSHOT"
 
 repositories {
     mavenLocal()
     mavenCentral()
-    maven(url = "https://papermc.io/repo/repository/maven-public/")
     maven(url = "https://oss.sonatype.org/content/groups/public/")
+    maven(url = "https://papermc.io/repo/repository/maven-public/")
     maven(url = "https://repo.aikar.co/content/groups/aikar/")
     maven(url = "https://repo.jpenilla.xyz/snapshots")
     maven(url = "https://ci.ender.zone/plugin/repository/everything/")
@@ -44,7 +44,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
     compileOnly("com.github.Eunoians", "McRPG", "1.3.3.0-BETA")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+7-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+10-SNAPSHOT")
     implementation("co.aikar", "acf-paper", "0.5.0-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "1.7")
 }
@@ -55,7 +55,7 @@ spigot {
     description = "Customizable Trades for Wandering Traders. Inspired by Vanilla Tweaks"
     website = "https://github.com/jmanpenilla/WanderingTrades"
     authors("jmp")
-    softDepends("McRPG", "WorldEdit", "WorldGuard", "Vault", "Prisma", "PlaceholderAPI")
+    softDepends("McRPG", "WorldEdit", "WorldGuard", "Vault", "Prisma", "PlaceholderAPI", "ViaVersion") //todo remove ViaVersion when adventure-platform-bukkit fixed
 }
 
 val autoRelocate by tasks.register<ConfigureShadowRelocation>("configureShadowRelocation", ConfigureShadowRelocation::class) {
