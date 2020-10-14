@@ -1,9 +1,7 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.parser.StandardParameters;
 import cloud.commandframework.bukkit.BukkitCommandMetaBuilder;
 import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
@@ -26,7 +24,6 @@ public class CommandHelper {
 
     @Getter private PaperCommandManager<CommandSender> mgr;
     @Getter private MinecraftHelp<CommandSender> help;
-    @Getter private AnnotationParser<CommandSender> annotationParser;
     private final Map<String, CommandArgument.Builder<CommandSender, ?>> argumentRegistry = new HashMap<>();
     private final Map<String, CommandFlag.Builder<?>> flagRegistry = new HashMap<>();
 
@@ -38,10 +35,8 @@ public class CommandHelper {
                     Function.identity(),
                     Function.identity()
             );
-            help = new MinecraftHelp<>("/wanderingtrades help", sender -> wanderingTrades.getAudience().sender(sender), mgr);
-            annotationParser = new AnnotationParser<>(mgr, CommandSender.class,
-                    p -> metaWithDescription(p.get(StandardParameters.DESCRIPTION, "No description")));
 
+            help = new MinecraftHelp<>("/wanderingtrades help", sender -> wanderingTrades.getAudience().sender(sender), mgr);
             help.setHelpColors(MinecraftHelp.HelpColors.of(
                     TextColor.color(0x00a3ff),
                     NamedTextColor.WHITE,
@@ -74,10 +69,7 @@ public class CommandHelper {
                     new CommandWanderingTrades(wanderingTrades, mgr, this),
                     new CommandSummon(wanderingTrades, mgr, this),
                     new CommandConfig(wanderingTrades, mgr, this)
-            ).forEach(instance -> {
-                annotationParser.parse(instance);
-                instance.registerCommands();
-            });
+            ).forEach(WTCommand::registerCommands);
         } catch (Exception e) {
             e.printStackTrace();
         }

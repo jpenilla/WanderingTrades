@@ -1,8 +1,8 @@
 # WanderingTrades Config ${project.version}
 debug: false
 
-# Languages currently included: en_US
-# Contribute translations for the menus and command on GitHub
+# Languages currently included: en_US, zh_CN
+# Contribute translations for the menus and commands on GitHub
 language: 'en_US'
 
 # Set to true to overwrite the existing lang file to update it

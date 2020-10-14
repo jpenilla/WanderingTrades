@@ -46,7 +46,6 @@ dependencies {
 
     val cloudVersion = "1.0.0"
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
-    implementation("cloud.commandframework", "cloud-annotations", cloudVersion)
     implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
 }
 

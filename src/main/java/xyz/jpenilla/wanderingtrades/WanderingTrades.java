@@ -46,7 +46,8 @@ public final class WanderingTrades extends BasePlugin {
         if (getServer().getPluginManager().isPluginEnabled("McRPG")) {
             McRPG = new McRPGHook();
         }
-        if (getServer().getPluginManager().isPluginEnabled("WorldGuard") && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+        if (getServer().getPluginManager().isPluginEnabled("WorldGuard")
+                && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
             worldGuard = new WorldGuardHook(this);
         }
 
