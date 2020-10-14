@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.Crafty;
 import xyz.jpenilla.jmplib.RandomCollection;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -98,7 +98,7 @@ public class TraderSpawnListener implements Listener {
      *
      * @param trader the trader to act on
      */
-    private void resetOffers(@NotNull AbstractVillager trader) {
+    private void resetOffers(@NonNull AbstractVillager trader) {
         try {
             // TODO -> Check on new Minecraft Version/NMS Mappings
             String updateTradesMethodName = "eW";

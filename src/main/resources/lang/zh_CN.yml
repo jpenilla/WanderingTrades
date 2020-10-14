@@ -1,6 +1,6 @@
 # Wandering Trades ${project.version} zh_CN 语言文件 \\ 简体中文由 RinAfter 提供
 COMMAND_LIST_LOADED: '<gradient:green:blue>已加载交易配置</gradient><gray>:'
-COMMAND_SUMMON_NO_CONFIG: '<red><italic>没有加载该名称的交易配置'
+COMMAND_SUMMON_NO_CONFIG: '没有加载该名称的交易配置'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>配置格式不正确，请确保食谱至少拥有一种成分'
 COMMAND_RELOAD: '<gradient:red:yellow>重新加载WanderingTrades配置...'
 COMMAND_RELOAD_DONE: '<green>完成。'
@@ -11,12 +11,9 @@ COMMAND_WT_LIST: '列出已加载的交易配置'
 COMMAND_WT_EDIT: '打开GUI以编辑和创建交易配置'
 COMMAND_WT_CONFIG: '打开GUI以编辑 config.yml 配置'
 COMMAND_WT_PH_CONFIG: '打开GUI以编辑 playerheads.yml 配置'
-COMMAND_ERROR_CONSOLE_NEEDS_COORDS: '控制台操作必须提供世界和具体坐标'
 COMMAND_SUMMON: '召唤一个具有指定配置的流浪商人，忽略配置是否已禁用'
-COMMAND_SUMMON_NOAI: '与 /wt summon 相同，但AI被禁用'
 COMMAND_SUMMON_NATURAL: '召唤一个''自然生成''的流浪商人，提供一些修改选项'
 COMMAND_VSUMMON: '召唤一个具有指定配置的村民，忽略配置是否已禁用'
-COMMAND_VSUMMON_NOAI: '与 /wt summonvillager 相同，但AI被禁用'
 GUI_BACK: '<red>返回'
 GUI_BACK_LORE: '<gray><italic>  点击返回'
 GUI_CLOSE: '<red>关闭'
@@ -128,3 +125,17 @@ MESSAGE_EDIT_SAVED: "<italic><green>编辑已保存"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>输入WorldGuard区域名称</gradient><gray>:"
 MESSAGE_ADD_BLACKLIST_PLAYER: "<gradient:aqua:blue>输入玩家名称以将其列入黑名单</gradient><gray>:"
 MESSAGE_ADD_LORE_PROMPT: "<gradient:aqua:blue>输入新的lore</gradient><gray>:"
+COMMAND_ARGUMENT_HELP_QUERY: "帮助查询"
+HELP_HELP: "WanderingTrades帮助"
+HELP_COMMAND: "命令"
+HELP_DESCRIPTION: "描述"
+HELP_NO_DESCRIPTION: "无描述"
+HELP_ARGUMENTS: "参数"
+HELP_OPTIONAL: "可选"
+HELP_SHOWING_RESULTS_FOR_QUERY: "显示查询的搜索结果"
+HELP_NO_RESULTS_FOR_QUERY: "无查询结果"
+HELP_AVAILABLE_COMMANDS: "可用命令"
+HELP_CLICK_TO_SHOW_HELP: "单击此处显示此命令的帮助"
+HELP_PAGE_OUT_OF_RANGE: "错误: 第<page>页不在范围内。可用范围[1, <max_pages>]"
+HELP_CLICK_FOR_NEXT_PAGE: "点击进入下一页"
+HELP_CLICK_FOR_PREVIOUS_PAGE: "点击进入上一页"

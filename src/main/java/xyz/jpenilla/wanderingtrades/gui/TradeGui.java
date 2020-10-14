@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
@@ -54,7 +54,7 @@ public abstract class TradeGui extends GuiHolder {
     }
 
     @Override
-    public @NotNull Inventory getInventory() {
+    public @NonNull Inventory getInventory() {
         inventory.clear();
 
         inventory.setItem(inventory.getSize() - 1, cancelButton);

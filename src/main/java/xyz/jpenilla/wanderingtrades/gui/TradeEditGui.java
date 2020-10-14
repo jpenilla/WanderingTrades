@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -39,7 +39,7 @@ public class TradeEditGui extends TradeGui {
         }
     }
 
-    public @NotNull Inventory getInventory() {
+    public @NonNull Inventory getInventory() {
         inventory = super.getInventory();
 
         inventory.setItem(35, getDeleteButton());

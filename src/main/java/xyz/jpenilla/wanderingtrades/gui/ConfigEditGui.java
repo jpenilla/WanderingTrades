@@ -6,7 +6,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.TextUtil;
@@ -43,7 +43,7 @@ public class ConfigEditGui extends GuiHolder {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_CONFIG_TITLE), 45);
     }
 
-    @NotNull
+    @NonNull
     public Inventory getInventory() {
         inventory.clear();
 

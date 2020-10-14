@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -20,7 +20,7 @@ public class TradeCreateGui extends TradeGui {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
     }
 
-    public @NotNull Inventory getInventory() {
+    public @NonNull Inventory getInventory() {
         inventory = super.getInventory();
 
         ArrayList<String> tradeNameLore = new ArrayList<>();

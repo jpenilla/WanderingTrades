@@ -1,10 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.commons.io.output.ByteArrayOutputStream
 
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
     id("kr.entree.spigradle") version "2.2.3"
 }
 
@@ -13,13 +12,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-configurations.all {
-    exclude(group = "org.checkerframework")
-}
-
 val projectName = "WanderingTrades"
 group = "xyz.jpenilla"
-version = "1.6.4.3+${getLastCommitHash()}-SNAPSHOT"
+version = "1.6.5+${getLastCommitHash()}-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -36,17 +31,23 @@ repositories {
 
 dependencies {
     annotationProcessor("org.projectlombok", "lombok", "1.18.12")
+
     compileOnly("org.projectlombok", "lombok", "1.18.12")
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.3-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7")
     compileOnly("net.ess3", "EssentialsX", "2.17.2")
-    compileOnly("org.jetbrains", "annotations", "20.0.0")
+    compileOnly("org.checkerframework", "checker-qual", "3.5.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
     compileOnly("com.github.Eunoians", "McRPG", "1.3.3.0-BETA")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+10-SNAPSHOT")
-    implementation("co.aikar", "acf-paper", "0.5.0-SNAPSHOT")
+
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+16-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "1.7")
+
+    val cloudVersion = "1.0.0"
+    implementation("cloud.commandframework", "cloud-paper", cloudVersion)
+    implementation("cloud.commandframework", "cloud-annotations", cloudVersion)
+    implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
 }
 
 spigot {
@@ -55,26 +56,24 @@ spigot {
     description = "Customizable Trades for Wandering Traders. Inspired by Vanilla Tweaks"
     website = "https://github.com/jmanpenilla/WanderingTrades"
     authors("jmp")
-    softDepends("McRPG", "WorldEdit", "WorldGuard", "Vault", "Prisma", "PlaceholderAPI", "ViaVersion") //todo remove ViaVersion when adventure-platform-bukkit fixed
+    softDepends("McRPG", "WorldEdit", "WorldGuard", "Vault", "Prisma", "PlaceholderAPI", "ViaVersion")
 }
 
-val autoRelocate by tasks.register<ConfigureShadowRelocation>("configureShadowRelocation", ConfigureShadowRelocation::class) {
-    target = tasks.getByName("shadowJar") as ShadowJar?
+val autoRelocate by tasks.register("configureShadowRelocation", ConfigureShadowRelocation::class) {
+    target = tasks.shadowJar.get()
     val packageName = "${project.group}.${project.name.toLowerCase()}"
     prefix = "$packageName.shaded"
 }
 
 tasks {
-    compileJava {
-        options.compilerArgs.add("-parameters")
-        options.isFork = true
-        options.forkOptions.executable = "javac"
+    build {
+        dependsOn(shadowJar)
     }
-    withType<ShadowJar> {
+    shadowJar {
+        minimize()
+        dependsOn(autoRelocate)
         archiveClassifier.set("")
         archiveFileName.set("$projectName-${project.version}.jar")
-        dependsOn(autoRelocate)
-        minimize()
     }
 }
 
@@ -84,5 +83,5 @@ fun getLastCommitHash(): String {
         commandLine = listOf("git", "rev-parse", "--short", "HEAD")
         standardOutput = byteOut
     }
-    return byteOut.toString().trim()
+    return byteOut.toString(Charsets.UTF_8).trim()
 }

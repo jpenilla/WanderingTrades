@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -40,7 +40,7 @@ public abstract class GuiHolder implements InventoryHolder {
     public void onInventoryClose(InventoryCloseEvent event) {
     }
 
-    public void open(@NotNull Player p) {
+    public void open(@NonNull Player p) {
         p.openInventory(getInventory());
     }
 

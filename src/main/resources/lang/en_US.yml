@@ -1,6 +1,6 @@
 # Wandering Trades ${project.version} en_US language config
 COMMAND_LIST_LOADED: '<gradient:green:blue>Loaded Trade Configs</gradient><gray>:'
-COMMAND_SUMMON_NO_CONFIG: '<red><italic>There are no trade configs with that name loaded.'
+COMMAND_SUMMON_NO_CONFIG: 'There are no trade configs with that name loaded.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>That config is malformed. Make sure recipes have at least one ingredient.'
 COMMAND_RELOAD: '<gradient:red:yellow>Reloading WanderingTrades config...'
 COMMAND_RELOAD_DONE: '<green>Done.'
@@ -11,12 +11,9 @@ COMMAND_WT_LIST: 'Lists the loaded trade configs.'
 COMMAND_WT_EDIT: 'Opens a GUI menu to edit and create trade configs'
 COMMAND_WT_CONFIG: 'Opens a GUI menu to edit the config.yml settings'
 COMMAND_WT_PH_CONFIG: 'Opens a GUI menu to edit the playerheads.yml settings'
-COMMAND_ERROR_CONSOLE_NEEDS_COORDS: 'Console must provide world and coordinates'
 COMMAND_SUMMON: 'Summons a Wandering Trader with the specified config. Ignores whether the config is disabled.'
-COMMAND_SUMMON_NOAI: 'Same as /wt summon but with AI disabled'
 COMMAND_SUMMON_NATURAL: 'Summon a ''natural'' Wandering Trader with some modification options'
 COMMAND_VSUMMON: 'Summons a Villager with the specified config. Ignores whether the config is disabled.'
-COMMAND_VSUMMON_NOAI: 'Same as /wt summonvillager but with AI disabled'
 GUI_BACK: '<red>Back'
 GUI_BACK_LORE: '<gray><italic>  Click to go back'
 GUI_CLOSE: '<red>Close'
@@ -128,3 +125,17 @@ MESSAGE_EDIT_SAVED: "<italic><green>Edit saved"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Enter a WorldGuard region name</gradient><gray>:"
 MESSAGE_ADD_BLACKLIST_PLAYER: "<gradient:aqua:blue>Enter a player name to blacklist</gradient><gray>:"
 MESSAGE_ADD_LORE_PROMPT: "<gradient:aqua:blue>Enter a new line of lore</gradient><gray>:"
+COMMAND_ARGUMENT_HELP_QUERY: "Help Query"
+HELP_HELP: "WanderingTrades Help"
+HELP_COMMAND: "Command"
+HELP_DESCRIPTION: "Description"
+HELP_NO_DESCRIPTION: "No description"
+HELP_ARGUMENTS: "Arguments"
+HELP_OPTIONAL: "Optional"
+HELP_SHOWING_RESULTS_FOR_QUERY: "Showing search results for query"
+HELP_NO_RESULTS_FOR_QUERY: "No results for query"
+HELP_AVAILABLE_COMMANDS: "Available Commands"
+HELP_CLICK_TO_SHOW_HELP: "Click to show help for this command"
+HELP_PAGE_OUT_OF_RANGE: "Error: Page <page> is not in range. Must be in range [1, <max_pages>]"
+HELP_CLICK_FOR_NEXT_PAGE: "Click for next page"
+HELP_CLICK_FOR_PREVIOUS_PAGE: "Click for previous page"

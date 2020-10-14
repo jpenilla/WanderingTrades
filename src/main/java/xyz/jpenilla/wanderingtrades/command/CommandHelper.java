@@ -1,83 +1,105 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import co.aikar.commands.BukkitMessageFormatter;
-import co.aikar.commands.CommandReplacements;
-import co.aikar.commands.MessageType;
-import co.aikar.commands.PaperCommandManager;
+import cloud.commandframework.annotations.AnnotationParser;
+import cloud.commandframework.arguments.CommandArgument;
+import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.parser.StandardParameters;
+import cloud.commandframework.bukkit.BukkitCommandMetaBuilder;
+import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
+import cloud.commandframework.meta.SimpleCommandMeta;
+import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
+import cloud.commandframework.minecraft.extras.MinecraftHelp;
+import cloud.commandframework.paper.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import lombok.Getter;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 public class CommandHelper {
-    private final WanderingTrades plugin;
-    private final PaperCommandManager mgr;
 
-    public CommandHelper(WanderingTrades instance) {
-        plugin = instance;
-        mgr = new PaperCommandManager(plugin);
-        mgr.setFormat(MessageType.ERROR, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
-        mgr.setFormat(MessageType.SYNTAX, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
-        mgr.setFormat(MessageType.INFO, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
-        mgr.setFormat(MessageType.HELP, new BukkitMessageFormatter(ChatColor.BLUE, ChatColor.AQUA, ChatColor.WHITE));
-        mgr.setHelpFormatter(new HelpFormatter(plugin, mgr));
-        mgr.enableUnstableAPI("help");
-        mgr.setDefaultHelpPerPage(4);
-        mgr.registerDependency(Chat.class, plugin.getChat());
-        reload();
-        mgr.registerCommand(new CommandWanderingTrades(plugin));
-    }
+    @Getter private PaperCommandManager<CommandSender> mgr;
+    @Getter private MinecraftHelp<CommandSender> help;
+    @Getter private AnnotationParser<CommandSender> annotationParser;
+    private final Map<String, CommandArgument.Builder<CommandSender, ?>> argumentRegistry = new HashMap<>();
+    private final Map<String, CommandFlag.Builder<?>> flagRegistry = new HashMap<>();
 
-    public void reload() {
-        mgr.getCommandCompletions().registerAsyncCompletion("wtConfigs", c -> ImmutableList.copyOf(plugin.getCfg().getTradeConfigs().keySet()));
+    public CommandHelper(WanderingTrades wanderingTrades) {
+        try {
+            mgr = new PaperCommandManager<>(
+                    wanderingTrades,
+                    AsynchronousCommandExecutionCoordinator.<CommandSender>newBuilder().build(),
+                    Function.identity(),
+                    Function.identity()
+            );
+            help = new MinecraftHelp<>("/wanderingtrades help", sender -> wanderingTrades.getAudience().sender(sender), mgr);
+            annotationParser = new AnnotationParser<>(mgr, CommandSender.class,
+                    p -> metaWithDescription(p.get(StandardParameters.DESCRIPTION, "No description")));
 
-        mgr.getCommandCompletions().registerCompletion("angles", c -> {
-            final List<String> completions = new ArrayList<>(Arrays.asList(
-                    "30", "45", "60", "90", "120", "135", "150", "180",
-                    "210", "225", "240", "270", "300", "315", "330", "360"));
-            if (c.getSender() instanceof Player) {
-                completions.add(String.valueOf(Math.round(((Player) c.getSender()).getLocation().getYaw() * 100) / 100));
+            help.setHelpColors(MinecraftHelp.HelpColors.of(
+                    TextColor.color(0x00a3ff),
+                    NamedTextColor.WHITE,
+                    TextColor.color(0x284fff),
+                    NamedTextColor.GRAY,
+                    NamedTextColor.DARK_GRAY
+            ));
+            help.setMessageProvider((sender, key) -> wanderingTrades.getLang().get(Lang.valueOf(String.format("HELP_%s", key).toUpperCase())));
+
+            new MinecraftExceptionHandler<CommandSender>()
+                    .withDefaultHandlers()
+                    .apply(mgr, wanderingTrades.getAudience()::sender);
+
+            /* Register Brigadier */
+            try {
+                mgr.registerBrigadier();
+                wanderingTrades.getLogger().info("Successfully registered Mojang Brigadier support for commands.");
+            } catch (Exception ignored) {
             }
-            return completions;
-        });
 
-        mgr.getCommandCompletions().registerCompletion("wtWorlds", c -> {
-            final CommandSender s = c.getSender();
-            final ImmutableList.Builder<String> list = ImmutableList.builder();
-            list.addAll(Bukkit.getWorlds().stream().map(world -> world.getName() + ":x,y,z").collect(Collectors.toList()));
-            if (s instanceof Player) {
-                final Location l = ((Player) s).getLocation();
-                list.add(String.format("%s:%s,%s,%s",
-                        l.getWorld().getName(),
-                        (double) Math.round(l.getX() * 100) / 100,
-                        (double) Math.round(l.getY() * 100) / 100,
-                        (double) Math.round(l.getZ() * 100) / 100)
-                );
+            /* Register Asynchronous Completion Listener */
+            try {
+                mgr.registerAsynchronousCompletions();
+                wanderingTrades.getLogger().info("Successfully registered asynchronous command completion listener.");
+            } catch (Exception ignored) {
             }
-            return list.build();
-        });
 
-        CommandReplacements replacements = mgr.getCommandReplacements();
-        registerReplacements(replacements,
-                Lang.COMMAND_WT_HELP, Lang.COMMAND_WT_ABOUT, Lang.COMMAND_WT_RELOAD, Lang.COMMAND_WT_LIST,
-                Lang.COMMAND_WT_EDIT, Lang.COMMAND_WT_CONFIG, Lang.COMMAND_WT_PH_CONFIG, Lang.COMMAND_SUMMON,
-                Lang.COMMAND_SUMMON_NOAI, Lang.COMMAND_VSUMMON, Lang.COMMAND_VSUMMON_NOAI, Lang.COMMAND_SUMMON_NATURAL
-        );
-    }
-
-    private void registerReplacements(CommandReplacements replacements, Lang... keys) {
-        for (Lang key : keys) {
-            replacements.addReplacement(key.toString(), plugin.getLang().get(key));
+            /* Register Commands */
+            ImmutableList.of(
+                    new CommandWanderingTrades(wanderingTrades, mgr, this),
+                    new CommandSummon(wanderingTrades, mgr, this),
+                    new CommandConfig(wanderingTrades, mgr, this)
+            ).forEach(instance -> {
+                annotationParser.parse(instance);
+                instance.registerCommands();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    public CommandArgument.Builder<CommandSender, ?> getArgument(String name) {
+        return this.argumentRegistry.get(name);
+    }
+
+    public void registerArgument(String name, CommandArgument.Builder<CommandSender, ?> argumentBuilder) {
+        this.argumentRegistry.put(name, argumentBuilder);
+    }
+
+    public CommandFlag.Builder<?> getFlag(String name) {
+        return this.flagRegistry.get(name);
+    }
+
+    public void registerFlag(String name, CommandFlag.Builder<?> flagBuilder) {
+        this.flagRegistry.put(name, flagBuilder);
+    }
+
+    public static SimpleCommandMeta metaWithDescription(final String description) {
+        return BukkitCommandMetaBuilder.builder().withDescription(description).build();
     }
 }

@@ -1,366 +1,79 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandHelp;
-import co.aikar.commands.InvalidCommandArgument;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Dependency;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.HelpCommand;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.annotation.Syntax;
-import co.aikar.commands.annotation.Values;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import cloud.commandframework.CommandHelpHandler;
+import cloud.commandframework.Description;
+import cloud.commandframework.arguments.CommandArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.paper.PaperCommandManager;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.WanderingTrader;
-import org.bukkit.inventory.MerchantRecipe;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.jpenilla.jmplib.Chat;
-import xyz.jpenilla.jmplib.Crafty;
-import xyz.jpenilla.jmplib.ItemBuilder;
-import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-import xyz.jpenilla.wanderingtrades.gui.ConfigEditGui;
-import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
-import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
-import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
-import xyz.jpenilla.wanderingtrades.util.Constants;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
-@CommandAlias("wanderingtrades|wt")
-public class CommandWanderingTrades extends BaseCommand {
+import static xyz.jpenilla.wanderingtrades.command.CommandHelper.metaWithDescription;
+
+public class CommandWanderingTrades implements WTCommand {
+
     private final WanderingTrades wanderingTrades;
-    @Dependency
-    private Chat chat;
+    private final PaperCommandManager<CommandSender> mgr;
+    private final CommandHelper commandHelper;
+    private final Chat chat;
 
-    public CommandWanderingTrades(WanderingTrades p) {
-        wanderingTrades = p;
+    public CommandWanderingTrades(WanderingTrades wanderingTrades, PaperCommandManager<CommandSender> mgr, CommandHelper commandHelper) {
+        this.wanderingTrades = wanderingTrades;
+        this.mgr = mgr;
+        this.commandHelper = commandHelper;
+        this.chat = wanderingTrades.getChat();
     }
 
-    @Default
-    @HelpCommand
-    @Description("%COMMAND_WT_HELP")
-    public void onHelp(CommandSender sender, CommandHelp help) {
-        help.showHelp();
-    }
+    @Override
+    public void registerCommands() {
+        /* Help Query Argument */
+        CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>newBuilder("query")
+                .greedy()
+                .asOptional()
+                .withSuggestionsProvider((context, input) ->
+                        ((CommandHelpHandler.IndexHelpTopic<CommandSender>) mgr.getCommandHelpHandler().queryHelp(context.getSender(), ""))
+                                .getEntries().stream().map(CommandHelpHandler.VerboseHelpEntry::getSyntaxString).collect(Collectors.toList())
+                ).build();
 
-    @Subcommand("about")
-    @Description("%COMMAND_WT_ABOUT")
-    public void onAbout(CommandSender sender) {
-        ArrayList<String> list = new ArrayList<>();
-        final String header = chat.getCenteredMessage("<gradient:white:blue>=============</gradient><gradient:blue:white>=============");
-        list.add(header);
-        list.add(chat.getCenteredMessage("<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion()));
-        list.add(chat.getCenteredMessage("<gray>By <gradient:gold:yellow>jmp"));
-        list.add(header);
-        chat.sendParsed(sender, list);
-    }
+        /* Help Command */
+        mgr.command(
+                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_HELP)), "wanderingtrades")
+                        .literal("help")
+                        .argument(helpQueryArgument, Description.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
+                        .handler(context -> wanderingTrades.getCommandHelper().getHelp()
+                                .queryCommands(context.getOrDefault(helpQueryArgument, ""), context.getSender()))
+        );
 
-    @Subcommand("reload")
-    @CommandPermission("wanderingtrades.reload")
-    @Description("%COMMAND_WT_RELOAD")
-    public void onReload(CommandSender sender) {
-        chat.sendParsed(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
-        wanderingTrades.getCfg().load();
-        wanderingTrades.getLang().load();
-        wanderingTrades.getListeners().reload();
-        wanderingTrades.getCommandHelper().reload();
-        wanderingTrades.getStoredPlayers().load();
-        chat.sendParsed(sender, chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
-    }
+        /* About Command */
+        mgr.command(
+                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_ABOUT)))
+                        .literal("about")
+                        .handler(context -> ImmutableList.of(
+                                "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------",
+                                "<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion(),
+                                "<gray>By <gradient:gold:yellow>jmp",
+                                "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------"
+                        ).forEach(string -> chat.send(context.getSender(), chat.getCenteredMessage(string))))
+        );
 
-    @Subcommand("list|l")
-    @CommandPermission("wanderingtrades.list")
-    @Description("%COMMAND_WT_LIST")
-    public void onList(CommandSender sender) {
-        List<String> configs = new ArrayList<>(wanderingTrades.getCfg().getTradeConfigs().keySet());
-        StringBuilder sb = new StringBuilder();
-        for (String cfg : configs) {
-            sb.append("<hover:show_text:'<rainbow>Click to edit'><click:run_command:/wanderingtrades edit ");
-            sb.append(cfg);
-            sb.append(">");
-            sb.append(cfg);
-            if (configs.indexOf(cfg) != configs.size() - 1) {
-                sb.append("</click></hover><gray>,</gray> ");
-            }
-        }
-        chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_LIST_LOADED));
-        chat.sendParsed(sender, sb.toString());
-    }
-
-    @CommandPermission("wanderingtrades.edit")
-    @Subcommand("edit|e")
-    @Description("%COMMAND_WT_EDIT")
-    @CommandCompletion("@wtConfigs")
-    @Syntax("<tradeConfig>")
-    public void onEditTrades(Player p, @Optional @Values("@wtConfigs") String tradeConfig) {
-        if (tradeConfig == null) {
-            new TradeConfigListGui().open(p);
-        } else {
-            new TradeListGui(tradeConfig).open(p);
-        }
-    }
-
-    @CommandPermission("wanderingtrades.edit")
-    @Subcommand("editconfig|ec")
-    @Description("%COMMAND_WT_CONFIG")
-    public void onEditConfig(Player p) {
-        new ConfigEditGui().open(p);
-    }
-
-    @CommandPermission("wanderingtrades.edit")
-    @Subcommand("editplayerheads|eph")
-    @Description("%COMMAND_WT_PH_CONFIG")
-    public void onEditPH(Player p) {
-        new PlayerHeadConfigGui().open(p);
-    }
-
-    private Location resolveLocation(CommandSender sender, Location loc) {
-        Location location;
-        if (loc != null) {
-            location = loc;
-        } else if (sender instanceof Player) {
-            location = ((Player) sender).getLocation();
-        } else {
-            throw new InvalidCommandArgument(wanderingTrades.getLang().get(Lang.COMMAND_ERROR_CONSOLE_NEEDS_COORDS), true);
-        }
-        return location;
-    }
-
-    private static final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
-    //private static final BungeeCordComponentSerializer bungeeSerializer = BungeeCordComponentSerializer.get();
-
-    /**
-     * Set the custom name of an entity from a MiniMessage string using reflection. Falls back to Bukkit api using legacy text.
-     *
-     * @param entity      The Bukkit entity
-     * @param miniMessage The MiniMessage string. Clears the name if empty or null
-     */
-    private void setCustomName(@NotNull Entity entity, @Nullable String miniMessage) {
-        if (miniMessage == null || miniMessage.equals("")) {
-            entity.setCustomName(null);
-            return;
-        }
-        // TODO: prefer paper api to set name with components once the api exists https://github.com/PaperMC/Paper/pull/4357
-        //if (wanderingTrades.isPaperServer() && wanderingTrades.getMajorMinecraftVersion() > 15) {
-        //    entity.setCustomNameComponent(bungeeSerializer.serialize(wanderingTrades.getMiniMessage().parse(miniMessage)));
-        //    return;
-        //}
-        try {
-            Class<?> _CraftEntity = Crafty.needCraftClass("entity.CraftEntity");
-            Class<?> _Entity = Crafty.needNmsClass("Entity");
-            Class<?> _IChatBaseComponent = Crafty.needNmsClass("IChatBaseComponent");
-            Class<?> _ChatSerializer = Crafty.needNmsClass("IChatBaseComponent$ChatSerializer");
-            MethodHandle _getHandle = Crafty.findMethod(_CraftEntity, "getHandle", _Entity);
-            Method _jsonToComponent = _ChatSerializer.getMethod("a", String.class);
-            Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
-
-            Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
-            Object customName = Objects.requireNonNull(_jsonToComponent).invoke(null, gsonComponentSerializer.serialize(wanderingTrades.getMiniMessage().parse(miniMessage)));
-
-            _setCustomName.invoke(nmsEntity, customName);
-        } catch (Throwable throwable) {
-            wanderingTrades.getLog().debug("Failed to set entity name with reflection: " + throwable.getMessage());
-            entity.setCustomName(MiniMessageUtil.miniMessageToLegacy(miniMessage));
-        }
-    }
-
-    private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {
-        try {
-            List<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
-            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wt.getUniqueId());
-            wt.setRecipes(recipes);
-            wt.setAI(!disableAI);
-
-            PersistentDataContainer p = wt.getPersistentDataContainer();
-
-            TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
-            if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                setCustomName(wt, t.getCustomName());
-                wt.setCustomNameVisible(true);
-            }
-            if (t.isInvincible()) {
-                wt.setInvulnerable(true);
-                wt.setRemoveWhenFarAway(false);
-                wt.setPersistent(true);
-                p.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-            }
-
-            p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
-        } catch (NullPointerException | IllegalStateException ex) {
-            if (ex instanceof NullPointerException) {
-                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
-                onList(sender);
-            } else {
-                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
-            }
-        }
-    }
-
-    private void summonVillagerTrader(CommandSender sender, String tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
-        try {
-            List<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            final Villager v = (Villager) loc.getWorld().spawnEntity(loc, EntityType.VILLAGER);
-            v.setVillagerType(type);
-            v.setProfession(profession);
-            v.setVillagerLevel(5);
-            v.setRecipes(recipes);
-            v.setAI(!disableAI);
-
-            PersistentDataContainer p = v.getPersistentDataContainer();
-
-            TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
-            if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                setCustomName(v, t.getCustomName());
-                v.setCustomNameVisible(true);
-            }
-            if (t.isInvincible()) {
-                v.setInvulnerable(true);
-                v.setRemoveWhenFarAway(false);
-                v.setPersistent(true);
-                p.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-            }
-
-            p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
-        } catch (NullPointerException | IllegalStateException ex) {
-            if (ex instanceof NullPointerException) {
-                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
-                onList(sender);
-            } else {
-                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
-            }
-        }
-    }
-
-    @Subcommand("name")
-    @Description("Set the name of entities in line of sight")
-    @CommandPermission("wanderingtrades.name")
-    public void onName(Player player, String name) {
-        for (Entity e : player.getNearbyEntities(10, 10, 10)) {
-            if (e instanceof LivingEntity) {
-                if (isLookingAt(player, (LivingEntity) e)) {
-                    setCustomName(e, name);
-                    e.setCustomNameVisible(true);
-                }
-            }
-        }
-    }
-
-    @Subcommand("namehand")
-    @Description("Set the name of the held item")
-    @CommandPermission("wanderingtrades.namehand")
-    public void onNameHand(Player player, String name) {
-        if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
-            player.getInventory().setItemInMainHand(new ItemBuilder(player.getInventory().getItemInMainHand()).setName(name).build());
-        }
-    }
-
-    private boolean isLookingAt(Player player, LivingEntity entity) {
-        Location eye = player.getEyeLocation();
-        Vector toEntity = entity.getEyeLocation().toVector().subtract(eye.toVector());
-        double dot = toEntity.normalize().dot(eye.getDirection());
-        return dot > 0.99D;
-    }
-
-    @Subcommand("summonnatural|sn")
-    @Description("%COMMAND_SUMMON_NATURAL")
-    @Syntax("<ai> <protect> <refresh> [rotation] [world:x,y,z]")
-    @CommandCompletion("true|false true|false true|false @angles @wtWorlds")
-    @CommandPermission("wanderingtrades.summonnatural")
-    public void onSummonNatural(CommandSender sender, boolean ai, boolean protect, boolean refresh, @Optional Float rotation, @Optional Location location) {
-        Location loc = resolveLocation(sender, location);
-        if (rotation != null) {
-            loc.setYaw(rotation);
-        }
-        final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
-        PersistentDataContainer persistentDataContainer = wt.getPersistentDataContainer();
-        if (refresh) {
-            persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
-        }
-        if (!ai) {
-            wt.setAI(false);
-        }
-        if (protect) {
-            persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-        }
-    }
-
-    @Subcommand("summon|s")
-    @CommandPermission("wanderingtrades.summon")
-    public class SummonTrader extends BaseCommand {
-        @Default
-        @Description("%COMMAND_SUMMON")
-        @CommandCompletion("@wtConfigs @wtWorlds")
-        @Syntax("<tradeConfig> [world:x,y,z]")
-        public void onSummon(CommandSender sender, String tradeConfig, @Optional Location location) {
-            Location loc = resolveLocation(sender, location);
-            summonTrader(sender, tradeConfig, loc, false);
-        }
-
-        @Subcommand("noai|n")
-        public class NoAI extends BaseCommand {
-            @Default
-            @Description("")
-            @CommandCompletion("@wtConfigs @angles @wtWorlds")
-            @Syntax("<tradeConfig> [rotation] [world:x,y,z]")
-            public void onSummonNoAI(CommandSender sender, String tradeConfig, @Optional Float rotation, @Optional Location location) {
-                Location loc = resolveLocation(sender, location);
-                if (rotation != null) {
-                    loc.setYaw(rotation);
-                }
-                summonTrader(sender, tradeConfig, loc, true);
-            }
-        }
-    }
-
-    @Subcommand("summonvillager|sv")
-    @CommandPermission("wanderingtrades.summonvillager")
-    public class SummonVillager extends BaseCommand {
-        @Default
-        @Description("%COMMAND_VSUMMON")
-        @CommandCompletion("@wtConfigs * * @wtWorlds")
-        @Syntax("<tradeConfig> <profession> <type> [world:x,y,z]")
-        public void onVillagerSummon(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Location location) {
-            Location loc = resolveLocation(sender, location);
-            summonVillagerTrader(sender, tradeConfig, loc, type, profession, false);
-        }
-
-        @Subcommand("noai|n")
-        public class NoAI extends BaseCommand {
-            @Default
-            @Description("%COMMAND_VSUMMON_NOAI")
-            @CommandCompletion("@wtConfigs * * @angles @wtWorlds")
-            @Syntax("<tradeConfig> <profession> <type> [rotation] [world:x,y,z]")
-            public void onSummonNoAI(CommandSender sender, String tradeConfig, Villager.Profession profession, Villager.Type type, @Optional Float rotation, @Optional Location location) {
-                Location loc = resolveLocation(sender, location);
-                if (rotation != null) {
-                    loc.setYaw(rotation);
-                }
-                summonVillagerTrader(sender, tradeConfig, loc, type, profession, true);
-            }
-        }
+        /* Reload Command */
+        mgr.command(
+                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_RELOAD)))
+                        .literal("reload")
+                        .permission("wanderingtrades.reload")
+                        .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                            chat.sendParsed(context.getSender(), chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
+                            wanderingTrades.getCfg().load();
+                            wanderingTrades.getLang().load();
+                            wanderingTrades.getListeners().reload();
+                            wanderingTrades.getStoredPlayers().load();
+                            chat.sendParsed(context.getSender(), chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
+                        }).execute())
+        );
     }
 }
