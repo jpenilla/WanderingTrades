@@ -66,7 +66,13 @@ public class StoredPlayers {
         if (wanderingTrades.isPaperServer()) {
             final SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
             if (skullMeta != null && skullMeta.getPlayerProfile() != null) {
-                Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> skullMeta.getPlayerProfile().complete());
+                Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
+                    try {
+                        skullMeta.getPlayerProfile().complete();
+                    } catch (Exception e) {
+                        wanderingTrades.getLog().debug(String.format("Failed to cache player head skin for player: [username=%s,uuid=%s]", name, uuid));
+                    }
+                });
             }
         }
 

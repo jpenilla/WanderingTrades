@@ -36,7 +36,7 @@ public class CommandHelper {
                     Function.identity()
             );
 
-            help = new MinecraftHelp<>("/wanderingtrades help", sender -> wanderingTrades.getAudience().sender(sender), mgr);
+            help = new MinecraftHelp<>("/wanderingtrades help", wanderingTrades.getAudience()::sender, mgr);
             help.setHelpColors(MinecraftHelp.HelpColors.of(
                     TextColor.color(0x00a3ff),
                     NamedTextColor.WHITE,
