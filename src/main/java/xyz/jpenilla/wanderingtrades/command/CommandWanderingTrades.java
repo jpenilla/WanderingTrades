@@ -4,7 +4,6 @@ import cloud.commandframework.CommandHelpHandler;
 import cloud.commandframework.Description;
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.paper.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.command.CommandSender;
 import xyz.jpenilla.jmplib.Chat;
@@ -13,19 +12,17 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 
 import java.util.stream.Collectors;
 
-import static xyz.jpenilla.wanderingtrades.command.CommandHelper.metaWithDescription;
+import static xyz.jpenilla.wanderingtrades.command.CommandManager.metaWithDescription;
 
 public class CommandWanderingTrades implements WTCommand {
 
     private final WanderingTrades wanderingTrades;
-    private final PaperCommandManager<CommandSender> mgr;
-    private final CommandHelper commandHelper;
+    private final CommandManager mgr;
     private final Chat chat;
 
-    public CommandWanderingTrades(WanderingTrades wanderingTrades, PaperCommandManager<CommandSender> mgr, CommandHelper commandHelper) {
+    public CommandWanderingTrades(WanderingTrades wanderingTrades, CommandManager mgr) {
         this.wanderingTrades = wanderingTrades;
         this.mgr = mgr;
-        this.commandHelper = commandHelper;
         this.chat = wanderingTrades.getChat();
     }
 
@@ -45,7 +42,7 @@ public class CommandWanderingTrades implements WTCommand {
                 mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_HELP)), "wanderingtrades")
                         .literal("help")
                         .argument(helpQueryArgument, Description.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
-                        .handler(context -> wanderingTrades.getCommandHelper().getHelp()
+                        .handler(context -> wanderingTrades.getCommandManager().getHelp()
                                 .queryCommands(context.getOrDefault(helpQueryArgument, ""), context.getSender()))
         );
 

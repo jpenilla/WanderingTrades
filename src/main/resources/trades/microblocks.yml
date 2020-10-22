@@ -2426,7 +2426,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Fletching Table"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzVlNjBlMjU3Yjg4ZWMyYWE3MzJiMzczMmFjOTAxMDVhYjI1YzA3ZWIwYjI1MjdmMWY4YzMyYzNiYjc4YWYyOSJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBiNzhlMDk2MTIzNmM4ZGE3N2QyOGZhOWExYzZmMDM5OGViYjI4ZWJmZDdhMTc4M2ViMmI2YzhjNDE2MDM0NiJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"

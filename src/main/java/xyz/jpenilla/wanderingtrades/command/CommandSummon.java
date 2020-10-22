@@ -1,18 +1,17 @@
 package xyz.jpenilla.wanderingtrades.command;
 
 import cloud.commandframework.Description;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.arguments.standard.EnumArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.arguments.selector.SingleEntitySelector;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
+import cloud.commandframework.bukkit.parsers.location.LocationArgument;
 import cloud.commandframework.bukkit.parsers.selector.SingleEntitySelectorArgument;
-import cloud.commandframework.paper.PaperCommandManager;
-import com.google.common.collect.ImmutableList;
+import cloud.commandframework.context.CommandContext;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -35,75 +34,36 @@ import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static xyz.jpenilla.wanderingtrades.command.CommandHelper.metaWithDescription;
+import static xyz.jpenilla.wanderingtrades.command.CommandManager.metaWithDescription;
 
 public class CommandSummon implements WTCommand {
 
     private final WanderingTrades wanderingTrades;
-    private final PaperCommandManager<CommandSender> mgr;
-    private final CommandHelper commandHelper;
+    private final CommandManager mgr;
     private final Chat chat;
 
-    public CommandSummon(WanderingTrades wanderingTrades, PaperCommandManager<CommandSender> mgr, CommandHelper commandHelper) {
+    public CommandSummon(WanderingTrades wanderingTrades, CommandManager mgr) {
         this.wanderingTrades = wanderingTrades;
         this.mgr = mgr;
-        this.commandHelper = commandHelper;
         this.chat = wanderingTrades.getChat();
 
-        /* Register XYZ Coordinate Arguments */
-        ArgumentParser<CommandSender, Double> coordinateParser = (context, inputQueue) -> {
-            final String inputString = inputQueue.peek();
-            if (inputString == null || inputString.equals("")) {
-                return ArgumentParseResult.failure(new NullPointerException("No input provided"));
-            }
-            final double input;
-            try {
-                input = Double.parseDouble(inputString);
-            } catch (NumberFormatException e) {
-                return ArgumentParseResult.failure(new NumberFormatException(String.format("'%s' is not a valid coordinate.", inputString)));
-            }
-            inputQueue.remove();
-            return ArgumentParseResult.success(input);
-        };
-        commandHelper.registerArgument("x", mgr.argumentBuilder(Double.class, "x")
-                .withSuggestionsProvider((c, s) -> {
-                    if (c.getSender() instanceof Player) {
-                        return ImmutableList.of(String.format("%.2f", ((Player) c.getSender()).getLocation().getX()));
-                    }
-                    return Collections.emptyList();
-                })
-                .withParser(coordinateParser));
-        commandHelper.registerArgument("y", mgr.argumentBuilder(Double.class, "y")
-                .withSuggestionsProvider((c, s) -> {
-                    if (c.getSender() instanceof Player) {
-                        return ImmutableList.of(String.format("%.2f", ((Player) c.getSender()).getLocation().getY()));
-                    }
-                    return Collections.emptyList();
-                })
-                .withParser(coordinateParser));
-        commandHelper.registerArgument("z", mgr.argumentBuilder(Double.class, "z")
-                .withSuggestionsProvider((c, s) -> {
-                    if (c.getSender() instanceof Player) {
-                        return ImmutableList.of(String.format("%.2f", ((Player) c.getSender()).getLocation().getZ()));
-                    }
-                    return Collections.emptyList();
-                })
-                .withParser(coordinateParser));
-
-        /* Register Pitch and Yaw command flags */
-        commandHelper.registerFlag(
+        mgr.registerFlag(
                 "pitch",
                 mgr.flagBuilder("pitch")
                         .withArgument(IntegerArgument.newBuilder("pitch").withMin(-180).withMax(180))
         );
-        commandHelper.registerFlag(
+        mgr.registerFlag(
                 "yaw",
                 mgr.flagBuilder("yaw")
                         .withArgument(IntegerArgument.newBuilder("yaw").withMin(-90).withMax(90))
+        );
+        mgr.registerFlag(
+                "world",
+                mgr.flagBuilder("world")
+                        .withArgument(WorldArgument.of("world"))
         );
     }
 
@@ -112,26 +72,16 @@ public class CommandSummon implements WTCommand {
         mgr.command(
                 mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NATURAL)))
                         .literal("summonnatural")
-                        .argument(WorldArgument.of("world"))
-                        .argument(commandHelper.getArgument("x"))
-                        .argument(commandHelper.getArgument("y"))
-                        .argument(commandHelper.getArgument("z"))
-                        .flag(commandHelper.getFlag("pitch"))
-                        .flag(commandHelper.getFlag("yaw"))
+                        .argument(LocationArgument.of("location"))
+                        .flag(mgr.getFlag("world"))
+                        .flag(mgr.getFlag("pitch"))
+                        .flag(mgr.getFlag("yaw"))
                         .flag(mgr.flagBuilder("noai"))
                         .flag(mgr.flagBuilder("protect"))
                         .flag(mgr.flagBuilder("refresh"))
                         .permission("wanderingtrades.summonnatural")
                         .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            final Location loc = new Location(context.get("world"), context.get("x"), context.get("y"), context.get("z"));
-                            final int yaw = context.flags().getValue("yaw", Integer.MAX_VALUE);
-                            if (yaw != Integer.MAX_VALUE) {
-                                loc.setYaw(yaw);
-                            }
-                            final int pitch = context.flags().getValue("pitch", Integer.MAX_VALUE);
-                            if (pitch != Integer.MAX_VALUE) {
-                                loc.setPitch(pitch);
-                            }
+                            final Location loc = resolveLocation(context);
                             final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
                             PersistentDataContainer persistentDataContainer = wt.getPersistentDataContainer();
                             if (context.flags().isPresent("refresh")) {
@@ -149,25 +99,15 @@ public class CommandSummon implements WTCommand {
         mgr.command(
                 mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_SUMMON)))
                         .literal("summon")
-                        .argument(commandHelper.getArgument("trade_config"))
-                        .argument(WorldArgument.of("world"))
-                        .argument(commandHelper.getArgument("x"))
-                        .argument(commandHelper.getArgument("y"))
-                        .argument(commandHelper.getArgument("z"))
-                        .flag(commandHelper.getFlag("pitch"))
-                        .flag(commandHelper.getFlag("yaw"))
+                        .argument(mgr.getArgument("trade_config"))
+                        .argument(LocationArgument.of("location"))
+                        .flag(mgr.getFlag("world"))
+                        .flag(mgr.getFlag("pitch"))
+                        .flag(mgr.getFlag("yaw"))
                         .flag(mgr.flagBuilder("noai"))
                         .permission("wanderingtrades.summon")
                         .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            final Location loc = new Location(context.get("world"), context.get("x"), context.get("y"), context.get("z"));
-                            final int yaw = context.flags().getValue("yaw", Integer.MAX_VALUE);
-                            if (yaw != Integer.MAX_VALUE) {
-                                loc.setYaw(yaw);
-                            }
-                            final int pitch = context.flags().getValue("pitch", Integer.MAX_VALUE);
-                            if (pitch != Integer.MAX_VALUE) {
-                                loc.setPitch(pitch);
-                            }
+                            final Location loc = resolveLocation(context);
                             this.summonTrader(context.getSender(), context.get("trade_config"), loc, context.flags().isPresent("noai"));
                         }).execute())
         );
@@ -175,27 +115,17 @@ public class CommandSummon implements WTCommand {
         mgr.command(
                 mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_VSUMMON)))
                         .literal("summonvillager")
-                        .argument(commandHelper.getArgument("trade_config"))
+                        .argument(mgr.getArgument("trade_config"))
                         .argument(EnumArgument.of(Villager.Type.class, "type"))
                         .argument(EnumArgument.of(Villager.Profession.class, "profession"))
-                        .argument(WorldArgument.of("world"))
-                        .argument(commandHelper.getArgument("x"))
-                        .argument(commandHelper.getArgument("y"))
-                        .argument(commandHelper.getArgument("z"))
-                        .flag(commandHelper.getFlag("pitch"))
-                        .flag(commandHelper.getFlag("yaw"))
+                        .argument(LocationArgument.of("location"))
+                        .flag(mgr.getFlag("world"))
+                        .flag(mgr.getFlag("pitch"))
+                        .flag(mgr.getFlag("yaw"))
                         .flag(mgr.flagBuilder("noai"))
                         .permission("wanderingtrades.villager")
                         .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            final Location loc = new Location(context.get("world"), context.get("x"), context.get("y"), context.get("z"));
-                            final int yaw = context.flags().getValue("yaw", Integer.MAX_VALUE);
-                            if (yaw != Integer.MAX_VALUE) {
-                                loc.setYaw(yaw);
-                            }
-                            final int pitch = context.flags().getValue("pitch", Integer.MAX_VALUE);
-                            if (pitch != Integer.MAX_VALUE) {
-                                loc.setPitch(pitch);
-                            }
+                            final Location loc = resolveLocation(context);
                             this.summonVillagerTrader(context.getSender(), context.get("trade_config"), loc, context.get("type"), context.get("profession"), context.flags().isPresent("noai"));
                         }).execute())
         );
@@ -219,6 +149,23 @@ public class CommandSummon implements WTCommand {
                             }
                         }).execute())
         );
+    }
+
+    private Location resolveLocation(CommandContext<CommandSender> ctx) {
+        final Location loc = ctx.get("location");
+        final World world = ctx.flags().getValue("world", null);
+        if (world != null) {
+            loc.setWorld(world);
+        }
+        final Integer yaw = ctx.flags().getValue("yaw", null);
+        if (yaw != null) {
+            loc.setYaw(yaw);
+        }
+        final Integer pitch = ctx.flags().getValue("pitch", null);
+        if (pitch != null) {
+            loc.setPitch(pitch);
+        }
+        return loc;
     }
 
     private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {

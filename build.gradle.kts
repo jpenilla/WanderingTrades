@@ -41,10 +41,10 @@ dependencies {
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
     compileOnly("com.github.Eunoians", "McRPG", "1.3.3.0-BETA")
 
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+18-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+23-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "1.7")
 
-    val cloudVersion = "1.0.1"
+    val cloudVersion = "1.1.0-SNAPSHOT"
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
     implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
 }

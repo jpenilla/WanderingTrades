@@ -3,7 +3,6 @@ package xyz.jpenilla.wanderingtrades.command;
 import cloud.commandframework.Description;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.paper.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -20,23 +19,21 @@ import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 import java.util.ArrayList;
 import java.util.List;
 
-import static xyz.jpenilla.wanderingtrades.command.CommandHelper.metaWithDescription;
+import static xyz.jpenilla.wanderingtrades.command.CommandManager.metaWithDescription;
 
 public class CommandConfig implements WTCommand {
 
     private final WanderingTrades wanderingTrades;
-    private final PaperCommandManager<CommandSender> mgr;
-    private final CommandHelper commandHelper;
+    private final CommandManager mgr;
     private final Chat chat;
 
-    public CommandConfig(WanderingTrades wanderingTrades, PaperCommandManager<CommandSender> mgr, CommandHelper commandHelper) {
+    public CommandConfig(WanderingTrades wanderingTrades, CommandManager mgr) {
         this.wanderingTrades = wanderingTrades;
         this.mgr = mgr;
-        this.commandHelper = commandHelper;
         this.chat = wanderingTrades.getChat();
 
         /* Register TradeConfig name Argument */
-        commandHelper.registerArgument("trade_config",
+        mgr.registerArgument("trade_config",
                 mgr.argumentBuilder(String.class, "trade_config")
                         .withSuggestionsProvider((context, s) -> ImmutableList.copyOf(wanderingTrades.getCfg().getTradeConfigs().keySet()))
                         .withParser((context, input) -> {
@@ -61,7 +58,7 @@ public class CommandConfig implements WTCommand {
         mgr.command(
                 mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_EDIT)))
                         .literal("edit")
-                        .argument(commandHelper.getArgument("trade_config").asOptional())
+                        .argument(mgr.getArgument("trade_config").asOptional())
                         .permission("wanderingtrades.edit")
                         .senderType(Player.class)
                         .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bstats.bukkit.Metrics;
 import xyz.jpenilla.jmplib.BasePlugin;
-import xyz.jpenilla.wanderingtrades.command.CommandHelper;
+import xyz.jpenilla.wanderingtrades.command.CommandManager;
 import xyz.jpenilla.wanderingtrades.compatability.McRPGHook;
 import xyz.jpenilla.wanderingtrades.compatability.VaultHook;
 import xyz.jpenilla.wanderingtrades.compatability.WorldGuardHook;
@@ -15,6 +15,8 @@ import xyz.jpenilla.wanderingtrades.util.Listeners;
 import xyz.jpenilla.wanderingtrades.util.Log;
 import xyz.jpenilla.wanderingtrades.util.StoredPlayers;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
+
+import java.util.logging.Level;
 
 @PluginMain
 public final class WanderingTrades extends BasePlugin {
@@ -26,7 +28,7 @@ public final class WanderingTrades extends BasePlugin {
     @Getter private StoredPlayers storedPlayers;
     @Getter private Log log;
     @Getter private Listeners listeners;
-    @Getter private CommandHelper commandHelper;
+    @Getter private CommandManager commandManager;
 
     @Getter private McRPGHook McRPG = null;
     @Getter private WorldGuardHook worldGuard = null;
@@ -57,7 +59,11 @@ public final class WanderingTrades extends BasePlugin {
         storedPlayers = new StoredPlayers(this);
         getServer().getScheduler().runTaskTimer(this, storedPlayers::load, 0L, 864000L);
 
-        commandHelper = new CommandHelper(this);
+        try {
+            commandManager = new CommandManager(this);
+        } catch (Exception e) {
+            getLogger().log(Level.WARNING, "Failed to initialize CommandManager", e);
+        }
 
         listeners = new Listeners(this);
         listeners.register();
