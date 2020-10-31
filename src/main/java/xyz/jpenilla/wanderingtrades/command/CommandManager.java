@@ -2,7 +2,12 @@ package xyz.jpenilla.wanderingtrades.command;
 
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.bukkit.BukkitCaptionKeys;
 import cloud.commandframework.bukkit.BukkitCommandMetaBuilder;
+import cloud.commandframework.captions.SimpleCaptionRegistry;
+import cloud.commandframework.captions.StandardCaptionKeys;
+import cloud.commandframework.exceptions.InvalidCommandSenderException;
+import cloud.commandframework.exceptions.InvalidSyntaxException;
 import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
@@ -10,6 +15,8 @@ import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
@@ -19,10 +26,15 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
 
-    @Getter private final MinecraftHelp<CommandSender> help;
+    private static final Pattern SYNTAX_HIGHLIGHT_PATTERN = Pattern.compile("[^\\s\\w\\-]");
+
+    private final WanderingTrades wanderingTrades;
+    @Getter
+    private final MinecraftHelp<CommandSender> help;
     private final Map<String, CommandArgument.Builder<CommandSender, ?>> argumentRegistry = new HashMap<>();
     private final Map<String, CommandFlag.Builder<?>> flagRegistry = new HashMap<>();
 
@@ -33,6 +45,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                 Function.identity(),
                 Function.identity()
         );
+        this.wanderingTrades = wanderingTrades;
 
         help = new MinecraftHelp<>("/wanderingtrades help", wanderingTrades.getAudience()::sender, this);
         help.setHelpColors(MinecraftHelp.HelpColors.of(
@@ -44,9 +57,23 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         ));
         help.setMessageProvider((sender, key) -> wanderingTrades.getLang().get(Lang.valueOf(String.format("HELP_%s", key).toUpperCase())));
 
-        new MinecraftExceptionHandler<CommandSender>()
-                .withDefaultHandlers()
-                .apply(this, wanderingTrades.getAudience()::sender);
+        this.registerExceptionHandlers();
+
+        if (this.getCaptionRegistry() instanceof SimpleCaptionRegistry) {
+            final SimpleCaptionRegistry<CommandSender> registry = (SimpleCaptionRegistry<CommandSender>) this.getCaptionRegistry();
+            registry.registerMessageFactory(
+                    StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
+                    (caption, sender) -> wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM)
+            );
+            registry.registerMessageFactory(
+                    BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE,
+                    (caption, sender) -> wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE)
+            );
+            registry.registerMessageFactory(
+                    BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT,
+                    (caption, sender) -> wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT)
+            );
+        }
 
         /* Register Brigadier */
         try {
@@ -68,6 +95,61 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                 new CommandSummon(wanderingTrades, this),
                 new CommandConfig(wanderingTrades, this)
         ).forEach(WTCommand::registerCommands);
+    }
+
+    private void registerExceptionHandlers() {
+        new MinecraftExceptionHandler<CommandSender>()
+                .withHandler(MinecraftExceptionHandler.ExceptionType.NO_PERMISSION, e ->
+                        Component.translatable("commands.help.failed", NamedTextColor.RED))
+                .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, e -> {
+                    final Component invalidSyntaxMessage = Component.text(wanderingTrades.getLang().get(Lang.COMMAND_INVALID_SYNTAX), NamedTextColor.RED);
+                    final Component correctSyntaxMessage = Component.text(
+                            String.format("/%s", ((InvalidSyntaxException) e).getCorrectSyntax()),
+                            NamedTextColor.GRAY
+                    ).replaceText(
+                            SYNTAX_HIGHLIGHT_PATTERN,
+                            builder -> builder.color(NamedTextColor.WHITE)
+                    );
+
+                    return Component.text()
+                            .append(invalidSyntaxMessage)
+                            .append(correctSyntaxMessage)
+                            .build();
+                })
+                .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, e -> {
+                    final Component invalidSenderMessage = Component.text(wanderingTrades.getLang().get(Lang.COMMAND_INVALID_SENDER), NamedTextColor.RED);
+                    final Component correctSenderType = Component.text(
+                            ((InvalidCommandSenderException) e).getRequiredSender().getSimpleName(),
+                            NamedTextColor.GRAY
+                    );
+                    return Component.text()
+                            .append(invalidSenderMessage)
+                            .append(correctSenderType)
+                            .build();
+                })
+                .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, e -> {
+                    final Component invalidArgumentMessage = Component.text(wanderingTrades.getLang().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
+                    final Component causeMessage = Component.text(e.getCause().getMessage(), NamedTextColor.GRAY);
+                    return Component.text()
+                            .append(invalidArgumentMessage)
+                            .append(causeMessage)
+                            .build();
+                })
+                .withDecorator(component -> {
+                    final Component prefix = Component.text()
+                            .append(Component.text("[", NamedTextColor.WHITE))
+                            .append(Component.text("W", TextColor.color(0x6B0BDE)))
+                            .append(Component.text("T", TextColor.color(0xBA0DFA)))
+                            .append(Component.text("]", NamedTextColor.WHITE))
+                            .append(Component.space())
+                            .clickEvent(ClickEvent.runCommand("/wanderingtrades help"))
+                            .build();
+                    return Component.text()
+                            .append(prefix)
+                            .append(component)
+                            .build();
+                })
+                .apply(this, wanderingTrades.getAudience()::sender);
     }
 
     public CommandArgument.Builder<CommandSender, ?> getArgument(String name) {
