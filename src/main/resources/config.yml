@@ -1,7 +1,7 @@
 # WanderingTrades Config ${project.version}
 debug: false
 
-# Languages currently included: en_US, zh_CN
+# Languages currently included: en_US, zh_CN, de_DE
 # Contribute translations for the menus and commands on GitHub
 language: 'en_US'
 
@@ -44,3 +44,6 @@ refreshCommandTradersMinutes: 5
 wgWhitelist: false
 wgRegionList:
   - RegionExample
+
+# Setting this option to true will completely disable all WanderingTrades commands.
+disableCommands: false

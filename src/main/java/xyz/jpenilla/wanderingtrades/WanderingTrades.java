@@ -59,10 +59,14 @@ public final class WanderingTrades extends BasePlugin {
         storedPlayers = new StoredPlayers(this);
         getServer().getScheduler().runTaskTimer(this, storedPlayers::load, 0L, 864000L);
 
-        try {
-            commandManager = new CommandManager(this);
-        } catch (Exception e) {
-            getLogger().log(Level.WARNING, "Failed to initialize CommandManager", e);
+        if (!cfg.isDisableCommands()) {
+            try {
+                commandManager = new CommandManager(this);
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, "Failed to initialize CommandManager", e);
+                this.setEnabled(false);
+                return;
+            }
         }
 
         listeners = new Listeners(this);

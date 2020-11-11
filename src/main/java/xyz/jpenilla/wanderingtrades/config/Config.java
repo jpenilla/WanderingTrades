@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @FieldNameConstants
 public class Config {
@@ -21,6 +22,8 @@ public class Config {
     private boolean debug;
     @Getter @Setter
     private boolean enabled;
+    @Getter @Setter
+    private boolean disableCommands;
     @Getter @Setter
     private boolean removeOriginalTrades;
     @Getter @Setter
@@ -54,6 +57,7 @@ public class Config {
 
         debug = config.getBoolean(Fields.debug);
         enabled = config.getBoolean(Fields.enabled);
+        disableCommands = config.getBoolean(Fields.disableCommands);
         removeOriginalTrades = config.getBoolean(Fields.removeOriginalTrades);
         allowMultipleSets = config.getBoolean(Fields.allowMultipleSets);
         refreshCommandTraders = config.getBoolean(Fields.refreshCommandTraders);
@@ -72,6 +76,7 @@ public class Config {
 
         config.set(Fields.debug, debug);
         config.set(Fields.enabled, enabled);
+        config.set(Fields.disableCommands, disableCommands);
         config.set(Fields.removeOriginalTrades, removeOriginalTrades);
         config.set(Fields.allowMultipleSets, allowMultipleSets);
         config.set(Fields.refreshCommandTraders, refreshCommandTraders);
@@ -110,16 +115,16 @@ public class Config {
                 plugin.getLog().info("Creating trades folder");
             }
         }
-        if (folder.listFiles().length == 0) {
+        if (Objects.requireNonNull(folder.listFiles()).length == 0) {
             plugin.getLog().info("No trade configs found, copying example configs");
             plugin.saveResource("trades/example.yml", false);
             plugin.saveResource("trades/microblocks.yml", false);
             plugin.saveResource("trades/hermitheads.yml", false);
         }
 
-        File[] tradeConfigFiles = new File(path).listFiles();
+        File[] tradeConfigFiles = folder.listFiles();
 
-        Arrays.stream(tradeConfigFiles).forEach(f -> {
+        Arrays.stream(Objects.requireNonNull(tradeConfigFiles)).forEach(f -> {
             FileConfiguration data = YamlConfiguration.loadConfiguration(f);
             tradeConfigs.put(f.getName().split("\\.")[0], new TradeConfig(plugin, data));
         });
