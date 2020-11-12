@@ -1,16 +1,9 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import cloud.commandframework.CommandHelpHandler;
-import cloud.commandframework.Description;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
 import com.google.common.collect.ImmutableList;
-import org.bukkit.command.CommandSender;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
-
-import java.util.stream.Collectors;
 
 import static xyz.jpenilla.wanderingtrades.command.CommandManager.metaWithDescription;
 
@@ -28,24 +21,6 @@ public class CommandWanderingTrades implements WTCommand {
 
     @Override
     public void registerCommands() {
-        /* Help Query Argument */
-        CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>newBuilder("query")
-                .greedy()
-                .asOptional()
-                .withSuggestionsProvider((context, input) ->
-                        ((CommandHelpHandler.IndexHelpTopic<CommandSender>) mgr.getCommandHelpHandler().queryHelp(context.getSender(), ""))
-                                .getEntries().stream().map(CommandHelpHandler.VerboseHelpEntry::getSyntaxString).collect(Collectors.toList())
-                ).build();
-
-        /* Help Command */
-        mgr.command(
-                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_HELP)), "wanderingtrades")
-                        .literal("help")
-                        .argument(helpQueryArgument, Description.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
-                        .handler(context -> wanderingTrades.getCommandManager().getHelp()
-                                .queryCommands(context.getOrDefault(helpQueryArgument, ""), context.getSender()))
-        );
-
         /* About Command */
         mgr.command(
                 mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_ABOUT)))

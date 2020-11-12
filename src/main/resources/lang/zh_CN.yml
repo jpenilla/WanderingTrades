@@ -140,7 +140,7 @@ HELP_PAGE_OUT_OF_RANGE: "错误: 第<page>页不在范围内。可用范围[1, <
 HELP_CLICK_FOR_NEXT_PAGE: "点击进入下一页"
 HELP_CLICK_FOR_PREVIOUS_PAGE: "点击进入上一页"
 COMMAND_INVALID_SYNTAX: "无效的命令语法。正确的命令语法是："
-COMMAND_INVALID_SENDER: "使用此命令您必须是"
+COMMAND_INVALID_SENDER: "使用此命令您必须是{type}"
 COMMAND_INVALID_ARGUMENT: "无效的命令参数： "
 COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "'{input}'不属于下列情况: {acceptableValues}"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "'{input}'不是有效的位置坐标，所需格式为'<x> <y> <z>'"

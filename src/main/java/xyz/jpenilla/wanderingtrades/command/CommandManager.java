@@ -16,12 +16,12 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,6 +91,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
 
         /* Register Commands */
         ImmutableList.of(
+                new CommandHelp(wanderingTrades, this),
                 new CommandWanderingTrades(wanderingTrades, this),
                 new CommandSummon(wanderingTrades, this),
                 new CommandConfig(wanderingTrades, this)
@@ -102,9 +103,10 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                 .withHandler(MinecraftExceptionHandler.ExceptionType.NO_PERMISSION, e ->
                         Component.translatable("commands.help.failed", NamedTextColor.RED))
                 .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, e -> {
+                    final InvalidSyntaxException exception = (InvalidSyntaxException) e;
                     final Component invalidSyntaxMessage = Component.text(wanderingTrades.getLang().get(Lang.COMMAND_INVALID_SYNTAX), NamedTextColor.RED);
                     final Component correctSyntaxMessage = Component.text(
-                            String.format("/%s", ((InvalidSyntaxException) e).getCorrectSyntax()),
+                            String.format("/%s", exception.getCorrectSyntax()),
                             NamedTextColor.GRAY
                     ).replaceText(
                             SYNTAX_HIGHLIGHT_PATTERN,
@@ -117,15 +119,19 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                             .build();
                 })
                 .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, e -> {
-                    final Component invalidSenderMessage = Component.text(wanderingTrades.getLang().get(Lang.COMMAND_INVALID_SENDER), NamedTextColor.RED);
+                    final InvalidCommandSenderException exception = (InvalidCommandSenderException) e;
+                    final Component invalidSenderMessage = Component.text(
+                            wanderingTrades.getLang().get(Lang.COMMAND_INVALID_SENDER),
+                            NamedTextColor.RED
+                    );
                     final Component correctSenderType = Component.text(
-                            ((InvalidCommandSenderException) e).getRequiredSender().getSimpleName(),
+                            exception.getRequiredSender().getSimpleName(),
                             NamedTextColor.GRAY
                     );
-                    return Component.text()
-                            .append(invalidSenderMessage)
-                            .append(correctSenderType)
-                            .build();
+                    return invalidSenderMessage.replaceText(
+                            Pattern.compile("\\{type}"),
+                            match -> correctSenderType
+                    );
                 })
                 .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, e -> {
                     final Component invalidArgumentMessage = Component.text(wanderingTrades.getLang().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
@@ -135,20 +141,10 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                             .append(causeMessage)
                             .build();
                 })
-                .withDecorator(component -> {
-                    final Component prefix = Component.text()
-                            .append(Component.text("[", NamedTextColor.WHITE))
-                            .append(Component.text("W", TextColor.color(0x6B0BDE)))
-                            .append(Component.text("T", TextColor.color(0xBA0DFA)))
-                            .append(Component.text("]", NamedTextColor.WHITE))
-                            .append(Component.space())
-                            .clickEvent(ClickEvent.runCommand("/wanderingtrades help"))
-                            .build();
-                    return Component.text()
-                            .append(prefix)
-                            .append(component)
-                            .build();
-                })
+                .withDecorator(component -> Component.text()
+                        .append(Constants.PREFIX_COMPONENT)
+                        .append(component)
+                        .build())
                 .apply(this, wanderingTrades.getAudience()::sender);
     }
 

@@ -51,4 +51,4 @@ headTrade:
     customname: '<yellow>{PLAYER}''s Head'
     amount: 1
     lore:
-      - '    <gray>Obtained from Wandering Trader'
+      - '  <gray><italic>Obtained from Wandering Trader'
