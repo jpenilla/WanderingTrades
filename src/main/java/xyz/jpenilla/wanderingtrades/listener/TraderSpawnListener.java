@@ -58,7 +58,7 @@ public class TraderSpawnListener implements Listener {
 
                 List<MerchantRecipe> newTrades = new ArrayList<>();
                 if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
-                    newTrades.addAll(wanderingTrades.getStoredPlayers().getPlayerHeadsFromServer());
+                    newTrades.addAll(wanderingTrades.getStoredPlayers().randomlySelectPlayerHeads());
                 }
                 if (wanderingTrades.getCfg().isAllowMultipleSets()) {
                     ImmutableList.copyOf(wanderingTrades.getCfg().getTradeConfigs().values()).forEach(config -> {

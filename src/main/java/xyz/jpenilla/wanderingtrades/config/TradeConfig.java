@@ -5,11 +5,13 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -19,8 +21,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 
 @FieldNameConstants
 public class TradeConfig {
@@ -41,7 +44,7 @@ public class TradeConfig {
     @Getter @Setter
     private String customName;
 
-    private final String parent = "trades";
+    private static final String TRADES = "trades";
 
     public TradeConfig(WanderingTrades instance, FileConfiguration config) {
         plugin = instance;
@@ -50,7 +53,7 @@ public class TradeConfig {
     }
 
     public void load() {
-        allTrades = readTrades(file);
+        allTrades = readTrades();
         randomized = file.getBoolean(Fields.randomized);
         randomAmount = file.getString(Fields.randomAmount);
         enabled = file.getBoolean(Fields.enabled);
@@ -71,84 +74,95 @@ public class TradeConfig {
         try {
             file.save(path);
         } catch (IOException e) {
-            plugin.getLog().warn(e.getMessage());
+            plugin.getLogger().log(Level.WARNING, String.format("Failed to save trade config: '%s'", path), e);
         }
 
         load();
     }
 
-    public static ItemStack getStack(FileConfiguration config, String key) {
+    public static @Nullable ItemStack getStack(FileConfiguration config, String key) {
         ItemBuilder itemBuilder = null;
-        boolean McRPG = false;
 
         if (WanderingTrades.getInstance().isPaperServer() && WanderingTrades.getInstance().getMajorMinecraftVersion() > 14) {
-            try {
-                itemBuilder = new ItemBuilder(ItemStack.deserializeBytes((byte[]) config.get(key + ".itemStackAsBytes")));
-            } catch (Exception ignored) {
+            final byte[] stack = (byte[]) config.get(key + ".itemStackAsBytes");
+            if (stack != null) {
+                itemBuilder = new ItemBuilder(ItemStack.deserializeBytes(stack));
             }
         }
 
         if (itemBuilder == null) {
-            try {
-                itemBuilder = new ItemBuilder(ItemStack.deserialize(config.getConfigurationSection(key + ".itemStack").getValues(true)));
-            } catch (NullPointerException ignored) {
+            final ConfigurationSection configSection = config.getConfigurationSection(key + ".itemStack");
+            if (configSection != null) {
+                itemBuilder = new ItemBuilder(ItemStack.deserialize(configSection.getValues(true)));
             }
         }
 
-        if (itemBuilder == null && config.getString(key + ".material") != null) {
-            if (config.getString(key + ".material").contains("head-")) {
-                itemBuilder = new HeadBuilder(config.getString(key + ".material").replace("head-", ""));
+        final String materialString = config.getString(key + ".material");
+        final int amount = config.getInt(key + ".amount", 1);
+
+        if (materialString != null && materialString.toUpperCase(Locale.ENGLISH).contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
+            itemBuilder = new ItemBuilder(Material.CHIPPED_ANVIL).setAmount(amount);
+            if (materialString.toUpperCase().contains("SKILL")) {
+                itemBuilder.setName("mcrpg_skill_book_placeholder_");
             } else {
-                if (config.getString(key + ".material").toUpperCase().contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
-                    itemBuilder = new ItemBuilder(Material.CHIPPED_ANVIL).setAmount(config.getInt(key + ".amount"));
-                    if (config.getString(key + ".material").toUpperCase().contains("SKILL")) {
-                        itemBuilder.setName("mcrpg_skill_book_placeholder_");
-                    } else {
-                        itemBuilder.setName("mcrpg_upgrade_book_placeholder_");
-                    }
-                    McRPG = true;
+                itemBuilder.setName("mcrpg_upgrade_book_placeholder_");
+            }
+            return itemBuilder.build();
+        }
+
+        if (itemBuilder == null && materialString != null) {
+
+            if (materialString.startsWith("head-")) {
+                itemBuilder = new HeadBuilder(materialString.substring(5));
+            } else {
+                Material material = Material.getMaterial(materialString.toUpperCase());
+
+                if (material != null) {
+                    itemBuilder = new ItemBuilder(material).setAmount(amount);
                 } else {
-                    String matName;
-
-                    try {
-                        matName = Objects.requireNonNull(config.getString(key + ".material")).toUpperCase();
-                    } catch (NullPointerException e) {
-                        matName = Material.STONE.toString();
-                        WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
-                    }
-
-                    Material m = Material.getMaterial(matName);
-
-                    if (m != null) {
-                        itemBuilder = new ItemBuilder(m).setAmount(config.getInt(key + ".amount"));
-                    } else {
-                        itemBuilder = new ItemBuilder(Material.STONE);
-                        WanderingTrades.getInstance().getLog().warn(config.getString(key + ".material") + " is not a valid material");
-                    }
+                    itemBuilder = new ItemBuilder(Material.STONE);
+                    WanderingTrades.getInstance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid material!", materialString));
                 }
             }
 
-            if (!McRPG) {
-                String cname = config.getString(key + ".customname");
-                if (cname != null && !cname.equals("NONE")) {
-                    itemBuilder.setName(cname);
-                }
-                if (config.getStringList(key + ".lore").size() != 0) {
-                    itemBuilder.setLore(config.getStringList(key + ".lore"));
-                }
-                itemBuilder.setAmount(config.getInt(key + ".amount"));
+            final String customName = config.getString(key + ".customname");
+            if (customName != null && !customName.equals("NONE") && !customName.isEmpty()) {
+                itemBuilder.setName(customName);
+            }
+            final List<String> lores = config.getStringList(key + ".lore");
+            if (lores.size() != 0) {
+                itemBuilder.setLore(lores);
+            }
+            itemBuilder.setAmount(amount);
 
-                for (String s : config.getStringList(key + ".enchantments")) {
-                    if (s.contains(":")) {
-                        String[] e = s.split(":");
-                        Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e[0].toLowerCase()));
-                        if (ench != null) {
-                            itemBuilder.addEnchant(ench, Integer.parseInt(e[1]));
-                        }
+            for (final String enchantString : config.getStringList(key + ".enchantments")) {
+                final Enchantment enchantment;
+                final int level;
+                if (enchantString.contains(":")) {
+                    final String[] args = enchantString.toLowerCase(Locale.ENGLISH).split(":");
+                    if (args.length == 2) {
+                        enchantment = Enchantment.getByKey(NamespacedKey.minecraft(args[0]));
+                        level = Integer.parseInt(args[1]);
+                    } else if (args.length == 3) {
+                        // noinspection deprecation
+                        enchantment = Enchantment.getByKey(new NamespacedKey(args[0], args[1]));
+                        level = Integer.parseInt(args[2]);
+                    } else {
+                        enchantment = null;
+                        level = 0;
                     }
+                } else {
+                    enchantment = null;
+                    level = 0;
+                }
+                if (enchantment != null) {
+                    itemBuilder.addEnchant(enchantment, level);
+                } else {
+                    WanderingTrades.getInstance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid enchantment!", materialString));
                 }
             }
         }
+
         if (itemBuilder != null) {
             return itemBuilder.build();
         } else {
@@ -157,12 +171,12 @@ public class TradeConfig {
     }
 
     public void deleteTrade(String configName, String tradeName) {
-        file.set(parent + "." + tradeName, null);
+        file.set(TRADES + "." + tradeName, null);
         save(configName);
     }
 
     public void writeTrade(String configName, String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
-        String child = parent + "." + tradeName;
+        String child = TRADES + "." + tradeName;
         if (i1 != null) {
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
@@ -177,9 +191,17 @@ public class TradeConfig {
         }
     }
 
+    public @NonNull ConfigurationSection getTradeSection() {
+        ConfigurationSection section = this.file.getConfigurationSection(TRADES);
+        if (section == null) {
+            section = this.file.createSection("");
+        }
+        return section;
+    }
+
     public void writeIngredient(String tradeName, int i, ItemStack is) {
-        if (file.getConfigurationSection(parent).getKeys(false).contains(tradeName)) {
-            String child = parent + "." + tradeName;
+        if (this.getTradeSection().getKeys(false).contains(tradeName)) {
+            String child = TRADES + "." + tradeName;
             if (is != null) {
                 if (plugin.isPaperServer() && plugin.getMajorMinecraftVersion() > 14) {
                     file.set(child + ".ingredients." + i + ".itemStackAsBytes", is.serializeAsBytes());
@@ -192,29 +214,33 @@ public class TradeConfig {
         }
     }
 
-    private List<MerchantRecipe> readTrades(FileConfiguration config) {
+    private List<MerchantRecipe> readTrades() {
         List<MerchantRecipe> tradeList = new ArrayList<>();
-        config.getConfigurationSection(parent).getKeys(false).forEach(key -> {
-            String prefix = parent + "." + key + ".";
+        this.getTradeSection().getKeys(false).forEach(key -> {
+            String prefix = TRADES + "." + key + ".";
 
             int maxUses = 1;
-            if (config.getInt(prefix + "maxUses") != 0) {
-                maxUses = config.getInt(prefix + "maxUses");
+            if (file.getInt(prefix + "maxUses") != 0) {
+                maxUses = file.getInt(prefix + "maxUses");
             }
 
-            ItemStack result = getStack(config, prefix + "result");
-            MerchantRecipe recipe = new MerchantRecipe(result, 0, maxUses, config.getBoolean(prefix + "experienceReward"));
+            ItemStack result = getStack(file, prefix + "result");
+            if (result != null) {
+                MerchantRecipe recipe = new MerchantRecipe(result, 0, maxUses, file.getBoolean(prefix + "experienceReward"));
 
-            int ingredientNumber = 1;
-            while (ingredientNumber < 3) {
-                ItemStack ingredient = getStack(config, prefix + "ingredients." + ingredientNumber);
-                if (ingredient != null) {
-                    recipe.addIngredient(ingredient);
+                int ingredientNumber = 1;
+                while (ingredientNumber < 3) {
+                    ItemStack ingredient = getStack(file, prefix + "ingredients." + ingredientNumber);
+                    if (ingredient != null) {
+                        recipe.addIngredient(ingredient);
+                    }
+                    ingredientNumber++;
                 }
-                ingredientNumber++;
-            }
 
-            tradeList.add(recipe);
+                tradeList.add(recipe);
+            } else {
+                plugin.getLogger().log(Level.WARNING, String.format("Failed to read trade: '%s', missing/invalid result item", prefix));
+            }
         });
         return tradeList;
     }
