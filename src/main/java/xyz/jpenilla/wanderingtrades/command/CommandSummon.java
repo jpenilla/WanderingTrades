@@ -15,7 +15,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
@@ -36,6 +35,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 
 import static xyz.jpenilla.wanderingtrades.command.CommandManager.metaWithDescription;
 
@@ -140,7 +140,7 @@ public class CommandSummon implements WTCommand {
                         .senderType(Player.class)
                         .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
                             Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
-                            if (entity instanceof LivingEntity && !(entity instanceof Player)) {
+                            if (entity != null && !(entity instanceof Player)) {
                                 setCustomName(entity, context.get("name"));
                                 entity.setCustomNameVisible(true);
                                 chat.send(context.getSender(), "Named entity<gray>:</gray> " + context.get("name"));
@@ -235,7 +235,6 @@ public class CommandSummon implements WTCommand {
     }
 
     private static final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
-    //private static final BungeeCordComponentSerializer bungeeSerializer = BungeeCordComponentSerializer.get();
 
     /**
      * Set the custom name of an entity from a MiniMessage string using reflection. Falls back to Bukkit api using legacy text.
@@ -243,17 +242,14 @@ public class CommandSummon implements WTCommand {
      * @param entity      The Bukkit entity
      * @param miniMessage The MiniMessage string. Clears the name if empty or null
      */
-    private void setCustomName(final @NonNull Entity entity,
-                               final @Nullable String miniMessage) {
+    private void setCustomName(
+            final @NonNull Entity entity,
+            final @Nullable String miniMessage
+    ) {
         if (miniMessage == null || miniMessage.equals("")) {
             entity.setCustomName(null);
             return;
         }
-        // TODO: prefer paper api to set name with components once the api exists https://github.com/PaperMC/Paper/pull/4357
-        //if (wanderingTrades.isPaperServer() && wanderingTrades.getMajorMinecraftVersion() > 15) {
-        //    entity.setCustomNameComponent(bungeeSerializer.serialize(wanderingTrades.getMiniMessage().parse(miniMessage)));
-        //    return;
-        //}
         try {
             Class<?> _CraftEntity = Crafty.needCraftClass("entity.CraftEntity");
             Class<?> _Entity = Crafty.needNmsClass("Entity");
@@ -268,7 +264,13 @@ public class CommandSummon implements WTCommand {
 
             _setCustomName.invoke(nmsEntity, customName);
         } catch (Throwable throwable) {
-            wanderingTrades.getLog().debug("Failed to set entity name with reflection: " + throwable.getMessage());
+            if (wanderingTrades.getCfg().isDebug()) {
+                wanderingTrades.getLogger().log(
+                        Level.WARNING,
+                        "Failed to set entity name using reflection, falling back onto legacy text serialization",
+                        throwable
+                );
+            }
             entity.setCustomName(MiniMessageUtil.miniMessageToLegacy(miniMessage));
         }
     }

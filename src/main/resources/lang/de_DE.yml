@@ -17,7 +17,7 @@ COMMAND_VSUMMON: 'Erzeugt einen Dorfbewohner mit der spezifischen Konfiguration.
 GUI_BACK: '<red>Zurück'
 GUI_BACK_LORE: '<gray><italic>  Klicken um zurückzukehren'
 GUI_CLOSE: '<red>Schließen'
-GUI_CLOSE_LORE: '<gray><italic>  Klicken um zu schließ'
+GUI_CLOSE_LORE: '<gray><italic>  Klicken um zu schließen'
 GUI_TOGGLE_LORE: '<gray><italic>  Klicken um umzuschalten'
 GUI_EDIT_LORE: '<gray><italic>  Klickem um zu bearbeiten'
 GUI_VALUE_LORE: '<white>Wert</white><gray>:</gray> '

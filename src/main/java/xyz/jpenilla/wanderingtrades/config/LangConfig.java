@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class LangConfig {
     private final WanderingTrades plugin;
@@ -36,7 +37,7 @@ public class LangConfig {
 
     public String get(Lang key) {
         try {
-            return messages.get(key);
+            return Objects.requireNonNull(messages.get(key));
         } catch (NullPointerException e) {
             plugin.getLog().warn("The message '" + key + "' is missing from your lang file. Use 'updateLang: true' in config.yml to fix this");
             return "";

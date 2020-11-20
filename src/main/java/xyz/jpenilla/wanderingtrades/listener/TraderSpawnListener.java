@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class TraderSpawnListener implements Listener {
     private final WanderingTrades wanderingTrades;
@@ -75,10 +76,20 @@ public class TraderSpawnListener implements Listener {
                 }
 
                 Bukkit.getScheduler().runTask(wanderingTrades, () -> {
-                    if (!refresh) {
-                        newTrades.addAll(wanderingTrader.getRecipes());
-                    } else if (wanderingTrades.getMajorMinecraftVersion() < 17 && !wanderingTrades.getCfg().isRemoveOriginalTrades()) { // TODO -> Check on new Minecraft Version/NMS Mappings
-                        resetOffers(wanderingTrader);
+                    if (refresh) {
+                        if (!wanderingTrades.getCfg().isRemoveOriginalTrades()) {
+                            if (wanderingTrades.isPaperServer() && wanderingTrades.getMajorMinecraftVersion() >= 16) {
+                                wanderingTrader.resetOffers();
+                                newTrades.addAll(wanderingTrader.getRecipes());
+                            } else if (wanderingTrades.getMajorMinecraftVersion() <= 16) {
+                                // This branch is executed when the plugin is run on Paper 1.14 or 1.15, or on Spigot 1.14-1.16.
+                                // The above if statement, and the below method should be updated when Spigot's version/mappings
+                                // change, if maintaining Spigot support for this feature is desired.
+                                resetOffersUsingReflection(wanderingTrader);
+                                newTrades.addAll(wanderingTrader.getRecipes());
+                            }
+                        }
+                    } else {
                         newTrades.addAll(wanderingTrader.getRecipes());
                     }
                     wanderingTrader.setRecipes(newTrades);
@@ -93,14 +104,13 @@ public class TraderSpawnListener implements Listener {
     /**
      * Clear this {@link AbstractVillager}'s offers and acquire new ones.
      * <p>
-     * Reflection-based implementation of
-     * <a href="https://github.com/pl3xgaming/Purpur/blob/de30a3e5e293a5ece224bac0bb2301095ad6ddbf/patches/api/0016-Villager-resetOffers.patch#L19">Purpur's Villager-resetOffers API</a>
+     * Reflection-based implementation of Paper's Villager-resetOffers API</a>
      *
      * @param trader the trader to act on
      */
-    private void resetOffers(@NonNull AbstractVillager trader) {
+    private void resetOffersUsingReflection(@NonNull AbstractVillager trader) {
+        final List<MerchantRecipe> oldOffers = trader.getRecipes();
         try {
-            // TODO -> Check on new Minecraft Version/NMS Mappings
             String updateTradesMethodName = "eW";
             switch (wanderingTrades.getMajorMinecraftVersion()) {
                 case 14:
@@ -125,10 +135,13 @@ public class TraderSpawnListener implements Listener {
 
             _resetTrades.setAccessible(true);
             _resetTrades.invoke(nmsTrader);
-        } catch (Throwable e) {
-            trader.setRecipes(new ArrayList<>());
-            e.printStackTrace();
-            wanderingTrades.getLog().warn("Failed to reset trades! Please report this bug to the issue tracker  at " + wanderingTrades.getDescription().getWebsite() + " !");
+        } catch (Throwable throwable) {
+            trader.setRecipes(oldOffers);
+            wanderingTrades.getLogger().log(
+                    Level.WARNING,
+                    String.format("Failed to reset trades! Please report this bug to the issue tracker at %s !", wanderingTrades.getDescription().getWebsite()),
+                    throwable
+            );
         }
     }
 }

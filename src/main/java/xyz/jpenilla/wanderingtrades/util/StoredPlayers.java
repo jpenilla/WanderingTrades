@@ -1,7 +1,6 @@
 package xyz.jpenilla.wanderingtrades.util;
 
 import com.google.common.collect.ImmutableList;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class StoredPlayers {
     private final WanderingTrades wanderingTrades;
-    @Getter private final Map<UUID, MerchantRecipe> players = new HashMap<>();
+    private final Map<UUID, MerchantRecipe> players = new HashMap<>();
 
     public StoredPlayers(WanderingTrades wanderingTrades) {
         this.wanderingTrades = wanderingTrades;

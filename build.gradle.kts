@@ -33,7 +33,7 @@ dependencies {
     annotationProcessor("org.projectlombok", "lombok", "1.18.12")
 
     compileOnly("org.projectlombok", "lombok", "1.18.12")
-    compileOnly("com.destroystokyo.paper", "paper-api", "1.16.3-R0.1-SNAPSHOT")
+    compileOnly("com.destroystokyo.paper", "paper-api", "1.16.4-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7")
     compileOnly("net.ess3", "EssentialsX", "2.17.2")
     compileOnly("org.checkerframework", "checker-qual", "3.5.0")
