@@ -48,8 +48,20 @@ public class TraderSpawnListener implements Listener {
     @EventHandler
     public void onSpawn(CreatureSpawnEvent e) {
         if (e.getEntityType() == EntityType.WANDERING_TRADER) {
-            Bukkit.getScheduler().runTaskLater(wanderingTrades, () -> addTrades((WanderingTrader) e.getEntity(), false), 1L);
+            if (wanderingTrades.getCfg().isTraderWorldWhitelist()) {
+                if (wanderingTrades.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
+                    successfulSpawn((WanderingTrader) e.getEntity());
+                }
+            } else {
+                if (!wanderingTrades.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
+                    successfulSpawn((WanderingTrader) e.getEntity());
+                }
+            }
         }
+    }
+
+    private void successfulSpawn(WanderingTrader trader) {
+        Bukkit.getScheduler().runTaskLater(wanderingTrades, () -> addTrades(trader, false), 1L);
     }
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
