@@ -18,10 +18,10 @@ public class TradeListGui extends PaginatedGui {
     private final ItemStack editButton = new ItemBuilder(Material.CHEST).setName(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG)).setLore(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE)).build();
     private final ItemStack newTradeStack = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19")
             .setName(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE)).setLore(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE)).build();
-    private final String tradeConfig;
+    private final TradeConfig tradeConfig;
 
-    public TradeListGui(String tradeConfig) {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig, 54);
+    public TradeListGui(TradeConfig tradeConfig) {
+        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig.getConfigName(), 54);
         this.tradeConfig = tradeConfig;
     }
 
@@ -55,15 +55,14 @@ public class TradeListGui extends PaginatedGui {
 
     public List<ItemStack> getListItems() {
         List<ItemStack> trades = new ArrayList<>();
-        TradeConfig tc = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
-        tc.getTradeSection().getKeys(false).stream().sorted().forEach(key -> {
-            ItemStack s = TradeConfig.getStack(tc.getFile(), "trades." + key + ".result");
-            if (s != null) {
-                ItemBuilder b = new ItemBuilder(s);
-                b.setName(key);
-                b.clearEnchants();
-                b.clearLore();
-                trades.add(b.build());
+        tradeConfig.getTradeSection().getKeys(false).stream().sorted().forEach(key -> {
+            ItemStack itemStack = TradeConfig.getStack(tradeConfig.getFile(), "trades." + key + ".result");
+            if (itemStack != null) {
+                final ItemBuilder builder = new ItemBuilder(itemStack);
+                builder.setName(key);
+                builder.clearEnchants();
+                builder.clearLore();
+                trades.add(builder.build());
             }
         });
         return trades;

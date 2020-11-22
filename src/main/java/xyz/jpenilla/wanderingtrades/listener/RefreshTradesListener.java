@@ -2,7 +2,7 @@ package xyz.jpenilla.wanderingtrades.listener;
 
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractVillager;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +14,10 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 public class RefreshTradesListener implements Listener {
     private final WanderingTrades plugin;
 
@@ -23,41 +27,47 @@ public class RefreshTradesListener implements Listener {
 
     @EventHandler
     public void onClick(PlayerInteractEntityEvent e) {
-        EntityType type = e.getRightClicked().getType();
-        if (type == EntityType.WANDERING_TRADER || type == EntityType.VILLAGER) {
+        final Entity rightClicked = e.getRightClicked();
+        if (rightClicked instanceof AbstractVillager) {
+            final AbstractVillager abstractVillager = (AbstractVillager) rightClicked;
+
             // Block Name Tags
-            PersistentDataContainer persistentDataContainer = e.getRightClicked().getPersistentDataContainer();
-            if (persistentDataContainer.has(Constants.CONFIG, PersistentDataType.STRING) || persistentDataContainer.has(Constants.PROTECT, PersistentDataType.STRING)) {
-                PlayerInventory p = e.getPlayer().getInventory();
-                if ((p.getItemInMainHand().getType() == Material.NAME_TAG) || (p.getItemInOffHand().getType() == Material.NAME_TAG)) {
+            final PlayerInventory playerInventory = e.getPlayer().getInventory();
+            if (playerInventory.getItemInMainHand().getType() == Material.NAME_TAG || playerInventory.getItemInOffHand().getType() == Material.NAME_TAG) {
+                final PersistentDataContainer persistentDataContainer = abstractVillager.getPersistentDataContainer();
+                if (persistentDataContainer.has(Constants.CONFIG_NAME, PersistentDataType.STRING) || persistentDataContainer.has(Constants.PROTECT, PersistentDataType.STRING)) {
                     e.setCancelled(true);
                 }
             }
 
             // Update trades
             if (plugin.getWorldGuard() != null) {
-                if (plugin.getWorldGuard().passesWhiteBlackList(e.getRightClicked().getLocation())) {
-                    updateTrades((AbstractVillager) e.getRightClicked());
+                if (plugin.getWorldGuard().passesWhiteBlackList(abstractVillager.getLocation())) {
+                    updateTrades(abstractVillager);
                 }
             } else {
-                updateTrades((AbstractVillager) e.getRightClicked());
+                updateTrades(abstractVillager);
             }
+
         }
     }
 
-    private void updateTrades(AbstractVillager entity) {
-        if (entity.getTicksLived() / 20L / 60L >= plugin.getCfg().getRefreshCommandTradersMinutes()) {
-            PersistentDataContainer persistentDataContainer = entity.getPersistentDataContainer();
-            if (persistentDataContainer.has(Constants.CONFIG, PersistentDataType.STRING) || persistentDataContainer.has(Constants.REFRESH_NATURAL, PersistentDataType.STRING)) {
-                String config = persistentDataContainer.get(Constants.CONFIG, PersistentDataType.STRING);
-                if (config != null) {
-                    TradeConfig tc = plugin.getCfg().getTradeConfigs().get(config);
-                    entity.setRecipes(tc.getTrades(true));
+    private void updateTrades(AbstractVillager abstractVillager) {
+        final PersistentDataContainer persistentDataContainer = abstractVillager.getPersistentDataContainer();
+        final String configName = persistentDataContainer.get(Constants.CONFIG_NAME, PersistentDataType.STRING);
+        final boolean refreshNatural = persistentDataContainer.has(Constants.REFRESH_NATURAL, PersistentDataType.STRING);
+        if (configName != null || refreshNatural) {
+            final long timeAtPreviousRefresh = persistentDataContainer.getOrDefault(Constants.LAST_REFRESH, PersistentDataType.LONG, 0L);
+            final LocalDateTime nextAllowedRefresh = Instant.ofEpochMilli(timeAtPreviousRefresh).atZone(ZoneId.systemDefault()).toLocalDateTime().plusMinutes(plugin.getCfg().getRefreshCommandTradersMinutes());
+            if (timeAtPreviousRefresh == 0L || LocalDateTime.now().isAfter(nextAllowedRefresh)) {
+                if (configName != null) {
+                    final TradeConfig tradeConfig = plugin.getCfg().getTradeConfigs().get(configName);
+                    abstractVillager.setRecipes(tradeConfig.getTrades(true));
                 }
-                if (persistentDataContainer.has(Constants.REFRESH_NATURAL, PersistentDataType.STRING) && EntityType.WANDERING_TRADER.equals(entity.getType())) {
-                    plugin.getListeners().getTraderSpawnListener().addTrades((WanderingTrader) entity, true);
+                if (refreshNatural && abstractVillager instanceof WanderingTrader) {
+                    plugin.getListeners().getTraderSpawnListener().addTrades((WanderingTrader) abstractVillager, true);
                 }
-                entity.setTicksLived(1);
+                persistentDataContainer.set(Constants.LAST_REFRESH, PersistentDataType.LONG, System.currentTimeMillis());
             }
         }
     }

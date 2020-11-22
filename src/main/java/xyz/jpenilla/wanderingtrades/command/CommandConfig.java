@@ -11,6 +11,7 @@ import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.gui.ConfigEditGui;
 import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
@@ -34,11 +35,13 @@ public class CommandConfig implements WTCommand {
 
         /* Register TradeConfig name Argument */
         mgr.registerArgument("trade_config",
-                mgr.argumentBuilder(String.class, "trade_config")
+                mgr.argumentBuilder(TradeConfig.class, "trade_config")
                         .withSuggestionsProvider((context, s) -> ImmutableList.copyOf(wanderingTrades.getCfg().getTradeConfigs().keySet()))
                         .withParser((context, input) -> {
-                            if (wanderingTrades.getCfg().getTradeConfigs().containsKey(input.peek())) {
-                                return ArgumentParseResult.success(input.remove());
+                            final TradeConfig tradeConfig = wanderingTrades.getCfg().getTradeConfigs().getOrDefault(input.peek(), null);
+                            if (tradeConfig != null) {
+                                input.remove();
+                                return ArgumentParseResult.success(tradeConfig);
                             }
                             return ArgumentParseResult.failure(new IllegalArgumentException(wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG)));
                         }));
@@ -62,7 +65,7 @@ public class CommandConfig implements WTCommand {
                         .permission("wanderingtrades.edit")
                         .senderType(Player.class)
                         .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            final String config = context.<String>getOptional("trade_config").orElse(null);
+                            final TradeConfig config = context.<TradeConfig>getOptional("trade_config").orElse(null);
                             if (config == null) {
                                 new TradeConfigListGui().open((Player) context.getSender());
                             } else {

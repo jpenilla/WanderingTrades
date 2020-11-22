@@ -30,6 +30,8 @@ public class TradeConfig {
     private final WanderingTrades plugin;
     @Getter
     private final FileConfiguration file;
+    @Getter
+    private final String configName;
     @Getter @Setter
     private boolean randomized;
     @Getter @Setter
@@ -46,9 +48,10 @@ public class TradeConfig {
 
     private static final String TRADES = "trades";
 
-    public TradeConfig(WanderingTrades instance, FileConfiguration config) {
-        plugin = instance;
-        file = config;
+    public TradeConfig(WanderingTrades instance, String configName, FileConfiguration config) {
+        this.plugin = instance;
+        this.configName = configName;
+        this.file = config;
         load();
     }
 
@@ -62,7 +65,7 @@ public class TradeConfig {
         customName = file.getString(Fields.customName, null);
     }
 
-    public void save(String configName) {
+    public void save() {
         file.set(Fields.enabled, enabled);
         file.set(Fields.randomized, randomized);
         file.set(Fields.invincible, invincible);
@@ -70,7 +73,7 @@ public class TradeConfig {
         file.set(Fields.chance, chance);
         file.set(Fields.customName, customName);
 
-        String path = plugin.getDataFolder() + "/trades/" + configName + ".yml";
+        final String path = String.format("%s/trades/%s.yml", plugin.getDataFolder(), this.configName);
         try {
             file.save(path);
         } catch (IOException e) {
@@ -170,12 +173,12 @@ public class TradeConfig {
         }
     }
 
-    public void deleteTrade(String configName, String tradeName) {
+    public void deleteTrade(String tradeName) {
         file.set(TRADES + "." + tradeName, null);
-        save(configName);
+        this.save();
     }
 
-    public void writeTrade(String configName, String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
+    public void writeTrade(String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
         String child = TRADES + "." + tradeName;
         if (i1 != null) {
             file.set(child + ".maxUses", maxUses);
@@ -187,7 +190,7 @@ public class TradeConfig {
             }
             writeIngredient(tradeName, 1, i1);
             writeIngredient(tradeName, 2, i2);
-            save(configName);
+            this.save();
         }
     }
 

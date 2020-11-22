@@ -134,9 +134,10 @@ public class Config {
 
         File[] tradeConfigFiles = folder.listFiles();
 
-        Arrays.stream(Objects.requireNonNull(tradeConfigFiles)).forEach(f -> {
-            FileConfiguration data = YamlConfiguration.loadConfiguration(f);
-            tradeConfigs.put(f.getName().split("\\.")[0], new TradeConfig(plugin, data));
+        Arrays.stream(Objects.requireNonNull(tradeConfigFiles)).forEach(file -> {
+            final FileConfiguration data = YamlConfiguration.loadConfiguration(file);
+            final String configName = file.getName().split("\\.")[0];
+            tradeConfigs.put(configName, new TradeConfig(plugin, configName, data));
         });
     }
 }

@@ -3,7 +3,6 @@ package xyz.jpenilla.wanderingtrades.compatability;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Location;
 import xyz.jpenilla.jmplib.TextUtil;
@@ -27,16 +26,9 @@ public class WorldGuardHook {
     }
 
     public boolean passesWhiteBlackList(Location loc) {
-        if (!plugin.getCfg().isWgWhitelist()) {
-            return true;
-        }
-        final ApplicableRegionSet regions = getRegions(loc);
-        for (ProtectedRegion region : regions) {
-            if (TextUtil.containsCaseInsensitive(region.getId(), plugin.getCfg().getWgRegionList())) {
-                return true;
-            }
-        }
-        return false;
+        final boolean inListedRegion = getRegions(loc).getRegions().stream()
+                .anyMatch(region -> TextUtil.containsCaseInsensitive(region.getId(), plugin.getCfg().getWgRegionList()));
+        return plugin.getCfg().isWgWhitelist() == inListedRegion;
     }
 
 }

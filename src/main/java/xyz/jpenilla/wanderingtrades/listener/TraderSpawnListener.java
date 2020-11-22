@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractVillager;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
@@ -47,21 +48,19 @@ public class TraderSpawnListener implements Listener {
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent e) {
-        if (e.getEntityType() == EntityType.WANDERING_TRADER) {
+        final Entity entity = e.getEntity();
+        if (entity instanceof WanderingTrader) {
+            final WanderingTrader wanderingTrader = (WanderingTrader) entity;
             if (wanderingTrades.getCfg().isTraderWorldWhitelist()) {
                 if (wanderingTrades.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
-                    successfulSpawn((WanderingTrader) e.getEntity());
+                    this.addTrades(wanderingTrader, false);
                 }
             } else {
                 if (!wanderingTrades.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
-                    successfulSpawn((WanderingTrader) e.getEntity());
+                    this.addTrades(wanderingTrader, false);
                 }
             }
         }
-    }
-
-    private void successfulSpawn(WanderingTrader trader) {
-        Bukkit.getScheduler().runTaskLater(wanderingTrades, () -> addTrades(trader, false), 1L);
     }
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {

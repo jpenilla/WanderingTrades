@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 public class TradeCreateGui extends TradeGui {
 
-    public TradeCreateGui(String tradeConfig) {
+    public TradeCreateGui(TradeConfig tradeConfig) {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
     }
 
@@ -41,8 +41,6 @@ public class TradeCreateGui extends TradeGui {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
 
-        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(getTradeConfig());
-
         if (getTradeNameStack().isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
@@ -55,7 +53,7 @@ public class TradeCreateGui extends TradeGui {
                             WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                             return false;
                         }
-                        if (t.getFile().getConfigurationSection("trades").contains(input)) {
+                        if (this.tradeConfig.getFile().getConfigurationSection("trades").contains(input)) {
                             WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                             return false;
                         }

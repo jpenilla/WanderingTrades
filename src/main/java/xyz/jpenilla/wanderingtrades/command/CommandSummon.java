@@ -168,70 +168,67 @@ public class CommandSummon implements WTCommand {
         return loc;
     }
 
-    private void summonTrader(CommandSender sender, String tradeConfig, Location loc, boolean disableAI) {
+    private void summonTrader(CommandSender sender, TradeConfig tradeConfig, Location loc, boolean disableAI) {
+        final List<MerchantRecipe> recipes;
         try {
-            List<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            final WanderingTrader wt = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
-            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wt.getUniqueId());
-            wt.setRecipes(recipes);
-            wt.setAI(!disableAI);
-
-            PersistentDataContainer p = wt.getPersistentDataContainer();
-
-            TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
-            if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                setCustomName(wt, t.getCustomName());
-                wt.setCustomNameVisible(true);
-            }
-            if (t.isInvincible()) {
-                wt.setInvulnerable(true);
-                wt.setRemoveWhenFarAway(false);
-                wt.setPersistent(true);
-                p.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-            }
-
-            p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
-        } catch (NullPointerException | IllegalStateException ex) {
-            if (ex instanceof NullPointerException) {
-                chat.sendParsed(sender, "<red><italic>" + wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
-            } else {
-                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
-            }
+            recipes = tradeConfig.getTrades(true);
+        } catch (IllegalStateException ex) {
+            chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+            return;
         }
+        loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
+            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wanderingTrader.getUniqueId());
+            wanderingTrader.setRecipes(recipes);
+            wanderingTrader.setAI(!disableAI);
+
+            final PersistentDataContainer dataContainer = wanderingTrader.getPersistentDataContainer();
+            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.getConfigName());
+
+            final String customName = tradeConfig.getCustomName();
+            if (customName != null && !customName.isEmpty() && !customName.equalsIgnoreCase("NONE")) {
+                setCustomName(wanderingTrader, customName);
+                wanderingTrader.setCustomNameVisible(true);
+            }
+            if (tradeConfig.isInvincible()) {
+                wanderingTrader.setInvulnerable(true);
+                wanderingTrader.setRemoveWhenFarAway(false);
+                wanderingTrader.setPersistent(true);
+                dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+            }
+        });
     }
 
-    private void summonVillagerTrader(CommandSender sender, String tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
+    private void summonVillagerTrader(CommandSender sender, TradeConfig tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
+        final List<MerchantRecipe> recipes;
         try {
-            List<MerchantRecipe> recipes = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig).getTrades(true);
-            final Villager v = (Villager) loc.getWorld().spawnEntity(loc, EntityType.VILLAGER);
-            v.setVillagerType(type);
-            v.setProfession(profession);
-            v.setVillagerLevel(5);
-            v.setRecipes(recipes);
-            v.setAI(!disableAI);
-
-            PersistentDataContainer p = v.getPersistentDataContainer();
-
-            TradeConfig t = wanderingTrades.getCfg().getTradeConfigs().get(tradeConfig);
-            if (t.getCustomName() != null && !t.getCustomName().equalsIgnoreCase("NONE")) {
-                setCustomName(v, t.getCustomName());
-                v.setCustomNameVisible(true);
-            }
-            if (t.isInvincible()) {
-                v.setInvulnerable(true);
-                v.setRemoveWhenFarAway(false);
-                v.setPersistent(true);
-                p.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-            }
-
-            p.set(Constants.CONFIG, PersistentDataType.STRING, tradeConfig);
-        } catch (NullPointerException | IllegalStateException ex) {
-            if (ex instanceof NullPointerException) {
-                chat.sendParsed(sender, "<red><italic>" + wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG));
-            } else {
-                chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
-            }
+            recipes = tradeConfig.getTrades(true);
+        } catch (IllegalStateException ex) {
+            chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+            return;
         }
+        loc.getWorld().spawn(loc, Villager.class, villager -> {
+            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(villager.getUniqueId());
+            villager.setRecipes(recipes);
+            villager.setAI(!disableAI);
+            villager.setVillagerType(type);
+            villager.setProfession(profession);
+            villager.setVillagerLevel(5);
+
+            final PersistentDataContainer dataContainer = villager.getPersistentDataContainer();
+            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.getConfigName());
+
+            final String customName = tradeConfig.getCustomName();
+            if (customName != null && !customName.isEmpty() && !customName.equalsIgnoreCase("NONE")) {
+                setCustomName(villager, customName);
+                villager.setCustomNameVisible(true);
+            }
+            if (tradeConfig.isInvincible()) {
+                villager.setInvulnerable(true);
+                villager.setRemoveWhenFarAway(false);
+                villager.setPersistent(true);
+                dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+            }
+        });
     }
 
     private static final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();

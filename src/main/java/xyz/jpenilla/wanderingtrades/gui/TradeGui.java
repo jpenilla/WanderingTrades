@@ -40,7 +40,6 @@ public abstract class TradeGui extends GuiHolder {
     @Getter private final ItemStack ingredient2 = new ItemBuilder(Material.STRUCTURE_VOID).setName(lang.get(Lang.GUI_TRADE_INGREDIENT_2)).setLore(lang.getList(Lang.GUI_TRADE_OPTIONAL_LORE)).build();
     @Getter private final ItemStack resultStack = new ItemBuilder(Material.STRUCTURE_VOID).setName(lang.get(Lang.GUI_TRADE_RESULT)).setLore(lang.getList(Lang.GUI_TRADE_REQUIRED_LORE)).build();
 
-    @Getter private final String tradeConfig;
     @Getter @Setter private String tradeName = null;
     @Getter @Setter private int maxUses = 1;
     @Getter @Setter private boolean experienceReward = true;
@@ -48,7 +47,9 @@ public abstract class TradeGui extends GuiHolder {
     @Getter @Setter private ItemStack i2 = ingredient2;
     @Getter @Setter private ItemStack result = resultStack;
 
-    public TradeGui(String name, String tradeConfig) {
+    protected final TradeConfig tradeConfig;
+
+    public TradeGui(String name, TradeConfig tradeConfig) {
         super(name, 45);
         this.tradeConfig = tradeConfig;
     }
@@ -127,8 +128,6 @@ public abstract class TradeGui extends GuiHolder {
                     .start(p);
         }
 
-        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
-
         int rS = event.getRawSlot();
         if (rS == 28) {
             i1 = updateSlot(event, ingredient1);
@@ -144,7 +143,7 @@ public abstract class TradeGui extends GuiHolder {
                 if (!i2.equals(ingredient2)) {
                     ingred2 = i2;
                 }
-                t.writeTrade(tradeConfig, tradeName, maxUses, experienceReward, i1, ingred2, result);
+                tradeConfig.writeTrade(tradeName, maxUses, experienceReward, i1, ingred2, result);
                 WanderingTrades.getInstance().getCfg().load();
                 p.closeInventory();
                 new TradeListGui(tradeConfig).open(p);

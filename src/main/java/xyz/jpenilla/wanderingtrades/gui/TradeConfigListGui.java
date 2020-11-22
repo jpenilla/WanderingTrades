@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.TextUtil;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class TradeConfigListGui extends PaginatedGui {
@@ -30,28 +32,28 @@ public class TradeConfigListGui extends PaginatedGui {
 
     public List<ItemStack> getListItems() {
         List<ItemStack> items = new ArrayList<>();
-        List<String> configs = new ArrayList<>();
-        Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).sorted().forEach(completion -> configs.add((String) completion));
-        for (String config : configs) {
-            TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(config);
-            List<String> lore = new ArrayList<>();
-            t.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> lore.add("<gray><italic>  " + key));
-            String[] lores = new String[lore.size()];
-            for (int j = 0; j < lore.size(); j++) {
-                lores[j] = lore.get(j);
-            }
-            List<String> finalLores = new ArrayList<>();
-            for (int x = 0; x < 10; ++x) {
-                try {
-                    finalLores.add("<gray>" + lores[x]);
-                } catch (ArrayIndexOutOfBoundsException ignored) {
-                }
-            }
-            if (lores.length > 10) {
-                finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(lores.length - 10)));
-            }
-            items.add(new ItemBuilder(Material.PAPER).setName(config).setLore(finalLores).build());
-        }
+        Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray(new String[0]))
+                .sorted()
+                .map(configName -> WanderingTrades.getInstance().getCfg().getTradeConfigs().get(configName))
+                .forEach(tradeConfig -> {
+                    List<String> lore = new ArrayList<>();
+                    tradeConfig.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> lore.add("<gray><italic>  " + key));
+                    String[] lores = new String[lore.size()];
+                    for (int j = 0; j < lore.size(); j++) {
+                        lores[j] = lore.get(j);
+                    }
+                    List<String> finalLores = new ArrayList<>();
+                    for (int x = 0; x < 10; ++x) {
+                        try {
+                            finalLores.add("<gray>" + lores[x]);
+                        } catch (ArrayIndexOutOfBoundsException ignored) {
+                        }
+                    }
+                    if (lores.length > 10) {
+                        finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(lores.length - 10)));
+                    }
+                    items.add(new ItemBuilder(Material.PAPER).setName(tradeConfig.getConfigName()).setLore(finalLores).build());
+                });
         return items;
     }
 
@@ -92,8 +94,10 @@ public class TradeConfigListGui extends PaginatedGui {
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
                         try {
-                            Files.copy(WanderingTrades.getInstance().getResource("trades/blank.yml"),
-                                    new File(WanderingTrades.getInstance().getDataFolder() + "/trades/" + s + ".yml").toPath());
+                            Files.copy(
+                                    Objects.requireNonNull(WanderingTrades.getInstance().getResource("trades/blank.yml")),
+                                    new File(String.format("%s/trades/%s.yml", WanderingTrades.getInstance().getDataFolder(), s)).toPath()
+                            );
 
                             WanderingTrades.getInstance().getCfg().load();
                             WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
@@ -111,12 +115,16 @@ public class TradeConfigListGui extends PaginatedGui {
             return;
         }
         if (i != null) {
-            //try {
-            if (TextUtil.containsCaseInsensitive(i.getItemMeta().getDisplayName(), configNames)) {
-                p.closeInventory();
-                new TradeListGui(i.getItemMeta().getDisplayName()).open(p);
+            final ItemMeta meta = i.getItemMeta();
+            if (meta.hasDisplayName()) {
+                final String displayName = meta.getDisplayName();
+                if (TextUtil.containsCaseInsensitive(displayName, configNames)) {
+                    p.closeInventory();
+                    final TradeConfig tradeConfig = Objects.requireNonNull(WanderingTrades.getInstance().getCfg().getTradeConfigs().get(displayName));
+                    new TradeListGui(tradeConfig).open(p);
+                }
             }
-        } //catch (NullPointerException ignored) {}
+        }
     }
 
     @Override

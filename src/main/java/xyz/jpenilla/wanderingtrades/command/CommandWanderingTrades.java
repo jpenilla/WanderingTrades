@@ -1,5 +1,6 @@
 package xyz.jpenilla.wanderingtrades.command;
 
+import cloud.commandframework.arguments.standard.StringArgument;
 import com.google.common.collect.ImmutableList;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;

@@ -16,24 +16,23 @@ import java.util.stream.IntStream;
 
 public class TradeEditGui extends TradeGui {
 
-    public TradeEditGui(String tradeConfig, String tradeName) {
+    public TradeEditGui(TradeConfig tradeConfig, String tradeName) {
         super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_EDIT_TITLE) + tradeName, tradeConfig);
         setTradeName(tradeName);
-        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
-        setExperienceReward(t.getFile().getBoolean("trades." + tradeName + ".experienceReward"));
-        setMaxUses(t.getFile().getInt("trades." + tradeName + ".maxUses"));
+        setExperienceReward(tradeConfig.getFile().getBoolean("trades." + tradeName + ".experienceReward"));
+        setMaxUses(tradeConfig.getFile().getInt("trades." + tradeName + ".maxUses"));
         if (getMaxUses() == 0) {
             setMaxUses(1);
         }
-        setI1(TradeConfig.getStack(t.getFile(), "trades." + tradeName + ".ingredients.1"));
+        setI1(TradeConfig.getStack(tradeConfig.getFile(), "trades." + tradeName + ".ingredients.1"));
         if (getI1() == null) {
             setI1(getIngredient1());
         }
-        setI2(TradeConfig.getStack(t.getFile(), "trades." + tradeName + ".ingredients.2"));
+        setI2(TradeConfig.getStack(tradeConfig.getFile(), "trades." + tradeName + ".ingredients.2"));
         if (getI2() == null) {
             setI2(getIngredient2());
         }
-        setResult(TradeConfig.getStack(t.getFile(), "trades." + tradeName + ".result"));
+        setResult(TradeConfig.getStack(tradeConfig.getFile(), "trades." + tradeName + ".result"));
         if (getResult() == null) {
             setResult(getResultStack());
         }
@@ -61,8 +60,6 @@ public class TradeEditGui extends TradeGui {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
 
-        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(getTradeConfig());
-
         if (getDeleteButton().isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
@@ -73,10 +70,10 @@ public class TradeEditGui extends TradeGui {
                     }))
                     .onValidateInput(((player, s) -> {
                         if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
-                            t.deleteTrade(getTradeConfig(), getTradeName());
+                            this.tradeConfig.deleteTrade(getTradeName());
                             WanderingTrades.getInstance().getCfg().load();
                             WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                            new TradeListGui(getTradeConfig()).open(player);
+                            new TradeListGui(this.tradeConfig).open(player);
                         } else {
                             onEditCancelled(player, s);
                         }

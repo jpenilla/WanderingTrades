@@ -18,11 +18,11 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
 
 public abstract class GuiHolder implements InventoryHolder {
-    public final LangConfig lang = WanderingTrades.getInstance().getLang();
-    public final String gui_toggle_lore = lang.get(Lang.GUI_TOGGLE_LORE);
-    public final ItemStack backButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_BACK)).setLore(lang.get(Lang.GUI_BACK_LORE)).build();
-    public final ItemStack closeButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_CLOSE)).setLore(lang.get(Lang.GUI_CLOSE_LORE)).build();
-    public final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
+    protected final LangConfig lang = WanderingTrades.getInstance().getLang();
+    protected final String gui_toggle_lore = lang.get(Lang.GUI_TOGGLE_LORE);
+    protected final ItemStack backButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_BACK)).setLore(lang.get(Lang.GUI_BACK_LORE)).build();
+    protected final ItemStack closeButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_CLOSE)).setLore(lang.get(Lang.GUI_CLOSE_LORE)).build();
+    protected final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
     protected Inventory inventory;
 
     public GuiHolder(String name, int size) {

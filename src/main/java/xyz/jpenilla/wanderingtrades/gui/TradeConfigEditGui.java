@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.jmplib.InputConversation;
 import xyz.jpenilla.jmplib.ItemBuilder;
@@ -31,34 +32,32 @@ public class TradeConfigEditGui extends GuiHolder {
     private final ItemStack deleteButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19")
             .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_CONFIG_DELETE_LORE)).build();
 
-    private final String tradeConfig;
+    private final TradeConfig tradeConfig;
 
-    public TradeConfigEditGui(String tradeConfig) {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_EDIT_TITLE) + tradeConfig, 45);
+    public TradeConfigEditGui(TradeConfig tradeConfig) {
+        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_EDIT_TITLE) + tradeConfig.getConfigName(), 45);
         this.tradeConfig = tradeConfig;
     }
 
-    public Inventory getInventory() {
+    public @NonNull Inventory getInventory() {
         inventory.clear();
 
         inventory.setItem(inventory.getSize() - 1, backButton);
 
-        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
-
         ItemStack enabled;
-        if (t.isEnabled()) {
+        if (tradeConfig.isEnabled()) {
             enabled = enabledEnabled;
         } else {
             enabled = enabledDisabled;
         }
         ItemStack randomized;
-        if (t.isRandomized()) {
+        if (tradeConfig.isRandomized()) {
             randomized = randomizedEnabled;
         } else {
             randomized = randomizedDisabled;
         }
         ItemStack inv;
-        if (t.isInvincible()) {
+        if (tradeConfig.isInvincible()) {
             inv = invEnabled;
         } else {
             inv = invDisabled;
@@ -68,17 +67,17 @@ public class TradeConfigEditGui extends GuiHolder {
         inventory.setItem(14, inv);
 
         ArrayList<String> randAmountLore = new ArrayList<>();
-        randAmountLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + t.getRandomAmount());
+        randAmountLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + tradeConfig.getRandomAmount());
         randAmountLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(16, new ItemBuilder(randAmount).setLore(randAmountLore).build());
 
         ArrayList<String> chanceLore = new ArrayList<>();
-        chanceLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + t.getChance());
+        chanceLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + tradeConfig.getChance());
         chanceLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(28, new ItemBuilder(chance).setLore(chanceLore).build());
 
         ArrayList<String> customNameLore = new ArrayList<>();
-        customNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + t.getCustomName());
+        customNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + tradeConfig.getCustomName());
         customNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
         inventory.setItem(30, new ItemBuilder(customName).setLore(customNameLore).build());
 
@@ -110,27 +109,25 @@ public class TradeConfigEditGui extends GuiHolder {
             new TradeListGui(tradeConfig).open(p);
         }
 
-        TradeConfig t = WanderingTrades.getInstance().getCfg().getTradeConfigs().get(tradeConfig);
-
         if (enabledEnabled.isSimilar(item)) {
-            t.setEnabled(false);
+            tradeConfig.setEnabled(false);
         }
         if (enabledDisabled.isSimilar(item)) {
-            t.setEnabled(true);
+            tradeConfig.setEnabled(true);
         }
 
         if (randomizedEnabled.isSimilar(item)) {
-            t.setRandomized(false);
+            tradeConfig.setRandomized(false);
         }
         if (randomizedDisabled.isSimilar(item)) {
-            t.setRandomized(true);
+            tradeConfig.setRandomized(true);
         }
 
         if (invEnabled.isSimilar(item)) {
-            t.setInvincible(false);
+            tradeConfig.setInvincible(false);
         }
         if (invDisabled.isSimilar(item)) {
-            t.setInvincible(true);
+            tradeConfig.setInvincible(true);
         }
 
         if (randAmount.isSimilar(item)) {
@@ -139,15 +136,15 @@ public class TradeConfigEditGui extends GuiHolder {
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getRandomAmount()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.getRandomAmount()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
                         return "";
                     })
                     .onValidateInput(TradeConfigEditGui::validateIntRange)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        t.setRandomAmount(s);
-                        t.save(tradeConfig);
+                        tradeConfig.setRandomAmount(s);
+                        tradeConfig.save();
                         WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
@@ -161,15 +158,15 @@ public class TradeConfigEditGui extends GuiHolder {
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + t.getChance()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.getChance()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         return "";
                     })
                     .onValidateInput(this::onValidateDouble0T1)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        t.setChance(Double.parseDouble(s));
-                        t.save(tradeConfig);
+                        tradeConfig.setChance(Double.parseDouble(s));
+                        tradeConfig.save();
                         WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
@@ -183,14 +180,14 @@ public class TradeConfigEditGui extends GuiHolder {
                     .onPromptText(player -> {
                         WanderingTrades.getInstance().getChat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + t.getCustomName());
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + tradeConfig.getCustomName());
                         return "";
                     })
                     .onValidateInput((pl, s) -> true)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, string) -> {
-                        t.setCustomName(string);
-                        t.save(tradeConfig);
+                        tradeConfig.setCustomName(string);
+                        tradeConfig.save();
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -201,7 +198,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText((player -> {
-                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig));
+                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.getConfigName()));
                         WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
                         return "";
                     }))
@@ -226,7 +223,7 @@ public class TradeConfigEditGui extends GuiHolder {
                     .start(p);
         }
 
-        t.save(tradeConfig);
+        tradeConfig.save();
 
         getInventory();
     }

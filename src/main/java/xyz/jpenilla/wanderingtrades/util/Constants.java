@@ -8,9 +8,10 @@ import org.bukkit.NamespacedKey;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public class Constants {
-    public static final NamespacedKey CONFIG = new NamespacedKey(WanderingTrades.getInstance(), "wtConfig");
+    public static final NamespacedKey CONFIG_NAME = new NamespacedKey(WanderingTrades.getInstance(), "wtConfig");
     public static final NamespacedKey PROTECT = new NamespacedKey(WanderingTrades.getInstance(), "wtProtect");
     public static final NamespacedKey REFRESH_NATURAL = new NamespacedKey(WanderingTrades.getInstance(), "wtRefreshNatural");
+    public static final NamespacedKey LAST_REFRESH = new NamespacedKey(WanderingTrades.getInstance(), "wt_last_refresh_time");
 
     public static final Component PREFIX_COMPONENT =
             Component.text()
