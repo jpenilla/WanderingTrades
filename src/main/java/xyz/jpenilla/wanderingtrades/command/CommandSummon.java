@@ -207,7 +207,6 @@ public class CommandSummon implements WTCommand {
             return;
         }
         loc.getWorld().spawn(loc, Villager.class, villager -> {
-            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(villager.getUniqueId());
             villager.setRecipes(recipes);
             villager.setAI(!disableAI);
             villager.setVillagerType(type);
