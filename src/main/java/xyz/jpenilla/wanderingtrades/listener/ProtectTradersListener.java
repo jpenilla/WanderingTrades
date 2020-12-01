@@ -1,7 +1,7 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
+import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -10,19 +10,15 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 public class ProtectTradersListener implements Listener {
-    private final WanderingTrades plugin;
 
     public ProtectTradersListener(WanderingTrades instance) {
-        plugin = instance;
     }
 
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent e) {
-        EntityType type = e.getEntityType();
-        if (type == EntityType.WANDERING_TRADER || type == EntityType.VILLAGER) {
-            Entity entity = e.getEntity();
-            String i = entity.getPersistentDataContainer().get(Constants.PROTECT, PersistentDataType.STRING);
-            if (i != null) {
+        final Entity entity = e.getEntity();
+        if (entity instanceof AbstractVillager) {
+            if (entity.getPersistentDataContainer().has(Constants.PROTECT, PersistentDataType.STRING)) {
                 if (!e.getDamager().hasPermission("wanderingtrades.damage")) {
                     e.setCancelled(true);
                 }

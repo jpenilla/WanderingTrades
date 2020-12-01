@@ -108,10 +108,10 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                     final Component correctSyntaxMessage = Component.text(
                             String.format("/%s", exception.getCorrectSyntax()),
                             NamedTextColor.GRAY
-                    ).replaceText(
-                            SYNTAX_HIGHLIGHT_PATTERN,
-                            builder -> builder.color(NamedTextColor.WHITE)
-                    );
+                    ).replaceText(config -> {
+                        config.match(SYNTAX_HIGHLIGHT_PATTERN);
+                        config.replacement(builder -> builder.color(NamedTextColor.WHITE));
+                    });
 
                     return Component.text()
                             .append(invalidSyntaxMessage)
@@ -128,10 +128,10 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                             exception.getRequiredSender().getSimpleName(),
                             NamedTextColor.GRAY
                     );
-                    return invalidSenderMessage.replaceText(
-                            Pattern.compile("\\{type}"),
-                            match -> correctSenderType
-                    );
+                    return invalidSenderMessage.replaceText(config -> {
+                        config.match(Pattern.compile("\\{type}"));
+                        config.replacement(match -> correctSenderType);
+                    });
                 })
                 .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, e -> {
                     final Component invalidArgumentMessage = Component.text(wanderingTrades.getLang().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
@@ -141,6 +141,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                             .append(causeMessage)
                             .build();
                 })
+                .withCommandExecutionHandler()
                 .withDecorator(component -> Component.text()
                         .append(Constants.PREFIX_COMPONENT)
                         .append(component)

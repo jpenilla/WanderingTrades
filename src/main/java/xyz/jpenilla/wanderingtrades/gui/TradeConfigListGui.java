@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TradeConfigListGui extends PaginatedGui {
@@ -31,30 +33,23 @@ public class TradeConfigListGui extends PaginatedGui {
     }
 
     public List<ItemStack> getListItems() {
-        List<ItemStack> items = new ArrayList<>();
-        Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray(new String[0]))
+        return Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray(new String[0]))
                 .sorted()
                 .map(configName -> WanderingTrades.getInstance().getCfg().getTradeConfigs().get(configName))
-                .forEach(tradeConfig -> {
-                    List<String> lore = new ArrayList<>();
-                    tradeConfig.getFile().getConfigurationSection("trades").getKeys(false).forEach(key -> lore.add("<gray><italic>  " + key));
-                    String[] lores = new String[lore.size()];
-                    for (int j = 0; j < lore.size(); j++) {
-                        lores[j] = lore.get(j);
+                .map(tradeConfig -> {
+                    final Set<String> tradeKeys = Objects.requireNonNull(tradeConfig.getFile().getConfigurationSection("trades")).getKeys(false);
+                    final List<String> finalLores = new ArrayList<>();
+                    tradeKeys.stream()
+                            .sorted()
+                            .limit(10)
+                            .map(key -> "<gray><italic>  " + key)
+                            .forEach(loreLine -> finalLores.add("<gray>" + loreLine));
+                    if (finalLores.size() == 10) {
+                        finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
                     }
-                    List<String> finalLores = new ArrayList<>();
-                    for (int x = 0; x < 10; ++x) {
-                        try {
-                            finalLores.add("<gray>" + lores[x]);
-                        } catch (ArrayIndexOutOfBoundsException ignored) {
-                        }
-                    }
-                    if (lores.length > 10) {
-                        finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(lores.length - 10)));
-                    }
-                    items.add(new ItemBuilder(Material.PAPER).setName(tradeConfig.getConfigName()).setLore(finalLores).build());
-                });
-        return items;
+                    return new ItemBuilder(Material.PAPER).setName(tradeConfig.getConfigName()).setLore(finalLores).build();
+                })
+                .collect(Collectors.toList());
     }
 
     public Inventory getInv(Inventory i) {

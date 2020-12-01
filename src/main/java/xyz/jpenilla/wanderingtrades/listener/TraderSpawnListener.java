@@ -64,7 +64,7 @@ public class TraderSpawnListener implements Listener {
     }
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
-        if (!traderBlacklistCache.contains(wanderingTrader.getUniqueId())) {
+        if (!traderBlacklistCache.remove(wanderingTrader.getUniqueId())) {
             Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
 
                 List<MerchantRecipe> newTrades = new ArrayList<>();
@@ -107,8 +107,6 @@ public class TraderSpawnListener implements Listener {
                 });
 
             });
-        } else {
-            traderBlacklistCache.remove(wanderingTrader.getUniqueId());
         }
     }
 

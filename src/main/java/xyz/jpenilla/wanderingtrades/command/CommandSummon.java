@@ -153,18 +153,9 @@ public class CommandSummon implements WTCommand {
 
     private Location resolveLocation(CommandContext<CommandSender> ctx) {
         final Location loc = ctx.get("location");
-        final World world = ctx.flags().getValue("world", null);
-        if (world != null) {
-            loc.setWorld(world);
-        }
-        final Integer yaw = ctx.flags().getValue("yaw", null);
-        if (yaw != null) {
-            loc.setYaw(yaw);
-        }
-        final Integer pitch = ctx.flags().getValue("pitch", null);
-        if (pitch != null) {
-            loc.setPitch(pitch);
-        }
+        ctx.flags().<World>getValue("world").ifPresent(loc::setWorld);
+        ctx.flags().<Integer>getValue("yaw").ifPresent(loc::setYaw);
+        ctx.flags().<Integer>getValue("pitch").ifPresent(loc::setPitch);
         return loc;
     }
 
@@ -242,7 +233,7 @@ public class CommandSummon implements WTCommand {
             final @NonNull Entity entity,
             final @Nullable String miniMessage
     ) {
-        if (miniMessage == null || miniMessage.equals("")) {
+        if (miniMessage == null || miniMessage.isEmpty()) {
             entity.setCustomName(null);
             return;
         }
