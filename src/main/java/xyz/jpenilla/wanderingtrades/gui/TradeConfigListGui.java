@@ -42,8 +42,7 @@ public class TradeConfigListGui extends PaginatedGui {
                     tradeKeys.stream()
                             .sorted()
                             .limit(10)
-                            .map(key -> "<gray><italic>  " + key)
-                            .forEach(loreLine -> finalLores.add("<gray>" + loreLine));
+                            .forEach(key -> finalLores.add("<gray>  " + key));
                     if (finalLores.size() == 10) {
                         finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
                     }
