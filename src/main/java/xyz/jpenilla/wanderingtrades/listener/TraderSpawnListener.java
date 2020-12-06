@@ -22,6 +22,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +31,7 @@ import java.util.logging.Level;
 
 public class TraderSpawnListener implements Listener {
     private final WanderingTrades wanderingTrades;
-    @Getter private final List<UUID> traderBlacklistCache = new ArrayList<>();
+    @Getter private final Collection<UUID> traderBlacklistCache = new HashSet<>();
 
     public TraderSpawnListener(WanderingTrades wt) {
         this.wanderingTrades = wt;
@@ -49,7 +51,7 @@ public class TraderSpawnListener implements Listener {
     @EventHandler
     public void onSpawn(CreatureSpawnEvent e) {
         final Entity entity = e.getEntity();
-        if (entity instanceof WanderingTrader) {
+        if (entity instanceof WanderingTrader && e.getSpawnReason() != CreatureSpawnEvent.SpawnReason.MOUNT) {
             final WanderingTrader wanderingTrader = (WanderingTrader) entity;
             if (wanderingTrades.getCfg().isTraderWorldWhitelist()) {
                 if (wanderingTrades.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
