@@ -14,7 +14,7 @@ java {
 
 val projectName = "WanderingTrades"
 group = "xyz.jpenilla"
-version = "1.6.5.1+${getLastCommitHash()}-SNAPSHOT"
+version = "1.6.5.2+${getLastCommitHash()}-SNAPSHOT"
 
 repositories {
     mavenLocal()
