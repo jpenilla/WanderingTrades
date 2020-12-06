@@ -80,16 +80,19 @@ public class StoredPlayers {
     public List<MerchantRecipe> randomlySelectPlayerHeads() {
         final Collection<UUID> selectedPlayers = new ArrayList<>();
         final int amount = wanderingTrades.getCfg().getPlayerHeadConfig().getRandAmount();
-        final UUID[] UUIDs = uuidMerchantRecipeMap.keySet().toArray(new UUID[0]);
-        int iterations = 0;
-        while (selectedPlayers.size() < amount) {
-            final UUID uuid = UUIDs[ThreadLocalRandom.current().nextInt(0, UUIDs.length - 1)];
-            if (!selectedPlayers.contains(uuid)) {
+        final ArrayList<UUID> UUIDs = new ArrayList<>(uuidMerchantRecipeMap.keySet());
+        if (UUIDs.size() < 2) {
+            selectedPlayers.addAll(UUIDs);
+        } else {
+            for (int i = 0; selectedPlayers.size() < amount; i++) {
+                final UUID uuid = UUIDs.get(ThreadLocalRandom.current().nextInt(0, UUIDs.size() - 1));
+                if (selectedPlayers.contains(uuid)) {
+                    continue;
+                }
                 selectedPlayers.add(uuid);
-            }
-            iterations++;
-            if (iterations > 10 * amount) {
-                break;
+                if (i > 10 * amount) {
+                    break;
+                }
             }
         }
         return selectedPlayers.stream().map(uuidMerchantRecipeMap::get).collect(Collectors.toList());

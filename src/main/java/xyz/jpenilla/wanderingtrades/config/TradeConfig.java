@@ -197,7 +197,7 @@ public class TradeConfig {
     public @NonNull ConfigurationSection getTradeSection() {
         ConfigurationSection section = this.file.getConfigurationSection(TRADES);
         if (section == null) {
-            section = this.file.createSection("");
+            section = this.file.createSection(TRADES);
         }
         return section;
     }
@@ -231,13 +231,11 @@ public class TradeConfig {
             if (result != null) {
                 MerchantRecipe recipe = new MerchantRecipe(result, 0, maxUses, file.getBoolean(prefix + "experienceReward"));
 
-                int ingredientNumber = 1;
-                while (ingredientNumber < 3) {
-                    ItemStack ingredient = getStack(file, prefix + "ingredients." + ingredientNumber);
+                for (int i = 1; i < 3; i++) {
+                    ItemStack ingredient = getStack(file, prefix + "ingredients." + i);
                     if (ingredient != null) {
                         recipe.addIngredient(ingredient);
                     }
-                    ingredientNumber++;
                 }
 
                 tradeList.add(recipe);
@@ -272,17 +270,15 @@ public class TradeConfig {
         }
         if (plugin.getMcRPG() != null) {
             return plugin.getMcRPG().replacePlaceholders(h);
-        } else {
-            return h;
         }
+        return h;
     }
 
     public int getRandAmount() {
         if (randomAmount.contains(":")) {
             String[] ints = randomAmount.split(":");
             return ThreadLocalRandom.current().nextInt(Integer.parseInt(ints[0]), Integer.parseInt(ints[1]));
-        } else {
-            return Integer.parseInt(randomAmount);
         }
+        return Integer.parseInt(randomAmount);
     }
 }
