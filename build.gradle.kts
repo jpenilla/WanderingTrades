@@ -44,7 +44,7 @@ dependencies {
     implementation("xyz.jpenilla", "jmplib", "1.0.1+26-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "1.7")
 
-    val cloudVersion = "1.2.0-SNAPSHOT"
+    val cloudVersion = "1.3.0"
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
     implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
 }
