@@ -1,8 +1,10 @@
 package xyz.jpenilla.wanderingtrades.command;
 
+import cloud.commandframework.Command;
 import cloud.commandframework.Description;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.meta.CommandMeta;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -19,8 +21,6 @@ import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static xyz.jpenilla.wanderingtrades.command.CommandManager.metaWithDescription;
 
 public class CommandConfig implements WTCommand {
 
@@ -49,67 +49,71 @@ public class CommandConfig implements WTCommand {
 
     @Override
     public void registerCommands() {
+        final Command.Builder<CommandSender> wt = mgr.commandBuilder("wt");
+
         /* List Trade Configs Command */
-        mgr.command(
-                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_LIST)))
-                        .literal("list")
-                        .permission("wanderingtrades.list")
-                        .handler(context -> onList(context.getSender()))
-        );
+        final Command<CommandSender> list = wt
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_LIST))
+                .literal("list")
+                .permission("wanderingtrades.list")
+                .handler(context -> onList(context.getSender()))
+                .build();
 
         /* Trade Config Edit Command */
-        mgr.command(
-                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_EDIT)))
-                        .literal("edit")
-                        .argument(mgr.getArgument("trade_config").asOptional())
-                        .permission("wanderingtrades.edit")
-                        .senderType(Player.class)
-                        .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            final TradeConfig config = context.<TradeConfig>getOptional("trade_config").orElse(null);
-                            if (config == null) {
-                                new TradeConfigListGui().open((Player) context.getSender());
-                            } else {
-                                new TradeListGui(config).open((Player) context.getSender());
-                            }
-                        }).execute())
-        );
+        final Command<CommandSender> edit = wt
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_EDIT))
+                .literal("edit")
+                .argument(mgr.getArgument("trade_config").asOptional())
+                .permission("wanderingtrades.edit")
+                .senderType(Player.class)
+                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                    final TradeConfig config = context.<TradeConfig>getOptional("trade_config").orElse(null);
+                    if (config == null) {
+                        new TradeConfigListGui().open((Player) context.getSender());
+                    } else {
+                        new TradeListGui(config).open((Player) context.getSender());
+                    }
+                }).execute())
+                .build();
 
         /* Plugin Config Edit Command */
-        mgr.command(
-                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_CONFIG)))
-                        .literal("editconfig")
-                        .permission("wanderingtrades.edit")
-                        .senderType(Player.class)
-                        .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            new ConfigEditGui().open((Player) context.getSender());
-                        }).execute())
-        );
+        final Command<CommandSender> editConfig = wt
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_CONFIG))
+                .literal("editconfig")
+                .permission("wanderingtrades.edit")
+                .senderType(Player.class)
+                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                    new ConfigEditGui().open((Player) context.getSender());
+                }).execute())
+                .build();
 
         /* Player Head Config Edit Command */
-        mgr.command(
-                mgr.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_PH_CONFIG)))
-                        .literal("editplayerheads")
-                        .permission("wanderingtrades.edit")
-                        .senderType(Player.class)
-                        .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            new PlayerHeadConfigGui().open((Player) context.getSender());
-                        }).execute())
-        );
+        final Command<CommandSender> editPlayerHeadConfig = wt
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_PH_CONFIG))
+                .literal("editplayerheads")
+                .permission("wanderingtrades.edit")
+                .senderType(Player.class)
+                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                    new PlayerHeadConfigGui().open((Player) context.getSender());
+                }).execute())
+                .build();
 
         /* Held ItemStack Rename Command */
-        mgr.command(
-                mgr.commandBuilder("namehelditem", metaWithDescription("Sets the display name of the held ItemStack."))
-                        .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
-                                Description.of("The MiniMessage string to use as a name."))
-                        .permission("wanderingtrades.namehand")
-                        .senderType(Player.class)
-                        .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                            final Player player = (Player) context.getSender();
-                            if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
-                                player.getInventory().setItemInMainHand(new ItemBuilder(player.getInventory().getItemInMainHand()).setName(context.get("name")).build());
-                            }
-                        }).execute())
-        );
+        final Command<CommandSender> nameHeldItem = mgr.commandBuilder("namehelditem")
+                .meta(CommandMeta.DESCRIPTION, "Sets the display name of the held ItemStack.")
+                .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
+                        Description.of("The MiniMessage string to use as a name."))
+                .permission("wanderingtrades.namehand")
+                .senderType(Player.class)
+                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                    final Player player = (Player) context.getSender();
+                    if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
+                        player.getInventory().setItemInMainHand(new ItemBuilder(player.getInventory().getItemInMainHand()).setName(context.get("name")).build());
+                    }
+                }).execute())
+                .build();
+
+        mgr.register(ImmutableList.of(list, edit, editConfig, nameHeldItem));
     }
 
     private void onList(CommandSender sender) {

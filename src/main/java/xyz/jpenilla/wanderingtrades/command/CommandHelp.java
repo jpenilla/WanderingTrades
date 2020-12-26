@@ -1,17 +1,17 @@
 package xyz.jpenilla.wanderingtrades.command;
 
+import cloud.commandframework.Command;
 import cloud.commandframework.CommandHelpHandler;
 import cloud.commandframework.Description;
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import org.bukkit.command.CommandSender;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
 import java.util.stream.Collectors;
-
-import static xyz.jpenilla.wanderingtrades.command.CommandManager.metaWithDescription;
 
 public class CommandHelp implements WTCommand {
 
@@ -44,14 +44,16 @@ public class CommandHelp implements WTCommand {
                 .build();
 
         /* Help Command */
-        commandManager.command(
-                commandManager.commandBuilder("wt", metaWithDescription(wanderingTrades.getLang().get(Lang.COMMAND_WT_HELP)), "wanderingtrades")
-                        .literal("help")
-                        .argument(helpQueryArgument, Description.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
-                        .handler(context -> minecraftHelp.queryCommands(
-                                context.getOptional(helpQueryArgument).orElse(""),
-                                context.getSender()
-                        ))
-        );
+        final Command<CommandSender> help = commandManager.commandBuilder("wt", "wanderingtrades")
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_HELP))
+                .literal("help")
+                .argument(helpQueryArgument, Description.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
+                .handler(context -> minecraftHelp.queryCommands(
+                        context.getOptional(helpQueryArgument).orElse(""),
+                        context.getSender()
+                ))
+                .build();
+
+        commandManager.command(help);
     }
 }

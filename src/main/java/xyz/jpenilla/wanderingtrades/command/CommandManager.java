@@ -1,15 +1,14 @@
 package xyz.jpenilla.wanderingtrades.command;
 
+import cloud.commandframework.Command;
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.bukkit.BukkitCaptionKeys;
-import cloud.commandframework.bukkit.BukkitCommandMetaBuilder;
 import cloud.commandframework.captions.SimpleCaptionRegistry;
 import cloud.commandframework.captions.StandardCaptionKeys;
 import cloud.commandframework.exceptions.InvalidCommandSenderException;
 import cloud.commandframework.exceptions.InvalidSyntaxException;
 import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
-import cloud.commandframework.meta.SimpleCommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -24,6 +23,7 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -165,7 +165,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         this.flagRegistry.put(name, flagBuilder);
     }
 
-    public static SimpleCommandMeta metaWithDescription(final String description) {
-        return BukkitCommandMetaBuilder.builder().withDescription(description).build();
+    public final void register(List<Command<CommandSender>> commands) {
+        commands.forEach(this::command);
     }
 }
