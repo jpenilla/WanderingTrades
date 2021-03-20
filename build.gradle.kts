@@ -29,7 +29,6 @@ dependencies {
     compileOnly("org.projectlombok", "lombok", "1.18.12")
 
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("com.destroystokyo.paper", "paper", "1.16.5-R0.1-SNAPSHOT")
     implementation("io.papermc", "paperlib", "1.0.6")
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7")
     compileOnly("net.ess3", "EssentialsX", "2.17.2")
