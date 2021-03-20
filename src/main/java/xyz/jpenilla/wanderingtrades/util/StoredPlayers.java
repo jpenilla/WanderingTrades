@@ -8,8 +8,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.SkullMeta;
 import xyz.jpenilla.jmplib.HeadBuilder;
+import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.Config;
+import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -17,11 +20,12 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+
+import static io.papermc.lib.PaperLib.isPaper;
 
 public class StoredPlayers {
 
@@ -31,7 +35,7 @@ public class StoredPlayers {
 
     public StoredPlayers(WanderingTrades wanderingTrades) {
         this.wanderingTrades = wanderingTrades;
-        this.profileCompleter = wanderingTrades.isPaperServer() ? new ProfileCompleter() : null;
+        this.profileCompleter = isPaper() ? new ProfileCompleter() : null;
         if (this.profileCompleter != null) {
             this.profileCompleter.runTaskTimerAsynchronously(wanderingTrades, 0L, 40L);
         }
@@ -54,25 +58,32 @@ public class StoredPlayers {
     }
 
     private MerchantRecipe getHeadRecipe(UUID uuid, String name) {
-        final ItemStack head = new HeadBuilder(uuid)
-                .setName(wanderingTrades.getCfg().getPlayerHeadConfig().getName().replace("{PLAYER}", name))
-                .setLore(wanderingTrades.getCfg().getPlayerHeadConfig().getLore())
-                .setAmount(wanderingTrades.getCfg().getPlayerHeadConfig().getHeadsPerTrade())
-                .build();
+        final Config cfg = wanderingTrades.getCfg();
+        final PlayerHeadConfig playerHeadConfig = cfg.getPlayerHeadConfig();
+        final ItemBuilder headBuilder = new HeadBuilder(uuid)
+                .setLore(playerHeadConfig.getLore())
+                .setAmount(playerHeadConfig.getHeadsPerTrade());
+        if (playerHeadConfig.getName() != null) {
+            headBuilder.setName(playerHeadConfig.getName().replace("{PLAYER}", name));
+        }
+        final ItemStack head = headBuilder.build();
 
         if (this.profileCompleter != null) {
-            Optional.ofNullable(((SkullMeta) head.getItemMeta()).getPlayerProfile()).ifPresent(this.profileCompleter::submitProfile);
+            final SkullMeta meta = (SkullMeta) head.getItemMeta();
+            if (meta != null) {
+                this.profileCompleter.submitSkullMeta(meta);
+            }
         }
 
         final MerchantRecipe recipe = new MerchantRecipe(
                 head,
                 0,
-                wanderingTrades.getCfg().getPlayerHeadConfig().getMaxUses(),
-                wanderingTrades.getCfg().getPlayerHeadConfig().isExperienceReward()
+                playerHeadConfig.getMaxUses(),
+                playerHeadConfig.isExperienceReward()
         );
-        recipe.addIngredient(wanderingTrades.getCfg().getPlayerHeadConfig().getIngredient1());
-        if (wanderingTrades.getCfg().getPlayerHeadConfig().getIngredient2() != null) {
-            recipe.addIngredient(wanderingTrades.getCfg().getPlayerHeadConfig().getIngredient2());
+        recipe.addIngredient(playerHeadConfig.getIngredient1());
+        if (playerHeadConfig.getIngredient2() != null) {
+            recipe.addIngredient(playerHeadConfig.getIngredient2());
         }
         return recipe;
     }
@@ -102,7 +113,7 @@ public class StoredPlayers {
         if (wanderingTrades.isVaultPermissions()) {
             if (wanderingTrades.getCfg().getPlayerHeadConfig().isPermissionWhitelist()) {
                 Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
-                    if (wanderingTrades.getVault().getPerms().playerHas(null, offlinePlayer, "wanderingtrades.headavailable")) {
+                    if (wanderingTrades.getVault().getPerms().playerHas(null, offlinePlayer, Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
                         Bukkit.getScheduler().runTask(wanderingTrades, () -> uuidMerchantRecipeMap.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer.getUniqueId(), offlinePlayer.getName())));
                     }
                 });
@@ -121,7 +132,7 @@ public class StoredPlayers {
     public void addHeadIfPermissible(Player player) {
         if (wanderingTrades.isVaultPermissions()) {
             if (wanderingTrades.getCfg().getPlayerHeadConfig().isPermissionWhitelist()) {
-                if (player.hasPermission("wanderingtrades.headavailable")) {
+                if (player.hasPermission(Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
                     this.addHead(player);
                 }
                 return;
@@ -132,7 +143,7 @@ public class StoredPlayers {
 
     public void onLogout(Player player) {
         if (wanderingTrades.isVaultPermissions() && wanderingTrades.getCfg().getPlayerHeadConfig().isPermissionWhitelist()) {
-            if (!player.hasPermission("wanderingtrades.headavailable")) {
+            if (!player.hasPermission(Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
                 uuidMerchantRecipeMap.remove(player.getUniqueId());
             }
         }

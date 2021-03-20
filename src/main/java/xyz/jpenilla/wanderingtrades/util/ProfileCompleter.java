@@ -1,6 +1,7 @@
 package xyz.jpenilla.wanderingtrades.util;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -12,6 +13,14 @@ class ProfileCompleter extends BukkitRunnable {
 
     private final Queue<PlayerProfile> completionQueue = new ConcurrentLinkedQueue<>();
 
+    public void submitSkullMeta(final @NonNull SkullMeta meta) {
+        final PlayerProfile playerProfile = meta.getPlayerProfile();
+        if (playerProfile == null) {
+            return;
+        }
+        this.submitProfile(playerProfile);
+    }
+
     public void submitProfile(final @NonNull PlayerProfile profile) {
         this.completionQueue.add(profile);
     }
@@ -22,8 +31,8 @@ class ProfileCompleter extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!this.completionQueue.isEmpty()) {
-            final PlayerProfile profile = this.completionQueue.remove();
+        final PlayerProfile profile = this.completionQueue.poll();
+        if (profile != null) {
             try {
                 profile.complete();
             } catch (Exception e) {

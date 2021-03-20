@@ -1,9 +1,11 @@
 package xyz.jpenilla.wanderingtrades;
 
+import io.papermc.lib.PaperLib;
 import kr.entree.spigradle.annotations.PluginMain;
 import lombok.Getter;
 import lombok.Setter;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import xyz.jpenilla.jmplib.BasePlugin;
 import xyz.jpenilla.wanderingtrades.command.CommandManager;
 import xyz.jpenilla.wanderingtrades.compatability.McRPGHook;
@@ -39,6 +41,7 @@ public final class WanderingTrades extends BasePlugin {
 
     @Override
     public void onPluginEnable() {
+        PaperLib.suggestPaper(this, Level.WARNING);
         instance = this;
         log = new Log(this);
 
@@ -71,13 +74,12 @@ public final class WanderingTrades extends BasePlugin {
 
         listeners = new Listeners(this);
         listeners.register();
-        new UpdateChecker(this, "jmanpenilla/WanderingTrades").checkVersion();
+        new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion();
 
-        Metrics metrics = new Metrics(this, 7597);
-        metrics.addCustomChart(new Metrics.SimplePie("player_heads", () -> cfg.getPlayerHeadConfig().isPlayerHeadsFromServer() ? "On" : "Off"));
-        metrics.addCustomChart(new Metrics.SimplePie("player_heads_per_trader", () -> String.valueOf(cfg.getPlayerHeadConfig().getPlayerHeadsFromServerAmount())));
-        metrics.addCustomChart(new Metrics.SimplePie("plugin_language", () -> cfg.getLanguage()));
-        metrics.addCustomChart(new Metrics.SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.getTradeConfigs().size())));
-        log.info("Enabled");
+        final Metrics metrics = new Metrics(this, 7597);
+        metrics.addCustomChart(new SimplePie("player_heads", () -> cfg.getPlayerHeadConfig().isPlayerHeadsFromServer() ? "On" : "Off"));
+        metrics.addCustomChart(new SimplePie("player_heads_per_trader", () -> String.valueOf(cfg.getPlayerHeadConfig().getPlayerHeadsFromServerAmount())));
+        metrics.addCustomChart(new SimplePie("plugin_language", () -> cfg.getLanguage()));
+        metrics.addCustomChart(new SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.getTradeConfigs().size())));
     }
 }

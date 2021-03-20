@@ -25,6 +25,9 @@ import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
+import static io.papermc.lib.PaperLib.getMinecraftVersion;
+import static io.papermc.lib.PaperLib.isPaper;
+
 @FieldNameConstants
 public class TradeConfig {
     private final WanderingTrades plugin;
@@ -45,6 +48,8 @@ public class TradeConfig {
     private boolean invincible;
     @Getter @Setter
     private String customName;
+    @Getter @Setter
+    private boolean disableHeroOfTheVillageGifts;
 
     private static final String TRADES = "trades";
 
@@ -63,6 +68,7 @@ public class TradeConfig {
         chance = file.getDouble(Fields.chance);
         invincible = file.getBoolean(Fields.invincible, false);
         customName = file.getString(Fields.customName, null);
+        disableHeroOfTheVillageGifts = file.getBoolean(Fields.disableHeroOfTheVillageGifts, false);
     }
 
     public void save() {
@@ -72,6 +78,7 @@ public class TradeConfig {
         file.set(Fields.randomAmount, randomAmount);
         file.set(Fields.chance, chance);
         file.set(Fields.customName, customName);
+        file.set(Fields.disableHeroOfTheVillageGifts, disableHeroOfTheVillageGifts);
 
         final String path = String.format("%s/trades/%s.yml", plugin.getDataFolder(), this.configName);
         try {
@@ -86,7 +93,7 @@ public class TradeConfig {
     public static @Nullable ItemStack getStack(FileConfiguration config, String key) {
         ItemBuilder itemBuilder = null;
 
-        if (WanderingTrades.getInstance().isPaperServer() && WanderingTrades.getInstance().getMajorMinecraftVersion() > 14) {
+        if (isPaper() && getMinecraftVersion() > 14) {
             final byte[] stack = (byte[]) config.get(key + ".itemStackAsBytes");
             if (stack != null) {
                 itemBuilder = new ItemBuilder(ItemStack.deserializeBytes(stack));
@@ -183,7 +190,7 @@ public class TradeConfig {
         if (i1 != null) {
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
-            if (plugin.isPaperServer() && plugin.getMajorMinecraftVersion() > 14) {
+            if (isPaper() && getMinecraftVersion() > 14) {
                 file.set(child + ".result.itemStackAsBytes", result.serializeAsBytes());
             } else {
                 file.set(child + ".result.itemStack", result.serialize());
@@ -206,7 +213,7 @@ public class TradeConfig {
         if (this.getTradeSection().getKeys(false).contains(tradeName)) {
             String child = TRADES + "." + tradeName;
             if (is != null) {
-                if (plugin.isPaperServer() && plugin.getMajorMinecraftVersion() > 14) {
+                if (isPaper() && getMinecraftVersion() > 14) {
                     file.set(child + ".ingredients." + i + ".itemStackAsBytes", is.serializeAsBytes());
                 } else {
                     file.set(child + ".ingredients." + i + ".itemStack", is.serialize());

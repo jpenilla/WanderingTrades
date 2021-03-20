@@ -17,6 +17,9 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
 
+import java.util.function.DoubleFunction;
+import java.util.function.IntFunction;
+
 public abstract class GuiHolder implements InventoryHolder {
     protected final LangConfig lang = WanderingTrades.getInstance().getLang();
     protected final String gui_toggle_lore = lang.get(Lang.GUI_TOGGLE_LORE);
@@ -46,70 +49,82 @@ public abstract class GuiHolder implements InventoryHolder {
 
     public abstract void reOpen(Player p);
 
-    public boolean onValidateIntGT0(Player player, String input) {
+    private boolean validateInt(
+            final @NonNull Player player,
+            final @NonNull String input,
+            final @NonNull IntFunction<@NonNull Boolean> validator
+    ) {
         try {
             int i = Integer.parseInt(input);
-            if (i < 1) {
-                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
-                return false;
-            }
-        } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            return validator.apply(i);
+        } catch (final NumberFormatException ex) {
+            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
-        return true;
     }
 
-    public boolean onValidateIntGTE0(Player player, String input) {
-        try {
-            int i = Integer.parseInt(input);
-            if (i < 0) {
-                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
-                return false;
-            }
-        } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
-            return false;
-        }
-        return true;
-    }
-
-    public boolean onValidateIntGTEN1(Player player, String input) {
-        try {
-            int i = Integer.parseInt(input);
-            if (i < -1) {
-                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
-                return false;
-            }
-        } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
-            return false;
-        }
-        return true;
-    }
-
-    public boolean onValidateDouble0T1(Player player, String input) {
+    private boolean validateDouble(
+            final @NonNull Player player,
+            final @NonNull String input,
+            final @NonNull DoubleFunction<@NonNull Boolean> validator
+    ) {
         try {
             double d = Double.parseDouble(input);
-            if (d < 0 || d > 1) {
-                WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
-                return false;
-            }
-        } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            return validator.apply(d);
+        } catch (final NumberFormatException ex) {
+            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
-        return true;
+    }
+
+    public boolean onValidateIntGT0(final @NonNull Player player, final @NonNull String input) {
+        return this.validateInt(player, input, i -> {
+            if (i >= 1) {
+                return true;
+            }
+            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
+            return false;
+        });
+    }
+
+    public boolean onValidateIntGTE0(final @NonNull Player player, final @NonNull String input) {
+        return this.validateInt(player, input, i -> {
+            if (i >= 0) {
+                return true;
+            }
+            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
+            return false;
+        });
+    }
+
+    public boolean onValidateIntGTEN1(final @NonNull Player player, final @NonNull String input) {
+        return this.validateInt(player, input, i -> {
+            if (i >= -1) {
+                return true;
+            }
+            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
+            return false;
+        });
+    }
+
+    public boolean onValidateDouble0T1(final @NonNull Player player, final @NonNull String input) {
+        return this.validateDouble(player, input, d -> {
+            if (d < 0 || d > 1) {
+                WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
+                return false;
+            }
+            return true;
+        });
     }
 
     public String onConfirmYesNo(Player player, String s) {
-        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
-        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_YES_NO));
+        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
+        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YES_NO));
         return "";
     }
 
     public void onEditCancelled(Player p, String s) {
-        WanderingTrades.getInstance().getChat().sendParsed(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
+        WanderingTrades.getInstance().chat().sendParsed(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
         open(p);
     }
 }

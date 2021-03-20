@@ -134,7 +134,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendParsed(player,
+                        WanderingTrades.getInstance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.getRandomAmount()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
@@ -145,7 +145,7 @@ public class TradeConfigEditGui extends GuiHolder {
                     .onAccepted((player, s) -> {
                         tradeConfig.setRandomAmount(s);
                         tradeConfig.save();
-                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -156,7 +156,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendParsed(player,
+                        WanderingTrades.getInstance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.getChance()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
@@ -167,7 +167,7 @@ public class TradeConfigEditGui extends GuiHolder {
                     .onAccepted((player, s) -> {
                         tradeConfig.setChance(Double.parseDouble(s));
                         tradeConfig.save();
-                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -178,7 +178,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendParsed(player,
+                        WanderingTrades.getInstance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + tradeConfig.getCustomName());
                         return "";
@@ -198,8 +198,8 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText((player -> {
-                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.getConfigName()));
-                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.getConfigName()));
+                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
                         return "";
                     }))
                     .onValidateInput(((player, s) -> {
@@ -213,7 +213,7 @@ public class TradeConfigEditGui extends GuiHolder {
                                 e.printStackTrace();
                             }
                             WanderingTrades.getInstance().getCfg().load();
-                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                             new TradeConfigListGui().open(player);
                         } else {
                             onEditCancelled(player, s);
@@ -239,7 +239,7 @@ public class TradeConfigEditGui extends GuiHolder {
                 if (validateInt(null, split[0]) && validateInt(null, split[1])) {
                     return true;
                 } else {
-                    WanderingTrades.getInstance().getChat().sendParsed(p, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                    WanderingTrades.getInstance().chat().sendParsed(p, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
                     return false;
                 }
             } catch (Exception e) {
@@ -254,11 +254,11 @@ public class TradeConfigEditGui extends GuiHolder {
         try {
             int i = Integer.parseInt(input);
             if (i < 0) {
-                WanderingTrades.getInstance().getChat().sendParsed(player, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_NUMBER_GTE_0));
+                WanderingTrades.getInstance().chat().sendParsed(player, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_NUMBER_GTE_0));
                 return false;
             }
         } catch (NumberFormatException ex) {
-            WanderingTrades.getInstance().getChat().sendParsed(player, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+            WanderingTrades.getInstance().chat().sendParsed(player, WanderingTrades.getInstance().getLang().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
             return false;
         }
         return true;

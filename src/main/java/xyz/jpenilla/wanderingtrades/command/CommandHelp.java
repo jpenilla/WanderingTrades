@@ -1,8 +1,8 @@
 package xyz.jpenilla.wanderingtrades.command;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandHelpHandler;
-import cloud.commandframework.Description;
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
@@ -47,7 +47,7 @@ public class CommandHelp implements WTCommand {
         final Command<CommandSender> help = commandManager.commandBuilder("wt", "wanderingtrades")
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_HELP))
                 .literal("help")
-                .argument(helpQueryArgument, Description.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
+                .argument(helpQueryArgument, ArgumentDescription.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
                 .handler(context -> minecraftHelp.queryCommands(
                         context.getOptional(helpQueryArgument).orElse(""),
                         context.getSender()

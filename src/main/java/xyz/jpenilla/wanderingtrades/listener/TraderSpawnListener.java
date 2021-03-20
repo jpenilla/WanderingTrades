@@ -14,27 +14,26 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.jmplib.Crafty;
 import xyz.jpenilla.jmplib.RandomCollection;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.util.VillagerReflection;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import static io.papermc.lib.PaperLib.getMinecraftVersion;
+import static io.papermc.lib.PaperLib.isPaper;
+
 public class TraderSpawnListener implements Listener {
-    private final WanderingTrades wanderingTrades;
+    private final WanderingTrades plugin;
     @Getter private final Collection<UUID> traderBlacklistCache = new HashSet<>();
 
     public TraderSpawnListener(WanderingTrades wt) {
-        this.wanderingTrades = wt;
+        this.plugin = wt;
     }
 
     public static boolean randBoolean(double p) {
@@ -53,12 +52,12 @@ public class TraderSpawnListener implements Listener {
         final Entity entity = e.getEntity();
         if (entity instanceof WanderingTrader && e.getSpawnReason() != CreatureSpawnEvent.SpawnReason.MOUNT) {
             final WanderingTrader wanderingTrader = (WanderingTrader) entity;
-            if (wanderingTrades.getCfg().isTraderWorldWhitelist()) {
-                if (wanderingTrades.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
+            if (plugin.getCfg().isTraderWorldWhitelist()) {
+                if (plugin.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
                     this.addTrades(wanderingTrader, false);
                 }
             } else {
-                if (!wanderingTrades.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
+                if (!plugin.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
                     this.addTrades(wanderingTrader, false);
                 }
             }
@@ -67,38 +66,38 @@ public class TraderSpawnListener implements Listener {
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
         if (!traderBlacklistCache.remove(wanderingTrader.getUniqueId())) {
-            Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 
                 List<MerchantRecipe> newTrades = new ArrayList<>();
-                if (wanderingTrades.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(wanderingTrades.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
-                    newTrades.addAll(wanderingTrades.getStoredPlayers().randomlySelectPlayerHeads());
+                if (plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
+                    newTrades.addAll(plugin.getStoredPlayers().randomlySelectPlayerHeads());
                 }
-                if (wanderingTrades.getCfg().isAllowMultipleSets()) {
-                    ImmutableList.copyOf(wanderingTrades.getCfg().getTradeConfigs().values()).forEach(config -> {
+                if (plugin.getCfg().isAllowMultipleSets()) {
+                    ImmutableList.copyOf(plugin.getCfg().getTradeConfigs().values()).forEach(config -> {
                         if (randBoolean(config.getChance())) {
                             newTrades.addAll(config.getTrades(false));
                         }
                     });
                 } else {
                     RandomCollection<String> configNames = new RandomCollection<>();
-                    wanderingTrades.getCfg().getTradeConfigs().forEach((key, value) -> configNames.add(value.getChance(), key));
+                    plugin.getCfg().getTradeConfigs().forEach((key, value) -> configNames.add(value.getChance(), key));
                     String chosenConfig = configNames.next();
                     if (chosenConfig != null) {
-                        newTrades.addAll(wanderingTrades.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
+                        newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
                     }
                 }
 
-                Bukkit.getScheduler().runTask(wanderingTrades, () -> {
+                Bukkit.getScheduler().runTask(plugin, () -> {
                     if (refresh) {
-                        if (!wanderingTrades.getCfg().isRemoveOriginalTrades()) {
-                            if (wanderingTrades.isPaperServer() && wanderingTrades.getMajorMinecraftVersion() >= 16) {
+                        if (!plugin.getCfg().isRemoveOriginalTrades()) {
+                            if (isPaper() && getMinecraftVersion() >= 16) {
                                 wanderingTrader.resetOffers();
                                 newTrades.addAll(wanderingTrader.getRecipes());
-                            } else if (wanderingTrades.getMajorMinecraftVersion() <= 16) {
+                            } else if (getMinecraftVersion() <= 16) {
                                 // This branch is executed when the plugin is run on Paper 1.14 or 1.15, or on Spigot 1.14-1.16.
                                 // The above if statement, and the below method should be updated when Spigot's version/mappings
                                 // change, if maintaining Spigot support for this feature is desired.
-                                resetOffersUsingReflection(wanderingTrader);
+                                this.resetOffersUsingReflection(wanderingTrader);
                                 newTrades.addAll(wanderingTrader.getRecipes());
                             }
                         }
@@ -122,35 +121,12 @@ public class TraderSpawnListener implements Listener {
     private void resetOffersUsingReflection(@NonNull AbstractVillager trader) {
         final List<MerchantRecipe> oldOffers = trader.getRecipes();
         try {
-            String updateTradesMethodName = "eW";
-            switch (wanderingTrades.getMajorMinecraftVersion()) {
-                case 14:
-                    updateTradesMethodName = "eh";
-                    break;
-                case 15:
-                    updateTradesMethodName = "eC";
-                    break;
-                case 16:
-                    updateTradesMethodName = "eW";
-                    break;
-            }
-
-            Class<?> _CraftAbstractVillager = Crafty.needCraftClass("entity.CraftAbstractVillager");
-            Class<?> _EntityVillagerAbstract = Crafty.needNmsClass("EntityVillagerAbstract");
-            MethodHandle _getHandle = Crafty.findMethod(_CraftAbstractVillager, "getHandle", _EntityVillagerAbstract);
-            Method _resetTrades = _EntityVillagerAbstract.getDeclaredMethod(updateTradesMethodName);
-            Field _trades = Crafty.needField(_EntityVillagerAbstract, "trades");
-
-            Object nmsTrader = Objects.requireNonNull(_getHandle).bindTo(trader).invoke();
-            _trades.set(nmsTrader, Crafty.needNmsClass("MerchantRecipeList").newInstance());
-
-            _resetTrades.setAccessible(true);
-            _resetTrades.invoke(nmsTrader);
-        } catch (Throwable throwable) {
+            VillagerReflection.resetOffers(trader);
+        } catch (final Throwable throwable) {
             trader.setRecipes(oldOffers);
-            wanderingTrades.getLogger().log(
+            this.plugin.getLogger().log(
                     Level.WARNING,
-                    String.format("Failed to reset trades! Please report this bug to the issue tracker at %s !", wanderingTrades.getDescription().getWebsite()),
+                    String.format("Failed to reset trades! Please report this bug to the issue tracker at %s !", plugin.getDescription().getWebsite()),
                     throwable
             );
         }

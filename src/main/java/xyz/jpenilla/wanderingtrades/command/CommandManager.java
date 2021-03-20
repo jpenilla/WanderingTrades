@@ -3,7 +3,9 @@ package xyz.jpenilla.wanderingtrades.command;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.BukkitCaptionKeys;
+import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.captions.SimpleCaptionRegistry;
 import cloud.commandframework.captions.StandardCaptionKeys;
 import cloud.commandframework.exceptions.InvalidCommandSenderException;
@@ -12,14 +14,17 @@ import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
-import com.google.common.collect.ImmutableList;
+import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import java.util.HashMap;
@@ -27,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
 
@@ -47,7 +53,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         );
         this.wanderingTrades = wanderingTrades;
 
-        help = new MinecraftHelp<>("/wanderingtrades help", wanderingTrades.getAudience()::sender, this);
+        help = new MinecraftHelp<>("/wanderingtrades help", wanderingTrades.audiences()::sender, this);
         help.setHelpColors(MinecraftHelp.HelpColors.of(
                 TextColor.color(0x00a3ff),
                 NamedTextColor.WHITE,
@@ -76,21 +82,28 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         }
 
         /* Register Brigadier */
-        try {
+        if (this.queryCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             this.registerBrigadier();
+            final CloudBrigadierManager<CommandSender, ?> brigManager = this.brigadierManager();
+            if (brigManager != null) {
+                brigManager.setNativeNumberSuggestions(false);
+            }
             wanderingTrades.getLogger().info("Successfully registered Mojang Brigadier support for commands.");
-        } catch (Exception ignored) {
         }
 
         /* Register Asynchronous Completion Listener */
-        try {
+        if (this.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
             this.registerAsynchronousCompletions();
             wanderingTrades.getLogger().info("Successfully registered asynchronous command completion listener.");
-        } catch (Exception ignored) {
         }
 
+        this.getParserRegistry().registerParserSupplier(
+                TypeToken.get(TradeConfig.class),
+                parameters -> new TradeConfigArgument.Parser(this.wanderingTrades)
+        );
+
         /* Register Commands */
-        ImmutableList.of(
+        Stream.of(
                 new CommandHelp(wanderingTrades, this),
                 new CommandWanderingTrades(wanderingTrades, this),
                 new CommandSummon(wanderingTrades, this),
@@ -142,19 +155,8 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                             .build();
                 })
                 .withCommandExecutionHandler()
-                .withDecorator(component -> Component.text()
-                        .append(Constants.PREFIX_COMPONENT)
-                        .append(component)
-                        .build())
-                .apply(this, wanderingTrades.getAudience()::sender);
-    }
-
-    public CommandArgument.Builder<CommandSender, ?> getArgument(String name) {
-        return this.argumentRegistry.get(name);
-    }
-
-    public void registerArgument(String name, CommandArgument.Builder<CommandSender, ?> argumentBuilder) {
-        this.argumentRegistry.put(name, argumentBuilder);
+                .withDecorator(component -> TextComponent.ofChildren(Constants.PREFIX_COMPONENT, component))
+                .apply(this, wanderingTrades.audiences()::sender);
     }
 
     public CommandFlag.Builder<?> getFlag(String name) {

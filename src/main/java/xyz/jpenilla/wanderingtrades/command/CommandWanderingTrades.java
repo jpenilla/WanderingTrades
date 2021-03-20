@@ -17,7 +17,7 @@ public class CommandWanderingTrades implements WTCommand {
     public CommandWanderingTrades(WanderingTrades wanderingTrades, CommandManager mgr) {
         this.wanderingTrades = wanderingTrades;
         this.mgr = mgr;
-        this.chat = wanderingTrades.getChat();
+        this.chat = wanderingTrades.chat();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CommandWanderingTrades implements WTCommand {
                         "<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion(),
                         "<gray>By <gradient:gold:yellow>jmp",
                         "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------"
-                ).forEach(string -> chat.send(context.getSender(), chat.getCenteredMessage(string)))).build();
+                ).forEach(string -> chat.send(context.getSender(), Chat.getCenteredMessage(string)))).build();
 
         /* Reload Command */
         final Command<CommandSender> reload = wt
@@ -41,12 +41,12 @@ public class CommandWanderingTrades implements WTCommand {
                 .literal("reload")
                 .permission("wanderingtrades.reload")
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    chat.sendParsed(context.getSender(), chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
+                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
                     wanderingTrades.getCfg().load();
                     wanderingTrades.getLang().load();
                     wanderingTrades.getListeners().reload();
                     wanderingTrades.getStoredPlayers().load();
-                    chat.sendParsed(context.getSender(), chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
+                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
                 }).execute()).build();
 
         mgr.register(ImmutableList.of(about, reload));

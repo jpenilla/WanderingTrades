@@ -64,15 +64,15 @@ public class TradeEditGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText((player -> {
-                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", getTradeName()));
-                        WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", getTradeName()));
+                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
                         return "";
                     }))
                     .onValidateInput(((player, s) -> {
                         if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
                             this.tradeConfig.deleteTrade(getTradeName());
                             WanderingTrades.getInstance().getCfg().load();
-                            WanderingTrades.getInstance().getChat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                             new TradeListGui(this.tradeConfig).open(player);
                         } else {
                             onEditCancelled(player, s);

@@ -1,7 +1,7 @@
 package xyz.jpenilla.wanderingtrades.command;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.Description;
 import cloud.commandframework.arguments.standard.EnumArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
@@ -30,8 +30,10 @@ import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.jmplib.Crafty;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import java.lang.invoke.MethodHandle;
@@ -39,6 +41,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
+
+import static io.papermc.lib.PaperLib.getMinecraftVersion;
+import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.colorDownsamplingGson;
+import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
 public class CommandSummon implements WTCommand {
 
@@ -49,7 +55,7 @@ public class CommandSummon implements WTCommand {
     public CommandSummon(WanderingTrades wanderingTrades, CommandManager mgr) {
         this.wanderingTrades = wanderingTrades;
         this.mgr = mgr;
-        this.chat = wanderingTrades.getChat();
+        this.chat = wanderingTrades.chat();
 
         mgr.registerFlag(
                 "pitch",
@@ -102,7 +108,7 @@ public class CommandSummon implements WTCommand {
         final Command<CommandSender> summon = wt
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON))
                 .literal("summon")
-                .argument(mgr.getArgument("trade_config"))
+                .argument(TradeConfigArgument.of(this.wanderingTrades, "trade_config"))
                 .argument(LocationArgument.of("location"))
                 .flag(mgr.getFlag("world"))
                 .flag(mgr.getFlag("pitch"))
@@ -118,7 +124,7 @@ public class CommandSummon implements WTCommand {
         final Command<CommandSender> summonVillager = wt
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_VSUMMON))
                 .literal("summonvillager")
-                .argument(mgr.getArgument("trade_config"))
+                .argument(TradeConfigArgument.of(this.wanderingTrades, "trade_config"))
                 .argument(EnumArgument.of(Villager.Type.class, "type"))
                 .argument(EnumArgument.of(Villager.Profession.class, "profession"))
                 .argument(LocationArgument.of("location"))
@@ -138,7 +144,7 @@ public class CommandSummon implements WTCommand {
                 .meta(CommandMeta.DESCRIPTION, "Sets the name of an entity.")
                 .argument(SingleEntitySelectorArgument.of("entity"))
                 .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
-                        Description.of("The MiniMessage string to use as a name."))
+                        ArgumentDescription.of("The MiniMessage string to use as a name."))
                 .permission("wanderingtrades.name")
                 .senderType(Player.class)
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
@@ -173,7 +179,7 @@ public class CommandSummon implements WTCommand {
             return;
         }
         loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
-            wanderingTrades.getListeners().getTraderSpawnListener().getTraderBlacklistCache().add(wanderingTrader.getUniqueId());
+            wanderingTrades.getListeners().listener(TraderSpawnListener.class).getTraderBlacklistCache().add(wanderingTrader.getUniqueId());
             wanderingTrader.setRecipes(recipes);
             wanderingTrader.setAI(!disableAI);
 
@@ -202,8 +208,7 @@ public class CommandSummon implements WTCommand {
             chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             return;
         }
-        loc.getWorld().spawn(loc, Villager.class, villager -> {
-            villager.setRecipes(recipes);
+        final Villager v = loc.getWorld().spawn(loc, Villager.class, villager -> {
             villager.setAI(!disableAI);
             villager.setVillagerType(type);
             villager.setProfession(profession);
@@ -224,9 +229,8 @@ public class CommandSummon implements WTCommand {
                 dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
             }
         });
+        v.setRecipes(recipes);
     }
-
-    private static final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
 
     /**
      * Set the custom name of an entity from a MiniMessage string using reflection. Falls back to Bukkit api using legacy text.
@@ -252,7 +256,8 @@ public class CommandSummon implements WTCommand {
             Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
 
             Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
-            Object customName = Objects.requireNonNull(_jsonToComponent).invoke(null, gsonComponentSerializer.serialize(wanderingTrades.getMiniMessage().parse(miniMessage)));
+            final GsonComponentSerializer serializer = getMinecraftVersion() >= 16 ? gson() : colorDownsamplingGson();
+            Object customName = Objects.requireNonNull(_jsonToComponent).invoke(null, serializer.serialize(wanderingTrades.miniMessage().parse(miniMessage)));
 
             _setCustomName.invoke(nmsEntity, customName);
         } catch (Throwable throwable) {

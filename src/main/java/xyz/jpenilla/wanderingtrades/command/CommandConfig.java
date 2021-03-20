@@ -1,8 +1,7 @@
 package xyz.jpenilla.wanderingtrades.command;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.Description;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import com.google.common.collect.ImmutableList;
@@ -12,6 +11,7 @@ import org.bukkit.entity.Player;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.gui.ConfigEditGui;
@@ -31,20 +31,7 @@ public class CommandConfig implements WTCommand {
     public CommandConfig(WanderingTrades wanderingTrades, CommandManager mgr) {
         this.wanderingTrades = wanderingTrades;
         this.mgr = mgr;
-        this.chat = wanderingTrades.getChat();
-
-        /* Register TradeConfig name Argument */
-        mgr.registerArgument("trade_config",
-                mgr.argumentBuilder(TradeConfig.class, "trade_config")
-                        .withSuggestionsProvider((context, s) -> ImmutableList.copyOf(wanderingTrades.getCfg().getTradeConfigs().keySet()))
-                        .withParser((context, input) -> {
-                            final TradeConfig tradeConfig = wanderingTrades.getCfg().getTradeConfigs().getOrDefault(input.peek(), null);
-                            if (tradeConfig != null) {
-                                input.remove();
-                                return ArgumentParseResult.success(tradeConfig);
-                            }
-                            return ArgumentParseResult.failure(new IllegalArgumentException(wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG)));
-                        }));
+        this.chat = wanderingTrades.chat();
     }
 
     @Override
@@ -63,7 +50,7 @@ public class CommandConfig implements WTCommand {
         final Command<CommandSender> edit = wt
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_EDIT))
                 .literal("edit")
-                .argument(mgr.getArgument("trade_config").asOptional())
+                .argument(TradeConfigArgument.optional(this.wanderingTrades, "trade_config"))
                 .permission("wanderingtrades.edit")
                 .senderType(Player.class)
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
@@ -102,7 +89,7 @@ public class CommandConfig implements WTCommand {
         final Command<CommandSender> nameHeldItem = mgr.commandBuilder("namehelditem")
                 .meta(CommandMeta.DESCRIPTION, "Sets the display name of the held ItemStack.")
                 .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
-                        Description.of("The MiniMessage string to use as a name."))
+                        ArgumentDescription.of("The MiniMessage string to use as a name."))
                 .permission("wanderingtrades.namehand")
                 .senderType(Player.class)
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
@@ -113,7 +100,7 @@ public class CommandConfig implements WTCommand {
                 }).execute())
                 .build();
 
-        mgr.register(ImmutableList.of(list, edit, editConfig, nameHeldItem));
+        mgr.register(ImmutableList.of(list, edit, editConfig, editPlayerHeadConfig, nameHeldItem));
     }
 
     private void onList(CommandSender sender) {

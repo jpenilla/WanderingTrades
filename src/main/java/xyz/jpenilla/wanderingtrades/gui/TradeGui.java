@@ -112,7 +112,7 @@ public abstract class TradeGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().getChat().sendParsed(player,
+                        WanderingTrades.getInstance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + maxUses
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));

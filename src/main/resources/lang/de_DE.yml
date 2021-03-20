@@ -1,4 +1,4 @@
-# Wandering Trades de_DE language config \\ German translation by Cantibra
+# Wandering Trades ${project.version} de_DE language config \\ German translation by Cantibra
 COMMAND_LIST_LOADED: '<gradient:green:blue>Geladene Angebots-Konfigurationen</gradient><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'Es sind keine Angebots-Konfigurationen mit diesem Namen geladen.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Diese Konfiguration enthält fehler. Stelle sicher, dass die Rezepte mindestens ein Item enthalten.'

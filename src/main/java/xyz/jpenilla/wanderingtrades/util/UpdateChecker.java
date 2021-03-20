@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class UpdateChecker {
     private final WanderingTrades plugin;
@@ -30,7 +31,7 @@ public class UpdateChecker {
             try {
                 result = parser.parse(new InputStreamReader(new URL("https://api.github.com/repos/" + githubRepo + "/releases").openStream(), Charsets.UTF_8)).getAsJsonArray();
             } catch (IOException exception) {
-                plugin.getLogger().info("Cannot look for updates: " + exception.getMessage());
+                plugin.getLogger().log(Level.INFO, "Failed to look for updates", exception);
                 return;
             }
 
@@ -39,17 +40,16 @@ public class UpdateChecker {
             final List<String> versionList = new LinkedList<>(versionMap.keySet());
             final String currentVersion = "v" + plugin.getDescription().getVersion();
             if (versionList.get(0).equals(currentVersion)) {
-                plugin.getLogger().info("You are running the latest version of " + plugin.getName() + "! :)");
-                return;
+                return; // Up to date, do nothing
             }
             if (currentVersion.contains("SNAPSHOT")) {
-                plugin.getLogger().info("You are running a development build of " + plugin.getName() + "! (" + currentVersion + ")");
+                plugin.getLogger().info("This server is running a development build of " + plugin.getName() + "! (" + currentVersion + ")");
                 plugin.getLogger().info("The latest official release is " + versionList.get(0));
                 return;
             }
             final int versionsBehind = versionList.indexOf(currentVersion);
             plugin.getLogger().info("There is an update available for " + plugin.getName() + "!");
-            plugin.getLogger().info("You are running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "many" : versionsBehind) + " versions outdated.");
+            plugin.getLogger().info("This server is running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "UNKNOWN" : versionsBehind) + " versions outdated.");
             plugin.getLogger().info("Download the latest version, " + versionList.get(0) + " from GitHub at the link below:");
             plugin.getLogger().info(versionMap.get(versionList.get(0)));
         });

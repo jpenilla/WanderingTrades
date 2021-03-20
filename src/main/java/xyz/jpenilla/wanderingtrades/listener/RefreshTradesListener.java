@@ -65,7 +65,7 @@ public class RefreshTradesListener implements Listener {
                     abstractVillager.setRecipes(tradeConfig.getTrades(true));
                 }
                 if (refreshNatural && abstractVillager instanceof WanderingTrader) {
-                    plugin.getListeners().getTraderSpawnListener().addTrades((WanderingTrader) abstractVillager, true);
+                    plugin.getListeners().listener(TraderSpawnListener.class).addTrades((WanderingTrader) abstractVillager, true);
                 }
                 persistentDataContainer.set(Constants.LAST_REFRESH, PersistentDataType.LONG, System.currentTimeMillis());
             }
