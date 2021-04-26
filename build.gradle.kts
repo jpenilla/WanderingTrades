@@ -3,7 +3,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream
 
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     id("kr.entree.spigradle") version "2.2.3"
 }
 
