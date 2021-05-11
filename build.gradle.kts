@@ -26,8 +26,8 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok", "lombok", "1.18.12")
-    compileOnly("org.projectlombok", "lombok", "1.18.12")
+    annotationProcessor("org.projectlombok", "lombok", "1.18.20")
+    compileOnly("org.projectlombok", "lombok", "1.18.20")
 
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     implementation("io.papermc", "paperlib", "1.0.6")
