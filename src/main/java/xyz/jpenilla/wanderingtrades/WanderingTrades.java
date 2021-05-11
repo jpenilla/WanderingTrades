@@ -1,7 +1,6 @@
 package xyz.jpenilla.wanderingtrades;
 
 import io.papermc.lib.PaperLib;
-import kr.entree.spigradle.annotations.PluginMain;
 import lombok.Getter;
 import lombok.Setter;
 import org.bstats.bukkit.Metrics;
@@ -20,7 +19,6 @@ import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
 
 import java.util.logging.Level;
 
-@PluginMain
 public final class WanderingTrades extends BasePlugin {
     @Getter
     private static WanderingTrades instance;

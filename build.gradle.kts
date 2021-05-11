@@ -3,12 +3,13 @@ import org.apache.commons.io.output.ByteArrayOutputStream
 
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("kr.entree.spigradle") version "2.2.3"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
 }
 
 group = "xyz.jpenilla"
 version = "1.6.5.3+${getLastCommitHash()}-SNAPSHOT"
+description = "Customizable trades for Wandering Traders."
 
 repositories {
     mavenLocal()
@@ -50,13 +51,13 @@ java {
     targetCompatibility = JavaVersion.toVersion(8)
 }
 
-spigot {
+bukkit {
+    main = "xyz.jpenilla.wanderingtrades.WanderingTrades"
     name = project.name
     apiVersion = "1.14"
-    description = "Customizable Trades for Wandering Traders. Inspired by Vanilla Tweaks"
     website = "https://github.com/jpenilla/WanderingTrades"
-    authors("jmp")
-    softDepends("McRPG", "WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
+    authors = listOf("jmp")
+    softDepend = listOf("McRPG", "WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
 }
 
 tasks {

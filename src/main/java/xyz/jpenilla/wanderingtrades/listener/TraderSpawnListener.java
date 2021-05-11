@@ -65,50 +65,51 @@ public class TraderSpawnListener implements Listener {
     }
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
-        if (!traderBlacklistCache.remove(wanderingTrader.getUniqueId())) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-
-                List<MerchantRecipe> newTrades = new ArrayList<>();
-                if (plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
-                    newTrades.addAll(plugin.getStoredPlayers().randomlySelectPlayerHeads());
-                }
-                if (plugin.getCfg().isAllowMultipleSets()) {
-                    ImmutableList.copyOf(plugin.getCfg().getTradeConfigs().values()).forEach(config -> {
-                        if (randBoolean(config.getChance())) {
-                            newTrades.addAll(config.getTrades(false));
-                        }
-                    });
-                } else {
-                    RandomCollection<String> configNames = new RandomCollection<>();
-                    plugin.getCfg().getTradeConfigs().forEach((key, value) -> configNames.add(value.getChance(), key));
-                    String chosenConfig = configNames.next();
-                    if (chosenConfig != null) {
-                        newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
-                    }
-                }
-
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    if (refresh) {
-                        if (!plugin.getCfg().isRemoveOriginalTrades()) {
-                            if (isPaper() && getMinecraftVersion() >= 16) {
-                                wanderingTrader.resetOffers();
-                                newTrades.addAll(wanderingTrader.getRecipes());
-                            } else if (getMinecraftVersion() <= 16) {
-                                // This branch is executed when the plugin is run on Paper 1.14 or 1.15, or on Spigot 1.14-1.16.
-                                // The above if statement, and the below method should be updated when Spigot's version/mappings
-                                // change, if maintaining Spigot support for this feature is desired.
-                                this.resetOffersUsingReflection(wanderingTrader);
-                                newTrades.addAll(wanderingTrader.getRecipes());
-                            }
-                        }
-                    } else {
-                        newTrades.addAll(wanderingTrader.getRecipes());
-                    }
-                    wanderingTrader.setRecipes(newTrades);
-                });
-
-            });
+        if (traderBlacklistCache.remove(wanderingTrader.getUniqueId())) {
+            return;
         }
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            List<MerchantRecipe> newTrades = new ArrayList<>();
+            if (plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
+                newTrades.addAll(plugin.getStoredPlayers().randomlySelectPlayerHeads());
+            }
+            if (plugin.getCfg().isAllowMultipleSets()) {
+                ImmutableList.copyOf(plugin.getCfg().getTradeConfigs().values()).forEach(config -> {
+                    if (randBoolean(config.getChance())) {
+                        newTrades.addAll(config.getTrades(false));
+                    }
+                });
+            } else {
+                RandomCollection<String> configNames = new RandomCollection<>();
+                plugin.getCfg().getTradeConfigs().forEach((key, value) -> configNames.add(value.getChance(), key));
+                String chosenConfig = configNames.next();
+                if (chosenConfig != null) {
+                    newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
+                }
+            }
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (refresh) {
+                    if (!plugin.getCfg().isRemoveOriginalTrades()) {
+                        if (isPaper() && getMinecraftVersion() >= 16) {
+                            wanderingTrader.resetOffers();
+                            newTrades.addAll(wanderingTrader.getRecipes());
+                        } else if (getMinecraftVersion() <= 16) {
+                            // This branch is executed when the plugin is run on Paper 1.14 or 1.15, or on Spigot 1.14-1.16.
+                            // The above if statement, and the below method should be updated when Spigot's version/mappings
+                            // change, if maintaining Spigot support for this feature is desired.
+                            this.resetOffersUsingReflection(wanderingTrader);
+                            newTrades.addAll(wanderingTrader.getRecipes());
+                        }
+                    }
+                } else {
+                    newTrades.addAll(wanderingTrader.getRecipes());
+                }
+                wanderingTrader.setRecipes(newTrades);
+            });
+
+        });
     }
 
     /**
