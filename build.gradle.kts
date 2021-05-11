@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.jpenilla"
-version = "1.6.5.3+${getLastCommitHash()}-SNAPSHOT"
+version = "1.6.5.3-SNAPSHOT+${getLastCommitHash()}"
 description = "Customizable trades for Wandering Traders."
 
 repositories {
