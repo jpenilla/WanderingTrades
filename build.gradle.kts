@@ -12,7 +12,7 @@ version = "1.6.5.3-SNAPSHOT+${getLastCommitHash()}"
 description = "Customizable trades for Wandering Traders."
 
 repositories {
-    mavenLocal()
+    //mavenLocal()
     mavenCentral()
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://papermc.io/repo/repository/maven-public/")
@@ -32,8 +32,8 @@ dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
     implementation("io.papermc", "paperlib", "1.0.6")
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7")
-    compileOnly("net.ess3", "EssentialsX", "2.17.2")
-    compileOnly("org.checkerframework", "checker-qual", "3.11.0")
+    compileOnly("net.ess3", "EssentialsX", "2.18.2")
+    compileOnly("org.checkerframework", "checker-qual", "3.13.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
     compileOnly("com.github.Eunoians", "McRPG", "1.3.3.0-BETA")
