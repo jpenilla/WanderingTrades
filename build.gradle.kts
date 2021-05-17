@@ -1,14 +1,13 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
-import org.apache.commons.io.output.ByteArrayOutputStream
-
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
+    val indraVersion = "2.0.4"
+    id("net.kyori.indra.git") version indraVersion
 }
 
 group = "xyz.jpenilla"
-version = "1.6.5.3-SNAPSHOT+${getLastCommitHash()}"
+version = "1.6.5.3-SNAPSHOT+${lastCommitHash()}"
 description = "Customizable trades for Wandering Traders."
 
 repositories {
@@ -26,29 +25,25 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok", "lombok", "1.18.20")
-    compileOnly("org.projectlombok", "lombok", "1.18.20")
-
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+
     implementation("io.papermc", "paperlib", "1.0.6")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+36-SNAPSHOT")
+    implementation("org.bstats", "bstats-bukkit", "2.2.1")
+    val cloudVersion = "1.5.0-SNAPSHOT"
+    implementation("cloud.commandframework", "cloud-paper", cloudVersion)
+    implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
+
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7")
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
     compileOnly("org.checkerframework", "checker-qual", "3.13.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
-    compileOnly("com.github.Eunoians", "McRPG", "1.3.3.0-BETA")
-
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+33-SNAPSHOT")
-    implementation("org.bstats", "bstats-bukkit", "2.2.1")
-
-    val cloudVersion = "1.5.0-SNAPSHOT"
-    implementation("cloud.commandframework", "cloud-paper", cloudVersion)
-    implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion(8)
     targetCompatibility = JavaVersion.toVersion(8)
+    sourceCompatibility = JavaVersion.toVersion(8)
 }
 
 bukkit {
@@ -64,25 +59,25 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
-    register<ConfigureShadowRelocation>("autoRelocate") {
-        target = shadowJar.get()
-        val packageName = "${project.group}.${project.name.toLowerCase()}"
-        prefix = "$packageName.lib"
-    }
     shadowJar {
         minimize()
-        dependsOn(withType<ConfigureShadowRelocation>())
-        archiveClassifier.set("")
         archiveFileName.set("${project.name}-${project.version}.jar")
+        archiveClassifier.set("")
+        sequenceOf(
+            "org.bstats",
+            "cloud.commandframework",
+            "xyz.jpenilla.jmplib",
+            "net.kyori",
+            "io.papermc.lib",
+            "io.leangen.geantyref"
+        ).forEach {
+            relocate(it, "xyz.jpenilla.wanderingtrades.lib.$it")
+        }
     }
     processResources {
         filter { string -> string.replace("\${project.version}", project.version as String) }
     }
 }
 
-fun getLastCommitHash(): String = ByteArrayOutputStream().apply {
-    exec {
-        commandLine = listOf("git", "rev-parse", "--short", "HEAD")
-        standardOutput = this@apply
-    }
-}.toString(Charsets.UTF_8).trim()
+fun lastCommitHash(): String = indraGit.commit()?.name?.substring(0, 7)
+    ?: error("Could not determine commit hash")

@@ -79,7 +79,7 @@ public class CommandSummon implements WTCommand {
         final Command.Builder<CommandSender> wt = mgr.commandBuilder("wt");
 
         final Command<CommandSender> summonNatural = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_NATURAL))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
                 .literal("summonnatural")
                 .argument(LocationArgument.of("location"))
                 .flag(mgr.getFlag("world"))
@@ -106,7 +106,7 @@ public class CommandSummon implements WTCommand {
                 .build();
 
         final Command<CommandSender> summon = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON))
                 .literal("summon")
                 .argument(TradeConfigArgument.of(this.wanderingTrades, "trade_config"))
                 .argument(LocationArgument.of("location"))
@@ -122,7 +122,7 @@ public class CommandSummon implements WTCommand {
                 .build();
 
         final Command<CommandSender> summonVillager = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_VSUMMON))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_VSUMMON))
                 .literal("summonvillager")
                 .argument(TradeConfigArgument.of(this.wanderingTrades, "trade_config"))
                 .argument(EnumArgument.of(Villager.Type.class, "type"))
@@ -175,23 +175,23 @@ public class CommandSummon implements WTCommand {
         try {
             recipes = tradeConfig.getTrades(true);
         } catch (IllegalStateException ex) {
-            chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+            chat.sendParsed(sender, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             return;
         }
         loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
-            wanderingTrades.getListeners().listener(TraderSpawnListener.class).getTraderBlacklistCache().add(wanderingTrader.getUniqueId());
+            wanderingTrades.listeners().listener(TraderSpawnListener.class).getTraderBlacklistCache().add(wanderingTrader.getUniqueId());
             wanderingTrader.setRecipes(recipes);
             wanderingTrader.setAI(!disableAI);
 
             final PersistentDataContainer dataContainer = wanderingTrader.getPersistentDataContainer();
-            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.getConfigName());
+            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.configName());
 
-            final String customName = tradeConfig.getCustomName();
+            final String customName = tradeConfig.customName();
             if (customName != null && !customName.isEmpty() && !customName.equalsIgnoreCase("NONE")) {
                 setCustomName(wanderingTrader, customName);
                 wanderingTrader.setCustomNameVisible(true);
             }
-            if (tradeConfig.isInvincible()) {
+            if (tradeConfig.invincible()) {
                 wanderingTrader.setInvulnerable(true);
                 wanderingTrader.setRemoveWhenFarAway(false);
                 wanderingTrader.setPersistent(true);
@@ -205,7 +205,7 @@ public class CommandSummon implements WTCommand {
         try {
             recipes = tradeConfig.getTrades(true);
         } catch (IllegalStateException ex) {
-            chat.sendParsed(sender, wanderingTrades.getLang().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+            chat.sendParsed(sender, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             return;
         }
         final Villager v = loc.getWorld().spawn(loc, Villager.class, villager -> {
@@ -215,14 +215,14 @@ public class CommandSummon implements WTCommand {
             villager.setVillagerLevel(5);
 
             final PersistentDataContainer dataContainer = villager.getPersistentDataContainer();
-            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.getConfigName());
+            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.configName());
 
-            final String customName = tradeConfig.getCustomName();
+            final String customName = tradeConfig.customName();
             if (customName != null && !customName.isEmpty() && !customName.equalsIgnoreCase("NONE")) {
                 setCustomName(villager, customName);
                 villager.setCustomNameVisible(true);
             }
-            if (tradeConfig.isInvincible()) {
+            if (tradeConfig.invincible()) {
                 villager.setInvulnerable(true);
                 villager.setRemoveWhenFarAway(false);
                 villager.setPersistent(true);
@@ -261,7 +261,7 @@ public class CommandSummon implements WTCommand {
 
             _setCustomName.invoke(nmsEntity, customName);
         } catch (Throwable throwable) {
-            if (wanderingTrades.getCfg().isDebug()) {
+            if (wanderingTrades.config().debug()) {
                 wanderingTrades.getLogger().log(
                         Level.WARNING,
                         "Failed to set entity name using reflection, falling back onto legacy text serialization",

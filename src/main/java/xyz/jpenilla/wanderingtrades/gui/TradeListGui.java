@@ -21,7 +21,7 @@ public class TradeListGui extends PaginatedGui {
     private final TradeConfig tradeConfig;
 
     public TradeListGui(TradeConfig tradeConfig) {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig.getConfigName(), 54);
+        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig.configName(), 54);
         this.tradeConfig = tradeConfig;
     }
 
@@ -56,7 +56,7 @@ public class TradeListGui extends PaginatedGui {
     public List<ItemStack> getListItems() {
         List<ItemStack> trades = new ArrayList<>();
         tradeConfig.getTradeSection().getKeys(false).stream().sorted().forEach(key -> {
-            ItemStack itemStack = TradeConfig.getStack(tradeConfig.getFile(), "trades." + key + ".result");
+            ItemStack itemStack = TradeConfig.getStack(tradeConfig.fileConfiguration(), "trades." + key + ".result");
             if (itemStack != null) {
                 final ItemBuilder builder = new ItemBuilder(itemStack);
                 builder.setName(key);

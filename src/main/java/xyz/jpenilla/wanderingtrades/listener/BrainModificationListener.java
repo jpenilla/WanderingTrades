@@ -39,8 +39,8 @@ public class BrainModificationListener implements Listener {
 
     private void modifyBrain(final @NonNull Villager villager) {
         final String configName = villager.getPersistentDataContainer().get(Constants.CONFIG_NAME, PersistentDataType.STRING);
-        final TradeConfig tradeConfig = this.plugin.getCfg().getTradeConfigs().get(configName);
-        if (configName == null || tradeConfig == null || !tradeConfig.isDisableHeroOfTheVillageGifts()) {
+        final TradeConfig tradeConfig = this.plugin.config().tradeConfigs().get(configName);
+        if (configName == null || tradeConfig == null || !tradeConfig.disableHeroOfTheVillageGifts()) {
             return;
         }
         try {

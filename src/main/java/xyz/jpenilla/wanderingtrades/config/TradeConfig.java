@@ -1,8 +1,5 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldNameConstants;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,27 +25,17 @@ import java.util.logging.Level;
 import static io.papermc.lib.PaperLib.getMinecraftVersion;
 import static io.papermc.lib.PaperLib.isPaper;
 
-@FieldNameConstants
 public class TradeConfig {
     private final WanderingTrades plugin;
-    @Getter
     private final FileConfiguration file;
-    @Getter
     private final String configName;
-    @Getter @Setter
     private boolean randomized;
-    @Getter @Setter
     private boolean enabled;
-    @Getter @Setter
     private String randomAmount;
     private List<MerchantRecipe> allTrades;
-    @Getter @Setter
     private double chance;
-    @Getter @Setter
     private boolean invincible;
-    @Getter @Setter
     private String customName;
-    @Getter @Setter
     private boolean disableHeroOfTheVillageGifts;
 
     private static final String TRADES = "trades";
@@ -110,16 +97,6 @@ public class TradeConfig {
         final String materialString = config.getString(key + ".material");
         final int amount = config.getInt(key + ".amount", 1);
 
-        if (materialString != null && materialString.toUpperCase(Locale.ENGLISH).contains("MCRPG") && WanderingTrades.getInstance().getMcRPG() != null) {
-            itemBuilder = new ItemBuilder(Material.CHIPPED_ANVIL).setAmount(amount);
-            if (materialString.toUpperCase().contains("SKILL")) {
-                itemBuilder.setName("mcrpg_skill_book_placeholder_");
-            } else {
-                itemBuilder.setName("mcrpg_upgrade_book_placeholder_");
-            }
-            return itemBuilder.build();
-        }
-
         if (itemBuilder == null && materialString != null) {
 
             if (materialString.startsWith("head-")) {
@@ -131,7 +108,7 @@ public class TradeConfig {
                     itemBuilder = new ItemBuilder(material).setAmount(amount);
                 } else {
                     itemBuilder = new ItemBuilder(Material.STONE);
-                    WanderingTrades.getInstance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid material!", materialString));
+                    WanderingTrades.instance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid material!", materialString));
                 }
             }
 
@@ -168,7 +145,7 @@ public class TradeConfig {
                 if (enchantment != null) {
                     itemBuilder.addEnchant(enchantment, level);
                 } else {
-                    WanderingTrades.getInstance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid enchantment!", materialString));
+                    WanderingTrades.instance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid enchantment!", materialString));
                 }
             }
         }
@@ -275,9 +252,6 @@ public class TradeConfig {
                 h.addAll(allTrades);
             }
         }
-        if (plugin.getMcRPG() != null) {
-            return plugin.getMcRPG().replacePlaceholders(h);
-        }
         return h;
     }
 
@@ -287,5 +261,83 @@ public class TradeConfig {
             return ThreadLocalRandom.current().nextInt(Integer.parseInt(ints[0]), Integer.parseInt(ints[1]));
         }
         return Integer.parseInt(randomAmount);
+    }
+
+    public FileConfiguration fileConfiguration() {
+        return this.file;
+    }
+
+    public String configName() {
+        return this.configName;
+    }
+
+    public boolean randomized() {
+        return this.randomized;
+    }
+
+    public boolean enabled() {
+        return this.enabled;
+    }
+
+    public String randomAmount() {
+        return this.randomAmount;
+    }
+
+    public double chance() {
+        return this.chance;
+    }
+
+    public boolean invincible() {
+        return this.invincible;
+    }
+
+    public String customName() {
+        return this.customName;
+    }
+
+    public boolean disableHeroOfTheVillageGifts() {
+        return this.disableHeroOfTheVillageGifts;
+    }
+
+    public void randomized(boolean randomized) {
+        this.randomized = randomized;
+    }
+
+    public void enabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void randomAmount(String randomAmount) {
+        this.randomAmount = randomAmount;
+    }
+
+    public void chance(double chance) {
+        this.chance = chance;
+    }
+
+    public void invincible(boolean invincible) {
+        this.invincible = invincible;
+    }
+
+    public void customName(String customName) {
+        this.customName = customName;
+    }
+
+    public void setDisableHeroOfTheVillageGifts(boolean disableHeroOfTheVillageGifts) {
+        this.disableHeroOfTheVillageGifts = disableHeroOfTheVillageGifts;
+    }
+
+    public static final class Fields {
+        public static final String plugin = "plugin";
+        public static final String file = "file";
+        public static final String configName = "configName";
+        public static final String randomized = "randomized";
+        public static final String enabled = "enabled";
+        public static final String randomAmount = "randomAmount";
+        public static final String allTrades = "allTrades";
+        public static final String chance = "chance";
+        public static final String invincible = "invincible";
+        public static final String customName = "customName";
+        public static final String disableHeroOfTheVillageGifts = "disableHeroOfTheVillageGifts";
     }
 }

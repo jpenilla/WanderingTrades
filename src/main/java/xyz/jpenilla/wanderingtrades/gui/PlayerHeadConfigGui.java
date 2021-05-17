@@ -35,11 +35,11 @@ public class PlayerHeadConfigGui extends TradeGui {
     private final ItemStack customName = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME)).build();
 
     public PlayerHeadConfigGui() {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_PH_CONFIG_TITLE), null);
-        PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
-       setI1(config.getIngredient1());
-        if (config.getIngredient2() != null) {
-            setI2(config.getIngredient2());
+        super(WanderingTrades.instance().langConfig().get(Lang.GUI_PH_CONFIG_TITLE), null);
+        PlayerHeadConfig config = WanderingTrades.instance().config().playerHeadConfig();
+       setI1(config.ingredientOne());
+        if (config.ingredientTwo() != null) {
+            setI2(config.ingredientTwo());
         }
     }
 
@@ -49,49 +49,49 @@ public class PlayerHeadConfigGui extends TradeGui {
         inventory.setItem(inventory.getSize() - 1, closeButton);
         inventory.setItem(inventory.getSize() - 9, new ItemBuilder(getSaveButton()).setLore(lang.get(Lang.GUI_PH_CONFIG_SAVE_LORE)).build());
 
-        PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
+        PlayerHeadConfig config = WanderingTrades.instance().config().playerHeadConfig();
 
-        if (config.isPermissionWhitelist()) {
+        if (config.permissionWhitelist()) {
             inventory.setItem(9, permissionWhitelistStack);
         } else {
             inventory.setItem(9, noPermissionsWhitelistStack);
         }
 
-        if (config.isPlayerHeadsFromServer()) {
+        if (config.playerHeadsFromServer()) {
             inventory.setItem(10, enabledStack);
         } else {
             inventory.setItem(10, disabledStack);
         }
 
-        if (config.isExperienceReward()) {
+        if (config.experienceReward()) {
             inventory.setItem(11, getExperienceEnabled());
         } else {
             inventory.setItem(11, getExperienceDisabled());
         }
 
-        ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getDays(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
+        ItemStack k = new ItemBuilder(days).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.days(), lang.get(Lang.GUI_EDIT_LORE), lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)).build();
         inventory.setItem(12, k);
 
-        ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getPlayerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack a = new ItemBuilder(amountTradesStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.playerHeadsFromServerAmount(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(13, a);
 
-        ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getHeadsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack f = new ItemBuilder(amountHeadsStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.headsPerTrade(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(14, f);
 
-        ItemStack e = new ItemBuilder(getMaxUsesStack()).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getMaxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack e = new ItemBuilder(getMaxUsesStack()).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.maxUses(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(15, e);
 
-        ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.getPlayerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack b = new ItemBuilder(chanceStack).setLore(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + config.playerHeadsFromServerChance(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(16, b);
 
-        ItemStack g = new ItemBuilder(customName).setLore(lang.get(Lang.GUI_VALUE_LORE) + config.getName(), lang.get(Lang.GUI_EDIT_LORE)).build();
+        ItemStack g = new ItemBuilder(customName).setLore(lang.get(Lang.GUI_VALUE_LORE) + config.name(), lang.get(Lang.GUI_EDIT_LORE)).build();
         inventory.setItem(17, g);
 
         ArrayList<String> resultLore = new ArrayList<>(Arrays.asList(
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
                 "<white>------------"
         ));
-        resultLore.addAll(config.getLore());
+        resultLore.addAll(config.lore());
         ItemStack h = new ItemBuilder(loreStack).setLore(resultLore).build();
         inventory.setItem(25, h);
 
@@ -99,14 +99,14 @@ public class PlayerHeadConfigGui extends TradeGui {
         inventory.setItem(29, getPlus());
         inventory.setItem(30, getI2());
         inventory.setItem(31, getEquals());
-        inventory.setItem(32, new ItemBuilder(notch).setName(config.getName().replace("{PLAYER}", "Notch"))
-                .setLore(config.getLore()).setAmount(config.getHeadsPerTrade()).build());
+        inventory.setItem(32, new ItemBuilder(notch).setName(config.name().replace("{PLAYER}", "Notch"))
+                .setLore(config.lore()).setAmount(config.headsPerTrade()).build());
 
         ArrayList<String> blacklistLore = new ArrayList<>(Arrays.asList(
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
                 ""
         ));
-        config.getUsernameBlacklist().forEach(name -> blacklistLore.add(" <red>-</red> <white>" + name));
+        config.usernameBlacklist().forEach(name -> blacklistLore.add(" <red>-</red> <white>" + name));
         ItemStack d = new ItemBuilder(blacklistStack).setLore(blacklistLore).build();
         inventory.setItem(34, d);
 
@@ -136,42 +136,42 @@ public class PlayerHeadConfigGui extends TradeGui {
             p.closeInventory();
         }
 
-        PlayerHeadConfig config = WanderingTrades.getInstance().getCfg().getPlayerHeadConfig();
+        PlayerHeadConfig config = WanderingTrades.instance().config().playerHeadConfig();
 
         if (enabledStack.isSimilar(item)) {
-            config.setPlayerHeadsFromServer(false);
+            config.playerHeadsFromServer(false);
         } else if (disabledStack.isSimilar(item)) {
-            config.setPlayerHeadsFromServer(true);
+            config.playerHeadsFromServer(true);
         }
 
         if (getExperienceEnabled().isSimilar(item)) {
-            config.setExperienceReward(false);
+            config.experienceReward(false);
         } else if (getExperienceDisabled().isSimilar(item)) {
-            config.setExperienceReward(true);
+            config.experienceReward(true);
         }
 
         if (permissionWhitelistStack.isSimilar(item)) {
-            config.setPermissionWhitelist(false);
+            config.permissionWhitelist(false);
         } else if (noPermissionsWhitelistStack.isSimilar(item)) {
-            config.setPermissionWhitelist(true);
+            config.permissionWhitelist(true);
         }
 
         if (getMaxUsesStack().isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player,
+                        WanderingTrades.instance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.getMaxUses()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.maxUses()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         return "";
                     })
                     .onValidateInput(this::onValidateIntGT0)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        config.setMaxUses(Integer.parseInt(s));
+                        config.maxUses(Integer.parseInt(s));
                         config.save();
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -182,18 +182,18 @@ public class PlayerHeadConfigGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player,
+                        WanderingTrades.instance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.getPlayerHeadsFromServerChance()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.playerHeadsFromServerChance()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         return "";
                     })
                     .onValidateInput(this::onValidateDouble0T1)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        config.setPlayerHeadsFromServerChance(Double.parseDouble(s));
+                        config.playerHeadsFromServerChance(Double.parseDouble(s));
                         config.save();
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -204,18 +204,18 @@ public class PlayerHeadConfigGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player,
+                        WanderingTrades.instance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_HEADS_AMOUNT_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.getHeadsPerTrade()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.headsPerTrade()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         return "";
                     })
                     .onValidateInput(this::onValidateIntGT0)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        config.setHeadsPerTrade(Integer.parseInt(s));
+                        config.headsPerTrade(Integer.parseInt(s));
                         config.save();
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -226,18 +226,18 @@ public class PlayerHeadConfigGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player,
+                        WanderingTrades.instance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.getPlayerHeadsFromServerAmount()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.playerHeadsFromServerAmount()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
                         return "";
                     })
                     .onValidateInput(TradeConfigEditGui::validateIntRange)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        config.setPlayerHeadsFromServerAmount(s);
+                        config.playerHeadsFromServerAmount(s);
                         config.save();
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -248,15 +248,15 @@ public class PlayerHeadConfigGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player,
+                        WanderingTrades.instance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_CUSTOM_NAME_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + config.getName());
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + config.name());
                         return "";
                     })
                     .onValidateInput((pl, s) -> true)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, string) -> {
-                        config.setName(string);
+                        config.name(string);
                         config.save();
                         open(player);
                     })
@@ -266,37 +266,37 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (blacklistStack.isSimilar(item)) {
             if (click.isRightClick()) {
-                List<String> l = config.getUsernameBlacklist();
+                List<String> l = config.usernameBlacklist();
                 if (!(l.size() - 1 < 0)) {
                     l.remove(l.size() - 1);
                 }
-                config.setUsernameBlacklist(l);
-                WanderingTrades.getInstance().getStoredPlayers().load();
+                config.usernameBlacklist(l);
+                WanderingTrades.instance().storedPlayers().load();
             } else {
                 p.closeInventory();
                 new InputConversation()
                         .onPromptText(player -> {
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_BLACKLIST_PLAYER));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_BLACKLIST_PLAYER));
                             return "";
                         })
                         .onValidateInput((player, input) -> {
                             if (input.contains(" ")) {
-                                WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                                 return false;
                             }
-                            if (TextUtil.containsCaseInsensitive(input, config.getUsernameBlacklist())) {
-                                WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            if (TextUtil.containsCaseInsensitive(input, config.usernameBlacklist())) {
+                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                                 return false;
                             }
                             return true;
                         })
                         .onConfirmText(this::onConfirmYesNo)
                         .onAccepted((player, s) -> {
-                            List<String> temp = config.getUsernameBlacklist();
+                            List<String> temp = config.usernameBlacklist();
                             temp.add(s);
-                            config.setUsernameBlacklist(temp);
+                            config.usernameBlacklist(temp);
                             config.save();
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                             open(player);
                         })
                         .onDenied(this::onEditCancelled)
@@ -306,26 +306,26 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (loreStack.isSimilar(item)) {
             if (click.isRightClick()) {
-                List<String> l = config.getLore();
+                List<String> l = config.lore();
                 if (!(l.size() - 1 < 0)) {
                     l.remove(l.size() - 1);
                 }
-                config.setLore(l);
+                config.lore(l);
             } else {
                 p.closeInventory();
                 new InputConversation()
                         .onPromptText(player -> {
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_LORE_PROMPT));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_LORE_PROMPT));
                             return "";
                         })
                         .onValidateInput((player, input) -> true)
                         .onConfirmText(this::onConfirmYesNo)
                         .onAccepted((player, s) -> {
-                            List<String> temp = config.getLore();
+                            List<String> temp = config.lore();
                             temp.add(s);
-                            config.setLore(temp);
+                            config.lore(temp);
                             config.save();
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                             open(player);
                         })
                         .onDenied(this::onEditCancelled)
@@ -337,19 +337,19 @@ public class PlayerHeadConfigGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player,
+                        WanderingTrades.instance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_HEADS_DAYS_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.getDays()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.days()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         return "";
                     })
                     .onValidateInput(this::onValidateIntGTEN1)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        config.setDays(Integer.parseInt(s));
+                        config.days(Integer.parseInt(s));
                         config.save();
-                        WanderingTrades.getInstance().getStoredPlayers().load();
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        WanderingTrades.instance().storedPlayers().load();
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })
                     .onDenied(this::onEditCancelled)
@@ -369,10 +369,10 @@ public class PlayerHeadConfigGui extends TradeGui {
                 if (!getI2().equals(getIngredient2())) {
                     temp = getI2();
                 }
-                config.setIngredient1(getI1());
-                config.setIngredient2(temp);
+                config.ingredientOne(getI1());
+                config.ingredientTwo(temp);
                 config.save();
-                WanderingTrades.getInstance().getCfg().load();
+                WanderingTrades.instance().config().load();
             }
         }
 

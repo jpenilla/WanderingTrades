@@ -21,7 +21,7 @@ import java.util.function.DoubleFunction;
 import java.util.function.IntFunction;
 
 public abstract class GuiHolder implements InventoryHolder {
-    protected final LangConfig lang = WanderingTrades.getInstance().getLang();
+    protected final LangConfig lang = WanderingTrades.instance().langConfig();
     protected final String gui_toggle_lore = lang.get(Lang.GUI_TOGGLE_LORE);
     protected final ItemStack backButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_BACK)).setLore(lang.get(Lang.GUI_BACK_LORE)).build();
     protected final ItemStack closeButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_CLOSE)).setLore(lang.get(Lang.GUI_CLOSE_LORE)).build();
@@ -58,7 +58,7 @@ public abstract class GuiHolder implements InventoryHolder {
             int i = Integer.parseInt(input);
             return validator.apply(i);
         } catch (final NumberFormatException ex) {
-            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
     }
@@ -72,7 +72,7 @@ public abstract class GuiHolder implements InventoryHolder {
             double d = Double.parseDouble(input);
             return validator.apply(d);
         } catch (final NumberFormatException ex) {
-            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
     }
@@ -82,7 +82,7 @@ public abstract class GuiHolder implements InventoryHolder {
             if (i >= 1) {
                 return true;
             }
-            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
+            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
             return false;
         });
     }
@@ -92,7 +92,7 @@ public abstract class GuiHolder implements InventoryHolder {
             if (i >= 0) {
                 return true;
             }
-            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
+            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
             return false;
         });
     }
@@ -102,7 +102,7 @@ public abstract class GuiHolder implements InventoryHolder {
             if (i >= -1) {
                 return true;
             }
-            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
+            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
             return false;
         });
     }
@@ -110,7 +110,7 @@ public abstract class GuiHolder implements InventoryHolder {
     public boolean onValidateDouble0T1(final @NonNull Player player, final @NonNull String input) {
         return this.validateDouble(player, input, d -> {
             if (d < 0 || d > 1) {
-                WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
+                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
                 return false;
             }
             return true;
@@ -118,13 +118,13 @@ public abstract class GuiHolder implements InventoryHolder {
     }
 
     public String onConfirmYesNo(Player player, String s) {
-        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
-        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YES_NO));
+        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
+        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YES_NO));
         return "";
     }
 
     public void onEditCancelled(Player p, String s) {
-        WanderingTrades.getInstance().chat().sendParsed(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
+        WanderingTrades.instance().chat().sendParsed(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
         open(p);
     }
 }

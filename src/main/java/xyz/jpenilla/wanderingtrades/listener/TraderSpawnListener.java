@@ -1,7 +1,6 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
 import com.google.common.collect.ImmutableList;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Entity;
@@ -30,7 +29,7 @@ import static io.papermc.lib.PaperLib.isPaper;
 
 public class TraderSpawnListener implements Listener {
     private final WanderingTrades plugin;
-    @Getter private final Collection<UUID> traderBlacklistCache = new HashSet<>();
+    private final Collection<UUID> traderBlacklistCache = new HashSet<>();
 
     public TraderSpawnListener(WanderingTrades wt) {
         this.plugin = wt;
@@ -52,12 +51,12 @@ public class TraderSpawnListener implements Listener {
         final Entity entity = e.getEntity();
         if (entity instanceof WanderingTrader && e.getSpawnReason() != CreatureSpawnEvent.SpawnReason.MOUNT) {
             final WanderingTrader wanderingTrader = (WanderingTrader) entity;
-            if (plugin.getCfg().isTraderWorldWhitelist()) {
-                if (plugin.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
+            if (plugin.config().traderWorldWhitelist()) {
+                if (plugin.config().traderWorldList().contains(e.getEntity().getWorld().getName())) {
                     this.addTrades(wanderingTrader, false);
                 }
             } else {
-                if (!plugin.getCfg().getTraderWorldList().contains(e.getEntity().getWorld().getName())) {
+                if (!plugin.config().traderWorldList().contains(e.getEntity().getWorld().getName())) {
                     this.addTrades(wanderingTrader, false);
                 }
             }
@@ -71,27 +70,27 @@ public class TraderSpawnListener implements Listener {
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             List<MerchantRecipe> newTrades = new ArrayList<>();
-            if (plugin.getCfg().getPlayerHeadConfig().isPlayerHeadsFromServer() && randBoolean(plugin.getCfg().getPlayerHeadConfig().getPlayerHeadsFromServerChance())) {
-                newTrades.addAll(plugin.getStoredPlayers().randomlySelectPlayerHeads());
+            if (plugin.config().playerHeadConfig().playerHeadsFromServer() && randBoolean(plugin.config().playerHeadConfig().playerHeadsFromServerChance())) {
+                newTrades.addAll(plugin.storedPlayers().randomlySelectPlayerHeads());
             }
-            if (plugin.getCfg().isAllowMultipleSets()) {
-                ImmutableList.copyOf(plugin.getCfg().getTradeConfigs().values()).forEach(config -> {
-                    if (randBoolean(config.getChance())) {
+            if (plugin.config().allowMultipleSets()) {
+                ImmutableList.copyOf(plugin.config().tradeConfigs().values()).forEach(config -> {
+                    if (randBoolean(config.chance())) {
                         newTrades.addAll(config.getTrades(false));
                     }
                 });
             } else {
                 RandomCollection<String> configNames = new RandomCollection<>();
-                plugin.getCfg().getTradeConfigs().forEach((key, value) -> configNames.add(value.getChance(), key));
+                plugin.config().tradeConfigs().forEach((key, value) -> configNames.add(value.chance(), key));
                 String chosenConfig = configNames.next();
                 if (chosenConfig != null) {
-                    newTrades.addAll(plugin.getCfg().getTradeConfigs().get(chosenConfig).getTrades(false));
+                    newTrades.addAll(plugin.config().tradeConfigs().get(chosenConfig).getTrades(false));
                 }
             }
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (refresh) {
-                    if (!plugin.getCfg().isRemoveOriginalTrades()) {
+                    if (!plugin.config().removeOriginalTrades()) {
                         if (isPaper() && getMinecraftVersion() >= 16) {
                             wanderingTrader.resetOffers();
                             newTrades.addAll(wanderingTrader.getRecipes());
@@ -114,8 +113,8 @@ public class TraderSpawnListener implements Listener {
 
     /**
      * Clear this {@link AbstractVillager}'s offers and acquire new ones.
-     * <p>
-     * Reflection-based implementation of Paper's Villager-resetOffers API</a>
+     *
+     * <p>Reflection-based implementation of Paper's Villager-resetOffers API</p>
      *
      * @param trader the trader to act on
      */
@@ -131,5 +130,9 @@ public class TraderSpawnListener implements Listener {
                     throwable
             );
         }
+    }
+
+    public Collection<UUID> getTraderBlacklistCache() {
+        return this.traderBlacklistCache;
     }
 }

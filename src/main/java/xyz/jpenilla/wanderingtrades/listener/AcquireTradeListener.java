@@ -16,7 +16,7 @@ public class AcquireTradeListener implements Listener {
     @EventHandler
     public void onAcquireTrade(VillagerAcquireTradeEvent e) {
         if (e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
-            if (plugin.getCfg().isRemoveOriginalTrades()) {
+            if (plugin.config().removeOriginalTrades()) {
                 e.setCancelled(true);
             }
         }

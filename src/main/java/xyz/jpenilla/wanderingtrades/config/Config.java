@@ -1,8 +1,5 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldNameConstants;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -13,40 +10,25 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 
-@FieldNameConstants
 public class Config {
     private final WanderingTrades plugin;
 
-    @Getter @Setter
     private boolean debug;
-    @Getter @Setter
     private boolean enabled;
-    @Getter @Setter
     private boolean disableCommands;
-    @Getter @Setter
     private boolean removeOriginalTrades;
-    @Getter @Setter
     private boolean allowMultipleSets;
-    @Getter @Setter
     private boolean refreshCommandTraders;
-    @Getter @Setter
     private boolean wgWhitelist;
-    @Getter
     private boolean traderWorldWhitelist;
-    @Getter
     private boolean updateLang;
-    @Getter
     private String language;
-    @Getter @Setter
     private List<String> wgRegionList;
-    @Getter
     private List<String> traderWorldList;
-    @Getter @Setter
     private int refreshCommandTradersMinutes;
-    @Getter
     private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
-    @Getter @Setter
     private PlayerHeadConfig playerHeadConfig;
 
     public Config(WanderingTrades instance) {
@@ -98,7 +80,7 @@ public class Config {
         try {
             config.save(path);
         } catch (IOException e) {
-            plugin.getLog().warn(e.getMessage());
+            this.plugin.getLogger().log(Level.WARNING, "Failed to save config", e);
         }
 
         load();
@@ -122,11 +104,11 @@ public class Config {
         File folder = new File(path);
         if (!folder.exists()) {
             if (folder.mkdir()) {
-                plugin.getLog().info("Creating trades folder");
+                this.plugin.getLogger().info("Creating trades folder");
             }
         }
         if (Objects.requireNonNull(folder.listFiles()).length == 0) {
-            plugin.getLog().info("No trade configs found, copying example configs");
+            this.plugin.getLogger().info("No trade configs found, copying example configs");
             plugin.saveResource("trades/example.yml", false);
             plugin.saveResource("trades/microblocks.yml", false);
             plugin.saveResource("trades/hermitheads.yml", false);
@@ -139,5 +121,112 @@ public class Config {
             final String configName = file.getName().split("\\.")[0];
             tradeConfigs.put(configName, new TradeConfig(plugin, configName, data));
         });
+    }
+
+    public boolean debug() {
+        return this.debug;
+    }
+
+    public boolean enabled() {
+        return this.enabled;
+    }
+
+    public boolean disableCommands() {
+        return this.disableCommands;
+    }
+
+    public boolean removeOriginalTrades() {
+        return this.removeOriginalTrades;
+    }
+
+    public boolean allowMultipleSets() {
+        return this.allowMultipleSets;
+    }
+
+    public boolean refreshCommandTraders() {
+        return this.refreshCommandTraders;
+    }
+
+    public boolean wgWhitelist() {
+        return this.wgWhitelist;
+    }
+
+    public boolean traderWorldWhitelist() {
+        return this.traderWorldWhitelist;
+    }
+
+    public boolean updateLang() {
+        return this.updateLang;
+    }
+
+    public String language() {
+        return this.language;
+    }
+
+    public List<String> wgRegionList() {
+        return this.wgRegionList;
+    }
+
+    public List<String> traderWorldList() {
+        return this.traderWorldList;
+    }
+
+    public int refreshCommandTradersMinutes() {
+        return this.refreshCommandTradersMinutes;
+    }
+
+    public HashMap<String, TradeConfig> tradeConfigs() {
+        return this.tradeConfigs;
+    }
+
+    public PlayerHeadConfig playerHeadConfig() {
+        return this.playerHeadConfig;
+    }
+
+    public void enabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void removeOriginalTrades(boolean removeOriginalTrades) {
+        this.removeOriginalTrades = removeOriginalTrades;
+    }
+
+    public void allowMultipleSets(boolean allowMultipleSets) {
+        this.allowMultipleSets = allowMultipleSets;
+    }
+
+    public void refreshCommandTraders(boolean refreshCommandTraders) {
+        this.refreshCommandTraders = refreshCommandTraders;
+    }
+
+    public void wgWhitelist(boolean wgWhitelist) {
+        this.wgWhitelist = wgWhitelist;
+    }
+
+    public void wgRegionList(List<String> wgRegionList) {
+        this.wgRegionList = wgRegionList;
+    }
+
+    public void refreshCommandTradersMinutes(int refreshCommandTradersMinutes) {
+        this.refreshCommandTradersMinutes = refreshCommandTradersMinutes;
+    }
+
+    public static final class Fields {
+        public static final String plugin = "plugin";
+        public static final String debug = "debug";
+        public static final String enabled = "enabled";
+        public static final String disableCommands = "disableCommands";
+        public static final String removeOriginalTrades = "removeOriginalTrades";
+        public static final String allowMultipleSets = "allowMultipleSets";
+        public static final String refreshCommandTraders = "refreshCommandTraders";
+        public static final String wgWhitelist = "wgWhitelist";
+        public static final String traderWorldWhitelist = "traderWorldWhitelist";
+        public static final String updateLang = "updateLang";
+        public static final String language = "language";
+        public static final String wgRegionList = "wgRegionList";
+        public static final String traderWorldList = "traderWorldList";
+        public static final String refreshCommandTradersMinutes = "refreshCommandTradersMinutes";
+        public static final String tradeConfigs = "tradeConfigs";
+        public static final String playerHeadConfig = "playerHeadConfig";
     }
 }

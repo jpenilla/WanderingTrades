@@ -40,7 +40,7 @@ public class CommandConfig implements WTCommand {
 
         /* List Trade Configs Command */
         final Command<CommandSender> list = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_LIST))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_LIST))
                 .literal("list")
                 .permission("wanderingtrades.list")
                 .handler(context -> onList(context.getSender()))
@@ -48,7 +48,7 @@ public class CommandConfig implements WTCommand {
 
         /* Trade Config Edit Command */
         final Command<CommandSender> edit = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_EDIT))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_EDIT))
                 .literal("edit")
                 .argument(TradeConfigArgument.optional(this.wanderingTrades, "trade_config"))
                 .permission("wanderingtrades.edit")
@@ -65,7 +65,7 @@ public class CommandConfig implements WTCommand {
 
         /* Plugin Config Edit Command */
         final Command<CommandSender> editConfig = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_CONFIG))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_CONFIG))
                 .literal("editconfig")
                 .permission("wanderingtrades.edit")
                 .senderType(Player.class)
@@ -76,7 +76,7 @@ public class CommandConfig implements WTCommand {
 
         /* Player Head Config Edit Command */
         final Command<CommandSender> editPlayerHeadConfig = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_PH_CONFIG))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_PH_CONFIG))
                 .literal("editplayerheads")
                 .permission("wanderingtrades.edit")
                 .senderType(Player.class)
@@ -104,8 +104,8 @@ public class CommandConfig implements WTCommand {
     }
 
     private void onList(CommandSender sender) {
-        chat.send(sender, wanderingTrades.getLang().get(Lang.COMMAND_LIST_LOADED));
-        List<String> toSort = new ArrayList<>(ImmutableList.copyOf(wanderingTrades.getCfg().getTradeConfigs().keySet()));
+        chat.send(sender, wanderingTrades.langConfig().get(Lang.COMMAND_LIST_LOADED));
+        List<String> toSort = new ArrayList<>(ImmutableList.copyOf(wanderingTrades.config().tradeConfigs().keySet()));
         toSort.sort(null);
         int index = 1;
         for (String cfg : toSort) {

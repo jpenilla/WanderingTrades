@@ -27,8 +27,8 @@ public class WorldGuardHook {
 
     public boolean passesWhiteBlackList(Location loc) {
         final boolean inListedRegion = getRegions(loc).getRegions().stream()
-                .anyMatch(region -> TextUtil.containsCaseInsensitive(region.getId(), plugin.getCfg().getWgRegionList()));
-        return plugin.getCfg().isWgWhitelist() == inListedRegion;
+                .anyMatch(region -> TextUtil.containsCaseInsensitive(region.getId(), plugin.config().wgRegionList()));
+        return plugin.config().wgWhitelist() == inListedRegion;
     }
 
 }

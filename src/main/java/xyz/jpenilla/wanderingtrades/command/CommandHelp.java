@@ -23,7 +23,7 @@ public class CommandHelp implements WTCommand {
     public CommandHelp(WanderingTrades wanderingTrades, CommandManager commandManager) {
         this.wanderingTrades = wanderingTrades;
         this.commandManager = commandManager;
-        this.minecraftHelp = commandManager.getHelp();
+        this.minecraftHelp = commandManager.minecraftHelp();
         this.commandHelpHandler = commandManager.getCommandHelpHandler();
     }
 
@@ -45,9 +45,9 @@ public class CommandHelp implements WTCommand {
 
         /* Help Command */
         final Command<CommandSender> help = commandManager.commandBuilder("wt", "wanderingtrades")
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_HELP))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_HELP))
                 .literal("help")
-                .argument(helpQueryArgument, ArgumentDescription.of(wanderingTrades.getLang().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
+                .argument(helpQueryArgument, ArgumentDescription.of(wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
                 .handler(context -> minecraftHelp.queryCommands(
                         context.getOptional(helpQueryArgument).orElse(""),
                         context.getSender()

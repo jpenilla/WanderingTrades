@@ -36,7 +36,7 @@ class ProfileCompleter extends BukkitRunnable {
             try {
                 profile.complete();
             } catch (Exception e) {
-                WanderingTrades.getInstance().getLog().debug(String.format("Failed to cache player head skin for player: [username=%s,uuid=%s]", profile.getName(), profile.getId()));
+                WanderingTrades.instance().debug(String.format("Failed to cache player head skin for player: [username=%s,uuid=%s]", profile.getName(), profile.getId()));
             }
         }
     }

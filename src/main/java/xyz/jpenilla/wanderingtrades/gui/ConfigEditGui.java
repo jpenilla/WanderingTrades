@@ -40,34 +40,34 @@ public class ConfigEditGui extends GuiHolder {
     private final ItemStack refreshTradersMinutes = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES)).build();
 
     public ConfigEditGui() {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_CONFIG_TITLE), 45);
+        super(WanderingTrades.instance().langConfig().get(Lang.GUI_CONFIG_TITLE), 45);
     }
 
     @NonNull
     public Inventory getInventory() {
         inventory.clear();
 
-        Config c = WanderingTrades.getInstance().getCfg();
+        Config c = WanderingTrades.instance().config();
 
-        if (c.isEnabled()) {
+        if (c.enabled()) {
             inventory.setItem(10, enabledEnabled);
         } else {
             inventory.setItem(10, enabledDisabled);
         }
 
-        if (c.isAllowMultipleSets()) {
+        if (c.allowMultipleSets()) {
             inventory.setItem(12, allowMultipleSets);
         } else {
             inventory.setItem(12, disallowMultipleSets);
         }
 
-        if (c.isRemoveOriginalTrades()) {
+        if (c.removeOriginalTrades()) {
             inventory.setItem(14, removeOriginalTradesEnabled);
         } else {
             inventory.setItem(14, removeOriginalTradesDisabled);
         }
 
-        if (c.isRefreshCommandTraders()) {
+        if (c.refreshCommandTraders()) {
             inventory.setItem(16, refreshTradesEnabled);
         } else {
             inventory.setItem(16, refreshTradesDisabled);
@@ -75,12 +75,12 @@ public class ConfigEditGui extends GuiHolder {
 
         ArrayList<String> refreshLore =
                 new ArrayList<>(Arrays.asList(
-                        lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.getRefreshCommandTradersMinutes())),
+                        lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.refreshCommandTradersMinutes())),
                         lang.get(Lang.GUI_EDIT_LORE)
                 ));
         inventory.setItem(28, new ItemBuilder(refreshTradersMinutes).setLore(refreshLore).build());
 
-        if (c.isWgWhitelist()) {
+        if (c.wgWhitelist()) {
             inventory.setItem(30, wgWhitelist);
         } else {
             inventory.setItem(30, wgBlacklist);
@@ -90,7 +90,7 @@ public class ConfigEditGui extends GuiHolder {
                 lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
                 ""
         ));
-        c.getWgRegionList().forEach(region -> wgListLore.add(" <aqua>-</aqua> <white>" + region));
+        c.wgRegionList().forEach(region -> wgListLore.add(" <aqua>-</aqua> <white>" + region));
         inventory.setItem(32, new ItemBuilder(wgList).setLore(wgListLore).build());
 
         inventory.setItem(inventory.getSize() - 1, closeButton);
@@ -120,53 +120,53 @@ public class ConfigEditGui extends GuiHolder {
             p.closeInventory();
         }
 
-        Config c = WanderingTrades.getInstance().getCfg();
+        Config c = WanderingTrades.instance().config();
 
         if (enabledEnabled.isSimilar(item)) {
-            c.setEnabled(false);
+            c.enabled(false);
         } else if (enabledDisabled.isSimilar(item)) {
-            c.setEnabled(true);
+            c.enabled(true);
         }
 
         if (allowMultipleSets.isSimilar(item)) {
-            c.setAllowMultipleSets(false);
+            c.allowMultipleSets(false);
         } else if (disallowMultipleSets.isSimilar(item)) {
-            c.setAllowMultipleSets(true);
+            c.allowMultipleSets(true);
         }
 
         if (removeOriginalTradesEnabled.isSimilar(item)) {
-            c.setRemoveOriginalTrades(false);
+            c.removeOriginalTrades(false);
         } else if (removeOriginalTradesDisabled.isSimilar(item)) {
-            c.setRemoveOriginalTrades(true);
+            c.removeOriginalTrades(true);
         }
 
         if (refreshTradesEnabled.isSimilar(item)) {
-            c.setRefreshCommandTraders(false);
+            c.refreshCommandTraders(false);
         } else if (refreshTradesDisabled.isSimilar(item)) {
-            c.setRefreshCommandTraders(true);
+            c.refreshCommandTraders(true);
         }
 
         if (wgBlacklist.isSimilar(item)) {
-            c.setWgWhitelist(true);
+            c.wgWhitelist(true);
         } else if (wgWhitelist.isSimilar(item)) {
-            c.setWgWhitelist(false);
+            c.wgWhitelist(false);
         }
 
         if (refreshTradersMinutes.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player,
+                        WanderingTrades.instance().chat().sendParsed(player,
                                 lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + c.getRefreshCommandTradersMinutes()
+                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + c.refreshCommandTradersMinutes()
                                         + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
                         return "";
                     })
                     .onValidateInput(this::onValidateIntGTE0)
                     .onConfirmText(this::onConfirmYesNo)
                     .onAccepted((player, s) -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        c.setRefreshCommandTradersMinutes(Integer.parseInt(s));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        c.refreshCommandTradersMinutes(Integer.parseInt(s));
                         c.save();
                         open(p);
                     })
@@ -176,36 +176,36 @@ public class ConfigEditGui extends GuiHolder {
 
         if (wgList.isSimilar(item)) {
             if (click.isRightClick()) {
-                List<String> l = c.getWgRegionList();
+                List<String> l = c.wgRegionList();
                 if (!(l.size() - 1 < 0)) {
                     l.remove(l.size() - 1);
                 }
-                c.setWgRegionList(c.getWgRegionList());
+                c.wgRegionList(c.wgRegionList());
             } else {
                 p.closeInventory();
                 new InputConversation()
                         .onPromptText(player -> {
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
                             return "";
                         })
                         .onValidateInput((player, input) -> {
                             if (input.contains(" ")) {
-                                WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                                 return false;
                             }
-                            if (TextUtil.containsCaseInsensitive(input, c.getWgRegionList())) {
-                                WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            if (TextUtil.containsCaseInsensitive(input, c.wgRegionList())) {
+                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                                 return false;
                             }
                             return true;
                         })
                         .onConfirmText(this::onConfirmYesNo)
                         .onAccepted((player, s) -> {
-                            List<String> temp = c.getWgRegionList();
+                            List<String> temp = c.wgRegionList();
                             temp.add(s);
-                            c.setWgRegionList(temp);
+                            c.wgRegionList(temp);
                             c.save();
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                             open(p);
                         })
                         .onDenied(this::onEditCancelled)

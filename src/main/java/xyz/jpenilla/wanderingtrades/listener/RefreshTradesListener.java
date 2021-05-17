@@ -41,8 +41,8 @@ public class RefreshTradesListener implements Listener {
             }
 
             // Update trades
-            if (plugin.getWorldGuard() != null) {
-                if (plugin.getWorldGuard().passesWhiteBlackList(abstractVillager.getLocation())) {
+            if (plugin.worldGuardHook() != null) {
+                if (plugin.worldGuardHook().passesWhiteBlackList(abstractVillager.getLocation())) {
                     updateTrades(abstractVillager);
                 }
             } else {
@@ -58,14 +58,14 @@ public class RefreshTradesListener implements Listener {
         final boolean refreshNatural = persistentDataContainer.has(Constants.REFRESH_NATURAL, PersistentDataType.STRING);
         if (configName != null || refreshNatural) {
             final long timeAtPreviousRefresh = persistentDataContainer.getOrDefault(Constants.LAST_REFRESH, PersistentDataType.LONG, 0L);
-            final LocalDateTime nextAllowedRefresh = Instant.ofEpochMilli(timeAtPreviousRefresh).atZone(ZoneId.systemDefault()).toLocalDateTime().plusMinutes(plugin.getCfg().getRefreshCommandTradersMinutes());
+            final LocalDateTime nextAllowedRefresh = Instant.ofEpochMilli(timeAtPreviousRefresh).atZone(ZoneId.systemDefault()).toLocalDateTime().plusMinutes(plugin.config().refreshCommandTradersMinutes());
             if (timeAtPreviousRefresh == 0L || LocalDateTime.now().isAfter(nextAllowedRefresh)) {
                 if (configName != null) {
-                    final TradeConfig tradeConfig = plugin.getCfg().getTradeConfigs().get(configName);
+                    final TradeConfig tradeConfig = plugin.config().tradeConfigs().get(configName);
                     abstractVillager.setRecipes(tradeConfig.getTrades(true));
                 }
                 if (refreshNatural && abstractVillager instanceof WanderingTrader) {
-                    plugin.getListeners().listener(TraderSpawnListener.class).addTrades((WanderingTrader) abstractVillager, true);
+                    plugin.listeners().listener(TraderSpawnListener.class).addTrades((WanderingTrader) abstractVillager, true);
                 }
                 persistentDataContainer.set(Constants.LAST_REFRESH, PersistentDataType.LONG, System.currentTimeMillis());
             }

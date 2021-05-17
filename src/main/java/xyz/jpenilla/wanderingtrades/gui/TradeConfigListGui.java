@@ -28,25 +28,25 @@ public class TradeConfigListGui extends PaginatedGui {
     private final List<String> configNames = new ArrayList<>();
 
     public TradeConfigListGui() {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_TITLE), 36);
-        Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
+        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TC_LIST_TITLE), 36);
+        Arrays.stream(WanderingTrades.instance().config().tradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
 
     public List<ItemStack> getListItems() {
-        return Arrays.stream(WanderingTrades.getInstance().getCfg().getTradeConfigs().keySet().toArray(new String[0]))
+        return Arrays.stream(WanderingTrades.instance().config().tradeConfigs().keySet().toArray(new String[0]))
                 .sorted()
-                .map(configName -> WanderingTrades.getInstance().getCfg().getTradeConfigs().get(configName))
+                .map(configName -> WanderingTrades.instance().config().tradeConfigs().get(configName))
                 .map(tradeConfig -> {
-                    final Set<String> tradeKeys = Objects.requireNonNull(tradeConfig.getFile().getConfigurationSection("trades")).getKeys(false);
+                    final Set<String> tradeKeys = Objects.requireNonNull(tradeConfig.fileConfiguration().getConfigurationSection("trades")).getKeys(false);
                     final List<String> finalLores = new ArrayList<>();
                     tradeKeys.stream()
                             .sorted()
                             .limit(10)
                             .forEach(key -> finalLores.add("<gray>  " + key));
                     if (finalLores.size() == 10) {
-                        finalLores.add(WanderingTrades.getInstance().getLang().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
+                        finalLores.add(WanderingTrades.instance().langConfig().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
                     }
-                    return new ItemBuilder(Material.PAPER).setName(tradeConfig.getConfigName()).setLore(finalLores).build();
+                    return new ItemBuilder(Material.PAPER).setName(tradeConfig.configName()).setLore(finalLores).build();
                 })
                 .collect(Collectors.toList());
     }
@@ -71,16 +71,16 @@ public class TradeConfigListGui extends PaginatedGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
                         return "";
                     })
                     .onValidateInput((player, input) -> {
                         if (input.contains(" ")) {
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                             return false;
                         }
                         if (TextUtil.containsCaseInsensitive(input, configNames)) {
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                             return false;
                         }
                         return true;
@@ -89,20 +89,20 @@ public class TradeConfigListGui extends PaginatedGui {
                     .onAccepted((player, s) -> {
                         try {
                             Files.copy(
-                                    Objects.requireNonNull(WanderingTrades.getInstance().getResource("trades/blank.yml")),
-                                    new File(String.format("%s/trades/%s.yml", WanderingTrades.getInstance().getDataFolder(), s)).toPath()
+                                    Objects.requireNonNull(WanderingTrades.instance().getResource("trades/blank.yml")),
+                                    new File(String.format("%s/trades/%s.yml", WanderingTrades.instance().getDataFolder(), s)).toPath()
                             );
 
-                            WanderingTrades.getInstance().getCfg().load();
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
+                            WanderingTrades.instance().config().load();
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
                         } catch (IOException ex) {
                             ex.printStackTrace();
-                            WanderingTrades.getInstance().chat().sendParsed(player, "<red>Error");
+                            WanderingTrades.instance().chat().sendParsed(player, "<red>Error");
                         }
                         reOpen(p);
                     })
                     .onDenied((player, s) -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
                         reOpen(player);
                     })
                     .start(p);
@@ -114,7 +114,7 @@ public class TradeConfigListGui extends PaginatedGui {
                 final String displayName = meta.getDisplayName();
                 if (TextUtil.containsCaseInsensitive(displayName, configNames)) {
                     p.closeInventory();
-                    final TradeConfig tradeConfig = Objects.requireNonNull(WanderingTrades.getInstance().getCfg().getTradeConfigs().get(displayName));
+                    final TradeConfig tradeConfig = Objects.requireNonNull(WanderingTrades.instance().config().tradeConfigs().get(displayName));
                     new TradeListGui(tradeConfig).open(p);
                 }
             }

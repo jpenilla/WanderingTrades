@@ -16,12 +16,12 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        this.wanderingTrades.getStoredPlayers().addHeadIfPermissible(e.getPlayer());
+        this.wanderingTrades.storedPlayers().addHeadIfPermissible(e.getPlayer());
     }
 
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
-        this.wanderingTrades.getStoredPlayers().onLogout(e.getPlayer());
+        this.wanderingTrades.storedPlayers().onLogout(e.getPlayer());
     }
 
 }

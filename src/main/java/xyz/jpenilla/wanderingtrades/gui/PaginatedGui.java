@@ -1,7 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -18,7 +16,7 @@ public abstract class PaginatedGui extends GuiHolder {
     private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(lang.get(Lang.GUI_PAGED_NEXT)).setLore(lang.get(Lang.GUI_PAGED_NEXT_LORE)).build();
     private final ItemStack previousPage = new ItemBuilder(Material.FEATHER).setName(lang.get(Lang.GUI_PAGED_LAST)).setLore(lang.get(Lang.GUI_PAGED_LAST_LORE)).build();
 
-    @Getter @Setter private int page = 0;
+    private int page = 0;
 
     public PaginatedGui(String name, int size) {
         super(name, size);
@@ -78,4 +76,11 @@ public abstract class PaginatedGui extends GuiHolder {
 
     public abstract void onClick(Player p, ItemStack i);
 
+    public int getPage() {
+        return this.page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
 }

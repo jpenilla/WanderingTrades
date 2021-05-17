@@ -1,8 +1,5 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldNameConstants;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -12,35 +9,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@FieldNameConstants
 public class PlayerHeadConfig {
     private final FileConfiguration config;
 
-    @Getter @Setter
     private int maxUses = 1;
-    @Getter @Setter
     private boolean experienceReward;
-    @Getter @Setter
     private boolean playerHeadsFromServer;
-    @Getter @Setter
     private boolean permissionWhitelist;
-    @Getter @Setter
     private double playerHeadsFromServerChance;
-    @Getter @Setter
     private String playerHeadsFromServerAmount;
-    @Getter @Setter
     private int headsPerTrade;
-    @Getter @Setter
     private String name;
-    @Getter @Setter
     private List<String> lore;
-    @Getter @Setter
     private ItemStack ingredient1;
-    @Getter @Setter
     private ItemStack ingredient2;
-    @Getter @Setter
     private List<String> usernameBlacklist;
-    @Getter @Setter
     private int days;
 
     private final String prefix = "headTrade.";
@@ -87,7 +70,7 @@ public class PlayerHeadConfig {
         config.set(prefix + "head.customname", name);
         config.set(prefix + "head.lore", lore);
 
-        String path = WanderingTrades.getInstance().getDataFolder() + "/playerheads.yml";
+        String path = WanderingTrades.instance().getDataFolder() + "/playerheads.yml";
         try {
             config.save(path);
         } catch (IOException e) {
@@ -110,5 +93,127 @@ public class PlayerHeadConfig {
         } else {
             return Integer.parseInt(playerHeadsFromServerAmount);
         }
+    }
+
+    public int maxUses() {
+        return this.maxUses;
+    }
+
+    public boolean experienceReward() {
+        return this.experienceReward;
+    }
+
+    public boolean playerHeadsFromServer() {
+        return this.playerHeadsFromServer;
+    }
+
+    public boolean permissionWhitelist() {
+        return this.permissionWhitelist;
+    }
+
+    public double playerHeadsFromServerChance() {
+        return this.playerHeadsFromServerChance;
+    }
+
+    public String playerHeadsFromServerAmount() {
+        return this.playerHeadsFromServerAmount;
+    }
+
+    public int headsPerTrade() {
+        return this.headsPerTrade;
+    }
+
+    public String name() {
+        return this.name;
+    }
+
+    public List<String> lore() {
+        return this.lore;
+    }
+
+    public ItemStack ingredientOne() {
+        return this.ingredient1;
+    }
+
+    public ItemStack ingredientTwo() {
+        return this.ingredient2;
+    }
+
+    public List<String> usernameBlacklist() {
+        return this.usernameBlacklist;
+    }
+
+    public int days() {
+        return this.days;
+    }
+
+    public void maxUses(int maxUses) {
+        this.maxUses = maxUses;
+    }
+
+    public void experienceReward(boolean experienceReward) {
+        this.experienceReward = experienceReward;
+    }
+
+    public void playerHeadsFromServer(boolean playerHeadsFromServer) {
+        this.playerHeadsFromServer = playerHeadsFromServer;
+    }
+
+    public void permissionWhitelist(boolean permissionWhitelist) {
+        this.permissionWhitelist = permissionWhitelist;
+    }
+
+    public void playerHeadsFromServerChance(double playerHeadsFromServerChance) {
+        this.playerHeadsFromServerChance = playerHeadsFromServerChance;
+    }
+
+    public void playerHeadsFromServerAmount(String playerHeadsFromServerAmount) {
+        this.playerHeadsFromServerAmount = playerHeadsFromServerAmount;
+    }
+
+    public void headsPerTrade(int headsPerTrade) {
+        this.headsPerTrade = headsPerTrade;
+    }
+
+    public void name(String name) {
+        this.name = name;
+    }
+
+    public void lore(List<String> lore) {
+        this.lore = lore;
+    }
+
+    public void ingredientOne(ItemStack ingredient1) {
+        this.ingredient1 = ingredient1;
+    }
+
+    public void ingredientTwo(ItemStack ingredient2) {
+        this.ingredient2 = ingredient2;
+    }
+
+    public void usernameBlacklist(List<String> usernameBlacklist) {
+        this.usernameBlacklist = usernameBlacklist;
+    }
+
+    public void days(int days) {
+        this.days = days;
+    }
+
+    public static final class Fields {
+        public static final String config = "config";
+        public static final String maxUses = "maxUses";
+        public static final String experienceReward = "experienceReward";
+        public static final String playerHeadsFromServer = "playerHeadsFromServer";
+        public static final String permissionWhitelist = "permissionWhitelist";
+        public static final String playerHeadsFromServerChance = "playerHeadsFromServerChance";
+        public static final String playerHeadsFromServerAmount = "playerHeadsFromServerAmount";
+        public static final String headsPerTrade = "headsPerTrade";
+        public static final String name = "name";
+        public static final String lore = "lore";
+        public static final String ingredient1 = "ingredient1";
+        public static final String ingredient2 = "ingredient2";
+        public static final String usernameBlacklist = "usernameBlacklist";
+        public static final String days = "days";
+        public static final String prefix = "prefix";
     }
 }

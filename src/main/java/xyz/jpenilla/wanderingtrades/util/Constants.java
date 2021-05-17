@@ -14,10 +14,10 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final NamespacedKey CONFIG_NAME = new NamespacedKey(WanderingTrades.getInstance(), "wtConfig");
-    public static final NamespacedKey PROTECT = new NamespacedKey(WanderingTrades.getInstance(), "wtProtect");
-    public static final NamespacedKey REFRESH_NATURAL = new NamespacedKey(WanderingTrades.getInstance(), "wtRefreshNatural");
-    public static final NamespacedKey LAST_REFRESH = new NamespacedKey(WanderingTrades.getInstance(), "wt_last_refresh_time");
+    public static final NamespacedKey CONFIG_NAME = new NamespacedKey(WanderingTrades.instance(), "wtConfig");
+    public static final NamespacedKey PROTECT = new NamespacedKey(WanderingTrades.instance(), "wtProtect");
+    public static final NamespacedKey REFRESH_NATURAL = new NamespacedKey(WanderingTrades.instance(), "wtRefreshNatural");
+    public static final NamespacedKey LAST_REFRESH = new NamespacedKey(WanderingTrades.instance(), "wt_last_refresh_time");
 
     public static final Component PREFIX_COMPONENT = text()
                     .append(text("[", WHITE))

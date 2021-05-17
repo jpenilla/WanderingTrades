@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 public class TradeCreateGui extends TradeGui {
 
     public TradeCreateGui(TradeConfig tradeConfig) {
-        super(WanderingTrades.getInstance().getLang().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
+        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
     }
 
     public @NonNull Inventory getInventory() {
@@ -45,16 +45,16 @@ public class TradeCreateGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
                         return "";
                     })
                     .onValidateInput((player, input) -> {
                         if (input.contains(" ")) {
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                             return false;
                         }
-                        if (this.tradeConfig.getFile().getConfigurationSection("trades").contains(input)) {
-                            WanderingTrades.getInstance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                        if (this.tradeConfig.fileConfiguration().getConfigurationSection("trades").contains(input)) {
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                             return false;
                         }
                         return true;

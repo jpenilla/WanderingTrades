@@ -26,22 +26,14 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
             final @Nullable BiFunction<CommandContext<CommandSender>, String, List<String>> suggestionsProvider,
             final @NonNull ArgumentDescription defaultDescription
     ) {
-        super(
-                required,
-                name,
-                new Parser(plugin),
-                defaultValue,
-                TradeConfig.class,
-                suggestionsProvider,
-                defaultDescription
-        );
+        super(required, name, new Parser(plugin), defaultValue, TradeConfig.class, suggestionsProvider, defaultDescription);
     }
 
-    public static @NonNull CommandArgument<CommandSender, TradeConfig> of(final @NonNull WanderingTrades plugin, final @NonNull String name) {
+    public static @NonNull TradeConfigArgument of(final @NonNull WanderingTrades plugin, final @NonNull String name) {
         return builder(plugin, name).build();
     }
 
-    public static @NonNull CommandArgument<CommandSender, TradeConfig> optional(final @NonNull WanderingTrades plugin, final @NonNull String name) {
+    public static @NonNull TradeConfigArgument optional(final @NonNull WanderingTrades plugin, final @NonNull String name) {
         return builder(plugin, name).asOptional().build();
     }
 
@@ -61,12 +53,12 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
                 final @NonNull CommandContext<@NonNull CommandSender> commandContext,
                 final @NonNull Queue<@NonNull String> inputQueue
         ) {
-            final TradeConfig tradeConfig = this.plugin.getCfg().getTradeConfigs().getOrDefault(inputQueue.peek(), null);
+            final TradeConfig tradeConfig = this.plugin.config().tradeConfigs().getOrDefault(inputQueue.peek(), null);
             if (tradeConfig != null) {
                 inputQueue.remove();
                 return ArgumentParseResult.success(tradeConfig);
             }
-            return ArgumentParseResult.failure(new IllegalArgumentException(this.plugin.getLang().get(Lang.COMMAND_SUMMON_NO_CONFIG)));
+            return ArgumentParseResult.failure(new IllegalArgumentException(this.plugin.langConfig().get(Lang.COMMAND_SUMMON_NO_CONFIG)));
         }
 
         @Override
@@ -74,7 +66,7 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
                 final @NonNull CommandContext<@NonNull CommandSender> commandContext,
                 final @NonNull String input
         ) {
-            return ImmutableList.copyOf(this.plugin.getCfg().getTradeConfigs().keySet());
+            return ImmutableList.copyOf(this.plugin.config().tradeConfigs().keySet());
         }
     }
 
@@ -87,7 +79,7 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
         }
 
         @Override
-        public @NonNull CommandArgument<@NonNull CommandSender, @NonNull TradeConfig> build() {
+        public @NonNull TradeConfigArgument build() {
             return new TradeConfigArgument(
                     this.plugin,
                     this.isRequired(),

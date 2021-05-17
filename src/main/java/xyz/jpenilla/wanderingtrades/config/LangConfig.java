@@ -21,12 +21,12 @@ public class LangConfig {
     }
 
     public void load() {
-        File f = new File(plugin.getDataFolder() + "/lang/" + plugin.getCfg().getLanguage() + ".yml");
-        if (plugin.getCfg().isUpdateLang() || !f.exists()) {
+        File f = new File(plugin.getDataFolder() + "/lang/" + plugin.config().language() + ".yml");
+        if (plugin.config().updateLang() || !f.exists()) {
             try {
-                plugin.saveResource("lang/" + plugin.getCfg().getLanguage() + ".yml", true);
+                plugin.saveResource("lang/" + plugin.config().language() + ".yml", true);
             } catch (IllegalArgumentException ignored) {
-                plugin.getLog().warn("Invalid/missing language file name");
+                this.plugin.getLogger().warning("Invalid/missing language file name");
             }
         }
         FileConfiguration config = YamlConfiguration.loadConfiguration(f);
@@ -39,7 +39,7 @@ public class LangConfig {
         try {
             return Objects.requireNonNull(messages.get(key));
         } catch (NullPointerException e) {
-            plugin.getLog().warn("The message '" + key + "' is missing from your lang file. Use 'updateLang: true' in config.yml to fix this");
+            this.plugin.getLogger().warning("The message '" + key + "' is missing from your lang file. Use 'updateLang: true' in config.yml to fix this");
             return "";
         }
     }

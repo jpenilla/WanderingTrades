@@ -26,7 +26,7 @@ public class CommandWanderingTrades implements WTCommand {
 
         /* About Command */
         final Command<CommandSender> about = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_ABOUT))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_ABOUT))
                 .literal("about")
                 .handler(context -> ImmutableList.of(
                         "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------",
@@ -37,16 +37,16 @@ public class CommandWanderingTrades implements WTCommand {
 
         /* Reload Command */
         final Command<CommandSender> reload = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.getLang().get(Lang.COMMAND_WT_RELOAD))
+                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_RELOAD))
                 .literal("reload")
                 .permission("wanderingtrades.reload")
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD)));
-                    wanderingTrades.getCfg().load();
-                    wanderingTrades.getLang().load();
-                    wanderingTrades.getListeners().reload();
-                    wanderingTrades.getStoredPlayers().load();
-                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.getLang().get(Lang.COMMAND_RELOAD_DONE)));
+                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.langConfig().get(Lang.COMMAND_RELOAD)));
+                    wanderingTrades.config().load();
+                    wanderingTrades.langConfig().load();
+                    wanderingTrades.listeners().reload();
+                    wanderingTrades.storedPlayers().load();
+                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.langConfig().get(Lang.COMMAND_RELOAD_DONE)));
                 }).execute()).build();
 
         mgr.register(ImmutableList.of(about, reload));
