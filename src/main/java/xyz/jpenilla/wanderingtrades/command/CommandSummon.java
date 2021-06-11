@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -40,10 +40,6 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 import xyz.jpenilla.wanderingtrades.util.Constants;
-
-import static io.papermc.lib.PaperLib.getMinecraftVersion;
-import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.colorDownsamplingGson;
-import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
 public class CommandSummon implements WTCommand {
 
@@ -249,16 +245,13 @@ public class CommandSummon implements WTCommand {
             Class<?> _CraftEntity = Crafty.needCraftClass("entity.CraftEntity");
             Class<?> _Entity = Crafty.needNMSClassOrElse("Entity", "net.minecraft.world.entity.Entity");
             Class<?> _IChatBaseComponent = Crafty.needNMSClassOrElse("IChatBaseComponent", "net.minecraft.network.chat.IChatBaseComponent");
-            Class<?> _ChatSerializer = Crafty.needNMSClassOrElse("IChatBaseComponent$ChatSerializer", "net.minecraft.network.chat.IChatBaseComponent$ChatSerializer");
             MethodHandle _getHandle = Crafty.findMethod(_CraftEntity, "getHandle", _Entity);
-            Method _jsonToComponent = _ChatSerializer.getMethod("a", String.class);
             Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
 
             Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
-            final GsonComponentSerializer serializer = getMinecraftVersion() >= 16 ? gson() : colorDownsamplingGson();
-            Object customName = Objects.requireNonNull(_jsonToComponent).invoke(null, serializer.serialize(wanderingTrades.miniMessage().parse(miniMessage)));
+            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(wanderingTrades.miniMessage().parse(miniMessage));
 
-            _setCustomName.invoke(nmsEntity, customName);
+            _setCustomName.invoke(nmsEntity, nmsComponent);
         } catch (Throwable throwable) {
             if (wanderingTrades.config().debug()) {
                 wanderingTrades.getLogger().log(
