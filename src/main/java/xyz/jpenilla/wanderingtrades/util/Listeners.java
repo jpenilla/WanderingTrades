@@ -1,6 +1,8 @@
 package xyz.jpenilla.wanderingtrades.util;
 
 import io.papermc.lib.PaperLib;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -13,9 +15,6 @@ import xyz.jpenilla.wanderingtrades.listener.JoinQuitListener;
 import xyz.jpenilla.wanderingtrades.listener.ProtectTradersListener;
 import xyz.jpenilla.wanderingtrades.listener.RefreshTradesListener;
 import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Listeners {
     private final WanderingTrades plugin;

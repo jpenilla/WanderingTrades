@@ -1,5 +1,7 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
+import java.util.function.DoubleFunction;
+import java.util.function.IntFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,9 +18,6 @@ import xyz.jpenilla.jmplib.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
-
-import java.util.function.DoubleFunction;
-import java.util.function.IntFunction;
 
 public abstract class GuiHolder implements InventoryHolder {
     protected final LangConfig lang = WanderingTrades.instance().langConfig();

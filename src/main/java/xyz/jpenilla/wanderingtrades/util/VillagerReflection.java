@@ -1,11 +1,5 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import org.bukkit.entity.AbstractVillager;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.WanderingTrader;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.jmplib.Crafty;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,6 +7,11 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.bukkit.entity.AbstractVillager;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.WanderingTrader;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import xyz.jpenilla.jmplib.Crafty;
 
 import static io.papermc.lib.PaperLib.getMinecraftVersion;
 import static io.papermc.lib.PaperLib.isPaper;
@@ -23,13 +22,13 @@ public final class VillagerReflection {
 
     private static final Class<?> BehaviorController_class;
     private static final Class<?> BehaviorVillageHeroGift_class;
-    private static final Class<?> MerchantRecipeList_class = Crafty.needNmsClass("MerchantRecipeList");
+    private static final Class<?> MerchantRecipeList_class = Crafty.needNMSClassOrElse("MerchantRecipeList", "net.minecraft.world.item.trading.MerchantRecipeList");
     private static final Class<?> CraftAbstractVillager_class = Crafty.needCraftClass("entity.CraftAbstractVillager");
     private static final Class<?> CraftVillager_class = Crafty.needCraftClass("entity.CraftVillager");
-    private static final Class<?> EntityVillagerAbstract_class = Crafty.needNmsClass("EntityVillagerAbstract");
-    private static final Class<?> EntityVillager_class = Crafty.needNmsClass("EntityVillager");
-    private static final Class<?> EntityLiving_class = Crafty.needNmsClass("EntityLiving");
-    private static final Class<?> EntityVillagerTrader_class = Crafty.needNmsClass("EntityVillagerTrader");
+    private static final Class<?> EntityVillagerAbstract_class = Crafty.needNMSClassOrElse("EntityVillagerAbstract", "net.minecraft.world.entity.npc.EntityVillagerAbstract");
+    private static final Class<?> EntityVillager_class = Crafty.needNMSClassOrElse("EntityVillager", "net.minecraft.world.entity.npc.EntityVillager");
+    private static final Class<?> EntityLiving_class = Crafty.needNMSClassOrElse("EntityLiving", "net.minecraft.world.entity.EntityLiving");
+    private static final Class<?> EntityVillagerTrader_class = Crafty.needNMSClassOrElse("EntityVillagerTrader", "net.minecraft.world.entity.npc.EntityVillagerTrader");
     private static final Class<?> CraftWanderingTrader_class = Crafty.needCraftClass("entity.CraftWanderingTrader");
     private static final MethodHandle CraftAbstractVillager_getHandle = Objects.requireNonNull(Crafty.findMethod(CraftAbstractVillager_class, "getHandle", EntityVillagerAbstract_class), "CraftAbstractVillager#getHandle");
     private static final MethodHandle CraftVillager_getHandle = Objects.requireNonNull(Crafty.findMethod(CraftVillager_class, "getHandle", EntityVillager_class), "CraftVillager#getHandle");
@@ -50,26 +49,36 @@ public final class VillagerReflection {
                 updateTradesMethodName = "eC";
                 break;
             case 16:
-            default:
                 updateTradesMethodName = "eW";
+                break;
+            case 17:
+            default:
+                updateTradesMethodName = "fE";
                 break;
         }
         try {
             EntityVillagerAbstract_updateTrades = EntityVillagerAbstract_class.getDeclaredMethod(updateTradesMethodName);
             EntityVillagerAbstract_updateTrades.setAccessible(true);
-            EntityVillagerAbstract_trades = Crafty.needField(EntityVillagerAbstract_class, "trades");
-            EntityVillagerTrader_despawnTimer = Objects.requireNonNull(
-                    Arrays.stream(EntityVillagerTrader_class.getDeclaredFields())
-                            .filter(field -> int.class.equals(field.getType()))
-                            .findFirst()
-                            .orElse(null),
-                    "Couldn't find wandering trader despawn timer field");
+            EntityVillagerAbstract_trades = Arrays.stream(MerchantRecipeList_class.getDeclaredFields())
+                    .filter(field -> field.getType().isAssignableFrom(MerchantRecipeList_class))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Couldn't find trades field!"));
+            EntityVillagerTrader_despawnTimer = Arrays.stream(EntityVillagerTrader_class.getDeclaredFields())
+                    .filter(field -> int.class.equals(field.getType()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Couldn't find despawn timer field!"));
             EntityVillagerTrader_despawnTimer.setAccessible(true);
 
             if (isPaper() && getMinecraftVersion() >= 16) {
-                BehaviorVillageHeroGift_class = Crafty.needNmsClass("BehaviorVillageHeroGift");
-                BehaviorController_class = Crafty.needNmsClass("BehaviorController");
-                BehaviorController_behaviorsMap = BehaviorController_class.getDeclaredField("e");
+                BehaviorVillageHeroGift_class = Crafty.needNMSClassOrElse("BehaviorVillageHeroGift", "net.minecraft.world.entity.ai.behavior.BehaviorVillageHeroGift");
+                BehaviorController_class = Crafty.needNMSClassOrElse("BehaviorController", "net.minecraft.world.entity.ai.BehaviorController");
+                final String mapName;
+                if (getMinecraftVersion() == 16) {
+                    mapName = "e";
+                } else /* if (ver >=17) */ {
+                    mapName = "f";
+                }
+                BehaviorController_behaviorsMap = BehaviorController_class.getDeclaredField(mapName);
                 BehaviorController_behaviorsMap.setAccessible(true);
                 EntityLiving_getBehaviorController = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, "getBehaviorController", BehaviorController_class), "EntityLiving#getBehaviorController");
             } else {

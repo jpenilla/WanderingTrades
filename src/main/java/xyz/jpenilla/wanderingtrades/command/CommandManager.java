@@ -15,6 +15,12 @@ import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import io.leangen.geantyref.TypeToken;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -26,13 +32,6 @@ import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
 
@@ -107,7 +106,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                 new CommandWanderingTrades(wanderingTrades, this),
                 new CommandSummon(wanderingTrades, this),
                 new CommandConfig(wanderingTrades, this)
-        ).forEach(WTCommand::registerCommands);
+        ).forEach(WTCommand::register);
     }
 
     private void registerExceptionHandlers() {

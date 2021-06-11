@@ -1,5 +1,6 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
+import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -13,8 +14,6 @@ import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-
-import java.util.ArrayList;
 
 public abstract class TradeGui extends GuiHolder {
 

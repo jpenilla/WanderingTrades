@@ -6,16 +6,15 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.Queue;
+import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-
-import java.util.List;
-import java.util.Queue;
-import java.util.function.BiFunction;
 
 public final class TradeConfigArgument extends CommandArgument<CommandSender, TradeConfig> {
     private TradeConfigArgument(

@@ -1,6 +1,7 @@
 package xyz.jpenilla.wanderingtrades;
 
 import io.papermc.lib.PaperLib;
+import java.util.logging.Level;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -14,8 +15,6 @@ import xyz.jpenilla.wanderingtrades.config.LangConfig;
 import xyz.jpenilla.wanderingtrades.util.Listeners;
 import xyz.jpenilla.wanderingtrades.util.StoredPlayers;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
-
-import java.util.logging.Level;
 
 public final class WanderingTrades extends BasePlugin {
     private static WanderingTrades instance;

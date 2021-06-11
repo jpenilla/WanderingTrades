@@ -7,11 +7,10 @@ import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
+import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
-
-import java.util.stream.Collectors;
 
 public class CommandHelp implements WTCommand {
 
@@ -28,7 +27,7 @@ public class CommandHelp implements WTCommand {
     }
 
     @Override
-    public void registerCommands() {
+    public void register() {
         /* Help Query Argument */
         CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>newBuilder("query")
                 .greedy()

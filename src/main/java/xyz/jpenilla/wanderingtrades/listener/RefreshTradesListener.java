@@ -1,5 +1,8 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Entity;
@@ -13,10 +16,6 @@ import org.bukkit.persistence.PersistentDataType;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 public class RefreshTradesListener implements Listener {
     private final WanderingTrades plugin;

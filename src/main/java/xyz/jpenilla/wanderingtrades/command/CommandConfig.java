@@ -5,6 +5,8 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,9 +21,6 @@ import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CommandConfig implements WTCommand {
 
     private final WanderingTrades wanderingTrades;
@@ -35,7 +34,7 @@ public class CommandConfig implements WTCommand {
     }
 
     @Override
-    public void registerCommands() {
+    public void register() {
         final Command.Builder<CommandSender> wt = mgr.commandBuilder("wt");
 
         /* List Trade Configs Command */

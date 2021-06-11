@@ -1,15 +1,14 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public class LangConfig {
     private final WanderingTrades plugin;

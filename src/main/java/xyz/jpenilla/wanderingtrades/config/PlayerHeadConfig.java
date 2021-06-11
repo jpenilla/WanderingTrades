@@ -1,13 +1,12 @@
 package xyz.jpenilla.wanderingtrades.config;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class PlayerHeadConfig {
     private final FileConfiguration config;

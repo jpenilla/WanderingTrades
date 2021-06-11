@@ -1,9 +1,5 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -11,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public class Config {
     private final WanderingTrades plugin;

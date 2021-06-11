@@ -3,6 +3,7 @@ package xyz.jpenilla.wanderingtrades.command;
 import cloud.commandframework.Command;
 import cloud.commandframework.meta.CommandMeta;
 import com.google.common.collect.ImmutableList;
+import java.util.stream.Stream;
 import org.bukkit.command.CommandSender;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -21,19 +22,19 @@ public class CommandWanderingTrades implements WTCommand {
     }
 
     @Override
-    public void registerCommands() {
+    public void register() {
         final Command.Builder<CommandSender> wt = mgr.commandBuilder("wt");
 
         /* About Command */
         final Command<CommandSender> about = wt
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_ABOUT))
                 .literal("about")
-                .handler(context -> ImmutableList.of(
+                .handler(context -> Stream.of(
                         "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------",
                         "<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion(),
                         "<gray>By <gradient:gold:yellow>jmp",
                         "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------"
-                ).forEach(string -> chat.send(context.getSender(), Chat.getCenteredMessage(string)))).build();
+                ).map(Chat::getCenteredMessage).forEach(string -> chat.send(context.getSender(), string))).build();
 
         /* Reload Command */
         final Command<CommandSender> reload = wt

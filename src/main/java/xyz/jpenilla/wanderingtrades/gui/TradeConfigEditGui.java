@@ -1,5 +1,8 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.stream.IntStream;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,10 +17,6 @@ import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 public class TradeConfigEditGui extends GuiHolder {
     private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_ENABLED)).setLore(gui_toggle_lore).build();

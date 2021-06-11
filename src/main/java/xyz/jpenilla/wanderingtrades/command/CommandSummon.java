@@ -12,6 +12,11 @@ import cloud.commandframework.bukkit.parsers.selector.SingleEntitySelectorArgume
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import com.google.common.collect.ImmutableList;
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -35,12 +40,6 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 import xyz.jpenilla.wanderingtrades.util.Constants;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
 
 import static io.papermc.lib.PaperLib.getMinecraftVersion;
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.colorDownsamplingGson;
@@ -75,7 +74,7 @@ public class CommandSummon implements WTCommand {
     }
 
     @Override
-    public void registerCommands() {
+    public void register() {
         final Command.Builder<CommandSender> wt = mgr.commandBuilder("wt");
 
         final Command<CommandSender> summonNatural = wt
@@ -248,9 +247,9 @@ public class CommandSummon implements WTCommand {
         }
         try {
             Class<?> _CraftEntity = Crafty.needCraftClass("entity.CraftEntity");
-            Class<?> _Entity = Crafty.needNmsClass("Entity");
-            Class<?> _IChatBaseComponent = Crafty.needNmsClass("IChatBaseComponent");
-            Class<?> _ChatSerializer = Crafty.needNmsClass("IChatBaseComponent$ChatSerializer");
+            Class<?> _Entity = Crafty.needNMSClassOrElse("Entity", "net.minecraft.world.entity.Entity");
+            Class<?> _IChatBaseComponent = Crafty.needNMSClassOrElse("IChatBaseComponent", "net.minecraft.network.chat.IChatBaseComponent");
+            Class<?> _ChatSerializer = Crafty.needNMSClassOrElse("IChatBaseComponent$ChatSerializer", "net.minecraft.network.chat.IChatBaseComponent$ChatSerializer");
             MethodHandle _getHandle = Crafty.findMethod(_CraftEntity, "getHandle", _Entity);
             Method _jsonToComponent = _ChatSerializer.getMethod("a", String.class);
             Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);

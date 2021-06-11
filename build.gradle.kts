@@ -2,12 +2,14 @@ plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
-    val indraVersion = "2.0.4"
+    val indraVersion = "2.0.5"
+    id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
 }
 
 group = "xyz.jpenilla"
-version = "1.6.5.3-SNAPSHOT+${lastCommitHash()}"
+version = "1.6.5.3-SNAPSHOT"
+    .run { if (endsWith("-SNAPSHOT")) "$this+${lastCommitHash()}" else this }
 description = "Customizable trades for Wandering Traders."
 
 repositories {
@@ -28,7 +30,7 @@ dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.6")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+36-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+38-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "2.2.1")
     val cloudVersion = "1.5.0-SNAPSHOT"
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
@@ -41,9 +43,8 @@ dependencies {
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
 }
 
-java {
-    targetCompatibility = JavaVersion.toVersion(8)
-    sourceCompatibility = JavaVersion.toVersion(8)
+indra {
+    javaVersions().target(8)
 }
 
 bukkit {

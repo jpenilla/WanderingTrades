@@ -1,6 +1,7 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
+import java.util.logging.Level;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -14,9 +15,7 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 import xyz.jpenilla.wanderingtrades.util.VillagerReflection;
 
-import java.util.logging.Level;
-
-public class BrainModificationListener implements Listener {
+public final class BrainModificationListener implements Listener {
     private final WanderingTrades plugin;
 
     public BrainModificationListener(final @NonNull WanderingTrades plugin) {
