@@ -1087,7 +1087,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Coal Ore"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmY0MDA1NzcyMTkzMzNlYjYxNGE0ZDkyYmVmMjM5ZDMwZTJjYjA5MmQyYWQ3ZGZlYTViZDlkMGYxYWM0MGJlYSJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTVkZTZkYTBjMzNkODAyNjFjNzhhZmJlMjY0Mjc5M2M2YTM4NTJkODdjZjY1ZDVhMjU5Njg1OGMwYjViY2EwNiJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
@@ -1104,7 +1104,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Iron Ore"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWU4YWE3MWY1OTkxYWE3ZGNmNTc0ODM1MWU1ZjFhYzRmNTQ1OTY4NmM0ZTQ3NmY4NWRlYjU2OTI0NGYzNTk4NiJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWQwNDA5ZmZiMGZmMTBlNTliNzIwY2U0MThhNDQ5NWM5MjI3YzdlNzQ1YTFiNTVmMzZjNzYwODliMDNmZTA0NCJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
@@ -1121,7 +1121,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Gold Ore"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGIwNGI5NGZkNDkxY2NjNDJjNzYyNmVlNWQ4NjdhNmExMTI2ZTkxODUzZjk0OTJhMTQ5YTYxZWI5ZGQ4MmU1OCJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY4OTY5NGM5NzlkMWM0YmM0NDMzZjdkMzM0ZGQzNzM3NjQ0NGQxZmM0MzY2MmFkODdjZDM5ODRlOWI5MTNiYyJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
@@ -1138,7 +1138,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Lapis Ore"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmNkOTYyZTU5MDhlYWExYTIyYmNhNjY4Nzk4ZjlhZWQzM2IzN2I0OGUxNmEyZmM1OWViNGRhMGFiNDU3Y2RiZSJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmI4ZDkxMzE4NWU1YTM2NWI5NWE4NThkMmU2Yzk5NDE5ODU2NjM5ZDAzNWRjYmY3N2NkNDQwNDU2MGEyNTM4NCJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
@@ -1155,7 +1155,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Diamond Ore"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk3N2JmNWMxZjFkZjQwYTk5YWU0NzhkMDRlOGMxZWE4NmI4ODFkZTBmZWZhZWZkN2JhNmQ1OTdjODcxZWM0NCJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmZiZjBhYzMxNDFkNWI2MzJjYmNkMzY1OWViODE1MmIyOWQ1ZmEwZDA5ZTRiMDhkYmU4MTNhYzg0MWU0MzQ4YiJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
@@ -1172,7 +1172,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Redstone Ore"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjgxMzM5MTc1ODljZjEwYzdmYzQ2ZWYzMzEyMDk2NjliZDdhYTUyNDQ4MDUxOTMyMzkyNDNiZDVhNTQ4ZmNjIn19fQ==
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzk4MmI0MWNlMmViOWZlYjM1MTZlZWY3NTMzNjk0YWQ2YWE2YzE4NTA5MDFiYjU5NDkzOTkwOWQ3MzNiZjJkYiJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
@@ -1189,7 +1189,7 @@ trades:
         amount: 1
     result:
       customname: "<gradient:aqua:blue>Emerald Ore"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmU2MGY4OWMxNjVhMTllZjkxNDYwOWUyNDM0MzI0OTIxMmU1MWY2YmRlOTIxNGY2OWViMmUxMDRkMGY5NmVkYiJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmI0NTQ4MmE4Y2FlNjk0NmViZTUxMTUxNjc3MGQxMDE4MjA0ZmRjNDgyYmY3OTQyYjQxNzUyNjYxMWExYzBiNSJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
@@ -2550,6 +2550,448 @@ trades:
     result:
       customname: "<gradient:aqua:blue>Respawn Anchor"
       material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWFjZDQ3MzQ5NjQyNjQxM2VlYmI2NTIzZGVlNGEyZmMxN2MxOTJhYTMwMWQyMzQwNjcyY2FiYTI0OWMzZTRmNCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  cut_copper:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: CUT_COPPER
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Cut Copper"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTMxYzU3ODM3YjhjMzdlY2RiM2RkZDlmM2E4ZGMzOTVhNzEyYzI1N2ZhZjE3N2Q3ZmU4ZDNmNDRlZjQ3NTkzMSJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  exposed_cut_copper:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: EXPOSED_CUT_COPPER
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Exposed Cut Copper"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTY0YmQ2ZTc4MWFhMTU1NmNjZGZmMzIyYzE5NmM5Nzk5MWVhOTUyODI4NDhiZTkwOGYxYThkZGNhOTJjYmViMiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  weathered_cut_copper:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: WEATHERED_CUT_COPPER
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Weathered Cut Copper"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWZhOGZjNDM3MThhZTgxZDU4M2M2NGIyOTA0ZmE1ZmMwMzBiMWJkYmVjMmFmNjYwNTA5OWRmMmZkMmYwMGE2MSJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  oxidized_cut_copper:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: OXIDIZED_CUT_COPPER
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Oxidized Cut Copper"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjQ1YTk2ZTZlMGJkMGIxZjRkZDY0MjdiNTVjMmE2MGM5MDUzZmUwMGE2ODI5NTc1MWZkY2E3OThlMGVhZGU0MiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjJkNzE0NGRjZjFlNzg0OTU2ZWUxMmZiMjljNjEzODJlZWEyNzJhNzYyMWI1MDY2MjM5N2JjMDc0NTE1ZDk4MiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  cobbled_deepslate:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: COBBLED_DEEPSLATE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Cobbled Deepslate"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAxMDFkMDEzNzk3MTJhYTZiMWE5ODg5ZmE2NmU0ZDA1OTE2MWUyZTM1ZDk1YThlYTQ4MzQ3ZDY4N2QwODYzOCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  calcite:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: CALCITE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Calcite"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDlhYjZlN2IwYzcyNjQ1Y2RiNGEwOWE0Mjk2MDAzZGYyNGM2Y2ZhMWQ4ZDAxMzNiYzhhZTIxMWU5NDg4MDdjMCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_lapis_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_LAPIS_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Lapis Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTU1ZWZjOWMzNzlhYzMzYWVjOTA1MWU4OTk5ZTdmNDgzNzE1NTEwYjM3NGYyYmUyY2QzNTc4MjFmZjg0MDYzMyJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  dripstone_block:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DRIPSTONE_BLOCK
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Dripstone Block"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjI1Yjk4NTRkMmU0OGVkZTdhMjY4ZjAwMWY2YTEzMjZjOTdlYTU2MmNjYzA1MmQyOWZkOTE4OTVlNThkZWUzMCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  tuff:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: TUFF
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Tuff"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjZkNzQ4M2Q5ZTY5Yjc5Nzg5NTg4NjllMjI2OGU1OTE5NDAxYzY3NTJlM2Y2MmYxYWNmYzNjYTlkYmY0MjllYiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  azalea_leaves:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: AZALEA_LEAVES
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Azalea Leaves"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRhNjI1ZGNmYmZiODc1NTZmZTk0NjI3MWQ4YWIwMWFhZjAyYmE2ODFmNTY3MzcyZDA1NjI4NmI3YTAyYmIxZiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  flowering_azalea_leaves:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: FLOWERING_AZALEA_LEAVES
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Flowering Azalea Leaves"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDc5ZDQ3ZjMxMDk0ZTYyNGU5YmQ3ZTIzZTY2ZDQ1ZjQ0ZDAzMzc5MWE1ZmFjNDJhODQ1ODQxYTM4NjI5NDYwMiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  raw_copper_block:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: RAW_COPPER_BLOCK
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Raw Copper Block"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDRmNWE3Y2NhMmY0MDk5MzhkMGRiOTJkYTQ3NDk2YjM2MjA0YmI4NTgyY2VkNjVkNWZiOGQzY2Q5MjFjMDhhZSJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  raw_gold_block:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: RAW_GOLD_BLOCK
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Raw Gold Block"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRhYzc0YzVlOTVkMDdlYmM5MGYxYzE2Y2Q5NTk5ZWJiYzk0YWExMzIxZDljYjliYjE0MzRjMzg0YTdlMjc0ZCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  raw_iron_block:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: RAW_IRON_BLOCK
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Raw Iron Block"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjVmYzA2YjBkY2M1ZGIwN2E4NTNhZmJlM2Q2OWNkNzcwM2UxMGQ3NTg0ZGE3OTlmZDI4MTlhZDU3YWJjNGRmZiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  amethyst_block:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: AMETHYST_BLOCK
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Amethyst Block"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzEzYjc3ZjVhNzQ2YzFmMDBkZDFjZTdmZTY2OTc2Yzc1Y2VjZjdkODliZGIwMmU4Y2Y5NDM2NjcyYWY1ODk2ZCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  polished_deepslate:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: POLISHED_DEEPSLATE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Polished Deepslate"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjFkMDIyNTY2OTNjYWYwODFlNGM1ZmMzMDQ5MTc5YmZkNTVjMWU3NmFmYWI5ZTExMjZiYmQ3NjQzZWRjZThkYSJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_coal_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_COAL_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Coal Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTE5NjBkM2RlZGJjNmRlMTA5N2I3Y2MyZDgzNzcyOGJkOTQzZTdjZmI5MGQxMWM0OTQzNjc5NmZiZDlkZDBjYSJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_copper_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_COPPER_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Copper Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjQ2MWViZmYzZWZiMTk1NzIxYzRjNjQzZjEzNDFkMjg1NzMwMmYwZWYzY2U1MzdkZTA3MjI3ZWU5MzQ3NzYwNyJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_diamond_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_DIAMOND_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Diamond Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmYxMjFlNTE4YTRmZmFkNzQ5NDAwNzQ2NDJkNmRiOWE0OGRjMmFhOWJlYzJiNjYyNTQ0NjgyZDhlODUxZDJhIn19fQ==
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_emerald_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_EMERALD_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Emerald Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTA1NjFjN2E3N2EyOTUyMjg2NTIwZGNhZTA3NjVkNDllZGEyNmRjOWQ0YzQwYmRjNmUwODQ3MzI3NWQ2MDI0MiJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_gold_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_GOLD_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Gold Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTQwYzQwNzM0ZDU1YzIyNWRhMjIwYTMwYzA3NjhjNzAwYmRmYTU2YzE3ZDNhNWViNWZkY2I3NTg2MTliNWUxNyJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_iron_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_IRON_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Iron Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY2NWZmZGZiMjA5YjU4OGYzYTVlYTJkYTZmYzIxZjg0MzQ1ZjQ3ZjMxODQxODk5NjZjZGQwODBhN2RhOWEyOCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  deepslate_redstone_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: DEEPSLATE_REDSTONE_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Deepslate Redstone Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBjZGZiZTUzODk5ODk4MWFiMzlkM2Q4OTg0MzBkNTg4NjExZjQ3NmM4ODIwOTA5Njc4YTI5YTA3ZmRmNDAyZCJ9fX0=
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  copper_ore:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: COPPER_ORE
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Copper Ore"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjUwMTliMmMxOTRkNDBkYmFkOWYzOTUwMTU2MGMxZTc5ZjhkNTZiOTg4MzAxNDU0OGFlOTk3NmJiNmQ5ODEwIn19fQ==
+      amount: 8
+      lore:
+        - "  <gray><italic>Microblock"
+  moss_block:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+      2:
+        customname: NONE
+        material: MOSS_BLOCK
+        amount: 1
+    result:
+      customname: "<gradient:aqua:blue>Moss Block"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2NhMWFlYWRhZDkyZmM4YTE4ZGVmMTQ4MmNlZjMwODhmZDdlMzlhMjAyMjA3ODFiNmU2ODUzZmNkMGQ5YjhjYSJ9fX0=
       amount: 8
       lore:
         - "  <gray><italic>Microblock"
