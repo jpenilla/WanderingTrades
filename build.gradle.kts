@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.jpenilla"
-version = "1.6.5.3-SNAPSHOT"
+version = "1.6.6"
     .run { if (endsWith("-SNAPSHOT")) "$this+${lastCommitHash()}" else this }
 description = "Customizable trades for Wandering Traders."
 
