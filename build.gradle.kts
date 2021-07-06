@@ -5,6 +5,7 @@ plugins {
     val indraVersion = "2.0.5"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
+    id("xyz.jpenilla.run-paper") version "1.0.3"
 }
 
 group = "xyz.jpenilla"
@@ -57,6 +58,9 @@ bukkit {
 }
 
 tasks {
+    runServer {
+        minecraftVersion("1.17")
+    }
     build {
         dependsOn(shadowJar)
     }
