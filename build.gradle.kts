@@ -58,7 +58,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.17")
+        minecraftVersion("1.17.1")
     }
     build {
         dependsOn(shadowJar)
