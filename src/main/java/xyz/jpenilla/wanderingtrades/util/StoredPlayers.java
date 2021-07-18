@@ -40,6 +40,10 @@ public class StoredPlayers {
         }
     }
 
+    public void scheduleCacheUpdateTimer() {
+        this.wanderingTrades.getServer().getScheduler().runTaskTimer(this.wanderingTrades, this::load, 0L, 864000L);
+    }
+
     @SuppressWarnings("deprecation")
     public void load() {
         this.uuidMerchantRecipeMap.clear();
@@ -56,10 +60,10 @@ public class StoredPlayers {
                 .forEach(this::addOfflineHead);
     }
 
-    private MerchantRecipe getHeadRecipe(UUID uuid, String name) {
+    private MerchantRecipe getHeadRecipe(OfflinePlayer player, String name) {
         final Config cfg = wanderingTrades.config();
         final PlayerHeadConfig playerHeadConfig = cfg.playerHeadConfig();
-        final ItemBuilder headBuilder = new HeadBuilder(uuid)
+        final ItemBuilder headBuilder = new HeadBuilder(player)
                 .setLore(playerHeadConfig.lore())
                 .setAmount(playerHeadConfig.headsPerTrade());
         if (playerHeadConfig.name() != null) {
@@ -113,18 +117,18 @@ public class StoredPlayers {
             if (wanderingTrades.config().playerHeadConfig().permissionWhitelist()) {
                 Bukkit.getScheduler().runTaskAsynchronously(wanderingTrades, () -> {
                     if (wanderingTrades.vaultHook().permissions().playerHas(null, offlinePlayer, Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
-                        Bukkit.getScheduler().runTask(wanderingTrades, () -> uuidMerchantRecipeMap.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer.getUniqueId(), offlinePlayer.getName())));
+                        Bukkit.getScheduler().runTask(wanderingTrades, () -> uuidMerchantRecipeMap.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer, offlinePlayer.getName())));
                     }
                 });
                 return;
             }
         }
-        uuidMerchantRecipeMap.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer.getUniqueId(), offlinePlayer.getName()));
+        uuidMerchantRecipeMap.put(offlinePlayer.getUniqueId(), getHeadRecipe(offlinePlayer, offlinePlayer.getName()));
     }
 
     private void addHead(Player player) {
         if (!uuidMerchantRecipeMap.containsKey(player.getUniqueId()) && !TextUtil.containsCaseInsensitive(player.getName(), wanderingTrades.config().playerHeadConfig().usernameBlacklist())) {
-            uuidMerchantRecipeMap.put(player.getUniqueId(), getHeadRecipe(player.getUniqueId(), player.getName()));
+            uuidMerchantRecipeMap.put(player.getUniqueId(), getHeadRecipe(player, player.getName()));
         }
     }
 

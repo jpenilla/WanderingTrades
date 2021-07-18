@@ -11,6 +11,8 @@ import cloud.commandframework.captions.StandardCaptionKeys;
 import cloud.commandframework.exceptions.InvalidCommandSenderException;
 import cloud.commandframework.exceptions.InvalidSyntaxException;
 import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
+import cloud.commandframework.keys.CloudKey;
+import cloud.commandframework.keys.SimpleCloudKey;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -35,11 +37,11 @@ import xyz.jpenilla.wanderingtrades.util.Constants;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
 
+    public static final CloudKey<WanderingTrades> PLUGIN = SimpleCloudKey.of("wt:plugin", TypeToken.get(WanderingTrades.class));
     private static final Pattern SYNTAX_HIGHLIGHT_PATTERN = Pattern.compile("[^\\s\\w\\-]");
 
     private final WanderingTrades wanderingTrades;
     private final MinecraftHelp<CommandSender> help;
-    private final Map<String, CommandArgument.Builder<CommandSender, ?>> argumentRegistry = new HashMap<>();
     private final Map<String, CommandFlag.Builder<?>> flagRegistry = new HashMap<>();
 
     public CommandManager(WanderingTrades wanderingTrades) throws Exception {
@@ -97,8 +99,10 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
 
         this.getParserRegistry().registerParserSupplier(
                 TypeToken.get(TradeConfig.class),
-                parameters -> new TradeConfigArgument.Parser(this.wanderingTrades)
+                parameters -> new TradeConfigArgument.Parser()
         );
+
+        this.registerCommandPreProcessor(ctx -> ctx.getCommandContext().store(PLUGIN, wanderingTrades));
 
         /* Register Commands */
         Stream.of(

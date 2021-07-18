@@ -93,8 +93,8 @@ public class TraderSpawnListener implements Listener {
                         if (isPaper() && getMinecraftVersion() >= 16) {
                             wanderingTrader.resetOffers();
                             newTrades.addAll(wanderingTrader.getRecipes());
-                        } else if (getMinecraftVersion() <= 16) {
-                            // This branch is executed when the plugin is run on Paper 1.14 or 1.15, or on Spigot 1.14-1.16.
+                        } else if (getMinecraftVersion() <= 17) {
+                            // This branch is executed when the plugin is run on Paper 1.14 or 1.15, or on Spigot 1.14-1.17.
                             // The above if statement, and the below method should be updated when Spigot's version/mappings
                             // change, if maintaining Spigot support for this feature is desired.
                             this.resetOffersUsingReflection(wanderingTrader);

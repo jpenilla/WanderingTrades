@@ -103,7 +103,7 @@ public class CommandSummon implements WTCommand {
         final Command<CommandSender> summon = wt
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON))
                 .literal("summon")
-                .argument(TradeConfigArgument.of(this.wanderingTrades, "trade_config"))
+                .argument(TradeConfigArgument.of("trade_config"))
                 .argument(LocationArgument.of("location"))
                 .flag(mgr.getFlag("world"))
                 .flag(mgr.getFlag("pitch"))
@@ -119,7 +119,7 @@ public class CommandSummon implements WTCommand {
         final Command<CommandSender> summonVillager = wt
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_VSUMMON))
                 .literal("summonvillager")
-                .argument(TradeConfigArgument.of(this.wanderingTrades, "trade_config"))
+                .argument(TradeConfigArgument.of("trade_config"))
                 .argument(EnumArgument.of(Villager.Type.class, "type"))
                 .argument(EnumArgument.of(Villager.Profession.class, "profession"))
                 .argument(LocationArgument.of("location"))

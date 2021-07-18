@@ -49,7 +49,7 @@ public class CommandConfig implements WTCommand {
         final Command<CommandSender> edit = wt
                 .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_EDIT))
                 .literal("edit")
-                .argument(TradeConfigArgument.optional(this.wanderingTrades, "trade_config"))
+                .argument(TradeConfigArgument.optional("trade_config"))
                 .permission("wanderingtrades.edit")
                 .senderType(Player.class)
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {

@@ -50,7 +50,7 @@ public final class WanderingTrades extends BasePlugin {
         lang = new LangConfig(this);
 
         storedPlayers = new StoredPlayers(this);
-        getServer().getScheduler().runTaskTimer(this, storedPlayers::load, 0L, 864000L);
+        this.storedPlayers.scheduleCacheUpdateTimer();
 
         if (!cfg.disableCommands()) {
             try {
