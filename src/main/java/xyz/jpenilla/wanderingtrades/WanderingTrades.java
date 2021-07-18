@@ -49,8 +49,7 @@ public final class WanderingTrades extends BasePlugin {
         cfg = new Config(this);
         lang = new LangConfig(this);
 
-        storedPlayers = new StoredPlayers(this);
-        this.storedPlayers.scheduleCacheUpdateTimer();
+        this.storedPlayers = new StoredPlayers(this);
 
         if (!cfg.disableCommands()) {
             try {

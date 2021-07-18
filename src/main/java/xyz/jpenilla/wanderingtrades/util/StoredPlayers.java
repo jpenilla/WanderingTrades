@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitTask;
 import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.jmplib.TextUtil;
@@ -31,6 +32,7 @@ public class StoredPlayers {
     private final WanderingTrades wanderingTrades;
     private final ConcurrentHashMap<UUID, MerchantRecipe> uuidMerchantRecipeMap = new ConcurrentHashMap<>();
     private final ProfileCompleter profileCompleter;
+    private BukkitTask updateTask;
 
     public StoredPlayers(WanderingTrades wanderingTrades) {
         this.wanderingTrades = wanderingTrades;
@@ -38,14 +40,29 @@ public class StoredPlayers {
         if (this.profileCompleter != null) {
             this.profileCompleter.runTaskTimerAsynchronously(wanderingTrades, 0L, 40L);
         }
+        this.scheduleCacheUpdateTimer();
     }
 
-    public void scheduleCacheUpdateTimer() {
-        this.wanderingTrades.getServer().getScheduler().runTaskTimer(this.wanderingTrades, this::load, 0L, 864000L);
+    private void cancelCacheUpdateTimer() {
+        if (this.updateTask != null) {
+            this.updateTask.cancel();
+            this.updateTask = null;
+        }
+    }
+
+    public void updateCacheTimerState() {
+        this.cancelCacheUpdateTimer();
+        this.scheduleCacheUpdateTimer();
+    }
+
+    private void scheduleCacheUpdateTimer() {
+        if (this.wanderingTrades.config().playerHeadConfig().playerHeadsFromServer() && this.updateTask == null) {
+            this.updateTask = this.wanderingTrades.getServer().getScheduler().runTaskTimer(this.wanderingTrades, this::load, 0L, 864000L);
+        }
     }
 
     @SuppressWarnings("deprecation")
-    public void load() {
+    private void load() {
         this.uuidMerchantRecipeMap.clear();
         if (this.profileCompleter != null) {
             this.profileCompleter.clearQueue();
@@ -151,5 +168,4 @@ public class StoredPlayers {
             }
         }
     }
-
 }

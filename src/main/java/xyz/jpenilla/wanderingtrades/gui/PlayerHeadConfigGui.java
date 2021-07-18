@@ -36,7 +36,7 @@ public class PlayerHeadConfigGui extends TradeGui {
     public PlayerHeadConfigGui() {
         super(WanderingTrades.instance().langConfig().get(Lang.GUI_PH_CONFIG_TITLE), null);
         PlayerHeadConfig config = WanderingTrades.instance().config().playerHeadConfig();
-       setI1(config.ingredientOne());
+        setI1(config.ingredientOne());
         if (config.ingredientTwo() != null) {
             setI2(config.ingredientTwo());
         }
@@ -139,8 +139,10 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (enabledStack.isSimilar(item)) {
             config.playerHeadsFromServer(false);
+            WanderingTrades.instance().storedPlayers().updateCacheTimerState();
         } else if (disabledStack.isSimilar(item)) {
             config.playerHeadsFromServer(true);
+            WanderingTrades.instance().storedPlayers().updateCacheTimerState();
         }
 
         if (getExperienceEnabled().isSimilar(item)) {
@@ -270,7 +272,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                     l.remove(l.size() - 1);
                 }
                 config.usernameBlacklist(l);
-                WanderingTrades.instance().storedPlayers().load();
+                WanderingTrades.instance().storedPlayers().updateCacheTimerState();
             } else {
                 p.closeInventory();
                 new InputConversation()
@@ -347,7 +349,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                     .onAccepted((player, s) -> {
                         config.days(Integer.parseInt(s));
                         config.save();
-                        WanderingTrades.instance().storedPlayers().load();
+                        WanderingTrades.instance().storedPlayers().updateCacheTimerState();
                         WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(player);
                     })

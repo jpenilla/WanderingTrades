@@ -46,7 +46,7 @@ public class CommandWanderingTrades implements WTCommand {
                     wanderingTrades.config().load();
                     wanderingTrades.langConfig().load();
                     wanderingTrades.listeners().reload();
-                    wanderingTrades.storedPlayers().load();
+                    this.wanderingTrades.storedPlayers().updateCacheTimerState();
                     chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.langConfig().get(Lang.COMMAND_RELOAD_DONE)));
                 }).execute()).build();
 
