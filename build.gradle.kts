@@ -53,7 +53,7 @@ bukkit {
     apiVersion = "1.14"
     website = "https://github.com/jpenilla/WanderingTrades"
     authors = listOf("jmp")
-    softDepend = listOf("McRPG", "WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
+    softDepend = listOf("WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
 }
 
 tasks {
@@ -79,7 +79,20 @@ tasks {
         }
     }
     processResources {
-        filter { string -> string.replace("\${project.version}", project.version as String) }
+        val tokens = mapOf(
+            "project.version" to project.version
+        )
+        inputs.properties(tokens)
+        filesMatching("**/*.yml") {
+            // Some of our files are too large to use Groovy templating
+            filter { string ->
+                var result = string
+                for ((key, value) in tokens) {
+                    result = result.replace("\${$key}", value.toString())
+                }
+                result
+            }
+        }
     }
 }
 
