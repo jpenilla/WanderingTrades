@@ -40,7 +40,7 @@ dependencies {
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
     compileOnly("org.checkerframework", "checker-qual", "3.13.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
 }
 
 indra {
