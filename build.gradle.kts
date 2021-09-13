@@ -36,7 +36,7 @@ dependencies {
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
     implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
 
-    compileOnly("com.github.MilkBowl", "VaultAPI", "1.7")
+    compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
     compileOnly("org.checkerframework", "checker-qual", "3.13.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
