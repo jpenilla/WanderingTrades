@@ -30,7 +30,7 @@ dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.6")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+41-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+42-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "2.2.1")
     val cloudVersion = "1.5.0"
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
