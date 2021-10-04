@@ -23,6 +23,7 @@ public class Config {
     private boolean wgWhitelist;
     private boolean traderWorldWhitelist;
     private boolean updateLang;
+    private boolean updateChecker = true;
     private String language;
     private List<String> wgRegionList;
     private List<String> traderWorldList;
@@ -53,6 +54,7 @@ public class Config {
         traderWorldWhitelist = config.getBoolean(Fields.traderWorldWhitelist);
         language = config.getString(Fields.language);
         updateLang = config.getBoolean(Fields.updateLang);
+        updateChecker = config.getBoolean(Fields.updateChecker, updateChecker);
 
         loadTradeConfigs();
         loadPlayerHeadConfig();
@@ -74,6 +76,7 @@ public class Config {
         config.set(Fields.traderWorldWhitelist, traderWorldWhitelist);
         config.set(Fields.language, language);
         config.set(Fields.updateLang, updateLang);
+        config.set(Fields.updateChecker, updateChecker);
 
         String path = plugin.getDataFolder() + "/config.yml";
         try {
@@ -158,6 +161,10 @@ public class Config {
         return this.updateLang;
     }
 
+    public boolean updateChecker() {
+        return this.updateChecker;
+    }
+
     public String language() {
         return this.language;
     }
@@ -227,5 +234,6 @@ public class Config {
         public static final String refreshCommandTradersMinutes = "refreshCommandTradersMinutes";
         public static final String tradeConfigs = "tradeConfigs";
         public static final String playerHeadConfig = "playerHeadConfig";
+        public static final String updateChecker = "updateChecker";
     }
 }

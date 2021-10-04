@@ -53,3 +53,6 @@ wgRegionList:
 
 # Setting this option to true will completely disable all WanderingTrades commands.
 disableCommands: false
+
+# Should WanderingTrades check GitHub for updates on startup?
+updateChecker: true

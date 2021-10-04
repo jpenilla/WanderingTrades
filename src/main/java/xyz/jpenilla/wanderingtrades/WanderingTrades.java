@@ -63,7 +63,10 @@ public final class WanderingTrades extends BasePlugin {
 
         listeners = new Listeners(this);
         listeners.register();
-        new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion();
+
+        if (this.cfg.updateChecker()) {
+            new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion();
+        }
 
         final Metrics metrics = new Metrics(this, 7597);
         metrics.addCustomChart(new SimplePie("player_heads", () -> cfg.playerHeadConfig().playerHeadsFromServer() ? "On" : "Off"));
