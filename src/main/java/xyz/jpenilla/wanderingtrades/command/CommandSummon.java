@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
-import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
+import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -38,7 +38,6 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 public class CommandSummon implements WTCommand {
@@ -174,11 +173,11 @@ public class CommandSummon implements WTCommand {
             return;
         }
         loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
-            wanderingTrades.listeners().listener(TraderSpawnListener.class).getTraderBlacklistCache().add(wanderingTrader.getUniqueId());
             wanderingTrader.setRecipes(recipes);
             wanderingTrader.setAI(!disableAI);
 
             final PersistentDataContainer dataContainer = wanderingTrader.getPersistentDataContainer();
+            dataContainer.set(Constants.TEMPORARY_BLACKLISTED, PersistentDataType.BYTE, (byte) 1);
             dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.configName());
 
             final String customName = tradeConfig.customName();

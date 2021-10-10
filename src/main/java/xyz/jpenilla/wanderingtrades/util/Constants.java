@@ -19,14 +19,20 @@ public final class Constants {
     public static final NamespacedKey REFRESH_NATURAL = new NamespacedKey(WanderingTrades.instance(), "wtRefreshNatural");
     public static final NamespacedKey LAST_REFRESH = new NamespacedKey(WanderingTrades.instance(), "wt_last_refresh_time");
 
+    /**
+     * Key temporarily set on Wandering Traders PDC when spawned by WanderingTrades command or going through a portal, to avoid
+     * our CreatureSpawnEvent listener from handling already handled traders.
+     */
+    public static final NamespacedKey TEMPORARY_BLACKLISTED = new NamespacedKey(WanderingTrades.instance(), "wtTemporaryBlacklist");
+
     public static final Component PREFIX_COMPONENT = text()
-                    .append(text("[", WHITE))
-                    .append(text("W", color(0x6B0BDE)))
-                    .append(text("T", color(0xBA0DFA)))
-                    .append(text("]", WHITE))
-                    .append(space())
-                    .clickEvent(runCommand("/wanderingtrades help"))
-                    .build();
+            .append(text("[", WHITE))
+            .append(text("W", color(0x6B0BDE)))
+            .append(text("T", color(0xBA0DFA)))
+            .append(text("]", WHITE))
+            .append(space())
+            .clickEvent(runCommand("/wanderingtrades help"))
+            .build();
 
     public static final class Permissions {
         private Permissions() {

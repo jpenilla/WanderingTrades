@@ -2,10 +2,7 @@ package xyz.jpenilla.wanderingtrades.listener;
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractVillager;
@@ -18,9 +15,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.RandomCollection;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.util.Constants;
 import xyz.jpenilla.wanderingtrades.util.VillagerReflection;
 
 import static io.papermc.lib.PaperLib.getMinecraftVersion;
@@ -28,7 +27,6 @@ import static io.papermc.lib.PaperLib.isPaper;
 
 public class TraderSpawnListener implements Listener {
     private final WanderingTrades plugin;
-    private final Collection<UUID> traderBlacklistCache = new HashSet<>();
 
     public TraderSpawnListener(WanderingTrades wt) {
         this.plugin = wt;
@@ -41,7 +39,7 @@ public class TraderSpawnListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityPortal(EntityPortalEvent e) {
         if (e.getEntityType() == EntityType.WANDERING_TRADER) {
-            traderBlacklistCache.add(e.getEntity().getUniqueId());
+            e.getEntity().getPersistentDataContainer().set(Constants.TEMPORARY_BLACKLISTED, PersistentDataType.BYTE, (byte) 1);
         }
     }
 
@@ -63,7 +61,8 @@ public class TraderSpawnListener implements Listener {
     }
 
     public void addTrades(WanderingTrader wanderingTrader, boolean refresh) {
-        if (traderBlacklistCache.remove(wanderingTrader.getUniqueId())) {
+        if (wanderingTrader.getPersistentDataContainer().has(Constants.TEMPORARY_BLACKLISTED, PersistentDataType.BYTE)) {
+            wanderingTrader.getPersistentDataContainer().remove(Constants.TEMPORARY_BLACKLISTED);
             return;
         }
 
@@ -129,9 +128,5 @@ public class TraderSpawnListener implements Listener {
                     throwable
             );
         }
-    }
-
-    public Collection<UUID> getTraderBlacklistCache() {
-        return this.traderBlacklistCache;
     }
 }
