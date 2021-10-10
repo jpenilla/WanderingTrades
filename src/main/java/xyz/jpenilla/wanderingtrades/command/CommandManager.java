@@ -1,7 +1,6 @@
 package xyz.jpenilla.wanderingtrades.command;
 
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.BukkitCaptionKeys;
@@ -24,7 +23,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
@@ -33,6 +31,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.Components;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 public class CommandManager extends PaperCommandManager<CommandSender> {
@@ -128,10 +127,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                         config.replacement(builder -> builder.color(NamedTextColor.WHITE));
                     });
 
-                    return Component.text()
-                            .append(invalidSyntaxMessage)
-                            .append(correctSyntaxMessage)
-                            .build();
+                    return Components.ofChildren(invalidSyntaxMessage, correctSyntaxMessage);
                 })
                 .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, e -> {
                     final InvalidCommandSenderException exception = (InvalidCommandSenderException) e;
@@ -144,20 +140,17 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
                             NamedTextColor.GRAY
                     );
                     return invalidSenderMessage.replaceText(config -> {
-                        config.match(Pattern.compile("\\{type}"));
+                        config.matchLiteral("{type}");
                         config.replacement(match -> correctSenderType);
                     });
                 })
                 .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, e -> {
                     final Component invalidArgumentMessage = Component.text(wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
                     final Component causeMessage = Component.text(e.getCause().getMessage(), NamedTextColor.GRAY);
-                    return Component.text()
-                            .append(invalidArgumentMessage)
-                            .append(causeMessage)
-                            .build();
+                    return Components.ofChildren(invalidArgumentMessage, causeMessage);
                 })
                 .withCommandExecutionHandler()
-                .withDecorator(component -> TextComponent.ofChildren(Constants.PREFIX_COMPONENT, component))
+                .withDecorator(component -> Components.ofChildren(Constants.PREFIX_COMPONENT, component))
                 .apply(this, wanderingTrades.audiences()::sender);
     }
 
