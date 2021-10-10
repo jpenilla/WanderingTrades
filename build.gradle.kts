@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.0"
     val indraVersion = "2.0.6"
     id("net.kyori.indra") version indraVersion
@@ -30,17 +30,19 @@ dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.6")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+42-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+43-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "2.2.1")
     val cloudVersion = "1.5.0"
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
     implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
 
-    compileOnly("com.github.MilkBowl", "VaultAPI", "1.7")
+    compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
-    compileOnly("org.checkerframework", "checker-qual", "3.18.0")
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2")
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.1.0")
+    compileOnly("org.checkerframework", "checker-qual", "3.18.1")
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2") {
+        exclude("org.bukkit")
+    }
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
 }
 
 indra {
