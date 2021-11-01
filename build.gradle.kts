@@ -38,7 +38,7 @@ dependencies {
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
-    compileOnly("org.checkerframework", "checker-qual", "3.18.1")
+    compileOnly("org.checkerframework", "checker-qual", "3.19.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2") {
         exclude("org.bukkit")
     }
