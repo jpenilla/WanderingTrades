@@ -23,14 +23,16 @@ repositories {
     maven("https://ci.ender.zone/plugin/repository/everything/")
     maven("https://repo.codemc.org/repository/maven-public")
     maven("https://maven.enginehub.org/repo/")
-    maven("https://jitpack.io")
+    maven("https://jitpack.io") {
+        content { includeGroup("com.github.MilkBowl") }
+    }
 }
 
 dependencies {
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.6")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+43-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+44-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "2.2.1")
     val cloudVersion = "1.5.0"
     implementation("cloud.commandframework", "cloud-paper", cloudVersion)
@@ -38,7 +40,7 @@ dependencies {
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
-    compileOnly("org.checkerframework", "checker-qual", "3.18.1")
+    compileOnly("org.checkerframework", "checker-qual", "3.19.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2") {
         exclude("org.bukkit")
     }
@@ -68,7 +70,6 @@ tasks {
     shadowJar {
         minimize()
         archiveFileName.set("${project.name}-${project.version}.jar")
-        archiveClassifier.set("")
         sequenceOf(
             "org.bstats",
             "cloud.commandframework",
