@@ -21,7 +21,6 @@ import xyz.jpenilla.jmplib.HeadBuilder;
 import xyz.jpenilla.jmplib.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-import static io.papermc.lib.PaperLib.getMinecraftVersion;
 import static io.papermc.lib.PaperLib.isPaper;
 
 public class TradeConfig {
@@ -79,7 +78,7 @@ public class TradeConfig {
     public static @Nullable ItemStack getStack(FileConfiguration config, String key) {
         ItemBuilder itemBuilder = null;
 
-        if (isPaper() && getMinecraftVersion() > 14) {
+        if (isPaper()) {
             final byte[] stack = (byte[]) config.get(key + ".itemStackAsBytes");
             if (stack != null) {
                 itemBuilder = new ItemBuilder(ItemStack.deserializeBytes(stack));
@@ -130,7 +129,6 @@ public class TradeConfig {
                         enchantment = Enchantment.getByKey(NamespacedKey.minecraft(args[0]));
                         level = Integer.parseInt(args[1]);
                     } else if (args.length == 3) {
-                        // noinspection deprecation
                         enchantment = Enchantment.getByKey(new NamespacedKey(args[0], args[1]));
                         level = Integer.parseInt(args[2]);
                     } else {
@@ -166,7 +164,7 @@ public class TradeConfig {
         if (i1 != null) {
             file.set(child + ".maxUses", maxUses);
             file.set(child + ".experienceReward", experienceReward);
-            if (isPaper() && getMinecraftVersion() > 14) {
+            if (isPaper()) {
                 file.set(child + ".result.itemStackAsBytes", result.serializeAsBytes());
             } else {
                 file.set(child + ".result.itemStack", result.serialize());
@@ -189,7 +187,7 @@ public class TradeConfig {
         if (this.getTradeSection().getKeys(false).contains(tradeName)) {
             String child = TRADES + "." + tradeName;
             if (is != null) {
-                if (isPaper() && getMinecraftVersion() > 14) {
+                if (isPaper()) {
                     file.set(child + ".ingredients." + i + ".itemStackAsBytes", is.serializeAsBytes());
                 } else {
                     file.set(child + ".ingredients." + i + ".itemStack", is.serialize());

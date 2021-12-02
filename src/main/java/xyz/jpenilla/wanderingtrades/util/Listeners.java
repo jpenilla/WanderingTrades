@@ -38,7 +38,7 @@ public class Listeners {
             this.registerListener(RefreshTradesListener.class, new RefreshTradesListener(this.plugin));
         }
 
-        if (PaperLib.isPaper() && PaperLib.getMinecraftVersion() >= 16) {
+        if (PaperLib.isPaper()) {
             this.registerListener(BrainModificationListener.class, new BrainModificationListener(this.plugin));
         }
     }

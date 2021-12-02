@@ -5,12 +5,11 @@ plugins {
     val indraVersion = "2.0.6"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
-    id("xyz.jpenilla.run-paper") version "1.0.4"
+    id("xyz.jpenilla.run-paper") version "1.0.5"
 }
 
 group = "xyz.jpenilla"
-version = "1.6.7-SNAPSHOT"
-    .run { if (endsWith("-SNAPSHOT")) "$this+${lastCommitHash()}" else this }
+version = "1.7.0-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
 repositories {
@@ -29,32 +28,32 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.18-R0.1-SNAPSHOT")
 
-    implementation("io.papermc", "paperlib", "1.0.7")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+44-SNAPSHOT")
+    implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+45-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "2.2.1")
-    val cloudVersion = "1.5.0"
-    implementation("cloud.commandframework", "cloud-paper", cloudVersion)
-    implementation("cloud.commandframework", "cloud-minecraft-extras", cloudVersion)
+    implementation(platform("cloud.commandframework:cloud-bom:1.6.0"))
+    implementation("cloud.commandframework", "cloud-paper")
+    implementation("cloud.commandframework", "cloud-minecraft-extras")
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
     compileOnly("org.checkerframework", "checker-qual", "3.19.0")
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.2") {
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.6") {
         exclude("org.bukkit")
     }
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.6")
 }
 
 indra {
-    javaVersions().target(8)
+    javaVersions().target(17)
 }
 
 bukkit {
     main = "xyz.jpenilla.wanderingtrades.WanderingTrades"
     name = project.name
-    apiVersion = "1.14"
+    apiVersion = "1.16"
     website = "https://github.com/jpenilla/WanderingTrades"
     authors = listOf("jmp")
     softDepend = listOf("WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
@@ -62,7 +61,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.17.1")
+        minecraftVersion("1.18")
     }
     build {
         dependsOn(shadowJar)
@@ -101,3 +100,5 @@ tasks {
 
 fun lastCommitHash(): String = indraGit.commit()?.name?.substring(0, 7)
     ?: error("Could not determine commit hash")
+
+fun String.decorateVersion(): String = if (endsWith("-SNAPSHOT")) "$this+${lastCommitHash()}" else this

@@ -6,10 +6,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public class PlayerHeadConfig {
     private final FileConfiguration config;
+    private final WanderingTrades plugin;
 
     private int maxUses = 1;
     private boolean experienceReward;
@@ -27,8 +29,9 @@ public class PlayerHeadConfig {
 
     private final String prefix = "headTrade.";
 
-    public PlayerHeadConfig(FileConfiguration config) {
+    public PlayerHeadConfig(final @NonNull WanderingTrades plugin, final @NonNull FileConfiguration config) {
         this.config = config;
+        this.plugin = plugin;
         load();
     }
 
@@ -69,7 +72,7 @@ public class PlayerHeadConfig {
         config.set(prefix + "head.customname", name);
         config.set(prefix + "head.lore", lore);
 
-        String path = WanderingTrades.instance().getDataFolder() + "/playerheads.yml";
+        String path = this.plugin.getDataFolder() + "/playerheads.yml";
         try {
             config.save(path);
         } catch (IOException e) {

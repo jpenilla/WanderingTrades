@@ -22,7 +22,6 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 import xyz.jpenilla.wanderingtrades.util.VillagerReflection;
 
-import static io.papermc.lib.PaperLib.getMinecraftVersion;
 import static io.papermc.lib.PaperLib.isPaper;
 
 public class TraderSpawnListener implements Listener {
@@ -45,9 +44,7 @@ public class TraderSpawnListener implements Listener {
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent e) {
-        final Entity entity = e.getEntity();
-        if (entity instanceof WanderingTrader && e.getSpawnReason() != CreatureSpawnEvent.SpawnReason.MOUNT) {
-            final WanderingTrader wanderingTrader = (WanderingTrader) entity;
+        if (e.getEntity() instanceof final WanderingTrader wanderingTrader && e.getSpawnReason() != CreatureSpawnEvent.SpawnReason.MOUNT) {
             if (plugin.config().traderWorldWhitelist()) {
                 if (plugin.config().traderWorldList().contains(e.getEntity().getWorld().getName())) {
                     this.addTrades(wanderingTrader, false);
@@ -89,13 +86,10 @@ public class TraderSpawnListener implements Listener {
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (refresh) {
                     if (!plugin.config().removeOriginalTrades()) {
-                        if (isPaper() && getMinecraftVersion() >= 16) {
+                        if (isPaper()) {
                             wanderingTrader.resetOffers();
                             newTrades.addAll(wanderingTrader.getRecipes());
-                        } else if (getMinecraftVersion() <= 17) {
-                            // This branch is executed when the plugin is run on Paper 1.14 or 1.15, or on Spigot 1.14-1.17.
-                            // The above if statement, and the below method should be updated when Spigot's version/mappings
-                            // change, if maintaining Spigot support for this feature is desired.
+                        } else {
                             this.resetOffersUsingReflection(wanderingTrader);
                             newTrades.addAll(wanderingTrader.getRecipes());
                         }

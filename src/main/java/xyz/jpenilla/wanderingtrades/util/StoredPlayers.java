@@ -1,16 +1,15 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import com.google.common.collect.ImmutableList;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -67,7 +66,7 @@ public class StoredPlayers {
         if (this.profileCompleter != null) {
             this.profileCompleter.clearQueue();
         }
-        ImmutableList.copyOf(Bukkit.getOfflinePlayers()).stream()
+        Arrays.stream(Bukkit.getOfflinePlayers())
                 .filter(offlinePlayer -> offlinePlayer.getName() != null && !offlinePlayer.getName().isEmpty() && !TextUtil.containsCaseInsensitive(offlinePlayer.getName(), wanderingTrades.config().playerHeadConfig().usernameBlacklist()))
                 .filter(offlinePlayer -> {
                     final LocalDateTime logout = Instant.ofEpochMilli(offlinePlayer.getLastPlayed()).atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -80,7 +79,7 @@ public class StoredPlayers {
     private MerchantRecipe getHeadRecipe(OfflinePlayer player, String name) {
         final Config cfg = wanderingTrades.config();
         final PlayerHeadConfig playerHeadConfig = cfg.playerHeadConfig();
-        final ItemBuilder headBuilder = new HeadBuilder(player)
+        final ItemBuilder headBuilder = new HeadBuilder(player.getUniqueId())
                 .setLore(playerHeadConfig.lore())
                 .setAmount(playerHeadConfig.headsPerTrade());
         if (playerHeadConfig.name() != null) {
@@ -126,7 +125,7 @@ public class StoredPlayers {
                 }
             }
         }
-        return selectedPlayers.stream().map(uuidMerchantRecipeMap::get).collect(Collectors.toList());
+        return selectedPlayers.stream().map(this.uuidMerchantRecipeMap::get).toList();
     }
 
     private void addOfflineHead(OfflinePlayer offlinePlayer) {
