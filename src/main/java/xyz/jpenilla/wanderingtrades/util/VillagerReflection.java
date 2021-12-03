@@ -71,7 +71,7 @@ public final class VillagerReflection {
                 Brain_availableBehaviorsByPriority.setAccessible(true);
                 final String getBrainName = switch (getMinecraftVersion()) {
                     case 16, 17 -> "getBehaviorController";
-                    default -> "dt";
+                    default -> "dt"; // 1.18
                 };
                 LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, getBrainName, Brain_class), "LivingEntity#getBrain");
             } else {
