@@ -48,7 +48,7 @@ public final class VillagerReflection {
         try {
             EntityVillagerAbstract_updateTrades = EntityVillagerAbstract_class.getDeclaredMethod(updateTradesMethodName);
             EntityVillagerAbstract_updateTrades.setAccessible(true);
-            EntityVillagerAbstract_trades = Arrays.stream(MerchantRecipeList_class.getDeclaredFields())
+            EntityVillagerAbstract_trades = Arrays.stream(EntityVillagerAbstract_class.getDeclaredFields())
                     .filter(field -> field.getType().isAssignableFrom(MerchantRecipeList_class))
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("Couldn't find trades field!"));
