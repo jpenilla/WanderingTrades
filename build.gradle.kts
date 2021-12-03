@@ -13,7 +13,6 @@ version = "1.7.0-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
 repositories {
-    //mavenLocal()
     mavenCentral()
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://papermc.io/repo/repository/maven-public/")
