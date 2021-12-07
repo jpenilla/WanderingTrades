@@ -5,7 +5,7 @@ plugins {
     val indraVersion = "2.0.6"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
-    id("xyz.jpenilla.run-paper") version "1.0.5"
+    id("xyz.jpenilla.run-paper") version "1.0.6"
 }
 
 group = "xyz.jpenilla"
