@@ -42,7 +42,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.6") {
         exclude("org.bukkit")
     }
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.7")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.8")
 }
 
 indra {
