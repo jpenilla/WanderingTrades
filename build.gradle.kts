@@ -1,11 +1,11 @@
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.0"
+    id("com.github.johnrengelman.shadow") version "7.1.1"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
     val indraVersion = "2.0.6"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
-    id("xyz.jpenilla.run-paper") version "1.0.5"
+    id("xyz.jpenilla.run-paper") version "1.0.6"
 }
 
 group = "xyz.jpenilla"
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.18-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.18.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
     implementation("xyz.jpenilla", "jmplib", "1.0.1+45-SNAPSHOT")
@@ -38,11 +38,11 @@ dependencies {
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.ess3", "EssentialsX", "2.18.2")
-    compileOnly("org.checkerframework", "checker-qual", "3.19.0")
+    compileOnly("org.checkerframework", "checker-qual", "3.20.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.6") {
         exclude("org.bukkit")
     }
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.7")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.8")
 }
 
 indra {
@@ -60,7 +60,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.18")
+        minecraftVersion("1.18.1")
     }
     build {
         dependsOn(shadowJar)
