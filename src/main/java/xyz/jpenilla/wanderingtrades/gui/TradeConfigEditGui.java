@@ -1,7 +1,9 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.stream.IntStream;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -203,13 +205,11 @@ public class TradeConfigEditGui extends GuiHolder {
                     }))
                     .onValidateInput(((player, s) -> {
                         if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
-                            final File tcFile = new File(WanderingTrades.instance().getDataFolder() + "/trades/" + tradeConfig + ".yml");
+                            final Path tcFile = WanderingTrades.instance().dataPath().resolve("/trades/" + tradeConfig + ".yml");
                             try {
-                                if (!tcFile.delete()) {
-                                    WanderingTrades.instance().getLogger().warning("File delete failed");
-                                }
+                                Files.delete(tcFile);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                WanderingTrades.instance().getLogger().log(Level.WARNING, "File delete failed", e);
                             }
                             WanderingTrades.instance().config().load();
                             WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
