@@ -73,10 +73,10 @@ public class ConfigEditGui extends GuiHolder {
         }
 
         ArrayList<String> refreshLore =
-                new ArrayList<>(Arrays.asList(
-                        lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.refreshCommandTradersMinutes())),
-                        lang.get(Lang.GUI_EDIT_LORE)
-                ));
+            new ArrayList<>(Arrays.asList(
+                lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.refreshCommandTradersMinutes())),
+                lang.get(Lang.GUI_EDIT_LORE)
+            ));
         inventory.setItem(28, new ItemBuilder(refreshTradersMinutes).setLore(refreshLore).build());
 
         if (c.wgWhitelist()) {
@@ -86,8 +86,8 @@ public class ConfigEditGui extends GuiHolder {
         }
 
         ArrayList<String> wgListLore = new ArrayList<>(Arrays.asList(
-                lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
-                ""
+            lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
+            ""
         ));
         c.wgRegionList().forEach(region -> wgListLore.add(" <aqua>-</aqua> <white>" + region));
         inventory.setItem(32, new ItemBuilder(wgList).setLore(wgListLore).build());
@@ -154,23 +154,23 @@ public class ConfigEditGui extends GuiHolder {
         if (refreshTradersMinutes.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + c.refreshCommandTradersMinutes()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        return "";
-                    })
-                    .onValidateInput(this::onValidateIntGTE0)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        c.refreshCommandTradersMinutes(Integer.parseInt(s));
-                        c.save();
-                        open(p);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + c.refreshCommandTradersMinutes()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                    return "";
+                })
+                .onValidateInput(this::onValidateIntGTE0)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    c.refreshCommandTradersMinutes(Integer.parseInt(s));
+                    c.save();
+                    open(p);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (wgList.isSimilar(item)) {
@@ -183,32 +183,32 @@ public class ConfigEditGui extends GuiHolder {
             } else {
                 p.closeInventory();
                 new InputConversation()
-                        .onPromptText(player -> {
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
-                            return "";
-                        })
-                        .onValidateInput((player, input) -> {
-                            if (input.contains(" ")) {
-                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
-                                return false;
-                            }
-                            if (TextUtil.containsCaseInsensitive(input, c.wgRegionList())) {
-                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
-                                return false;
-                            }
-                            return true;
-                        })
-                        .onConfirmText(this::onConfirmYesNo)
-                        .onAccepted((player, s) -> {
-                            List<String> temp = c.wgRegionList();
-                            temp.add(s);
-                            c.wgRegionList(temp);
-                            c.save();
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                            open(p);
-                        })
-                        .onDenied(this::onEditCancelled)
-                        .start(p);
+                    .onPromptText(player -> {
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
+                        return "";
+                    })
+                    .onValidateInput((player, input) -> {
+                        if (input.contains(" ")) {
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            return false;
+                        }
+                        if (TextUtil.containsCaseInsensitive(input, c.wgRegionList())) {
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            return false;
+                        }
+                        return true;
+                    })
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, s) -> {
+                        List<String> temp = c.wgRegionList();
+                        temp.add(s);
+                        c.wgRegionList(temp);
+                        c.save();
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        open(p);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
             }
         }
 

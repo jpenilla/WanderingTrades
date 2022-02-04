@@ -31,7 +31,7 @@ public class TradeConfigEditGui extends GuiHolder {
     private final ItemStack chance = new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CHANCE)).build();
     private final ItemStack customName = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME)).build();
     private final ItemStack deleteButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19")
-            .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_CONFIG_DELETE_LORE)).build();
+        .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_CONFIG_DELETE_LORE)).build();
 
     private final TradeConfig tradeConfig;
 
@@ -134,92 +134,92 @@ public class TradeConfigEditGui extends GuiHolder {
         if (randAmount.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.randomAmount()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
-                        return "";
-                    })
-                    .onValidateInput(TradeConfigEditGui::validateIntRange)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        tradeConfig.randomAmount(s);
-                        tradeConfig.save();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.randomAmount()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                    return "";
+                })
+                .onValidateInput(TradeConfigEditGui::validateIntRange)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    tradeConfig.randomAmount(s);
+                    tradeConfig.save();
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (chance.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.chance()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        return "";
-                    })
-                    .onValidateInput(this::onValidateDouble0T1)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        tradeConfig.chance(Double.parseDouble(s));
-                        tradeConfig.save();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.chance()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                    return "";
+                })
+                .onValidateInput(this::onValidateDouble0T1)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    tradeConfig.chance(Double.parseDouble(s));
+                    tradeConfig.save();
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (customName.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + tradeConfig.customName());
-                        return "";
-                    })
-                    .onValidateInput((pl, s) -> true)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, string) -> {
-                        tradeConfig.customName(string);
-                        tradeConfig.save();
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + tradeConfig.customName());
+                    return "";
+                })
+                .onValidateInput((pl, s) -> true)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, string) -> {
+                    tradeConfig.customName(string);
+                    tradeConfig.save();
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (deleteButton.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText((player -> {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.configName()));
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
-                        return "";
-                    }))
-                    .onValidateInput(((player, s) -> {
-                        if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
-                            final Path tcFile = WanderingTrades.instance().dataPath().resolve("/trades/" + tradeConfig + ".yml");
-                            try {
-                                Files.delete(tcFile);
-                            } catch (Exception e) {
-                                WanderingTrades.instance().getLogger().log(Level.WARNING, "File delete failed", e);
-                            }
-                            WanderingTrades.instance().config().load();
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                            new TradeConfigListGui().open(player);
-                        } else {
-                            onEditCancelled(player, s);
+                .onPromptText((player -> {
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.configName()));
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                    return "";
+                }))
+                .onValidateInput(((player, s) -> {
+                    if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
+                        final Path tcFile = WanderingTrades.instance().dataPath().resolve("/trades/" + tradeConfig + ".yml");
+                        try {
+                            Files.delete(tcFile);
+                        } catch (Exception e) {
+                            WanderingTrades.instance().getLogger().log(Level.WARNING, "File delete failed", e);
                         }
-                        return true;
-                    }))
-                    .start(p);
+                        WanderingTrades.instance().config().load();
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        new TradeConfigListGui().open(player);
+                    } else {
+                        onEditCancelled(player, s);
+                    }
+                    return true;
+                }))
+                .start(p);
         }
 
         tradeConfig.save();

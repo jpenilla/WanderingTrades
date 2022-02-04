@@ -27,28 +27,28 @@ public class CommandWanderingTrades implements WTCommand {
 
         /* About Command */
         final Command<CommandSender> about = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_ABOUT))
-                .literal("about")
-                .handler(context -> Stream.of(
-                        "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------",
-                        "<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion(),
-                        "<gray>By <gradient:gold:yellow>jmp",
-                        "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------"
-                ).map(Chat::getCenteredMessage).forEach(string -> chat.send(context.getSender(), string))).build();
+            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_ABOUT))
+            .literal("about")
+            .handler(context -> Stream.of(
+                "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------",
+                "<hover:show_text:'<rainbow>click me!'><click:open_url:" + wanderingTrades.getDescription().getWebsite() + ">" + wanderingTrades.getName() + " <gradient:blue:green>" + wanderingTrades.getDescription().getVersion(),
+                "<gray>By <gradient:gold:yellow>jmp",
+                "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------"
+            ).map(Chat::getCenteredMessage).forEach(string -> chat.send(context.getSender(), string))).build();
 
         /* Reload Command */
         final Command<CommandSender> reload = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_RELOAD))
-                .literal("reload")
-                .permission("wanderingtrades.reload")
-                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.langConfig().get(Lang.COMMAND_RELOAD)));
-                    wanderingTrades.config().load();
-                    wanderingTrades.langConfig().load();
-                    wanderingTrades.listeners().reload();
-                    this.wanderingTrades.storedPlayers().updateCacheTimerState();
-                    chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.langConfig().get(Lang.COMMAND_RELOAD_DONE)));
-                }).execute()).build();
+            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_RELOAD))
+            .literal("reload")
+            .permission("wanderingtrades.reload")
+            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.langConfig().get(Lang.COMMAND_RELOAD)));
+                wanderingTrades.config().load();
+                wanderingTrades.langConfig().load();
+                wanderingTrades.listeners().reload();
+                this.wanderingTrades.storedPlayers().updateCacheTimerState();
+                chat.sendParsed(context.getSender(), Chat.getCenteredMessage(wanderingTrades.langConfig().get(Lang.COMMAND_RELOAD_DONE)));
+            }).execute()).build();
 
         mgr.register(ImmutableList.of(about, reload));
     }

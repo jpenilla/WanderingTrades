@@ -67,21 +67,21 @@ public class StoredPlayers {
             this.profileCompleter.clearQueue();
         }
         Arrays.stream(Bukkit.getOfflinePlayers())
-                .filter(offlinePlayer -> offlinePlayer.getName() != null && !offlinePlayer.getName().isEmpty() && !TextUtil.containsCaseInsensitive(offlinePlayer.getName(), wanderingTrades.config().playerHeadConfig().usernameBlacklist()))
-                .filter(offlinePlayer -> {
-                    final LocalDateTime logout = Instant.ofEpochMilli(offlinePlayer.getLastPlayed()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-                    final LocalDateTime cutoff = LocalDateTime.now().minusDays(wanderingTrades.config().playerHeadConfig().days());
-                    return logout.isAfter(cutoff) || wanderingTrades.config().playerHeadConfig().days() == -1;
-                })
-                .forEach(this::addOfflineHead);
+            .filter(offlinePlayer -> offlinePlayer.getName() != null && !offlinePlayer.getName().isEmpty() && !TextUtil.containsCaseInsensitive(offlinePlayer.getName(), wanderingTrades.config().playerHeadConfig().usernameBlacklist()))
+            .filter(offlinePlayer -> {
+                final LocalDateTime logout = Instant.ofEpochMilli(offlinePlayer.getLastPlayed()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                final LocalDateTime cutoff = LocalDateTime.now().minusDays(wanderingTrades.config().playerHeadConfig().days());
+                return logout.isAfter(cutoff) || wanderingTrades.config().playerHeadConfig().days() == -1;
+            })
+            .forEach(this::addOfflineHead);
     }
 
     private MerchantRecipe getHeadRecipe(OfflinePlayer player, String name) {
         final Config cfg = wanderingTrades.config();
         final PlayerHeadConfig playerHeadConfig = cfg.playerHeadConfig();
         final ItemBuilder headBuilder = new HeadBuilder(player.getUniqueId())
-                .setLore(playerHeadConfig.lore())
-                .setAmount(playerHeadConfig.headsPerTrade());
+            .setLore(playerHeadConfig.lore())
+            .setAmount(playerHeadConfig.headsPerTrade());
         if (playerHeadConfig.name() != null) {
             headBuilder.setName(playerHeadConfig.name().replace("{PLAYER}", name));
         }
@@ -95,10 +95,10 @@ public class StoredPlayers {
         }
 
         final MerchantRecipe recipe = new MerchantRecipe(
-                head,
-                0,
-                playerHeadConfig.maxUses(),
-                playerHeadConfig.experienceReward()
+            head,
+            0,
+            playerHeadConfig.maxUses(),
+            playerHeadConfig.experienceReward()
         );
         recipe.addIngredient(playerHeadConfig.ingredientOne());
         if (playerHeadConfig.ingredientTwo() != null) {

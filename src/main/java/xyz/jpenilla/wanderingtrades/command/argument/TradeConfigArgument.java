@@ -19,11 +19,11 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 public final class TradeConfigArgument extends CommandArgument<CommandSender, TradeConfig> {
     private TradeConfigArgument(
-            final boolean required,
-            final @NonNull String name,
-            final @NonNull String defaultValue,
-            final @Nullable BiFunction<CommandContext<CommandSender>, String, List<String>> suggestionsProvider,
-            final @NonNull ArgumentDescription defaultDescription
+        final boolean required,
+        final @NonNull String name,
+        final @NonNull String defaultValue,
+        final @Nullable BiFunction<CommandContext<CommandSender>, String, List<String>> suggestionsProvider,
+        final @NonNull ArgumentDescription defaultDescription
     ) {
         super(required, name, new Parser(), defaultValue, TradeConfig.class, suggestionsProvider, defaultDescription);
     }
@@ -43,8 +43,8 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
     public static final class Parser implements ArgumentParser<CommandSender, TradeConfig> {
         @Override
         public @NonNull ArgumentParseResult<@NonNull TradeConfig> parse(
-                final @NonNull CommandContext<@NonNull CommandSender> commandContext,
-                final @NonNull Queue<@NonNull String> inputQueue
+            final @NonNull CommandContext<@NonNull CommandSender> commandContext,
+            final @NonNull Queue<@NonNull String> inputQueue
         ) {
             final WanderingTrades plugin = commandContext.get(CommandManager.PLUGIN);
             final TradeConfig tradeConfig = plugin.config().tradeConfigs().getOrDefault(inputQueue.peek(), null);
@@ -57,8 +57,8 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
 
         @Override
         public @NonNull List<@NonNull String> suggestions(
-                final @NonNull CommandContext<@NonNull CommandSender> commandContext,
-                final @NonNull String input
+            final @NonNull CommandContext<@NonNull CommandSender> commandContext,
+            final @NonNull String input
         ) {
             return ImmutableList.copyOf(commandContext.get(CommandManager.PLUGIN).config().tradeConfigs().keySet());
         }
@@ -72,11 +72,11 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
         @Override
         public @NonNull TradeConfigArgument build() {
             return new TradeConfigArgument(
-                    this.isRequired(),
-                    this.getName(),
-                    this.getDefaultValue(),
-                    this.getSuggestionsProvider(),
-                    this.getDefaultDescription()
+                this.isRequired(),
+                this.getName(),
+                this.getDefaultValue(),
+                this.getSuggestionsProvider(),
+                this.getDefaultDescription()
             );
         }
     }

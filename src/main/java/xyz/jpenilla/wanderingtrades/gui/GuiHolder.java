@@ -49,9 +49,9 @@ public abstract class GuiHolder implements InventoryHolder {
     public abstract void reOpen(Player p);
 
     private boolean validateInt(
-            final @NonNull Player player,
-            final @NonNull String input,
-            final @NonNull IntFunction<@NonNull Boolean> validator
+        final @NonNull Player player,
+        final @NonNull String input,
+        final @NonNull IntFunction<@NonNull Boolean> validator
     ) {
         try {
             int i = Integer.parseInt(input);
@@ -63,9 +63,9 @@ public abstract class GuiHolder implements InventoryHolder {
     }
 
     private boolean validateDouble(
-            final @NonNull Player player,
-            final @NonNull String input,
-            final @NonNull DoubleFunction<@NonNull Boolean> validator
+        final @NonNull Player player,
+        final @NonNull String input,
+        final @NonNull DoubleFunction<@NonNull Boolean> validator
     ) {
         try {
             double d = Double.parseDouble(input);

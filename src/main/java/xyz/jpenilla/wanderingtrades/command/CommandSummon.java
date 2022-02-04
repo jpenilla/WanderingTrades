@@ -52,19 +52,19 @@ public class CommandSummon implements WTCommand {
         this.chat = wanderingTrades.chat();
 
         mgr.registerFlag(
-                "pitch",
-                mgr.flagBuilder("pitch")
-                        .withArgument(IntegerArgument.newBuilder("pitch").withMin(-180).withMax(180))
+            "pitch",
+            mgr.flagBuilder("pitch")
+                .withArgument(IntegerArgument.newBuilder("pitch").withMin(-180).withMax(180))
         );
         mgr.registerFlag(
-                "yaw",
-                mgr.flagBuilder("yaw")
-                        .withArgument(IntegerArgument.newBuilder("yaw").withMin(-90).withMax(90))
+            "yaw",
+            mgr.flagBuilder("yaw")
+                .withArgument(IntegerArgument.newBuilder("yaw").withMin(-90).withMax(90))
         );
         mgr.registerFlag(
-                "world",
-                mgr.flagBuilder("world")
-                        .withArgument(WorldArgument.of("world"))
+            "world",
+            mgr.flagBuilder("world")
+                .withArgument(WorldArgument.of("world"))
         );
     }
 
@@ -73,85 +73,85 @@ public class CommandSummon implements WTCommand {
         final Command.Builder<CommandSender> wt = mgr.commandBuilder("wt");
 
         final Command<CommandSender> summonNatural = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
-                .literal("summonnatural")
-                .argument(LocationArgument.of("location"))
-                .flag(mgr.getFlag("world"))
-                .flag(mgr.getFlag("pitch"))
-                .flag(mgr.getFlag("yaw"))
-                .flag(mgr.flagBuilder("noai"))
-                .flag(mgr.flagBuilder("protect"))
-                .flag(mgr.flagBuilder("refresh"))
-                .permission("wanderingtrades.summonnatural")
-                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    final Location loc = resolveLocation(context);
-                    final WanderingTrader wanderingTrader = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
-                    PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
-                    if (context.flags().isPresent("refresh")) {
-                        persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
-                    }
-                    if (context.flags().isPresent("noai")) {
-                        wanderingTrader.setAI(false);
-                    }
-                    if (context.flags().isPresent("protect")) {
-                        persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-                    }
-                }).execute())
-                .build();
+            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
+            .literal("summonnatural")
+            .argument(LocationArgument.of("location"))
+            .flag(mgr.getFlag("world"))
+            .flag(mgr.getFlag("pitch"))
+            .flag(mgr.getFlag("yaw"))
+            .flag(mgr.flagBuilder("noai"))
+            .flag(mgr.flagBuilder("protect"))
+            .flag(mgr.flagBuilder("refresh"))
+            .permission("wanderingtrades.summonnatural")
+            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                final Location loc = resolveLocation(context);
+                final WanderingTrader wanderingTrader = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
+                PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
+                if (context.flags().isPresent("refresh")) {
+                    persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
+                }
+                if (context.flags().isPresent("noai")) {
+                    wanderingTrader.setAI(false);
+                }
+                if (context.flags().isPresent("protect")) {
+                    persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+                }
+            }).execute())
+            .build();
 
         final Command<CommandSender> summon = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON))
-                .literal("summon")
-                .argument(TradeConfigArgument.of("trade_config"))
-                .argument(LocationArgument.of("location"))
-                .flag(mgr.getFlag("world"))
-                .flag(mgr.getFlag("pitch"))
-                .flag(mgr.getFlag("yaw"))
-                .flag(mgr.flagBuilder("noai"))
-                .permission("wanderingtrades.summon")
-                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    final Location loc = resolveLocation(context);
-                    this.summonTrader(context.getSender(), context.get("trade_config"), loc, context.flags().isPresent("noai"));
-                }).execute())
-                .build();
+            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON))
+            .literal("summon")
+            .argument(TradeConfigArgument.of("trade_config"))
+            .argument(LocationArgument.of("location"))
+            .flag(mgr.getFlag("world"))
+            .flag(mgr.getFlag("pitch"))
+            .flag(mgr.getFlag("yaw"))
+            .flag(mgr.flagBuilder("noai"))
+            .permission("wanderingtrades.summon")
+            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                final Location loc = resolveLocation(context);
+                this.summonTrader(context.getSender(), context.get("trade_config"), loc, context.flags().isPresent("noai"));
+            }).execute())
+            .build();
 
         final Command<CommandSender> summonVillager = wt
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_VSUMMON))
-                .literal("summonvillager")
-                .argument(TradeConfigArgument.of("trade_config"))
-                .argument(EnumArgument.of(Villager.Type.class, "type"))
-                .argument(EnumArgument.of(Villager.Profession.class, "profession"))
-                .argument(LocationArgument.of("location"))
-                .flag(mgr.getFlag("world"))
-                .flag(mgr.getFlag("pitch"))
-                .flag(mgr.getFlag("yaw"))
-                .flag(mgr.flagBuilder("noai"))
-                .permission("wanderingtrades.villager")
-                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    final Location loc = resolveLocation(context);
-                    this.summonVillagerTrader(context.getSender(), context.get("trade_config"), loc, context.get("type"), context.get("profession"), context.flags().isPresent("noai"));
-                }).execute())
-                .build();
+            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_VSUMMON))
+            .literal("summonvillager")
+            .argument(TradeConfigArgument.of("trade_config"))
+            .argument(EnumArgument.of(Villager.Type.class, "type"))
+            .argument(EnumArgument.of(Villager.Profession.class, "profession"))
+            .argument(LocationArgument.of("location"))
+            .flag(mgr.getFlag("world"))
+            .flag(mgr.getFlag("pitch"))
+            .flag(mgr.getFlag("yaw"))
+            .flag(mgr.flagBuilder("noai"))
+            .permission("wanderingtrades.villager")
+            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                final Location loc = resolveLocation(context);
+                this.summonVillagerTrader(context.getSender(), context.get("trade_config"), loc, context.get("type"), context.get("profession"), context.flags().isPresent("noai"));
+            }).execute())
+            .build();
 
         /* Entity Rename Command */
         final Command<CommandSender> nameEntity = mgr.commandBuilder("nameentity")
-                .meta(CommandMeta.DESCRIPTION, "Sets the name of an entity.")
-                .argument(SingleEntitySelectorArgument.of("entity"))
-                .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
-                        ArgumentDescription.of("The MiniMessage string to use as a name."))
-                .permission("wanderingtrades.name")
-                .senderType(Player.class)
-                .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
-                    if (entity != null && !(entity instanceof Player)) {
-                        setCustomName(entity, context.get("name"));
-                        entity.setCustomNameVisible(true);
-                        chat.send(context.getSender(), "Named entity<gray>:</gray> " + context.get("name"));
-                    } else {
-                        chat.send(context.getSender(), "<red>Cannot name player or non-living entity.");
-                    }
-                }).execute())
-                .build();
+            .meta(CommandMeta.DESCRIPTION, "Sets the name of an entity.")
+            .argument(SingleEntitySelectorArgument.of("entity"))
+            .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
+                ArgumentDescription.of("The MiniMessage string to use as a name."))
+            .permission("wanderingtrades.name")
+            .senderType(Player.class)
+            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
+                Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
+                if (entity != null && !(entity instanceof Player)) {
+                    setCustomName(entity, context.get("name"));
+                    entity.setCustomNameVisible(true);
+                    chat.send(context.getSender(), "Named entity<gray>:</gray> " + context.get("name"));
+                } else {
+                    chat.send(context.getSender(), "<red>Cannot name player or non-living entity.");
+                }
+            }).execute())
+            .build();
 
         mgr.register(ImmutableList.of(summonNatural, summon, summonVillager, nameEntity));
     }
@@ -233,8 +233,8 @@ public class CommandSummon implements WTCommand {
      * @param miniMessage The MiniMessage string. Clears the name if empty or null
      */
     private void setCustomName(
-            final @NonNull Entity entity,
-            final @Nullable String miniMessage
+        final @NonNull Entity entity,
+        final @Nullable String miniMessage
     ) {
         if (miniMessage == null || miniMessage.isEmpty()) {
             entity.setCustomName(null);
@@ -254,9 +254,9 @@ public class CommandSummon implements WTCommand {
         } catch (Throwable throwable) {
             if (wanderingTrades.config().debug()) {
                 wanderingTrades.getLogger().log(
-                        Level.WARNING,
-                        "Failed to set entity name using reflection, falling back onto legacy text serialization",
-                        throwable
+                    Level.WARNING,
+                    "Failed to set entity name using reflection, falling back onto legacy text serialization",
+                    throwable
                 );
             }
             entity.setCustomName(MiniMessageUtil.miniMessageToLegacy(miniMessage));

@@ -30,28 +30,28 @@ public class CommandHelp implements WTCommand {
     public void register() {
         /* Help Query Argument */
         CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>newBuilder("query")
-                .greedy()
-                .asOptional()
-                .withSuggestionsProvider((context, input) -> {
-                    final CommandHelpHandler.IndexHelpTopic<CommandSender> indexHelpTopic =
-                            (CommandHelpHandler.IndexHelpTopic<CommandSender>) commandHelpHandler.queryHelp(context.getSender(), "");
-                    return indexHelpTopic.getEntries()
-                            .stream()
-                            .map(CommandHelpHandler.VerboseHelpEntry::getSyntaxString)
-                            .collect(Collectors.toList());
-                })
-                .build();
+            .greedy()
+            .asOptional()
+            .withSuggestionsProvider((context, input) -> {
+                final CommandHelpHandler.IndexHelpTopic<CommandSender> indexHelpTopic =
+                    (CommandHelpHandler.IndexHelpTopic<CommandSender>) commandHelpHandler.queryHelp(context.getSender(), "");
+                return indexHelpTopic.getEntries()
+                    .stream()
+                    .map(CommandHelpHandler.VerboseHelpEntry::getSyntaxString)
+                    .collect(Collectors.toList());
+            })
+            .build();
 
         /* Help Command */
         final Command<CommandSender> help = commandManager.commandBuilder("wt", "wanderingtrades")
-                .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_HELP))
-                .literal("help")
-                .argument(helpQueryArgument, ArgumentDescription.of(wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
-                .handler(context -> minecraftHelp.queryCommands(
-                        context.getOptional(helpQueryArgument).orElse(""),
-                        context.getSender()
-                ))
-                .build();
+            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_HELP))
+            .literal("help")
+            .argument(helpQueryArgument, ArgumentDescription.of(wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
+            .handler(context -> minecraftHelp.queryCommands(
+                context.getOptional(helpQueryArgument).orElse(""),
+                context.getSender()
+            ))
+            .build();
 
         commandManager.command(help);
     }

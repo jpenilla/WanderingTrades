@@ -18,17 +18,17 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 public abstract class TradeGui extends GuiHolder {
 
     private final ItemStack cancelButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTZjNjBkYTQxNGJmMDM3MTU5YzhiZThkMDlhOGVjYjkxOWJmODlhMWEyMTUwMWI1YjJlYTc1OTYzOTE4YjdiIn19fQ==")
-            .setName(lang.get(Lang.GUI_TRADE_CANCEL)).setLore(lang.get(Lang.GUI_TRADE_CANCEL_LORE)).build();
+        .setName(lang.get(Lang.GUI_TRADE_CANCEL)).setLore(lang.get(Lang.GUI_TRADE_CANCEL_LORE)).build();
     private final ItemStack saveButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGE5OTM0MmUyYzczYTlmMzgyMjYyOGU3OTY0ODgyMzRmMjU4NDQ2ZjVhMmQ0ZDU5ZGRlNGFhODdkYjk4In19fQ==")
-            .setName(lang.get(Lang.GUI_TRADE_SAVE)).setLore(lang.get(Lang.GUI_TRADE_SAVE_LORE)).build();
+        .setName(lang.get(Lang.GUI_TRADE_SAVE)).setLore(lang.get(Lang.GUI_TRADE_SAVE_LORE)).build();
     private final ItemStack info = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTY0MzlkMmUzMDZiMjI1NTE2YWE5YTZkMDA3YTdlNzVlZGQyZDUwMTVkMTEzYjQyZjQ0YmU2MmE1MTdlNTc0ZiJ9fX0=")
-            .setName(lang.get(Lang.GUI_TRADE_INFO)).setLore(lang.getList(Lang.GUI_TRADE_INFO_LORE)).build();
+        .setName(lang.get(Lang.GUI_TRADE_INFO)).setLore(lang.getList(Lang.GUI_TRADE_INFO_LORE)).build();
     private final ItemStack plus = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzIzMzJiNzcwYTQ4NzQ2OTg4NjI4NTVkYTViM2ZlNDdmMTlhYjI5MWRmNzY2YjYwODNiNWY5YTBjM2M2ODQ3ZSJ9fX0=")
-            .setName("<color:blue>+").build();
+        .setName("<color:blue>+").build();
     private final ItemStack equals = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzkyNzY2ZmVhNmMwNTc1MGU0MGRjODNjZDdlOTNhYjM0ODQ2ZDQ0MDkyMDk1MWRhMjYzNTk4MzZlY2YwOGY0YiJ9fX0=")
-            .setName("<color:yellow>=").build();
+        .setName("<color:yellow>=").build();
     private final ItemStack deleteButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19")
-            .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_TRADE_DELETE_LORE)).build();
+        .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_TRADE_DELETE_LORE)).build();
     private final ItemStack experienceEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_EXP_REWARD)).setLore(gui_toggle_lore).build();
     private final ItemStack experienceDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_NO_EXP_REWARD)).setLore(gui_toggle_lore).build();
     private final ItemStack maxUsesStack = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_MAX_USES)).build();
@@ -108,21 +108,21 @@ public abstract class TradeGui extends GuiHolder {
         if (maxUsesStack.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + maxUses
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        return "";
-                    })
-                    .onValidateInput(this::onValidateIntGT0)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        maxUses = Integer.parseInt(s);
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + maxUses
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                    return "";
+                })
+                .onValidateInput(this::onValidateIntGT0)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    maxUses = Integer.parseInt(s);
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         int rS = event.getRawSlot();

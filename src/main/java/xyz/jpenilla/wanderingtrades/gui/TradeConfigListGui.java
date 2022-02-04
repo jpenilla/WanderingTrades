@@ -33,21 +33,21 @@ public class TradeConfigListGui extends PaginatedGui {
 
     public List<ItemStack> getListItems() {
         return Arrays.stream(WanderingTrades.instance().config().tradeConfigs().keySet().toArray(new String[0]))
-                .sorted()
-                .map(configName -> WanderingTrades.instance().config().tradeConfigs().get(configName))
-                .map(tradeConfig -> {
-                    final Set<String> tradeKeys = Objects.requireNonNull(tradeConfig.fileConfiguration().getConfigurationSection("trades")).getKeys(false);
-                    final List<String> finalLores = new ArrayList<>();
-                    tradeKeys.stream()
-                            .sorted()
-                            .limit(10)
-                            .forEach(key -> finalLores.add("<gray>  " + key));
-                    if (finalLores.size() == 10) {
-                        finalLores.add(WanderingTrades.instance().langConfig().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
-                    }
-                    return new ItemBuilder(Material.PAPER).setName(tradeConfig.configName()).setLore(finalLores).build();
-                })
-                .collect(Collectors.toList());
+            .sorted()
+            .map(configName -> WanderingTrades.instance().config().tradeConfigs().get(configName))
+            .map(tradeConfig -> {
+                final Set<String> tradeKeys = Objects.requireNonNull(tradeConfig.fileConfiguration().getConfigurationSection("trades")).getKeys(false);
+                final List<String> finalLores = new ArrayList<>();
+                tradeKeys.stream()
+                    .sorted()
+                    .limit(10)
+                    .forEach(key -> finalLores.add("<gray>  " + key));
+                if (finalLores.size() == 10) {
+                    finalLores.add(WanderingTrades.instance().langConfig().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
+                }
+                return new ItemBuilder(Material.PAPER).setName(tradeConfig.configName()).setLore(finalLores).build();
+            })
+            .collect(Collectors.toList());
     }
 
     public Inventory getInv(Inventory i) {
@@ -69,42 +69,42 @@ public class TradeConfigListGui extends PaginatedGui {
         if (newConfig.isSimilar(i)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
-                        return "";
-                    })
-                    .onValidateInput((player, input) -> {
-                        if (input.contains(" ")) {
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
-                            return false;
-                        }
-                        if (TextUtil.containsCaseInsensitive(input, configNames)) {
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
-                            return false;
-                        }
-                        return true;
-                    })
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        try {
-                            Files.copy(
-                                    Objects.requireNonNull(WanderingTrades.instance().getResource("trades/blank.yml")),
-                                    new File(String.format("%s/trades/%s.yml", WanderingTrades.instance().getDataFolder(), s)).toPath()
-                            );
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
+                    return "";
+                })
+                .onValidateInput((player, input) -> {
+                    if (input.contains(" ")) {
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                        return false;
+                    }
+                    if (TextUtil.containsCaseInsensitive(input, configNames)) {
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                        return false;
+                    }
+                    return true;
+                })
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    try {
+                        Files.copy(
+                            Objects.requireNonNull(WanderingTrades.instance().getResource("trades/blank.yml")),
+                            new File(String.format("%s/trades/%s.yml", WanderingTrades.instance().getDataFolder(), s)).toPath()
+                        );
 
-                            WanderingTrades.instance().config().load();
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                            WanderingTrades.instance().chat().sendParsed(player, "<red>Error");
-                        }
-                        reOpen(p);
-                    })
-                    .onDenied((player, s) -> {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
-                        reOpen(player);
-                    })
-                    .start(p);
+                        WanderingTrades.instance().config().load();
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        WanderingTrades.instance().chat().sendParsed(player, "<red>Error");
+                    }
+                    reOpen(p);
+                })
+                .onDenied((player, s) -> {
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
+                    reOpen(player);
+                })
+                .start(p);
             return;
         }
         if (i != null) {

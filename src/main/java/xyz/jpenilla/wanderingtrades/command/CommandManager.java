@@ -45,20 +45,20 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
 
     public CommandManager(WanderingTrades wanderingTrades) throws Exception {
         super(
-                wanderingTrades,
-                AsynchronousCommandExecutionCoordinator.<CommandSender>newBuilder().build(),
-                Function.identity(),
-                Function.identity()
+            wanderingTrades,
+            AsynchronousCommandExecutionCoordinator.<CommandSender>newBuilder().build(),
+            Function.identity(),
+            Function.identity()
         );
         this.wanderingTrades = wanderingTrades;
 
         help = new MinecraftHelp<>("/wanderingtrades help", wanderingTrades.audiences()::sender, this);
         help.setHelpColors(MinecraftHelp.HelpColors.of(
-                TextColor.color(0x00a3ff),
-                NamedTextColor.WHITE,
-                TextColor.color(0x284fff),
-                NamedTextColor.GRAY,
-                NamedTextColor.DARK_GRAY
+            TextColor.color(0x00a3ff),
+            NamedTextColor.WHITE,
+            TextColor.color(0x284fff),
+            NamedTextColor.GRAY,
+            NamedTextColor.DARK_GRAY
         ));
         help.setMessageProvider((sender, key) -> wanderingTrades.langConfig().get(Lang.valueOf(String.format("HELP_%s", key).toUpperCase())));
 
@@ -67,16 +67,16 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         if (this.getCaptionRegistry() instanceof SimpleCaptionRegistry) {
             final SimpleCaptionRegistry<CommandSender> registry = (SimpleCaptionRegistry<CommandSender>) this.getCaptionRegistry();
             registry.registerMessageFactory(
-                    StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
-                    (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM)
+                StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
+                (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM)
             );
             registry.registerMessageFactory(
-                    BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE,
-                    (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE)
+                BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE,
+                (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE)
             );
             registry.registerMessageFactory(
-                    BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT,
-                    (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT)
+                BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT,
+                (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT)
             );
         }
 
@@ -97,61 +97,61 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         }
 
         this.getParserRegistry().registerParserSupplier(
-                TypeToken.get(TradeConfig.class),
-                parameters -> new TradeConfigArgument.Parser()
+            TypeToken.get(TradeConfig.class),
+            parameters -> new TradeConfigArgument.Parser()
         );
 
         this.registerCommandPreProcessor(ctx -> ctx.getCommandContext().store(PLUGIN, wanderingTrades));
 
         /* Register Commands */
         Stream.of(
-                new CommandHelp(wanderingTrades, this),
-                new CommandWanderingTrades(wanderingTrades, this),
-                new CommandSummon(wanderingTrades, this),
-                new CommandConfig(wanderingTrades, this)
+            new CommandHelp(wanderingTrades, this),
+            new CommandWanderingTrades(wanderingTrades, this),
+            new CommandSummon(wanderingTrades, this),
+            new CommandConfig(wanderingTrades, this)
         ).forEach(WTCommand::register);
     }
 
     private void registerExceptionHandlers() {
         new MinecraftExceptionHandler<CommandSender>()
-                .withHandler(MinecraftExceptionHandler.ExceptionType.NO_PERMISSION, e ->
-                        Component.translatable("commands.help.failed", NamedTextColor.RED))
-                .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, e -> {
-                    final InvalidSyntaxException exception = (InvalidSyntaxException) e;
-                    final Component invalidSyntaxMessage = Component.text(wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_SYNTAX), NamedTextColor.RED);
-                    final Component correctSyntaxMessage = Component.text(
-                            String.format("/%s", exception.getCorrectSyntax()),
-                            NamedTextColor.GRAY
-                    ).replaceText(config -> {
-                        config.match(SYNTAX_HIGHLIGHT_PATTERN);
-                        config.replacement(builder -> builder.color(NamedTextColor.WHITE));
-                    });
+            .withHandler(MinecraftExceptionHandler.ExceptionType.NO_PERMISSION, e ->
+                Component.translatable("commands.help.failed", NamedTextColor.RED))
+            .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, e -> {
+                final InvalidSyntaxException exception = (InvalidSyntaxException) e;
+                final Component invalidSyntaxMessage = Component.text(wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_SYNTAX), NamedTextColor.RED);
+                final Component correctSyntaxMessage = Component.text(
+                    String.format("/%s", exception.getCorrectSyntax()),
+                    NamedTextColor.GRAY
+                ).replaceText(config -> {
+                    config.match(SYNTAX_HIGHLIGHT_PATTERN);
+                    config.replacement(builder -> builder.color(NamedTextColor.WHITE));
+                });
 
-                    return Components.ofChildren(invalidSyntaxMessage, correctSyntaxMessage);
-                })
-                .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, e -> {
-                    final InvalidCommandSenderException exception = (InvalidCommandSenderException) e;
-                    final Component invalidSenderMessage = Component.text(
-                            wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_SENDER),
-                            NamedTextColor.RED
-                    );
-                    final Component correctSenderType = Component.text(
-                            exception.getRequiredSender().getSimpleName(),
-                            NamedTextColor.GRAY
-                    );
-                    return invalidSenderMessage.replaceText(config -> {
-                        config.matchLiteral("{type}");
-                        config.replacement(match -> correctSenderType);
-                    });
-                })
-                .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, e -> {
-                    final Component invalidArgumentMessage = Component.text(wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
-                    final Component causeMessage = Component.text(e.getCause().getMessage(), NamedTextColor.GRAY);
-                    return Components.ofChildren(invalidArgumentMessage, causeMessage);
-                })
-                .withCommandExecutionHandler()
-                .withDecorator(component -> Components.ofChildren(Constants.PREFIX_COMPONENT, component))
-                .apply(this, wanderingTrades.audiences()::sender);
+                return Components.ofChildren(invalidSyntaxMessage, correctSyntaxMessage);
+            })
+            .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, e -> {
+                final InvalidCommandSenderException exception = (InvalidCommandSenderException) e;
+                final Component invalidSenderMessage = Component.text(
+                    wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_SENDER),
+                    NamedTextColor.RED
+                );
+                final Component correctSenderType = Component.text(
+                    exception.getRequiredSender().getSimpleName(),
+                    NamedTextColor.GRAY
+                );
+                return invalidSenderMessage.replaceText(config -> {
+                    config.matchLiteral("{type}");
+                    config.replacement(match -> correctSenderType);
+                });
+            })
+            .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, e -> {
+                final Component invalidArgumentMessage = Component.text(wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
+                final Component causeMessage = Component.text(e.getCause().getMessage(), NamedTextColor.GRAY);
+                return Components.ofChildren(invalidArgumentMessage, causeMessage);
+            })
+            .withCommandExecutionHandler()
+            .withDecorator(component -> Components.ofChildren(Constants.PREFIX_COMPONENT, component))
+            .apply(this, wanderingTrades.audiences()::sender);
     }
 
     public CommandFlag.Builder<?> getFlag(String name) {

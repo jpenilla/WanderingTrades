@@ -1,7 +1,7 @@
 # Wandering Trades 1.7.0 ru_RU language config
 # Russian translate by Z1xus, with love <3
 COMMAND_LIST_LOADED: '<gradient:green:blue>Загруженные конфигурации торгов</gradient><gray>:'
-COMMAND_SUMMON_NO_CONFIG: 'Не существует конфигурации торгов с таким именем..'
+COMMAND_SUMMON_NO_CONFIG: 'Не существует конфигурации торгов с таким именем.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Эта конфигурация неправильно сформирована. Убедитесь, что в рецептах есть хотя бы один ингредиент.'
 COMMAND_RELOAD: '<gradient:red:yellow>Перезагрузка конфигурации WanderingTrades...'
 COMMAND_RELOAD_DONE: '<green>Выполнено.'

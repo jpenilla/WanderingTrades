@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractVillager;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
@@ -117,9 +116,9 @@ public class TraderSpawnListener implements Listener {
         } catch (final Throwable throwable) {
             trader.setRecipes(oldOffers);
             this.plugin.getLogger().log(
-                    Level.WARNING,
-                    String.format("Failed to reset trades! Please report this bug to the issue tracker at %s !", plugin.getDescription().getWebsite()),
-                    throwable
+                Level.WARNING,
+                String.format("Failed to reset trades! Please report this bug to the issue tracker at %s !", plugin.getDescription().getWebsite()),
+                throwable
             );
         }
     }

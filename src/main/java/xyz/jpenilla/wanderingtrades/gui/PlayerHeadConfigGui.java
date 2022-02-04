@@ -87,8 +87,8 @@ public class PlayerHeadConfigGui extends TradeGui {
         inventory.setItem(17, g);
 
         ArrayList<String> resultLore = new ArrayList<>(Arrays.asList(
-                lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
-                "<white>------------"
+            lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
+            "<white>------------"
         ));
         resultLore.addAll(config.lore());
         ItemStack h = new ItemBuilder(loreStack).setLore(resultLore).build();
@@ -99,11 +99,11 @@ public class PlayerHeadConfigGui extends TradeGui {
         inventory.setItem(30, getI2());
         inventory.setItem(31, getEquals());
         inventory.setItem(32, new ItemBuilder(notch).setName(config.name().replace("{PLAYER}", "Notch"))
-                .setLore(config.lore()).setAmount(config.headsPerTrade()).build());
+            .setLore(config.lore()).setAmount(config.headsPerTrade()).build());
 
         ArrayList<String> blacklistLore = new ArrayList<>(Arrays.asList(
-                lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
-                ""
+            lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
+            ""
         ));
         config.usernameBlacklist().forEach(name -> blacklistLore.add(" <red>-</red> <white>" + name));
         ItemStack d = new ItemBuilder(blacklistStack).setLore(blacklistLore).build();
@@ -160,109 +160,109 @@ public class PlayerHeadConfigGui extends TradeGui {
         if (getMaxUsesStack().isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.maxUses()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        return "";
-                    })
-                    .onValidateInput(this::onValidateIntGT0)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        config.maxUses(Integer.parseInt(s));
-                        config.save();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.maxUses()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                    return "";
+                })
+                .onValidateInput(this::onValidateIntGT0)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    config.maxUses(Integer.parseInt(s));
+                    config.save();
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (chanceStack.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.playerHeadsFromServerChance()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        return "";
-                    })
-                    .onValidateInput(this::onValidateDouble0T1)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        config.playerHeadsFromServerChance(Double.parseDouble(s));
-                        config.save();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.playerHeadsFromServerChance()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                    return "";
+                })
+                .onValidateInput(this::onValidateDouble0T1)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    config.playerHeadsFromServerChance(Double.parseDouble(s));
+                    config.save();
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (amountHeadsStack.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_HEADS_AMOUNT_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.headsPerTrade()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        return "";
-                    })
-                    .onValidateInput(this::onValidateIntGT0)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        config.headsPerTrade(Integer.parseInt(s));
-                        config.save();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_HEADS_AMOUNT_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.headsPerTrade()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                    return "";
+                })
+                .onValidateInput(this::onValidateIntGT0)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    config.headsPerTrade(Integer.parseInt(s));
+                    config.save();
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (amountTradesStack.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.playerHeadsFromServerAmount()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
-                        return "";
-                    })
-                    .onValidateInput(TradeConfigEditGui::validateIntRange)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        config.playerHeadsFromServerAmount(s);
-                        config.save();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.playerHeadsFromServerAmount()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                    return "";
+                })
+                .onValidateInput(TradeConfigEditGui::validateIntRange)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    config.playerHeadsFromServerAmount(s);
+                    config.save();
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (customName.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_CUSTOM_NAME_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + config.name());
-                        return "";
-                    })
-                    .onValidateInput((pl, s) -> true)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, string) -> {
-                        config.name(string);
-                        config.save();
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_CUSTOM_NAME_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + config.name());
+                    return "";
+                })
+                .onValidateInput((pl, s) -> true)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, string) -> {
+                    config.name(string);
+                    config.save();
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         if (blacklistStack.isSimilar(item)) {
@@ -276,32 +276,32 @@ public class PlayerHeadConfigGui extends TradeGui {
             } else {
                 p.closeInventory();
                 new InputConversation()
-                        .onPromptText(player -> {
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_BLACKLIST_PLAYER));
-                            return "";
-                        })
-                        .onValidateInput((player, input) -> {
-                            if (input.contains(" ")) {
-                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
-                                return false;
-                            }
-                            if (TextUtil.containsCaseInsensitive(input, config.usernameBlacklist())) {
-                                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
-                                return false;
-                            }
-                            return true;
-                        })
-                        .onConfirmText(this::onConfirmYesNo)
-                        .onAccepted((player, s) -> {
-                            List<String> temp = config.usernameBlacklist();
-                            temp.add(s);
-                            config.usernameBlacklist(temp);
-                            config.save();
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                            open(player);
-                        })
-                        .onDenied(this::onEditCancelled)
-                        .start(p);
+                    .onPromptText(player -> {
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_BLACKLIST_PLAYER));
+                        return "";
+                    })
+                    .onValidateInput((player, input) -> {
+                        if (input.contains(" ")) {
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            return false;
+                        }
+                        if (TextUtil.containsCaseInsensitive(input, config.usernameBlacklist())) {
+                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            return false;
+                        }
+                        return true;
+                    })
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, s) -> {
+                        List<String> temp = config.usernameBlacklist();
+                        temp.add(s);
+                        config.usernameBlacklist(temp);
+                        config.save();
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        open(player);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
             }
         }
 
@@ -315,46 +315,46 @@ public class PlayerHeadConfigGui extends TradeGui {
             } else {
                 p.closeInventory();
                 new InputConversation()
-                        .onPromptText(player -> {
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_LORE_PROMPT));
-                            return "";
-                        })
-                        .onValidateInput((player, input) -> true)
-                        .onConfirmText(this::onConfirmYesNo)
-                        .onAccepted((player, s) -> {
-                            List<String> temp = config.lore();
-                            temp.add(s);
-                            config.lore(temp);
-                            config.save();
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                            open(player);
-                        })
-                        .onDenied(this::onEditCancelled)
-                        .start(p);
+                    .onPromptText(player -> {
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_LORE_PROMPT));
+                        return "";
+                    })
+                    .onValidateInput((player, input) -> true)
+                    .onConfirmText(this::onConfirmYesNo)
+                    .onAccepted((player, s) -> {
+                        List<String> temp = config.lore();
+                        temp.add(s);
+                        config.lore(temp);
+                        config.save();
+                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        open(player);
+                    })
+                    .onDenied(this::onEditCancelled)
+                    .start(p);
             }
         }
 
         if (days.isSimilar(item)) {
             p.closeInventory();
             new InputConversation()
-                    .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player,
-                                lang.get(Lang.MESSAGE_SET_HEADS_DAYS_PROMPT)
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.days()
-                                        + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                        return "";
-                    })
-                    .onValidateInput(this::onValidateIntGTEN1)
-                    .onConfirmText(this::onConfirmYesNo)
-                    .onAccepted((player, s) -> {
-                        config.days(Integer.parseInt(s));
-                        config.save();
-                        WanderingTrades.instance().storedPlayers().updateCacheTimerState();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        open(player);
-                    })
-                    .onDenied(this::onEditCancelled)
-                    .start(p);
+                .onPromptText(player -> {
+                    WanderingTrades.instance().chat().sendParsed(player,
+                        lang.get(Lang.MESSAGE_SET_HEADS_DAYS_PROMPT)
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + config.days()
+                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                    return "";
+                })
+                .onValidateInput(this::onValidateIntGTEN1)
+                .onConfirmText(this::onConfirmYesNo)
+                .onAccepted((player, s) -> {
+                    config.days(Integer.parseInt(s));
+                    config.save();
+                    WanderingTrades.instance().storedPlayers().updateCacheTimerState();
+                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    open(player);
+                })
+                .onDenied(this::onEditCancelled)
+                .start(p);
         }
 
         int rS = event.getRawSlot();
