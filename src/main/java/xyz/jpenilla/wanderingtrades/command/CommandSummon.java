@@ -248,7 +248,7 @@ public class CommandSummon implements WTCommand {
             Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
 
             Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
-            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(wanderingTrades.miniMessage().parse(miniMessage));
+            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(wanderingTrades.miniMessage().deserialize(miniMessage));
 
             _setCustomName.invoke(nmsEntity, nmsComponent);
         } catch (Throwable throwable) {
