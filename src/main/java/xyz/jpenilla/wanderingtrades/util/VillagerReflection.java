@@ -43,19 +43,20 @@ public final class VillagerReflection {
         final String updateTradesMethodName = switch (getMinecraftVersion()) {
             case 16 -> "eW";
             case 17 -> "fE";
-            default -> "fG"; // 1.18
+            case 18 -> "fH";
+            default -> throw new IllegalStateException("Don't know updateTrades method name for 1." + getMinecraftVersion());
         };
         try {
             EntityVillagerAbstract_updateTrades = EntityVillagerAbstract_class.getDeclaredMethod(updateTradesMethodName);
             EntityVillagerAbstract_updateTrades.setAccessible(true);
             EntityVillagerAbstract_trades = Arrays.stream(EntityVillagerAbstract_class.getDeclaredFields())
-                    .filter(field -> field.getType().isAssignableFrom(MerchantRecipeList_class))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Couldn't find trades field!"));
+                .filter(field -> field.getType().isAssignableFrom(MerchantRecipeList_class))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Couldn't find trades field!"));
             EntityVillagerTrader_despawnTimer = Arrays.stream(EntityVillagerTrader_class.getDeclaredFields())
-                    .filter(field -> int.class.equals(field.getType()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Couldn't find despawn timer field!"));
+                .filter(field -> int.class.equals(field.getType()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Couldn't find despawn timer field!"));
             EntityVillagerTrader_despawnTimer.setAccessible(true);
 
             if (isPaper()) {
@@ -71,7 +72,8 @@ public final class VillagerReflection {
                 Brain_availableBehaviorsByPriority.setAccessible(true);
                 final String getBrainName = switch (getMinecraftVersion()) {
                     case 16, 17 -> "getBehaviorController";
-                    default -> "dt"; // 1.18
+                    case 18 -> "du";
+                    default -> throw new IllegalStateException("Don't know getBrain method name for 1." + getMinecraftVersion());
                 };
                 LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, getBrainName, Brain_class), "LivingEntity#getBrain");
             } else {
@@ -97,15 +99,15 @@ public final class VillagerReflection {
         final Map<Integer, Map<?, Set<?>>> behaviors;
         try {
             behaviors = (Map<Integer, Map<?, Set<?>>>) Brain_availableBehaviorsByPriority.get(
-                    LivingEntity_getBrain.bindTo(handle).invoke()
+                LivingEntity_getBrain.bindTo(handle).invoke()
             );
         } catch (final IllegalAccessException e) {
             throw new IllegalStateException("Couldn't access behaviors", e);
         }
 
         behaviors.forEach((i, map) ->
-                map.forEach((activity, behaviorSet) ->
-                        behaviorSet.removeIf(it -> it.getClass().isAssignableFrom(BehaviorVillageHeroGift_class))));
+            map.forEach((activity, behaviorSet) ->
+                behaviorSet.removeIf(it -> it.getClass().isAssignableFrom(BehaviorVillageHeroGift_class))));
     }
 
     public static int despawnTimer(final @NonNull WanderingTrader wanderingTrader) throws Throwable {
