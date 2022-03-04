@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "xyz.jpenilla"
-version = "1.7.1".decorateVersion()
+version = "1.7.2-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
 repositories {
