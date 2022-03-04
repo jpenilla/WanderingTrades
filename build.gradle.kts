@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.18.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.18.2-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
     implementation("xyz.jpenilla", "jmplib", "1.0.1+46-SNAPSHOT")
