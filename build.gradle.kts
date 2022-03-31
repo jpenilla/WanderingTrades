@@ -14,12 +14,16 @@ description = "Customizable trades for Wandering Traders."
 
 repositories {
     mavenCentral()
-    maven("https://oss.sonatype.org/content/groups/public/")
+    maven("https://oss.sonatype.org/content/groups/public/") {
+        mavenContent { snapshotsOnly() }
+    }
     maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://repo.incendo.org/content/repositories/snapshots")
-    maven("https://repo.jpenilla.xyz/snapshots")
-    maven("https://ci.ender.zone/plugin/repository/everything/")
-    maven("https://repo.codemc.org/repository/maven-public")
+    maven("https://repo.jpenilla.xyz/snapshots/") {
+        mavenContent { snapshotsOnly() }
+    }
+    maven("https://repo.essentialsx.net/releases/") {
+        mavenContent { includeGroup("net.essentialsx") }
+    }
     maven("https://maven.enginehub.org/repo/")
     maven("https://jitpack.io") {
         content { includeGroup("com.github.MilkBowl") }
@@ -30,14 +34,16 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.18.2-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+46-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+47-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
     implementation(platform("cloud.commandframework:cloud-bom:1.6.2"))
     implementation("cloud.commandframework", "cloud-paper")
     implementation("cloud.commandframework", "cloud-minecraft-extras")
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
-    compileOnly("net.ess3", "EssentialsX", "2.18.2")
+    compileOnly("net.essentialsx", "EssentialsX", "2.19.4") {
+        isTransitive = false
+    }
     compileOnly("org.checkerframework", "checker-qual", "3.21.3")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7") {
         exclude("org.bukkit")
