@@ -205,7 +205,7 @@ public class TradeConfigEditGui extends GuiHolder {
                 }))
                 .onValidateInput(((player, s) -> {
                     if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
-                        final Path tcFile = WanderingTrades.instance().dataPath().resolve("/trades/" + tradeConfig + ".yml");
+                        final Path tcFile = WanderingTrades.instance().dataPath().resolve("trades/" + tradeConfig.configName() + ".yml");
                         try {
                             Files.delete(tcFile);
                         } catch (Exception e) {
