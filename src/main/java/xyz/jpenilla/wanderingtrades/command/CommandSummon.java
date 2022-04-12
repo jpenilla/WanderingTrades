@@ -40,6 +40,8 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
+import static io.papermc.lib.PaperLib.*;
+
 public class CommandSummon implements WTCommand {
 
     private final WanderingTrades wanderingTrades;
@@ -82,6 +84,7 @@ public class CommandSummon implements WTCommand {
             .flag(mgr.flagBuilder("noai"))
             .flag(mgr.flagBuilder("protect"))
             .flag(mgr.flagBuilder("refresh"))
+            .flag(mgr.flagBuilder("noinvisibility"))
             .permission("wanderingtrades.summonnatural")
             .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
                 final Location loc = resolveLocation(context);
@@ -95,6 +98,12 @@ public class CommandSummon implements WTCommand {
                 }
                 if (context.flags().isPresent("protect")) {
                     persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+                }
+                if (context.flags().isPresent("noinvisibility")) {
+                    if (isPaper()) {
+                        wanderingTrader.setCanDrinkPotion(false);
+                    }
+                    persistentDataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
                 }
             }).execute())
             .build();
@@ -190,6 +199,12 @@ public class CommandSummon implements WTCommand {
                 wanderingTrader.setRemoveWhenFarAway(false);
                 wanderingTrader.setPersistent(true);
                 dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+            }
+            if (wanderingTrades.config().preventNightInvisibility()) {
+                if (isPaper()) {
+                    wanderingTrader.setCanDrinkPotion(false);
+                }
+                dataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
             }
         });
     }

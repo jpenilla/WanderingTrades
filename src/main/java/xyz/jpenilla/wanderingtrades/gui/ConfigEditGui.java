@@ -31,6 +31,9 @@ public class ConfigEditGui extends GuiHolder {
     private final ItemStack refreshTradesEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_REFRESH)).setLore(gui_toggle_lore).build();
     private final ItemStack refreshTradesDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_NO_REFRESH)).setLore(gui_toggle_lore).build();
 
+    private final ItemStack preventNightInvisibilityEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY)).setLore(gui_toggle_lore).build();
+    private final ItemStack preventNightInvisibilityDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY)).setLore(gui_toggle_lore).build();
+
     private final ItemStack wgWhitelist = new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_WG_WHITE)).setLore(gui_toggle_lore).build();
     private final ItemStack wgBlacklist = new ItemBuilder(Material.BEDROCK).setName(lang.get(Lang.GUI_CONFIG_WG_BLACK)).setLore(gui_toggle_lore).build();
 
@@ -72,17 +75,23 @@ public class ConfigEditGui extends GuiHolder {
             inventory.setItem(16, refreshTradesDisabled);
         }
 
+        if (c.preventNightInvisibility()) {
+            inventory.setItem(28, preventNightInvisibilityEnabled);
+        } else {
+            inventory.setItem(28, preventNightInvisibilityDisabled);
+        }
+
         ArrayList<String> refreshLore =
             new ArrayList<>(Arrays.asList(
                 lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(c.refreshCommandTradersMinutes())),
                 lang.get(Lang.GUI_EDIT_LORE)
             ));
-        inventory.setItem(28, new ItemBuilder(refreshTradersMinutes).setLore(refreshLore).build());
+        inventory.setItem(30, new ItemBuilder(refreshTradersMinutes).setLore(refreshLore).build());
 
         if (c.wgWhitelist()) {
-            inventory.setItem(30, wgWhitelist);
+            inventory.setItem(32, wgWhitelist);
         } else {
-            inventory.setItem(30, wgBlacklist);
+            inventory.setItem(32, wgBlacklist);
         }
 
         ArrayList<String> wgListLore = new ArrayList<>(Arrays.asList(
@@ -90,7 +99,7 @@ public class ConfigEditGui extends GuiHolder {
             ""
         ));
         c.wgRegionList().forEach(region -> wgListLore.add(" <aqua>-</aqua> <white>" + region));
-        inventory.setItem(32, new ItemBuilder(wgList).setLore(wgListLore).build());
+        inventory.setItem(34, new ItemBuilder(wgList).setLore(wgListLore).build());
 
         inventory.setItem(inventory.getSize() - 1, closeButton);
 
@@ -143,6 +152,12 @@ public class ConfigEditGui extends GuiHolder {
             c.refreshCommandTraders(false);
         } else if (refreshTradesDisabled.isSimilar(item)) {
             c.refreshCommandTraders(true);
+        }
+
+        if (preventNightInvisibilityEnabled.isSimilar(item)) {
+            c.preventNightInvisibility(false);
+        } else if (preventNightInvisibilityDisabled.isSimilar(item)) {
+            c.preventNightInvisibility(true);
         }
 
         if (wgBlacklist.isSimilar(item)) {

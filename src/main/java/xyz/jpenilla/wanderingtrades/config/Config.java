@@ -20,6 +20,7 @@ public class Config {
     private boolean removeOriginalTrades;
     private boolean allowMultipleSets;
     private boolean refreshCommandTraders;
+    private boolean preventNightInvisibility;
     private boolean wgWhitelist;
     private boolean traderWorldWhitelist;
     private boolean updateLang;
@@ -48,6 +49,7 @@ public class Config {
         allowMultipleSets = config.getBoolean(Fields.allowMultipleSets);
         refreshCommandTraders = config.getBoolean(Fields.refreshCommandTraders);
         refreshCommandTradersMinutes = config.getInt(Fields.refreshCommandTradersMinutes);
+        preventNightInvisibility = config.getBoolean(Fields.preventNightInvisibility);
         wgRegionList = config.getStringList(Fields.wgRegionList);
         wgWhitelist = config.getBoolean(Fields.wgWhitelist);
         traderWorldList = config.getStringList(Fields.traderWorldList);
@@ -70,6 +72,7 @@ public class Config {
         config.set(Fields.allowMultipleSets, allowMultipleSets);
         config.set(Fields.refreshCommandTraders, refreshCommandTraders);
         config.set(Fields.refreshCommandTradersMinutes, refreshCommandTradersMinutes);
+        config.set(Fields.preventNightInvisibility, preventNightInvisibility);
         config.set(Fields.wgRegionList, wgRegionList);
         config.set(Fields.wgWhitelist, wgWhitelist);
         config.set(Fields.traderWorldList, traderWorldList);
@@ -149,6 +152,10 @@ public class Config {
         return this.refreshCommandTraders;
     }
 
+    public boolean preventNightInvisibility() {
+        return this.preventNightInvisibility;
+    }
+
     public boolean wgWhitelist() {
         return this.wgWhitelist;
     }
@@ -205,6 +212,10 @@ public class Config {
         this.refreshCommandTraders = refreshCommandTraders;
     }
 
+    public void preventNightInvisibility(boolean preventNightInvisibility) {
+        this.preventNightInvisibility = preventNightInvisibility;
+    }
+
     public void wgWhitelist(boolean wgWhitelist) {
         this.wgWhitelist = wgWhitelist;
     }
@@ -225,6 +236,7 @@ public class Config {
         public static final String removeOriginalTrades = "removeOriginalTrades";
         public static final String allowMultipleSets = "allowMultipleSets";
         public static final String refreshCommandTraders = "refreshCommandTraders";
+        public static final String preventNightInvisibility = "preventNightInvisibility";
         public static final String wgWhitelist = "wgWhitelist";
         public static final String traderWorldWhitelist = "traderWorldWhitelist";
         public static final String updateLang = "updateLang";
