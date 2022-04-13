@@ -8,13 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.listener.AcquireTradeListener;
-import xyz.jpenilla.wanderingtrades.listener.BrainModificationListener;
-import xyz.jpenilla.wanderingtrades.listener.GuiListener;
-import xyz.jpenilla.wanderingtrades.listener.JoinQuitListener;
-import xyz.jpenilla.wanderingtrades.listener.ProtectTradersListener;
-import xyz.jpenilla.wanderingtrades.listener.RefreshTradesListener;
-import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
+import xyz.jpenilla.wanderingtrades.listener.*;
 
 public class Listeners {
     private final WanderingTrades plugin;
@@ -32,6 +26,7 @@ public class Listeners {
             this.registerListener(AcquireTradeListener.class, new AcquireTradeListener(this.plugin));
             this.registerListener(TraderSpawnListener.class, new TraderSpawnListener(this.plugin));
             this.registerListener(ProtectTradersListener.class, new ProtectTradersListener(this.plugin));
+            this.registerListener(TraderPotionListener.class, new TraderPotionListener(this.plugin));
         }
 
         if (this.plugin.config().refreshCommandTraders()) {
