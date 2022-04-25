@@ -1,17 +1,20 @@
 package xyz.jpenilla.wanderingtrades.util;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.jmplib.Crafty;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.*;
-
-import static io.papermc.lib.PaperLib.*;
+import static io.papermc.lib.PaperLib.getMinecraftVersion;
+import static io.papermc.lib.PaperLib.isPaper;
 
 public final class VillagerReflection {
     private VillagerReflection() {
@@ -24,31 +27,22 @@ public final class VillagerReflection {
     private static final Class<?> CraftVillager_class = Crafty.needCraftClass("entity.CraftVillager");
     private static final Class<?> EntityVillagerAbstract_class = Crafty.needNMSClassOrElse("EntityVillagerAbstract", "net.minecraft.world.entity.npc.EntityVillagerAbstract");
     private static final Class<?> EntityVillager_class = Crafty.needNMSClassOrElse("EntityVillager", "net.minecraft.world.entity.npc.EntityVillager");
-    private static final Class<?> EntityInsentient_class = Crafty.needNMSClassOrElse("EntityInsentient", "net.minecraft.world.entity.EntityInsentient");
     private static final Class<?> EntityLiving_class = Crafty.needNMSClassOrElse("EntityLiving", "net.minecraft.world.entity.EntityLiving");
     private static final Class<?> EntityVillagerTrader_class = Crafty.needNMSClassOrElse("EntityVillagerTrader", "net.minecraft.world.entity.npc.EntityVillagerTrader");
-    private static final Class<?> PathfinderGoal_class = Crafty.needNMSClassOrElse("PathfinderGoal", "net.minecraft.world.entity.ai.goal.PathfinderGoal");
-    private static final Class<?> PathfinderGoalSelector_class = Crafty.needNMSClassOrElse("PathfinderGoalSelector", "net.minecraft.world.entity.ai.goal.PathfinderGoalSelector");
-    private static final Class<?> PathfinderGoalUseItem_class = Crafty.needNMSClassOrElse("PathfinderGoalUseItem", "net.minecraft.world.entity.ai.goal.PathfinderGoalUseItem");
-    private static final Class<?> PathfinderGoalWrapped_class = Crafty.needNMSClassOrElse("PathfinderGoalWrapped", "net.minecraft.world.entity.ai.goal.PathfinderGoalWrapped");
     private static final Class<?> CraftWanderingTrader_class = Crafty.needCraftClass("entity.CraftWanderingTrader");
     private static final MethodHandle CraftAbstractVillager_getHandle = Objects.requireNonNull(Crafty.findMethod(CraftAbstractVillager_class, "getHandle", EntityVillagerAbstract_class), "CraftAbstractVillager#getHandle");
     private static final MethodHandle CraftVillager_getHandle = Objects.requireNonNull(Crafty.findMethod(CraftVillager_class, "getHandle", EntityVillager_class), "CraftVillager#getHandle");
     private static final MethodHandle CraftWanderingTrader_getHandle = Objects.requireNonNull(Crafty.findMethod(CraftWanderingTrader_class, "getHandle", EntityVillagerTrader_class), "CraftWanderingTrader#getHandle");
     private static final MethodHandle LivingEntity_getBrain;
     private static final Method EntityVillagerAbstract_updateTrades;
-    private static final Method LivingEntity_stopUsingItem;
-    private static final Method PathfinderGoalWrapped_getGoal;
     private static final Field EntityVillagerAbstract_trades;
     private static final Field Brain_availableBehaviorsByPriority;
     private static final Field EntityVillagerTrader_despawnTimer;
-    private static final Field EntityInsentient_goalSelector;
-    private static final Field PathfinderGoalSelector_availableGoals;
 
     static {
         final String updateTradesMethodName = switch (getMinecraftVersion()) {
             case 16 -> "eW";
-            case 17 -> getMinecraftPatchVersion() > 0 ? "fF" : "fE";
+            case 17 -> "fE";
             case 18 -> "fH";
             default -> throw new IllegalStateException("Don't know updateTrades method name for 1." + getMinecraftVersion());
         };
@@ -82,48 +76,11 @@ public final class VillagerReflection {
                     default -> throw new IllegalStateException("Don't know getBrain method name for 1." + getMinecraftVersion());
                 };
                 LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, getBrainName, Brain_class), "LivingEntity#getBrain");
-
-                LivingEntity_stopUsingItem = null;
-                EntityInsentient_goalSelector = null;
-                PathfinderGoalSelector_availableGoals = null;
-                PathfinderGoalWrapped_getGoal = null;
             } else {
                 BehaviorVillageHeroGift_class = null;
                 Brain_class = null;
                 Brain_availableBehaviorsByPriority = null;
                 LivingEntity_getBrain = null;
-
-                // there are two GoalSelector fields on this class (we need goalSelector, not targetSelector)
-                final String goalSelectorField = switch(getMinecraftVersion()) {
-                    case 16 -> "goalSelector";
-                    case 17 -> getMinecraftPatchVersion() > 0 ? "bP" : "bO";
-                    case 18 -> "bQ";
-                    default -> throw new IllegalStateException("Don't know entity goalSelector field name for 1." + getMinecraftVersion());
-                };
-                // there are many void-parameterless methods on this class
-                final String stopUsingItemMethod = switch(getMinecraftVersion()) {
-                    case 16, 17 -> "clearActiveItem";
-                    case 18 -> "eS";
-                    default -> throw new IllegalStateException("Don't know entity stopUsingItem method names for 1." + getMinecraftVersion());
-                };
-
-                EntityInsentient_goalSelector = EntityInsentient_class.getDeclaredField(goalSelectorField);
-                LivingEntity_stopUsingItem = EntityLiving_class.getDeclaredMethod(stopUsingItemMethod);
-                // Field name - 1.16: d, 1.17: d, 1.18: d
-                PathfinderGoalSelector_availableGoals = Arrays.stream(PathfinderGoalSelector_class.getDeclaredFields())
-                    .filter(field -> field.getType().isAssignableFrom(Set.class))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Couldn't find available goals field!"));
-                // Method name - 1.16: j(), 1.17: j(), 1.18: k()
-                PathfinderGoalWrapped_getGoal = Arrays.stream(PathfinderGoalWrapped_class.getDeclaredMethods())
-                    .filter(method -> method.getReturnType().isAssignableFrom(PathfinderGoal_class))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Couldn't find get goal method!"));
-
-                EntityInsentient_goalSelector.setAccessible(true);
-                LivingEntity_stopUsingItem.setAccessible(true);
-                PathfinderGoalSelector_availableGoals.setAccessible(true);
-                PathfinderGoalWrapped_getGoal.setAccessible(true);
             }
         } catch (final ReflectiveOperationException e) {
             throw new IllegalStateException("Failed to initialize reflection helper", e);
@@ -151,27 +108,6 @@ public final class VillagerReflection {
         behaviors.forEach((i, map) ->
             map.forEach((activity, behaviorSet) ->
                 behaviorSet.removeIf(it -> it.getClass().isAssignableFrom(BehaviorVillageHeroGift_class))));
-    }
-
-    public static void removeWanderingTraderInvisibilityGoal(final @NonNull WanderingTrader wanderingTrader) throws Throwable {
-        if (isPaper()) {
-            return;
-        }
-
-        final Object handle = getEntityVillagerTrader(wanderingTrader);
-
-        final Object goalSelector = EntityInsentient_goalSelector.get(handle);
-        final Set<?> availableGoals = (Set<?>) PathfinderGoalSelector_availableGoals.get(goalSelector);
-
-        for (Iterator<?> i = availableGoals.iterator(); i.hasNext();) {
-            final Object wrappedGoal = i.next();
-            final Object goal = PathfinderGoalWrapped_getGoal.invoke(wrappedGoal);
-            if (PathfinderGoalUseItem_class.isInstance(goal)) {
-                i.remove();
-            }
-        }
-
-        LivingEntity_stopUsingItem.invoke(handle);
     }
 
     public static int despawnTimer(final @NonNull WanderingTrader wanderingTrader) throws Throwable {
