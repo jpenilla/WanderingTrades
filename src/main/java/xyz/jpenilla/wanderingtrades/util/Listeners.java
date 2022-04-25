@@ -14,6 +14,7 @@ import xyz.jpenilla.wanderingtrades.listener.GuiListener;
 import xyz.jpenilla.wanderingtrades.listener.JoinQuitListener;
 import xyz.jpenilla.wanderingtrades.listener.ProtectTradersListener;
 import xyz.jpenilla.wanderingtrades.listener.RefreshTradesListener;
+import xyz.jpenilla.wanderingtrades.listener.TraderPotionListener;
 import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 
 public class Listeners {
@@ -36,6 +37,10 @@ public class Listeners {
 
         if (this.plugin.config().refreshCommandTraders()) {
             this.registerListener(RefreshTradesListener.class, new RefreshTradesListener(this.plugin));
+        }
+
+        if (this.plugin.config().preventNightInvisibility()) {
+            this.registerListener(TraderPotionListener.class, new TraderPotionListener());
         }
 
         if (PaperLib.isPaper()) {
