@@ -33,6 +33,8 @@ GUI_CONFIG_REMOVE_ORIGINAL: '<green>Удалять оригинальных сд
 GUI_CONFIG_KEEP_ORIGINAL: '<red>Не удалять оригинальные сделки Странствующего торговца'
 GUI_CONFIG_REFRESH: '<green>Автообновлять сделки торговцев вызванных через /wt'
 GUI_CONFIG_NO_REFRESH: '<red>Не автообновлять сделки торговцев вызванных через /wt'
+GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY: '<green>Preventing use of invisibility potions of /wt summoned traders'
+GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY: '<red>Not preventing use of invisibility potions of /wt summoned traders'
 GUI_CONFIG_WG_WHITE: '<aqua>Режим</aqua><gray>:</gray> Белый список регионов WorldGuard'
 GUI_CONFIG_WG_BLACK: '<aqua>Режим</aqua><gray>:</gray> Черный список регионов WorldGuard'
 GUI_CONFIG_WG_LIST: '<aqua>Список регионов для белого/черного списка'

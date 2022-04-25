@@ -33,6 +33,8 @@ GUI_CONFIG_REMOVE_ORIGINAL: '<green>Entfernt die originalen Wandering Trader Ang
 GUI_CONFIG_KEEP_ORIGINAL: '<red>Entfernt nicht die Wandering Trader Angebote.'
 GUI_CONFIG_REFRESH: '<green>Aktualisiert die Angebote von "/wt summon angebote"'
 GUI_CONFIG_NO_REFRESH: '<red>Aktualisiert nicht die Angebote von "/wt summon angebote"'
+GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY: '<green>Preventing use of invisibility potions of /wt summoned traders'
+GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY: '<red>Not preventing use of invisibility potions of /wt summoned traders'
 GUI_CONFIG_WG_WHITE: '<aqua>Modus</aqua><gray>:</gray> WorldGuard Region Whitelist'
 GUI_CONFIG_WG_BLACK: '<aqua>Modus</aqua><gray>:</gray> WorldGuard Region Blacklist'
 GUI_CONFIG_WG_LIST: '<aqua>Liste der Regionen für die White-/Blacklist'
