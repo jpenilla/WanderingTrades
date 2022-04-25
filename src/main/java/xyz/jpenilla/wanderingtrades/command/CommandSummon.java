@@ -40,7 +40,7 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
-import static io.papermc.lib.PaperLib.*;
+import static io.papermc.lib.PaperLib.isPaper;
 
 public class CommandSummon implements WTCommand {
 
