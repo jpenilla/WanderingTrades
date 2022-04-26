@@ -42,7 +42,7 @@ public final class VillagerReflection {
     static {
         final String updateTradesMethodName = switch (getMinecraftVersion()) {
             case 16 -> "eW";
-            case 17 -> "fE";
+            case 17 -> "fF";
             case 18 -> "fH";
             default -> throw new IllegalStateException("Don't know updateTrades method name for 1." + getMinecraftVersion());
         };
