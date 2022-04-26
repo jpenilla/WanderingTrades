@@ -16,6 +16,7 @@ public final class Constants {
 
     public static final NamespacedKey CONFIG_NAME = new NamespacedKey(WanderingTrades.instance(), "wtConfig");
     public static final NamespacedKey PROTECT = new NamespacedKey(WanderingTrades.instance(), "wtProtect");
+    public static final NamespacedKey PREVENT_INVISIBILITY = new NamespacedKey(WanderingTrades.instance(), "wtPreventInvisibility");
     public static final NamespacedKey REFRESH_NATURAL = new NamespacedKey(WanderingTrades.instance(), "wtRefreshNatural");
     public static final NamespacedKey LAST_REFRESH = new NamespacedKey(WanderingTrades.instance(), "wt_last_refresh_time");
 

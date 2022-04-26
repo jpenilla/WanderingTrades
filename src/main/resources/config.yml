@@ -39,6 +39,11 @@ refreshCommandTraders: false
 #          click the trader
 refreshCommandTradersMinutes: 5
 
+# should traders summoned using the /wt commands become invisible at night
+# false: wandering traders drink an invisibility potion at night
+# true: wandering traders will not drink an invisibility potion at night
+preventNightInvisibility: false
+
 # false: below is a blacklist of Worlds for modifying natural spawned Wandering Traders
 # true: below is a whitelist of Worlds for modifying natural spawned Wandering Traders
 traderWorldWhitelist: false
