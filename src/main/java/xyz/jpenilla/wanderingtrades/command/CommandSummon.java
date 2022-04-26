@@ -22,7 +22,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
@@ -88,23 +87,24 @@ public class CommandSummon implements WTCommand {
             .permission("wanderingtrades.summonnatural")
             .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
                 final Location loc = resolveLocation(context);
-                final WanderingTrader wanderingTrader = (WanderingTrader) loc.getWorld().spawnEntity(loc, EntityType.WANDERING_TRADER);
-                PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
-                if (context.flags().isPresent("refresh")) {
-                    persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
-                }
-                if (context.flags().isPresent("noai")) {
-                    wanderingTrader.setAI(false);
-                }
-                if (context.flags().isPresent("protect")) {
-                    persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-                }
-                if (context.flags().isPresent("noinvisibility")) {
-                    if (isPaper()) {
-                        wanderingTrader.setCanDrinkPotion(false);
+                loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
+                    PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
+                    if (context.flags().isPresent("refresh")) {
+                        persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
                     }
-                    persistentDataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
-                }
+                    if (context.flags().isPresent("noai")) {
+                        wanderingTrader.setAI(false);
+                    }
+                    if (context.flags().isPresent("protect")) {
+                        persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+                    }
+                    if (context.flags().isPresent("noinvisibility")) {
+                        if (isPaper()) {
+                            wanderingTrader.setCanDrinkPotion(false);
+                        }
+                        persistentDataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
+                    }
+                });
             }).execute())
             .build();
 
@@ -200,11 +200,8 @@ public class CommandSummon implements WTCommand {
                 wanderingTrader.setPersistent(true);
                 dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
             }
-            if (wanderingTrades.config().preventNightInvisibility()) {
-                if (isPaper()) {
-                    wanderingTrader.setCanDrinkPotion(false);
-                }
-                dataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
+            if (wanderingTrades.config().preventNightInvisibility() && isPaper()) {
+                wanderingTrader.setCanDrinkPotion(false);
             }
         });
     }

@@ -1,27 +1,30 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
-import io.papermc.lib.PaperLib;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.persistence.PersistentDataType;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
-public class TraderPotionListener implements Listener {
+public final class TraderPotionListener implements Listener {
+    private final WanderingTrades plugin;
+
+    public TraderPotionListener(final WanderingTrades plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
-    public void onPotionEffect(EntityPotionEffectEvent e) {
-        if (!PaperLib.isPaper()) {
+    public void onPotionEffect(final EntityPotionEffectEvent e) {
+        if (!(e.getEntity() instanceof WanderingTrader wanderingTrader)) {
             return;
         }
-
-        final Entity entity = e.getEntity();
-        if (entity.getType() == EntityType.WANDERING_TRADER && e.getCause() == EntityPotionEffectEvent.Cause.POTION_DRINK && e.getAction() == EntityPotionEffectEvent.Action.ADDED) {
-            if (entity.getPersistentDataContainer().has(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING)) {
-                final WanderingTrader wanderingTrader = (WanderingTrader) entity;
+        if (e.getCause() == EntityPotionEffectEvent.Cause.POTION_DRINK && e.getAction() == EntityPotionEffectEvent.Action.ADDED) {
+            final boolean stopDrink =
+                wanderingTrader.getPersistentDataContainer().has(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING) // summonnatural with --noinvisibilty flag
+                    || (wanderingTrader.getPersistentDataContainer().has(Constants.CONFIG_NAME, PersistentDataType.STRING) && this.plugin.config().preventNightInvisibility()); // config traders
+            if (stopDrink) {
                 wanderingTrader.setCanDrinkPotion(false);
                 wanderingTrader.clearActiveItem();
                 e.setCancelled(true);

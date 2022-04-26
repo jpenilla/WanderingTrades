@@ -39,11 +39,8 @@ public class Listeners {
             this.registerListener(RefreshTradesListener.class, new RefreshTradesListener(this.plugin));
         }
 
-        if (this.plugin.config().preventNightInvisibility()) {
-            this.registerListener(TraderPotionListener.class, new TraderPotionListener());
-        }
-
         if (PaperLib.isPaper()) {
+            this.registerListener(TraderPotionListener.class, new TraderPotionListener(this.plugin));
             this.registerListener(BrainModificationListener.class, new BrainModificationListener(this.plugin));
         }
     }
