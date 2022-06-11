@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     val indraVersion = "2.1.1"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
