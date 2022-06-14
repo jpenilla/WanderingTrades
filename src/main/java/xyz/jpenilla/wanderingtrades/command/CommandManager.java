@@ -64,8 +64,8 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
 
         this.registerExceptionHandlers();
 
-        if (this.getCaptionRegistry() instanceof SimpleCaptionRegistry) {
-            final SimpleCaptionRegistry<CommandSender> registry = (SimpleCaptionRegistry<CommandSender>) this.getCaptionRegistry();
+        if (this.captionRegistry() instanceof SimpleCaptionRegistry) {
+            final SimpleCaptionRegistry<CommandSender> registry = (SimpleCaptionRegistry<CommandSender>) this.captionRegistry();
             registry.registerMessageFactory(
                 StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
                 (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM)
@@ -81,7 +81,7 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         }
 
         /* Register Brigadier */
-        if (this.queryCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
+        if (this.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             this.registerBrigadier();
             final CloudBrigadierManager<CommandSender, ?> brigManager = this.brigadierManager();
             if (brigManager != null) {
@@ -91,12 +91,12 @@ public class CommandManager extends PaperCommandManager<CommandSender> {
         }
 
         /* Register Asynchronous Completion Listener */
-        if (this.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+        if (this.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
             this.registerAsynchronousCompletions();
             wanderingTrades.getLogger().info("Successfully registered asynchronous command completion listener.");
         }
 
-        this.getParserRegistry().registerParserSupplier(
+        this.parserRegistry().registerParserSupplier(
             TypeToken.get(TradeConfig.class),
             parameters -> new TradeConfigArgument.Parser()
         );

@@ -23,7 +23,7 @@ public class CommandHelp implements WTCommand {
         this.wanderingTrades = wanderingTrades;
         this.commandManager = commandManager;
         this.minecraftHelp = commandManager.minecraftHelp();
-        this.commandHelpHandler = commandManager.getCommandHelpHandler();
+        this.commandHelpHandler = commandManager.createCommandHelpHandler();
     }
 
     @Override

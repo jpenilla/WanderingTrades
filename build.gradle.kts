@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     val indraVersion = "2.1.1"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
@@ -31,12 +31,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.18.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.19-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+47-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+49-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
-    implementation(platform("cloud.commandframework:cloud-bom:1.6.2"))
+    implementation(platform("cloud.commandframework:cloud-bom:1.7.0-SNAPSHOT"))
     implementation("cloud.commandframework", "cloud-paper")
     implementation("cloud.commandframework", "cloud-minecraft-extras")
 
@@ -66,7 +66,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.18.2")
+        minecraftVersion("1.19")
     }
     build {
         dependsOn(shadowJar)
