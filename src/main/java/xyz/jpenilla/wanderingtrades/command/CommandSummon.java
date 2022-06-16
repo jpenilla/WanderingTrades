@@ -11,7 +11,6 @@ import cloud.commandframework.bukkit.parsers.location.LocationArgument;
 import cloud.commandframework.bukkit.parsers.selector.SingleEntitySelectorArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
-import com.google.common.collect.ImmutableList;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -21,6 +20,7 @@ import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -30,6 +30,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.jmplib.Chat;
 import xyz.jpenilla.jmplib.Crafty;
 import xyz.jpenilla.jmplib.MiniMessageUtil;
@@ -41,13 +42,16 @@ import xyz.jpenilla.wanderingtrades.util.Constants;
 
 import static io.papermc.lib.PaperLib.isPaper;
 
+@DefaultQualifier(NonNull.class)
 public class CommandSummon implements WTCommand {
-
     private final WanderingTrades wanderingTrades;
     private final CommandManager mgr;
     private final Chat chat;
 
-    public CommandSummon(WanderingTrades wanderingTrades, CommandManager mgr) {
+    public CommandSummon(
+        final WanderingTrades wanderingTrades,
+        final CommandManager mgr
+    ) {
         this.wanderingTrades = wanderingTrades;
         this.mgr = mgr;
         this.chat = wanderingTrades.chat();
@@ -71,147 +75,157 @@ public class CommandSummon implements WTCommand {
 
     @Override
     public void register() {
-        final Command.Builder<CommandSender> wt = mgr.commandBuilder("wt");
+        final Command.Builder<CommandSender> wt = this.mgr.commandBuilder("wt");
 
         final Command<CommandSender> summonNatural = wt
-            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
+            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
             .literal("summonnatural")
             .argument(LocationArgument.of("location"))
-            .flag(mgr.getFlag("world"))
-            .flag(mgr.getFlag("pitch"))
-            .flag(mgr.getFlag("yaw"))
-            .flag(mgr.flagBuilder("noai"))
-            .flag(mgr.flagBuilder("protect"))
-            .flag(mgr.flagBuilder("refresh"))
-            .flag(mgr.flagBuilder("noinvisibility"))
+            .flag(this.mgr.getFlag("world"))
+            .flag(this.mgr.getFlag("pitch"))
+            .flag(this.mgr.getFlag("yaw"))
+            .flag(this.mgr.flagBuilder("noai"))
+            .flag(this.mgr.flagBuilder("protect"))
+            .flag(this.mgr.flagBuilder("refresh"))
+            .flag(this.mgr.flagBuilder("noinvisibility"))
             .permission("wanderingtrades.summonnatural")
-            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                final Location loc = resolveLocation(context);
-                loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
-                    PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
-                    if (context.flags().isPresent("refresh")) {
-                        persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
-                    }
-                    if (context.flags().isPresent("noai")) {
-                        wanderingTrader.setAI(false);
-                    }
-                    if (context.flags().isPresent("protect")) {
-                        persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-                    }
-                    if (context.flags().isPresent("noinvisibility")) {
-                        if (isPaper()) {
-                            wanderingTrader.setCanDrinkPotion(false);
-                        }
-                        persistentDataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
-                    }
-                });
+            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+                this.summonNatural(
+                    resolveLocation(context),
+                    context.flags().isPresent("refresh"),
+                    context.flags().isPresent("noai"),
+                    context.flags().isPresent("protect"),
+                    context.flags().isPresent("noinvisibility")
+                );
             }).execute())
             .build();
 
         final Command<CommandSender> summon = wt
-            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON))
+            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON))
             .literal("summon")
             .argument(TradeConfigArgument.of("trade_config"))
             .argument(LocationArgument.of("location"))
-            .flag(mgr.getFlag("world"))
-            .flag(mgr.getFlag("pitch"))
-            .flag(mgr.getFlag("yaw"))
-            .flag(mgr.flagBuilder("noai"))
+            .flag(this.mgr.getFlag("world"))
+            .flag(this.mgr.getFlag("pitch"))
+            .flag(this.mgr.getFlag("yaw"))
+            .flag(this.mgr.flagBuilder("noai"))
             .permission("wanderingtrades.summon")
-            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                final Location loc = resolveLocation(context);
-                this.summonTrader(context.getSender(), context.get("trade_config"), loc, context.flags().isPresent("noai"));
+            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+                this.summonTrader(
+                    context.getSender(),
+                    context.get("trade_config"),
+                    resolveLocation(context),
+                    context.flags().isPresent("noai")
+                );
             }).execute())
             .build();
 
         final Command<CommandSender> summonVillager = wt
-            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_VSUMMON))
+            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_VSUMMON))
             .literal("summonvillager")
             .argument(TradeConfigArgument.of("trade_config"))
             .argument(EnumArgument.of(Villager.Type.class, "type"))
             .argument(EnumArgument.of(Villager.Profession.class, "profession"))
             .argument(LocationArgument.of("location"))
-            .flag(mgr.getFlag("world"))
-            .flag(mgr.getFlag("pitch"))
-            .flag(mgr.getFlag("yaw"))
-            .flag(mgr.flagBuilder("noai"))
+            .flag(this.mgr.getFlag("world"))
+            .flag(this.mgr.getFlag("pitch"))
+            .flag(this.mgr.getFlag("yaw"))
+            .flag(this.mgr.flagBuilder("noai"))
             .permission("wanderingtrades.villager")
-            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                final Location loc = resolveLocation(context);
-                this.summonVillagerTrader(context.getSender(), context.get("trade_config"), loc, context.get("type"), context.get("profession"), context.flags().isPresent("noai"));
+            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+                this.summonVillagerTrader(
+                    context.getSender(),
+                    context.get("trade_config"),
+                    resolveLocation(context),
+                    context.get("type"),
+                    context.get("profession"),
+                    context.flags().isPresent("noai")
+                );
             }).execute())
             .build();
 
         /* Entity Rename Command */
-        final Command<CommandSender> nameEntity = mgr.commandBuilder("nameentity")
+        final Command<CommandSender> nameEntity = this.mgr.commandBuilder("nameentity")
             .meta(CommandMeta.DESCRIPTION, "Sets the name of an entity.")
             .argument(SingleEntitySelectorArgument.of("entity"))
             .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
                 ArgumentDescription.of("The MiniMessage string to use as a name."))
             .permission("wanderingtrades.name")
             .senderType(Player.class)
-            .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
+            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+                final @Nullable Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
                 if (entity != null && !(entity instanceof Player)) {
                     setCustomName(entity, context.get("name"));
                     entity.setCustomNameVisible(true);
-                    chat.send(context.getSender(), "Named entity<gray>:</gray> " + context.get("name"));
+                    this.chat.send(context.getSender(), "Named entity<gray>:</gray> " + context.get("name"));
                 } else {
-                    chat.send(context.getSender(), "<red>Cannot name player or non-living entity.");
+                    this.chat.send(context.getSender(), "<red>Cannot name player or non-living entity.");
                 }
             }).execute())
             .build();
 
-        mgr.register(ImmutableList.of(summonNatural, summon, summonVillager, nameEntity));
+        this.mgr.register(List.of(summonNatural, summon, summonVillager, nameEntity));
     }
 
-    private Location resolveLocation(CommandContext<CommandSender> ctx) {
-        final Location loc = ctx.get("location");
-        ctx.flags().<World>getValue("world").ifPresent(loc::setWorld);
-        ctx.flags().<Integer>getValue("yaw").ifPresent(loc::setYaw);
-        ctx.flags().<Integer>getValue("pitch").ifPresent(loc::setPitch);
-        return loc;
+    private void summonNatural(
+        final Location location,
+        final boolean refresh,
+        final boolean noAI,
+        final boolean protect,
+        final boolean noInvisibility
+    ) {
+        location.getWorld().spawn(location, WanderingTrader.class, wanderingTrader -> {
+            final PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
+            if (refresh) {
+                persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
+            }
+            if (noAI) {
+                wanderingTrader.setAI(false);
+            }
+            if (protect) {
+                persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+            }
+            if (noInvisibility) {
+                if (isPaper()) {
+                    wanderingTrader.setCanDrinkPotion(false);
+                }
+                persistentDataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
+            }
+        });
     }
 
-    private void summonTrader(CommandSender sender, TradeConfig tradeConfig, Location loc, boolean disableAI) {
-        final List<MerchantRecipe> recipes;
-        try {
-            recipes = tradeConfig.getTrades(true);
-        } catch (IllegalStateException ex) {
-            chat.sendParsed(sender, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+    private void summonTrader(CommandSender sender, TradeConfig tradeConfig, Location loc, boolean noAI) {
+        final @Nullable List<MerchantRecipe> recipes = this.tryGetTrades(sender, tradeConfig);
+        if (recipes == null) {
             return;
         }
         loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
             wanderingTrader.setRecipes(recipes);
-            wanderingTrader.setAI(!disableAI);
+            if (noAI) {
+                wanderingTrader.setAI(false);
+            }
 
             final PersistentDataContainer dataContainer = wanderingTrader.getPersistentDataContainer();
             dataContainer.set(Constants.TEMPORARY_BLACKLISTED, PersistentDataType.BYTE, (byte) 1);
-            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.configName());
 
-            final String customName = tradeConfig.customName();
-            if (customName != null && !customName.isEmpty() && !customName.equalsIgnoreCase("NONE")) {
-                setCustomName(wanderingTrader, customName);
-                wanderingTrader.setCustomNameVisible(true);
-            }
-            if (tradeConfig.invincible()) {
-                wanderingTrader.setInvulnerable(true);
-                wanderingTrader.setRemoveWhenFarAway(false);
-                wanderingTrader.setPersistent(true);
-                dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-            }
-            if (wanderingTrades.config().preventNightInvisibility() && isPaper()) {
+            this.applyConfig(tradeConfig, wanderingTrader);
+
+            if (this.wanderingTrades.config().preventNightInvisibility() && isPaper()) {
                 wanderingTrader.setCanDrinkPotion(false);
             }
         });
     }
 
-    private void summonVillagerTrader(CommandSender sender, TradeConfig tradeConfig, Location loc, Villager.Type type, Villager.Profession profession, boolean disableAI) {
-        final List<MerchantRecipe> recipes;
-        try {
-            recipes = tradeConfig.getTrades(true);
-        } catch (IllegalStateException ex) {
-            chat.sendParsed(sender, wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+    private void summonVillagerTrader(
+        final CommandSender sender,
+        final TradeConfig tradeConfig,
+        final Location loc,
+        final Villager.Type type,
+        final Villager.Profession profession,
+        final boolean disableAI
+    ) {
+        final @Nullable List<MerchantRecipe> recipes = this.tryGetTrades(sender, tradeConfig);
+        if (recipes == null) {
             return;
         }
         final Villager v = loc.getWorld().spawn(loc, Villager.class, villager -> {
@@ -220,22 +234,40 @@ public class CommandSummon implements WTCommand {
             villager.setProfession(profession);
             villager.setVillagerLevel(5);
 
-            final PersistentDataContainer dataContainer = villager.getPersistentDataContainer();
-            dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, tradeConfig.configName());
-
-            final String customName = tradeConfig.customName();
-            if (customName != null && !customName.isEmpty() && !customName.equalsIgnoreCase("NONE")) {
-                setCustomName(villager, customName);
-                villager.setCustomNameVisible(true);
-            }
-            if (tradeConfig.invincible()) {
-                villager.setInvulnerable(true);
-                villager.setRemoveWhenFarAway(false);
-                villager.setPersistent(true);
-                dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
-            }
+            this.applyConfig(tradeConfig, villager);
         });
         v.setRecipes(recipes);
+    }
+
+    private @Nullable List<MerchantRecipe> tryGetTrades(
+        final CommandSender sender,
+        final TradeConfig tradeConfig
+    ) {
+        try {
+            return tradeConfig.getTrades(true);
+        } catch (final IllegalStateException ex) {
+            this.chat.sendParsed(sender, this.wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+            return null;
+        }
+    }
+
+    private void applyConfig(
+        final TradeConfig config,
+        final AbstractVillager trader
+    ) {
+        final PersistentDataContainer dataContainer = trader.getPersistentDataContainer();
+        dataContainer.set(Constants.CONFIG_NAME, PersistentDataType.STRING, config.configName());
+        final String customName = config.customName();
+        if (customName != null && !customName.isEmpty() && !customName.equalsIgnoreCase("NONE")) {
+            this.setCustomName(trader, customName);
+            trader.setCustomNameVisible(true);
+        }
+        if (config.invincible()) {
+            trader.setInvulnerable(true);
+            trader.setRemoveWhenFarAway(false);
+            trader.setPersistent(true);
+            dataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
+        }
     }
 
     /**
@@ -260,12 +292,12 @@ public class CommandSummon implements WTCommand {
             Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
 
             Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
-            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(wanderingTrades.miniMessage().deserialize(miniMessage));
+            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(this.wanderingTrades.miniMessage().deserialize(miniMessage));
 
             _setCustomName.invoke(nmsEntity, nmsComponent);
         } catch (Throwable throwable) {
-            if (wanderingTrades.config().debug()) {
-                wanderingTrades.getLogger().log(
+            if (this.wanderingTrades.config().debug()) {
+                this.wanderingTrades.getLogger().log(
                     Level.WARNING,
                     "Failed to set entity name using reflection, falling back onto legacy text serialization",
                     throwable
@@ -275,4 +307,11 @@ public class CommandSummon implements WTCommand {
         }
     }
 
+    private static Location resolveLocation(final CommandContext<CommandSender> ctx) {
+        final Location loc = ctx.get("location");
+        ctx.flags().<World>getValue("world").ifPresent(loc::setWorld);
+        ctx.flags().<Integer>getValue("yaw").ifPresent(loc::setYaw);
+        ctx.flags().<Integer>getValue("pitch").ifPresent(loc::setPitch);
+        return loc;
+    }
 }
