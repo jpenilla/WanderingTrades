@@ -5,46 +5,47 @@ import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.CommandManager;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
+@DefaultQualifier(NonNull.class)
 public final class TradeConfigArgument extends CommandArgument<CommandSender, TradeConfig> {
     private TradeConfigArgument(
         final boolean required,
-        final @NonNull String name,
-        final @NonNull String defaultValue,
+        final String name,
+        final String defaultValue,
         final @Nullable BiFunction<CommandContext<CommandSender>, String, List<String>> suggestionsProvider,
-        final @NonNull ArgumentDescription defaultDescription
+        final ArgumentDescription defaultDescription
     ) {
         super(required, name, new Parser(), defaultValue, TradeConfig.class, suggestionsProvider, defaultDescription);
     }
 
-    public static @NonNull TradeConfigArgument of(final @NonNull String name) {
+    public static TradeConfigArgument of(final String name) {
         return builder(name).build();
     }
 
-    public static @NonNull TradeConfigArgument optional(final @NonNull String name) {
+    public static TradeConfigArgument optional(final String name) {
         return builder(name).asOptional().build();
     }
 
-    public static TradeConfigArgument.@NonNull Builder builder(final @NonNull String name) {
+    public static TradeConfigArgument.Builder builder(final String name) {
         return new Builder(name);
     }
 
     public static final class Parser implements ArgumentParser<CommandSender, TradeConfig> {
         @Override
-        public @NonNull ArgumentParseResult<@NonNull TradeConfig> parse(
-            final @NonNull CommandContext<@NonNull CommandSender> commandContext,
-            final @NonNull Queue<@NonNull String> inputQueue
+        public ArgumentParseResult<TradeConfig> parse(
+            final CommandContext<CommandSender> commandContext,
+            final Queue<String> inputQueue
         ) {
             final WanderingTrades plugin = commandContext.get(CommandManager.PLUGIN);
             final TradeConfig tradeConfig = plugin.config().tradeConfigs().getOrDefault(inputQueue.peek(), null);
@@ -56,21 +57,21 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
         }
 
         @Override
-        public @NonNull List<@NonNull String> suggestions(
-            final @NonNull CommandContext<@NonNull CommandSender> commandContext,
-            final @NonNull String input
+        public List<String> suggestions(
+            final CommandContext<CommandSender> commandContext,
+            final String input
         ) {
-            return ImmutableList.copyOf(commandContext.get(CommandManager.PLUGIN).config().tradeConfigs().keySet());
+            return List.copyOf(commandContext.get(CommandManager.PLUGIN).config().tradeConfigs().keySet());
         }
     }
 
     public static final class Builder extends TypedBuilder<CommandSender, TradeConfig, TradeConfigArgument.Builder> {
-        private Builder(final @NonNull String name) {
+        private Builder(final String name) {
             super(TradeConfig.class, name);
         }
 
         @Override
-        public @NonNull TradeConfigArgument build() {
+        public TradeConfigArgument build() {
             return new TradeConfigArgument(
                 this.isRequired(),
                 this.getName(),

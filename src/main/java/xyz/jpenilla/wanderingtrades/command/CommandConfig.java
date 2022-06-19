@@ -21,7 +21,7 @@ import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
 import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
 
-public class CommandConfig implements WTCommand {
+public final class CommandConfig implements WTCommand {
 
     private final WanderingTrades wanderingTrades;
     private final CommandManager mgr;

@@ -9,17 +9,19 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
-public class CommandHelp implements WTCommand {
-
+@DefaultQualifier(NonNull.class)
+public final class CommandHelp implements WTCommand {
     private final WanderingTrades wanderingTrades;
     private final CommandManager commandManager;
     private final MinecraftHelp<CommandSender> minecraftHelp;
     private final CommandHelpHandler<CommandSender> commandHelpHandler;
 
-    public CommandHelp(WanderingTrades wanderingTrades, CommandManager commandManager) {
+    public CommandHelp(final WanderingTrades wanderingTrades, final CommandManager commandManager) {
         this.wanderingTrades = wanderingTrades;
         this.commandManager = commandManager;
         this.minecraftHelp = commandManager.minecraftHelp();
@@ -29,12 +31,12 @@ public class CommandHelp implements WTCommand {
     @Override
     public void register() {
         /* Help Query Argument */
-        CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>newBuilder("query")
+        final CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>newBuilder("query")
             .greedy()
             .asOptional()
             .withSuggestionsProvider((context, input) -> {
                 final CommandHelpHandler.IndexHelpTopic<CommandSender> indexHelpTopic =
-                    (CommandHelpHandler.IndexHelpTopic<CommandSender>) commandHelpHandler.queryHelp(context.getSender(), "");
+                    (CommandHelpHandler.IndexHelpTopic<CommandSender>) this.commandHelpHandler.queryHelp(context.getSender(), "");
                 return indexHelpTopic.getEntries()
                     .stream()
                     .map(CommandHelpHandler.VerboseHelpEntry::getSyntaxString)
@@ -43,16 +45,16 @@ public class CommandHelp implements WTCommand {
             .build();
 
         /* Help Command */
-        final Command<CommandSender> help = commandManager.commandBuilder("wt", "wanderingtrades")
-            .meta(CommandMeta.DESCRIPTION, wanderingTrades.langConfig().get(Lang.COMMAND_WT_HELP))
+        final Command<CommandSender> help = this.commandManager.commandBuilder("wt", "wanderingtrades")
+            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_WT_HELP))
             .literal("help")
-            .argument(helpQueryArgument, ArgumentDescription.of(wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
-            .handler(context -> minecraftHelp.queryCommands(
+            .argument(helpQueryArgument, ArgumentDescription.of(this.wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
+            .handler(context -> this.minecraftHelp.queryCommands(
                 context.getOptional(helpQueryArgument).orElse(""),
                 context.getSender()
             ))
             .build();
 
-        commandManager.command(help);
+        this.commandManager.command(help);
     }
 }

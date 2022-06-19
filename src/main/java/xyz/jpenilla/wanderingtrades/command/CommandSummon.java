@@ -43,7 +43,7 @@ import xyz.jpenilla.wanderingtrades.util.Constants;
 import static io.papermc.lib.PaperLib.isPaper;
 
 @DefaultQualifier(NonNull.class)
-public class CommandSummon implements WTCommand {
+public final class CommandSummon implements WTCommand {
     private final WanderingTrades wanderingTrades;
     private final CommandManager mgr;
     private final Chat chat;
@@ -277,7 +277,7 @@ public class CommandSummon implements WTCommand {
      * @param miniMessage The MiniMessage string. Clears the name if empty or null
      */
     private void setCustomName(
-        final @NonNull Entity entity,
+        final Entity entity,
         final @Nullable String miniMessage
     ) {
         if (miniMessage == null || miniMessage.isEmpty()) {
