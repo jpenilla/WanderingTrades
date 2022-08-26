@@ -37,7 +37,7 @@ dependencies {
     implementation("xyz.jpenilla", "jmplib", "1.0.1+50-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 
-    implementation(platform("cloud.commandframework:cloud-bom:1.7.0"))
+    implementation(platform("cloud.commandframework:cloud-bom:1.7.1"))
     implementation("cloud.commandframework", "cloud-paper")
     implementation("cloud.commandframework", "cloud-minecraft-extras")
 
