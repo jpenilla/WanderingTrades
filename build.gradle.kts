@@ -31,10 +31,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.19-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.19.2-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+50-SNAPSHOT")
+    implementation("xyz.jpenilla", "jmplib", "1.0.1+51-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 
     implementation(platform("cloud.commandframework:cloud-bom:1.7.1"))
@@ -67,7 +67,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.19.1")
+        minecraftVersion("1.19.2")
     }
     build {
         dependsOn(shadowJar)
