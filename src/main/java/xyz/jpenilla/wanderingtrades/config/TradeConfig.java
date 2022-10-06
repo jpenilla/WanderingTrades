@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import xyz.jpenilla.jmplib.HeadBuilder;
@@ -120,31 +121,7 @@ public class TradeConfig {
             }
             itemBuilder.setAmount(amount);
 
-            for (final String enchantString : config.getStringList(key + ".enchantments")) {
-                final Enchantment enchantment;
-                final int level;
-                if (enchantString.contains(":")) {
-                    final String[] args = enchantString.toLowerCase(Locale.ENGLISH).split(":");
-                    if (args.length == 2) {
-                        enchantment = Enchantment.getByKey(NamespacedKey.minecraft(args[0]));
-                        level = Integer.parseInt(args[1]);
-                    } else if (args.length == 3) {
-                        enchantment = Enchantment.getByKey(new NamespacedKey(args[0], args[1]));
-                        level = Integer.parseInt(args[2]);
-                    } else {
-                        enchantment = null;
-                        level = 0;
-                    }
-                } else {
-                    enchantment = null;
-                    level = 0;
-                }
-                if (enchantment != null) {
-                    itemBuilder.addEnchant(enchantment, level);
-                } else {
-                    WanderingTrades.instance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid enchantment!", materialString));
-                }
-            }
+            applyEnchants(itemBuilder, config.getStringList(key + ".enchantments"));
         }
 
         if (itemBuilder != null) {
@@ -154,23 +131,67 @@ public class TradeConfig {
         }
     }
 
+    private static void applyEnchants(final ItemBuilder itemBuilder, final List<String> enchantStrings) {
+        final Material material = itemBuilder.build().getType();
+        for (final String enchantString : enchantStrings) {
+            final EnchantWithLevel enchantment = readEnchantString(enchantString);
+
+            if (enchantment == null) {
+                WanderingTrades.instance().getLogger().log(Level.WARNING, String.format("'%s' is not a valid enchantment!", enchantString));
+                continue;
+            }
+
+            if (material == Material.ENCHANTED_BOOK) {
+                itemBuilder.<EnchantmentStorageMeta>editMeta(meta -> meta.addStoredEnchant(enchantment.enchantment, enchantment.level, true));
+            } else {
+                itemBuilder.addEnchant(enchantment.enchantment, enchantment.level);
+            }
+        }
+    }
+
+    private record EnchantWithLevel(Enchantment enchantment, int level) {
+    }
+
+    private static @Nullable EnchantWithLevel readEnchantString(final String enchantString) {
+        if (enchantString.contains(":")) {
+            final String[] args = enchantString.toLowerCase(Locale.ENGLISH).split(":");
+            if (args.length == 1) {
+                return new EnchantWithLevel(Enchantment.getByKey(NamespacedKey.minecraft(args[0])), 1);
+            } else if (args.length == 2) {
+                return new EnchantWithLevel(Enchantment.getByKey(NamespacedKey.minecraft(args[0])), Integer.parseInt(args[1]));
+            } else if (args.length == 3) {
+                return new EnchantWithLevel(Enchantment.getByKey(new NamespacedKey(args[0], args[1])), Integer.parseInt(args[2]));
+            }
+            return null;
+        }
+        return null;
+    }
+
     public void deleteTrade(String tradeName) {
-        file.set(TRADES + "." + tradeName, null);
+        this.file.set(TRADES + "." + tradeName, null);
         this.save();
     }
 
+    private void writeStack(final String path, final @Nullable ItemStack itemStack) {
+        if (itemStack == null) {
+            this.file.set(path, null);
+            return;
+        }
+        if (isPaper()) {
+            this.file.set(path + ".itemStackAsBytes", itemStack.serializeAsBytes());
+        } else {
+            this.file.set(path + ".itemStack", itemStack.serialize());
+        }
+    }
+
     public void writeTrade(String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
-        String child = TRADES + "." + tradeName;
+        final String child = TRADES + "." + tradeName;
         if (i1 != null) {
-            file.set(child + ".maxUses", maxUses);
-            file.set(child + ".experienceReward", experienceReward);
-            if (isPaper()) {
-                file.set(child + ".result.itemStackAsBytes", result.serializeAsBytes());
-            } else {
-                file.set(child + ".result.itemStack", result.serialize());
-            }
-            writeIngredient(tradeName, 1, i1);
-            writeIngredient(tradeName, 2, i2);
+            this.file.set(child + ".maxUses", maxUses);
+            this.file.set(child + ".experienceReward", experienceReward);
+            this.writeStack(child + ".result", result);
+            this.writeIngredient(tradeName, 1, i1);
+            this.writeIngredient(tradeName, 2, i2);
             this.save();
         }
     }
@@ -185,23 +206,19 @@ public class TradeConfig {
 
     public void writeIngredient(String tradeName, int i, ItemStack is) {
         if (this.getTradeSection().getKeys(false).contains(tradeName)) {
-            String child = TRADES + "." + tradeName;
+            final String child = TRADES + "." + tradeName;
             if (is != null) {
-                if (isPaper()) {
-                    file.set(child + ".ingredients." + i + ".itemStackAsBytes", is.serializeAsBytes());
-                } else {
-                    file.set(child + ".ingredients." + i + ".itemStack", is.serialize());
-                }
+                this.writeStack(child + ".ingredients." + i, is);
             } else if (i == 2) {
-                file.set(child + ".ingredients.2", null);
+                this.writeStack(child + ".ingredients.2", null);
             }
         }
     }
 
     private List<MerchantRecipe> readTrades() {
-        List<MerchantRecipe> tradeList = new ArrayList<>();
-        this.getTradeSection().getKeys(false).forEach(key -> {
-            String prefix = TRADES + "." + key + ".";
+        final List<MerchantRecipe> results = new ArrayList<>();
+        for (final String key : this.getTradeSection().getKeys(false)) {
+            final String prefix = TRADES + "." + key + ".";
 
             int maxUses = 1;
             if (file.getInt(prefix + "maxUses") != 0) {
@@ -219,12 +236,12 @@ public class TradeConfig {
                     }
                 }
 
-                tradeList.add(recipe);
+                results.add(recipe);
             } else {
                 plugin.getLogger().log(Level.WARNING, String.format("Failed to read trade: '%s', missing/invalid result item", prefix));
             }
-        });
-        return tradeList;
+        }
+        return results;
     }
 
     private List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int amount) {
