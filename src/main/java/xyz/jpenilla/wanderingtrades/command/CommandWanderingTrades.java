@@ -5,7 +5,7 @@ import cloud.commandframework.meta.CommandMeta;
 import com.google.common.collect.ImmutableList;
 import java.util.stream.Stream;
 import org.bukkit.command.CommandSender;
-import xyz.jpenilla.jmplib.Chat;
+import xyz.jpenilla.pluginbase.legacy.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 

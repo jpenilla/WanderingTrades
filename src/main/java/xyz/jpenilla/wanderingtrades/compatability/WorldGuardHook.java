@@ -5,7 +5,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Location;
-import xyz.jpenilla.jmplib.TextUtil;
+import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public class WorldGuardHook {

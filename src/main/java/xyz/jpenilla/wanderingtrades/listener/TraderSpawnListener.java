@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.jmplib.RandomCollection;
+import xyz.jpenilla.pluginbase.legacy.WeightedRandom;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 import xyz.jpenilla.wanderingtrades.util.VillagerReflection;
@@ -74,7 +74,7 @@ public class TraderSpawnListener implements Listener {
                     }
                 });
             } else {
-                RandomCollection<String> configNames = new RandomCollection<>();
+                WeightedRandom<String> configNames = new WeightedRandom<>();
                 plugin.config().tradeConfigs().forEach((key, value) -> configNames.add(value.chance(), key));
                 String chosenConfig = configNames.next();
                 if (chosenConfig != null) {

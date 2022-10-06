@@ -11,7 +11,7 @@ import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.jmplib.Crafty;
+import xyz.jpenilla.pluginbase.legacy.Crafty;
 
 import static io.papermc.lib.PaperLib.getMinecraftVersion;
 import static io.papermc.lib.PaperLib.isPaper;

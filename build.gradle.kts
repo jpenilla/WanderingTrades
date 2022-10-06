@@ -17,7 +17,7 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/") {
         mavenContent { snapshotsOnly() }
     }
-    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.jpenilla.xyz/snapshots/") {
         mavenContent { snapshotsOnly() }
     }
@@ -34,7 +34,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.19.2-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
-    implementation("xyz.jpenilla", "jmplib", "1.0.1+51-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+56-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 
     implementation(platform("cloud.commandframework:cloud-bom:1.7.1"))

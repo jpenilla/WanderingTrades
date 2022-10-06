@@ -18,8 +18,8 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import xyz.jpenilla.jmplib.HeadBuilder;
-import xyz.jpenilla.jmplib.ItemBuilder;
+import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
+import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import static io.papermc.lib.PaperLib.isPaper;

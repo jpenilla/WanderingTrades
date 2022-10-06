@@ -6,7 +6,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import xyz.jpenilla.jmplib.BasePlugin;
+import xyz.jpenilla.pluginbase.legacy.PluginBase;
 import xyz.jpenilla.wanderingtrades.command.CommandManager;
 import xyz.jpenilla.wanderingtrades.compatability.VaultHook;
 import xyz.jpenilla.wanderingtrades.compatability.WorldGuardHook;
@@ -16,7 +16,7 @@ import xyz.jpenilla.wanderingtrades.util.Listeners;
 import xyz.jpenilla.wanderingtrades.util.StoredPlayers;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
 
-public final class WanderingTrades extends BasePlugin {
+public final class WanderingTrades extends PluginBase {
     private static WanderingTrades instance;
 
     public static WanderingTrades instance() {
@@ -34,7 +34,7 @@ public final class WanderingTrades extends BasePlugin {
     private boolean vaultPermissions = false;
 
     @Override
-    public void onPluginEnable() {
+    public void enable() {
         PaperLib.suggestPaper(this, Level.WARNING);
         instance = this;
 
