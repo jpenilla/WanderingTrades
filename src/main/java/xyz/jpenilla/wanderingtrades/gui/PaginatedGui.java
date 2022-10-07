@@ -9,16 +9,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
-public abstract class PaginatedGui extends GuiHolder {
+public abstract class PaginatedGui extends BaseGui {
     private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(lang.get(Lang.GUI_PAGED_NEXT)).setLore(lang.get(Lang.GUI_PAGED_NEXT_LORE)).build();
     private final ItemStack previousPage = new ItemBuilder(Material.FEATHER).setName(lang.get(Lang.GUI_PAGED_LAST)).setLore(lang.get(Lang.GUI_PAGED_LAST_LORE)).build();
 
     private int page = 0;
 
-    public PaginatedGui(String name, int size) {
-        super(name, size);
+    public PaginatedGui(final WanderingTrades plugin, String name, int size) {
+        super(plugin, name, size);
     }
 
     @NonNull

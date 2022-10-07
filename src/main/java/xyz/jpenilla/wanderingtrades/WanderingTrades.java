@@ -4,8 +4,10 @@ import io.papermc.lib.PaperLib;
 import java.util.logging.Level;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.PluginBase;
 import xyz.jpenilla.wanderingtrades.command.CommandManager;
 import xyz.jpenilla.wanderingtrades.compatability.VaultHook;
@@ -14,22 +16,21 @@ import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
 import xyz.jpenilla.wanderingtrades.util.Listeners;
 import xyz.jpenilla.wanderingtrades.util.StoredPlayers;
+import xyz.jpenilla.wanderingtrades.util.TradeApplicator;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
 
+@DefaultQualifier(NonNull.class)
 public final class WanderingTrades extends PluginBase {
-    private static WanderingTrades instance;
+    private static @MonotonicNonNull WanderingTrades instance;
 
-    public static WanderingTrades instance() {
-        return WanderingTrades.instance;
-    }
+    private @MonotonicNonNull Config cfg;
+    private @MonotonicNonNull LangConfig lang;
+    private @MonotonicNonNull StoredPlayers storedPlayers;
+    private @MonotonicNonNull Listeners listeners;
+    private @MonotonicNonNull TradeApplicator tradeApplicator;
 
-    private Config cfg;
-    private LangConfig lang;
-    private StoredPlayers storedPlayers;
-    private Listeners listeners;
-
-    private WorldGuardHook worldGuard = null;
-    private VaultHook vault = null;
+    private @Nullable WorldGuardHook worldGuard = null;
+    private @Nullable VaultHook vault = null;
 
     private boolean vaultPermissions = false;
 
@@ -38,56 +39,67 @@ public final class WanderingTrades extends PluginBase {
         PaperLib.suggestPaper(this, Level.WARNING);
         instance = this;
 
-        if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-            vault = new VaultHook(this);
+        if (this.getServer().getPluginManager().isPluginEnabled("Vault")) {
+            this.vault = new VaultHook(this);
         }
-        if (getServer().getPluginManager().isPluginEnabled("WorldGuard")
-                && getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
-            worldGuard = new WorldGuardHook(this);
+        if (this.getServer().getPluginManager().isPluginEnabled("WorldGuard")
+            && this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
+            this.worldGuard = new WorldGuardHook(this);
         }
 
-        cfg = new Config(this);
-        lang = new LangConfig(this);
+        this.cfg = new Config(this);
+        this.lang = new LangConfig(this);
 
         this.storedPlayers = new StoredPlayers(this);
 
-        if (!cfg.disableCommands()) {
+        if (!this.cfg.disableCommands()) {
             try {
                 new CommandManager(this);
-            } catch (Exception e) {
-                getLogger().log(Level.SEVERE, "Failed to initialize CommandManager", e);
-                this.setEnabled(false);
-                return;
+            } catch (final Exception ex) {
+                throw new RuntimeException("Failed to initialize CommandManager", ex);
             }
         }
 
-        listeners = new Listeners(this);
-        listeners.register();
+        this.tradeApplicator = new TradeApplicator(this);
+
+        this.listeners = new Listeners(this);
+        this.listeners.register();
 
         if (this.cfg.updateChecker()) {
-            new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion();
+            this.getServer().getScheduler().runTask(
+                this,
+                () -> new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion()
+            );
         }
 
-        final Metrics metrics = new Metrics(this, 7597);
-        metrics.addCustomChart(new SimplePie("player_heads", () -> cfg.playerHeadConfig().playerHeadsFromServer() ? "On" : "Off"));
-        metrics.addCustomChart(new SimplePie("player_heads_per_trader", () -> String.valueOf(cfg.playerHeadConfig().playerHeadsFromServerAmount())));
-        metrics.addCustomChart(new SimplePie("plugin_language", () -> cfg.language()));
-        metrics.addCustomChart(new SimplePie("amount_of_trade_configs", () -> String.valueOf(cfg.tradeConfigs().size())));
+        this.setupMetrics();
     }
 
-    public @NonNull Config config() {
+    private void setupMetrics() {
+        final Metrics metrics = new Metrics(this, 7597);
+        metrics.addCustomChart(new SimplePie("player_heads", () -> this.cfg.playerHeadConfig().playerHeadsFromServer() ? "On" : "Off"));
+        metrics.addCustomChart(new SimplePie("player_heads_per_trader", () -> String.valueOf(this.cfg.playerHeadConfig().playerHeadsFromServerAmount())));
+        metrics.addCustomChart(new SimplePie("plugin_language", () -> this.cfg.language()));
+        metrics.addCustomChart(new SimplePie("amount_of_trade_configs", () -> String.valueOf(this.cfg.tradeConfigs().size())));
+    }
+
+    public Config config() {
         return this.cfg;
     }
 
-    public @NonNull LangConfig langConfig() {
+    public LangConfig langConfig() {
         return this.lang;
     }
 
-    public @NonNull StoredPlayers storedPlayers() {
+    public StoredPlayers storedPlayers() {
         return this.storedPlayers;
     }
 
-    public @NonNull Listeners listeners() {
+    public TradeApplicator tradeApplicator() {
+        return tradeApplicator;
+    }
+
+    public Listeners listeners() {
         return this.listeners;
     }
 
@@ -111,5 +123,9 @@ public final class WanderingTrades extends PluginBase {
         if (this.config().debug()) {
             this.getLogger().info("[DEBUG] " + message);
         }
+    }
+
+    public static WanderingTrades instance() {
+        return instance;
     }
 }

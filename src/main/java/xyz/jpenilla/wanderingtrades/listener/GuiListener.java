@@ -6,54 +6,45 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import xyz.jpenilla.wanderingtrades.gui.GuiHolder;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
+import xyz.jpenilla.wanderingtrades.gui.BaseGui;
 
-public class GuiListener implements Listener {
-
+@DefaultQualifier(NonNull.class)
+public final class GuiListener implements Listener {
     @EventHandler
-    private void onInventoryClickEvent(InventoryClickEvent event) {
+    private void onInventoryClickEvent(final InventoryClickEvent event) {
         if (event.getRawSlot() < 0) {
             return;
         }
-        Inventory inventory = event.getView().getTopInventory();
-        InventoryHolder holder = inventory.getHolder();
-        if (holder instanceof GuiHolder) {
-            ((GuiHolder) holder).onInventoryClick(event);
+        if (event.getView().getTopInventory().getHolder() instanceof BaseGui holder) {
+            holder.onInventoryClick(event);
         }
-
     }
 
     @EventHandler
-    private void onInventoryDragEvent(InventoryDragEvent event) {
-        Inventory inventory = event.getInventory();
-        InventoryHolder holder = inventory.getHolder();
-        if (holder instanceof GuiHolder) {
+    private void onInventoryDragEvent(final InventoryDragEvent event) {
+        if (event.getInventory().getHolder() instanceof BaseGui holder) {
             for (int slot : event.getRawSlots()) {
                 if (event.getInventorySlots().contains(slot)) {
                     event.setCancelled(true);
                 }
             }
-            ((GuiHolder) holder).onInventoryDrag(event);
+            holder.onInventoryDrag(event);
         }
     }
 
     @EventHandler
-    private void onInventoryOpenEvent(InventoryOpenEvent event) {
-        Inventory inventory = event.getInventory();
-        InventoryHolder holder = inventory.getHolder();
-        if (holder instanceof GuiHolder) {
-            ((GuiHolder) holder).onInventoryOpen(event);
+    private void onInventoryOpenEvent(final InventoryOpenEvent event) {
+        if (event.getInventory().getHolder() instanceof BaseGui holder) {
+            holder.onInventoryOpen(event);
         }
     }
 
     @EventHandler
-    private void onInventoryCloseEvent(InventoryCloseEvent event) {
-        Inventory inventory = event.getInventory();
-        InventoryHolder holder = inventory.getHolder();
-        if (holder instanceof GuiHolder) {
-            ((GuiHolder) holder).onInventoryClose(event);
+    private void onInventoryCloseEvent(final InventoryCloseEvent event) {
+        if (event.getInventory().getHolder() instanceof BaseGui holder) {
+            holder.onInventoryClose(event);
         }
     }
 }

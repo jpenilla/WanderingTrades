@@ -19,8 +19,8 @@ public class TradeListGui extends PaginatedGui {
         .setName(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE)).setLore(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE)).build();
     private final TradeConfig tradeConfig;
 
-    public TradeListGui(TradeConfig tradeConfig) {
-        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig.configName(), 54);
+    public TradeListGui(final WanderingTrades plugin, TradeConfig tradeConfig) {
+        super(plugin, plugin.langConfig().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig.configName(), 54);
         this.tradeConfig = tradeConfig;
     }
 
@@ -39,16 +39,16 @@ public class TradeListGui extends PaginatedGui {
     public void onClick(Player p, ItemStack i) {
         if (backButton.isSimilar(i)) {
             p.closeInventory();
-            new TradeConfigListGui().open(p);
+            new TradeConfigListGui(this.plugin).open(p);
         } else if (editButton.isSimilar(i)) {
             p.closeInventory();
-            new TradeConfigEditGui(tradeConfig).open(p);
+            new TradeConfigEditGui(this.plugin, this.tradeConfig).open(p);
         } else if (newTradeStack.isSimilar(i)) {
             p.closeInventory();
-            new TradeCreateGui(tradeConfig).open(p);
+            new TradeCreateGui(this.plugin, this.tradeConfig).open(p);
         } else if (getListItems().contains(i)) {
             p.closeInventory();
-            new TradeEditGui(tradeConfig, i.getItemMeta().getDisplayName()).open(p);
+            new TradeEditGui(this.plugin, this.tradeConfig, i.getItemMeta().getDisplayName()).open(p);
         }
     }
 
@@ -69,6 +69,6 @@ public class TradeListGui extends PaginatedGui {
 
     @Override
     public void reOpen(Player p) {
-        new TradeListGui(tradeConfig).open(p);
+        new TradeListGui(this.plugin, this.tradeConfig).open(p);
     }
 }

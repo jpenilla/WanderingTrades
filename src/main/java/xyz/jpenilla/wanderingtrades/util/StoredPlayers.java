@@ -35,7 +35,7 @@ public class StoredPlayers {
 
     public StoredPlayers(WanderingTrades wanderingTrades) {
         this.wanderingTrades = wanderingTrades;
-        this.profileCompleter = isPaper() ? new ProfileCompleter() : null;
+        this.profileCompleter = isPaper() ? new ProfileCompleter(wanderingTrades) : null;
         if (this.profileCompleter != null) {
             this.profileCompleter.runTaskTimerAsynchronously(wanderingTrades, 0L, 40L);
         }

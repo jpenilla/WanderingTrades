@@ -3,10 +3,10 @@ package xyz.jpenilla.wanderingtrades.util;
 import io.papermc.lib.PaperLib;
 import java.util.HashMap;
 import java.util.Map;
-import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.listener.AcquireTradeListener;
 import xyz.jpenilla.wanderingtrades.listener.BrainModificationListener;
@@ -17,11 +17,12 @@ import xyz.jpenilla.wanderingtrades.listener.RefreshTradesListener;
 import xyz.jpenilla.wanderingtrades.listener.TraderPotionListener;
 import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 
+@DefaultQualifier(NonNull.class)
 public class Listeners {
     private final WanderingTrades plugin;
     private final Map<Class<?>, Listener> listeners = new HashMap<>();
 
-    public Listeners(final @NonNull WanderingTrades plugin) {
+    public Listeners(final WanderingTrades plugin) {
         this.plugin = plugin;
     }
 
@@ -45,19 +46,14 @@ public class Listeners {
         }
     }
 
-    private <L extends Listener> void registerListener(final @NonNull Class<L> listenerClass, final @NonNull L listener) {
+    private <L extends Listener> void registerListener(final Class<L> listenerClass, final L listener) {
         this.listeners.put(listenerClass, listener);
-        Bukkit.getServer().getPluginManager().registerEvents(listener, this.plugin);
+        this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
     }
 
     public void reload() {
         this.listeners.forEach((clazz, listener) -> HandlerList.unregisterAll(listener));
         this.listeners.clear();
         this.register();
-    }
-
-    @SuppressWarnings("unchecked")
-    public <L> @NonNull L listener(final @NonNull Class<L> listenerClass) {
-        return (L) this.listeners.get(listenerClass);
     }
 }

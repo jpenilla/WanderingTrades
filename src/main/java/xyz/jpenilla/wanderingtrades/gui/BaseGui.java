@@ -2,7 +2,6 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.function.DoubleFunction;
 import java.util.function.IntFunction;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,16 +18,30 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
 
-public abstract class GuiHolder implements InventoryHolder {
-    protected final LangConfig lang = WanderingTrades.instance().langConfig();
-    protected final String gui_toggle_lore = lang.get(Lang.GUI_TOGGLE_LORE);
-    protected final ItemStack backButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_BACK)).setLore(lang.get(Lang.GUI_BACK_LORE)).build();
-    protected final ItemStack closeButton = new ItemBuilder(Material.BARRIER).setName(lang.get(Lang.GUI_CLOSE)).setLore(lang.get(Lang.GUI_CLOSE_LORE)).build();
+public abstract class BaseGui implements InventoryHolder {
+    protected final LangConfig lang;
+    protected final String gui_toggle_lore;
+    protected final ItemStack backButton;
+    protected final ItemStack closeButton;
     protected final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
+    protected final WanderingTrades plugin;
     protected Inventory inventory;
 
-    public GuiHolder(String name, int size) {
-        inventory = Bukkit.createInventory(this, size, MiniMessageUtil.miniMessageToLegacy(name));
+    public BaseGui(WanderingTrades plugin, String name, int size) {
+        this.plugin = plugin;
+        this.inventory = plugin.getServer().createInventory(this, size, MiniMessageUtil.miniMessageToLegacy(name));
+
+        this.lang = this.plugin.langConfig();
+
+        this.gui_toggle_lore = this.lang.get(Lang.GUI_TOGGLE_LORE);
+        this.backButton = new ItemBuilder(Material.BARRIER)
+            .setName(this.lang.get(Lang.GUI_BACK))
+            .setLore(this.lang.get(Lang.GUI_BACK_LORE))
+            .build();
+        this.closeButton = new ItemBuilder(Material.BARRIER)
+            .setName(this.lang.get(Lang.GUI_CLOSE))
+            .setLore(this.lang.get(Lang.GUI_CLOSE_LORE))
+            .build();
     }
 
     public abstract void onInventoryClick(InventoryClickEvent event);
@@ -48,6 +61,38 @@ public abstract class GuiHolder implements InventoryHolder {
 
     public abstract void reOpen(Player p);
 
+    public boolean validateIntRange(Player p, String s) {
+        if (s.contains(":")) {
+            try {
+                String[] split = s.split(":");
+                if (validateIntForRange(null, split[0]) && validateIntForRange(null, split[1])) {
+                    return true;
+                } else {
+                    this.plugin.chat().sendParsed(p, this.plugin.langConfig().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                    return false;
+                }
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            return validateIntForRange(p, s);
+        }
+    }
+
+    private boolean validateIntForRange(Player player, String input) {
+        try {
+            int i = Integer.parseInt(input);
+            if (i < 0) {
+                this.plugin.chat().sendParsed(player, this.plugin.langConfig().get(Lang.MESSAGE_NUMBER_GTE_0));
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            this.plugin.chat().sendParsed(player, this.plugin.langConfig().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+            return false;
+        }
+        return true;
+    }
+
     private boolean validateInt(
         final @NonNull Player player,
         final @NonNull String input,
@@ -57,7 +102,7 @@ public abstract class GuiHolder implements InventoryHolder {
             int i = Integer.parseInt(input);
             return validator.apply(i);
         } catch (final NumberFormatException ex) {
-            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
     }
@@ -71,7 +116,7 @@ public abstract class GuiHolder implements InventoryHolder {
             double d = Double.parseDouble(input);
             return validator.apply(d);
         } catch (final NumberFormatException ex) {
-            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ENTER_NUMBER));
+            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
     }
@@ -81,7 +126,7 @@ public abstract class GuiHolder implements InventoryHolder {
             if (i >= 1) {
                 return true;
             }
-            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GT_0));
+            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_GT_0));
             return false;
         });
     }
@@ -91,7 +136,7 @@ public abstract class GuiHolder implements InventoryHolder {
             if (i >= 0) {
                 return true;
             }
-            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_0));
+            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_GTE_0));
             return false;
         });
     }
@@ -101,7 +146,7 @@ public abstract class GuiHolder implements InventoryHolder {
             if (i >= -1) {
                 return true;
             }
-            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
+            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
             return false;
         });
     }
@@ -109,7 +154,7 @@ public abstract class GuiHolder implements InventoryHolder {
     public boolean onValidateDouble0T1(final @NonNull Player player, final @NonNull String input) {
         return this.validateDouble(player, input, d -> {
             if (d < 0 || d > 1) {
-                WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NUMBER_0T1));
+                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_0T1));
                 return false;
             }
             return true;
@@ -117,13 +162,13 @@ public abstract class GuiHolder implements InventoryHolder {
     }
 
     public String onConfirmYesNo(Player player, String s) {
-        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
-        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_YES_NO));
+        this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
+        this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YES_NO));
         return "";
     }
 
     public void onEditCancelled(Player p, String s) {
-        WanderingTrades.instance().chat().sendParsed(p, lang.get(Lang.MESSAGE_EDIT_CANCELLED));
-        open(p);
+        this.plugin.chat().sendParsed(p, this.lang.get(Lang.MESSAGE_EDIT_CANCELLED));
+        this.open(p);
     }
 }

@@ -15,7 +15,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
-public abstract class TradeGui extends GuiHolder {
+public abstract class TradeGui extends BaseGui {
 
     private final ItemStack cancelButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTZjNjBkYTQxNGJmMDM3MTU5YzhiZThkMDlhOGVjYjkxOWJmODlhMWEyMTUwMWI1YjJlYTc1OTYzOTE4YjdiIn19fQ==")
         .setName(lang.get(Lang.GUI_TRADE_CANCEL)).setLore(lang.get(Lang.GUI_TRADE_CANCEL_LORE)).build();
@@ -46,8 +46,8 @@ public abstract class TradeGui extends GuiHolder {
 
     protected final TradeConfig tradeConfig;
 
-    public TradeGui(String name, TradeConfig tradeConfig) {
-        super(name, 45);
+    public TradeGui(final WanderingTrades plugin, String name, TradeConfig tradeConfig) {
+        super(plugin, name, 45);
         this.tradeConfig = tradeConfig;
     }
 
@@ -95,7 +95,7 @@ public abstract class TradeGui extends GuiHolder {
 
         if (cancelButton.isSimilar(item)) {
             p.closeInventory();
-            new TradeListGui(tradeConfig).open(p);
+            new TradeListGui(this.plugin, this.tradeConfig).open(p);
         }
 
         if (experienceEnabled.isSimilar(item)) {
@@ -109,7 +109,7 @@ public abstract class TradeGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                 .onPromptText(player -> {
-                    WanderingTrades.instance().chat().sendParsed(player,
+                    this.plugin.chat().sendParsed(player,
                         lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
                             + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + maxUses
                             + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
@@ -141,9 +141,9 @@ public abstract class TradeGui extends GuiHolder {
                     ingred2 = i2;
                 }
                 tradeConfig.writeTrade(tradeName, maxUses, experienceReward, i1, ingred2, result);
-                WanderingTrades.instance().config().load();
+                this.plugin.config().load();
                 p.closeInventory();
-                new TradeListGui(tradeConfig).open(p);
+                new TradeListGui(this.plugin, this.tradeConfig).open(p);
             }
         }
 
@@ -171,6 +171,7 @@ public abstract class TradeGui extends GuiHolder {
         }
     }
 
+    @Override
     public void reOpen(Player player) {
         player.openInventory(getInventory());
     }

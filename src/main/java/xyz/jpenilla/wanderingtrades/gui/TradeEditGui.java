@@ -15,8 +15,8 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 public class TradeEditGui extends TradeGui {
 
-    public TradeEditGui(TradeConfig tradeConfig, String tradeName) {
-        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TRADE_EDIT_TITLE) + tradeName, tradeConfig);
+    public TradeEditGui(final WanderingTrades plugin, TradeConfig tradeConfig, String tradeName) {
+        super(plugin, plugin.langConfig().get(Lang.GUI_TRADE_EDIT_TITLE) + tradeName, tradeConfig);
         setTradeName(tradeName);
         setExperienceReward(tradeConfig.fileConfiguration().getBoolean("trades." + tradeName + ".experienceReward"));
         setMaxUses(tradeConfig.fileConfiguration().getInt("trades." + tradeName + ".maxUses"));
@@ -63,16 +63,16 @@ public class TradeEditGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                 .onPromptText((player -> {
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", getTradeName()));
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", getTradeName()));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
                     return "";
                 }))
                 .onValidateInput(((player, s) -> {
                     if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
                         this.tradeConfig.deleteTrade(getTradeName());
-                        WanderingTrades.instance().config().load();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        new TradeListGui(this.tradeConfig).open(player);
+                        this.plugin.config().load();
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        new TradeListGui(this.plugin, this.tradeConfig).open(player);
                     } else {
                         onEditCancelled(player, s);
                     }

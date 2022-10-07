@@ -20,7 +20,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
-public class TradeConfigEditGui extends GuiHolder {
+public class TradeConfigEditGui extends BaseGui {
     private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_ENABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack enabledDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_DISABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack randomizedEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_RANDOMIZED)).setLore(gui_toggle_lore).build();
@@ -35,8 +35,8 @@ public class TradeConfigEditGui extends GuiHolder {
 
     private final TradeConfig tradeConfig;
 
-    public TradeConfigEditGui(TradeConfig tradeConfig) {
-        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TC_EDIT_TITLE) + tradeConfig.configName(), 45);
+    public TradeConfigEditGui(final WanderingTrades plugin, TradeConfig tradeConfig) {
+        super(plugin, plugin.langConfig().get(Lang.GUI_TC_EDIT_TITLE) + tradeConfig.configName(), 45);
         this.tradeConfig = tradeConfig;
     }
 
@@ -107,7 +107,7 @@ public class TradeConfigEditGui extends GuiHolder {
 
         if (backButton.isSimilar(item)) {
             p.closeInventory();
-            new TradeListGui(tradeConfig).open(p);
+            new TradeListGui(this.plugin, this.tradeConfig).open(p);
         }
 
         if (enabledEnabled.isSimilar(item)) {
@@ -135,18 +135,18 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                 .onPromptText(player -> {
-                    WanderingTrades.instance().chat().sendParsed(player,
+                    this.plugin.chat().sendParsed(player,
                         lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
                             + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.randomAmount()
                             + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
                     return "";
                 })
-                .onValidateInput(TradeConfigEditGui::validateIntRange)
+                .onValidateInput(this::validateIntRange)
                 .onConfirmText(this::onConfirmYesNo)
                 .onAccepted((player, s) -> {
                     tradeConfig.randomAmount(s);
                     tradeConfig.save();
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                     open(player);
                 })
                 .onDenied(this::onEditCancelled)
@@ -157,7 +157,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                 .onPromptText(player -> {
-                    WanderingTrades.instance().chat().sendParsed(player,
+                    this.plugin.chat().sendParsed(player,
                         lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
                             + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.chance()
                             + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
@@ -168,7 +168,7 @@ public class TradeConfigEditGui extends GuiHolder {
                 .onAccepted((player, s) -> {
                     tradeConfig.chance(Double.parseDouble(s));
                     tradeConfig.save();
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                     open(player);
                 })
                 .onDenied(this::onEditCancelled)
@@ -179,7 +179,7 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                 .onPromptText(player -> {
-                    WanderingTrades.instance().chat().sendParsed(player,
+                    this.plugin.chat().sendParsed(player,
                         lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
                             + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + tradeConfig.customName());
                     return "";
@@ -199,21 +199,21 @@ public class TradeConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                 .onPromptText((player -> {
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.configName()));
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.configName()));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
                     return "";
                 }))
                 .onValidateInput(((player, s) -> {
                     if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
-                        final Path tcFile = WanderingTrades.instance().dataPath().resolve("trades/" + tradeConfig.configName() + ".yml");
+                        final Path tcFile = this.plugin.dataPath().resolve("trades/" + tradeConfig.configName() + ".yml");
                         try {
                             Files.delete(tcFile);
                         } catch (Exception e) {
-                            WanderingTrades.instance().getLogger().log(Level.WARNING, "File delete failed", e);
+                            this.plugin.getLogger().log(Level.WARNING, "File delete failed", e);
                         }
-                        WanderingTrades.instance().config().load();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        new TradeConfigListGui().open(player);
+                        this.plugin.config().load();
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        new TradeConfigListGui(this.plugin).open(player);
                     } else {
                         onEditCancelled(player, s);
                     }
@@ -227,39 +227,8 @@ public class TradeConfigEditGui extends GuiHolder {
         getInventory();
     }
 
+    @Override
     public void reOpen(Player player) {
-        Bukkit.getServer().getScheduler().runTaskLater(WanderingTrades.instance(), () -> new TradeConfigEditGui(tradeConfig).open(player), 1L);
-    }
-
-    public static boolean validateIntRange(Player p, String s) {
-        if (s.contains(":")) {
-            try {
-                String[] split = s.split(":");
-                if (validateInt(null, split[0]) && validateInt(null, split[1])) {
-                    return true;
-                } else {
-                    WanderingTrades.instance().chat().sendParsed(p, WanderingTrades.instance().langConfig().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
-                    return false;
-                }
-            } catch (Exception e) {
-                return false;
-            }
-        } else {
-            return validateInt(p, s);
-        }
-    }
-
-    public static boolean validateInt(Player player, String input) {
-        try {
-            int i = Integer.parseInt(input);
-            if (i < 0) {
-                WanderingTrades.instance().chat().sendParsed(player, WanderingTrades.instance().langConfig().get(Lang.MESSAGE_NUMBER_GTE_0));
-                return false;
-            }
-        } catch (NumberFormatException ex) {
-            WanderingTrades.instance().chat().sendParsed(player, WanderingTrades.instance().langConfig().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
-            return false;
-        }
-        return true;
+        Bukkit.getServer().getScheduler().runTaskLater(this.plugin, () -> new TradeConfigEditGui(this.plugin, this.tradeConfig).open(player), 1L);
     }
 }

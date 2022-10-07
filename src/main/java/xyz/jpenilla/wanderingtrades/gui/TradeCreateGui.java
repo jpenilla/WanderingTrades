@@ -15,8 +15,8 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 public class TradeCreateGui extends TradeGui {
 
-    public TradeCreateGui(TradeConfig tradeConfig) {
-        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
+    public TradeCreateGui(final WanderingTrades plugin, TradeConfig tradeConfig) {
+        super(plugin, plugin.langConfig().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
     }
 
     public @NonNull Inventory getInventory() {
@@ -44,16 +44,16 @@ public class TradeCreateGui extends TradeGui {
             p.closeInventory();
             new InputConversation()
                 .onPromptText(player -> {
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
                     return "";
                 })
                 .onValidateInput((player, input) -> {
                     if (input.contains(" ")) {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                         return false;
                     }
                     if (this.tradeConfig.fileConfiguration().getConfigurationSection("trades").contains(input)) {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                         return false;
                     }
                     return true;

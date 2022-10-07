@@ -4,20 +4,23 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public class AcquireTradeListener implements Listener {
+@DefaultQualifier(NonNull.class)
+public final class AcquireTradeListener implements Listener {
     private final WanderingTrades plugin;
 
-    public AcquireTradeListener(WanderingTrades p) {
-        plugin = p;
+    public AcquireTradeListener(final WanderingTrades plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
-    public void onAcquireTrade(VillagerAcquireTradeEvent e) {
-        if (e.getEntityType().equals(EntityType.WANDERING_TRADER)) {
-            if (plugin.config().removeOriginalTrades()) {
-                e.setCancelled(true);
+    public void onAcquireTrade(final VillagerAcquireTradeEvent event) {
+        if (event.getEntityType().equals(EntityType.WANDERING_TRADER)) {
+            if (this.plugin.config().removeOriginalTrades()) {
+                event.setCancelled(true);
             }
         }
     }

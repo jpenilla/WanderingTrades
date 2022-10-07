@@ -26,15 +26,15 @@ public class TradeConfigListGui extends PaginatedGui {
     private final ItemStack newConfig = new ItemBuilder(Material.WRITABLE_BOOK).setName(lang.get(Lang.GUI_TC_LIST_ADD_CONFIG)).setLore(lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE)).build();
     private final List<String> configNames = new ArrayList<>();
 
-    public TradeConfigListGui() {
-        super(WanderingTrades.instance().langConfig().get(Lang.GUI_TC_LIST_TITLE), 36);
-        Arrays.stream(WanderingTrades.instance().config().tradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
+    public TradeConfigListGui(final WanderingTrades plugin) {
+        super(plugin, plugin.langConfig().get(Lang.GUI_TC_LIST_TITLE), 36);
+        Arrays.stream(plugin.config().tradeConfigs().keySet().toArray()).forEach(completion -> configNames.add((String) completion));
     }
 
     public List<ItemStack> getListItems() {
-        return Arrays.stream(WanderingTrades.instance().config().tradeConfigs().keySet().toArray(new String[0]))
+        return Arrays.stream(this.plugin.config().tradeConfigs().keySet().toArray(new String[0]))
             .sorted()
-            .map(configName -> WanderingTrades.instance().config().tradeConfigs().get(configName))
+            .map(configName -> this.plugin.config().tradeConfigs().get(configName))
             .map(tradeConfig -> {
                 final Set<String> tradeKeys = Objects.requireNonNull(tradeConfig.fileConfiguration().getConfigurationSection("trades")).getKeys(false);
                 final List<String> finalLores = new ArrayList<>();
@@ -43,7 +43,7 @@ public class TradeConfigListGui extends PaginatedGui {
                     .limit(10)
                     .forEach(key -> finalLores.add("<gray>  " + key));
                 if (finalLores.size() == 10) {
-                    finalLores.add(WanderingTrades.instance().langConfig().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
+                    finalLores.add(this.plugin.langConfig().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
                 }
                 return new ItemBuilder(Material.PAPER).setName(tradeConfig.configName()).setLore(finalLores).build();
             })
@@ -70,16 +70,16 @@ public class TradeConfigListGui extends PaginatedGui {
             p.closeInventory();
             new InputConversation()
                 .onPromptText(player -> {
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
                     return "";
                 })
                 .onValidateInput((player, input) -> {
                     if (input.contains(" ")) {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                         return false;
                     }
                     if (TextUtil.containsCaseInsensitive(input, configNames)) {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                         return false;
                     }
                     return true;
@@ -88,21 +88,21 @@ public class TradeConfigListGui extends PaginatedGui {
                 .onAccepted((player, s) -> {
                     try {
                         Files.copy(
-                            Objects.requireNonNull(WanderingTrades.instance().getResource("trades/blank.yml")),
-                            new File(String.format("%s/trades/%s.yml", WanderingTrades.instance().getDataFolder(), s)).toPath()
+                            Objects.requireNonNull(this.plugin.getResource("trades/blank.yml")),
+                            new File(String.format("%s/trades/%s.yml", this.plugin.getDataFolder(), s)).toPath()
                         );
 
-                        WanderingTrades.instance().config().load();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
+                        this.plugin.config().load();
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                        WanderingTrades.instance().chat().sendParsed(player, "<red>Error");
+                        this.plugin.chat().sendParsed(player, "<red>Error");
                     }
-                    reOpen(p);
+                    this.reOpen(p);
                 })
                 .onDenied((player, s) -> {
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
-                    reOpen(player);
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
+                    this.reOpen(player);
                 })
                 .start(p);
             return;
@@ -113,8 +113,8 @@ public class TradeConfigListGui extends PaginatedGui {
                 final String displayName = meta.getDisplayName();
                 if (TextUtil.containsCaseInsensitive(displayName, configNames)) {
                     p.closeInventory();
-                    final TradeConfig tradeConfig = Objects.requireNonNull(WanderingTrades.instance().config().tradeConfigs().get(displayName));
-                    new TradeListGui(tradeConfig).open(p);
+                    final TradeConfig tradeConfig = Objects.requireNonNull(this.plugin.config().tradeConfigs().get(displayName));
+                    new TradeListGui(this.plugin, tradeConfig).open(p);
                 }
             }
         }
@@ -122,6 +122,6 @@ public class TradeConfigListGui extends PaginatedGui {
 
     @Override
     public void reOpen(Player p) {
-        new TradeConfigListGui().open(p);
+        new TradeConfigListGui(this.plugin).open(p);
     }
 }

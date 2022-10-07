@@ -18,7 +18,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
-public class ConfigEditGui extends GuiHolder {
+public class ConfigEditGui extends BaseGui {
     private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_ENABLED)).setLore(gui_toggle_lore).build();
     private final ItemStack enabledDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_DISABLED)).setLore(gui_toggle_lore).build();
 
@@ -41,15 +41,15 @@ public class ConfigEditGui extends GuiHolder {
 
     private final ItemStack refreshTradersMinutes = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES)).build();
 
-    public ConfigEditGui() {
-        super(WanderingTrades.instance().langConfig().get(Lang.GUI_CONFIG_TITLE), 45);
+    public ConfigEditGui(final WanderingTrades plugin) {
+        super(plugin, plugin.langConfig().get(Lang.GUI_CONFIG_TITLE), 45);
     }
 
     @NonNull
     public Inventory getInventory() {
         inventory.clear();
 
-        Config c = WanderingTrades.instance().config();
+        Config c = this.plugin.config();
 
         if (c.enabled()) {
             inventory.setItem(10, enabledEnabled);
@@ -128,7 +128,7 @@ public class ConfigEditGui extends GuiHolder {
             p.closeInventory();
         }
 
-        Config c = WanderingTrades.instance().config();
+        Config c = this.plugin.config();
 
         if (enabledEnabled.isSimilar(item)) {
             c.enabled(false);
@@ -170,7 +170,7 @@ public class ConfigEditGui extends GuiHolder {
             p.closeInventory();
             new InputConversation()
                 .onPromptText(player -> {
-                    WanderingTrades.instance().chat().sendParsed(player,
+                    this.plugin.chat().sendParsed(player,
                         lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
                             + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + c.refreshCommandTradersMinutes()
                             + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
@@ -179,7 +179,7 @@ public class ConfigEditGui extends GuiHolder {
                 .onValidateInput(this::onValidateIntGTE0)
                 .onConfirmText(this::onConfirmYesNo)
                 .onAccepted((player, s) -> {
-                    WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                     c.refreshCommandTradersMinutes(Integer.parseInt(s));
                     c.save();
                     open(p);
@@ -199,16 +199,16 @@ public class ConfigEditGui extends GuiHolder {
                 p.closeInventory();
                 new InputConversation()
                     .onPromptText(player -> {
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_ADD_WG_REGION));
                         return "";
                     })
                     .onValidateInput((player, input) -> {
                         if (input.contains(" ")) {
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
+                            this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
                             return false;
                         }
                         if (TextUtil.containsCaseInsensitive(input, c.wgRegionList())) {
-                            WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                            this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
                             return false;
                         }
                         return true;
@@ -219,7 +219,7 @@ public class ConfigEditGui extends GuiHolder {
                         temp.add(s);
                         c.wgRegionList(temp);
                         c.save();
-                        WanderingTrades.instance().chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
+                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                         open(p);
                     })
                     .onDenied(this::onEditCancelled)
@@ -232,7 +232,8 @@ public class ConfigEditGui extends GuiHolder {
         getInventory();
     }
 
+    @Override
     public void reOpen(Player p) {
-        new ConfigEditGui().open(p);
+        new ConfigEditGui(this.plugin).open(p);
     }
 }

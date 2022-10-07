@@ -11,6 +11,11 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 class ProfileCompleter extends BukkitRunnable {
 
     private final Queue<PlayerProfile> completionQueue = new ConcurrentLinkedQueue<>();
+    private final WanderingTrades plugin;
+
+    ProfileCompleter(final WanderingTrades plugin) {
+        this.plugin = plugin;
+    }
 
     public void submitSkullMeta(final @NonNull SkullMeta meta) {
         final PlayerProfile playerProfile = meta.getPlayerProfile();
@@ -34,8 +39,8 @@ class ProfileCompleter extends BukkitRunnable {
         if (profile != null) {
             try {
                 profile.complete();
-            } catch (Exception e) {
-                WanderingTrades.instance().debug(String.format("Failed to cache player head skin for player: [username=%s,uuid=%s]", profile.getName(), profile.getId()));
+            } catch (final Exception e) {
+                this.plugin.debug(String.format("Failed to cache player head skin for player: [username=%s,uuid=%s]", profile.getName(), profile.getId()));
             }
         }
     }

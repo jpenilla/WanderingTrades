@@ -55,9 +55,9 @@ public final class CommandConfig implements WTCommand {
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
                     final TradeConfig config = context.<TradeConfig>getOptional("trade_config").orElse(null);
                     if (config == null) {
-                        new TradeConfigListGui().open((Player) context.getSender());
+                        new TradeConfigListGui(this.wanderingTrades).open((Player) context.getSender());
                     } else {
-                        new TradeListGui(config).open((Player) context.getSender());
+                        new TradeListGui(this.wanderingTrades, config).open((Player) context.getSender());
                     }
                 }).execute())
                 .build();
@@ -69,7 +69,7 @@ public final class CommandConfig implements WTCommand {
                 .permission("wanderingtrades.edit")
                 .senderType(Player.class)
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    new ConfigEditGui().open((Player) context.getSender());
+                    new ConfigEditGui(this.wanderingTrades).open((Player) context.getSender());
                 }).execute())
                 .build();
 
@@ -80,7 +80,7 @@ public final class CommandConfig implements WTCommand {
                 .permission("wanderingtrades.edit")
                 .senderType(Player.class)
                 .handler(c -> mgr.taskRecipe().begin(c).synchronous(context -> {
-                    new PlayerHeadConfigGui().open((Player) context.getSender());
+                    new PlayerHeadConfigGui(this.wanderingTrades).open((Player) context.getSender());
                 }).execute())
                 .build();
 
