@@ -12,6 +12,8 @@ group = "xyz.jpenilla"
 version = "1.7.4-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
+val mcVersion = "1.19.2"
+
 repositories {
     mavenCentral()
     maven("https://oss.sonatype.org/content/groups/public/") {
@@ -31,7 +33,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.19.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "$mcVersion-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
     implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+56-SNAPSHOT")
@@ -67,7 +69,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.19.2")
+        minecraftVersion(mcVersion)
     }
     build {
         dependsOn(shadowJar)
@@ -78,7 +80,7 @@ tasks {
         sequenceOf(
             "org.bstats",
             "cloud.commandframework",
-            "xyz.jpenilla.jmplib",
+            "xyz.jpenilla.pluginbase",
             "net.kyori",
             "io.papermc.lib",
             "io.leangen.geantyref"
