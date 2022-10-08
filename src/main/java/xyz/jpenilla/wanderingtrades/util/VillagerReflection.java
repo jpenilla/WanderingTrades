@@ -74,7 +74,7 @@ public final class VillagerReflection {
                 final String getBrainName = switch (getMinecraftVersion()) {
                     case 16, 17 -> "getBehaviorController";
                     case 18 -> "du";
-                    case 19 -> "dz";
+                    case 19 -> "dy";
                     default -> throw new IllegalStateException("Don't know getBrain method name for 1." + getMinecraftVersion());
                 };
                 LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, getBrainName, Brain_class), "LivingEntity#getBrain");
