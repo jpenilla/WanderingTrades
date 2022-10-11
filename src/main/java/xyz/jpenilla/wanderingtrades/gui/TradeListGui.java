@@ -24,6 +24,7 @@ public class TradeListGui extends PaginatedGui {
         this.tradeConfig = tradeConfig;
     }
 
+    @Override
     public Inventory getInv(Inventory i) {
         i.setItem(inventory.getSize() - 1, backButton);
         i.setItem(inventory.getSize() - 2, editButton);
@@ -36,6 +37,7 @@ public class TradeListGui extends PaginatedGui {
         return i;
     }
 
+    @Override
     public void onClick(Player p, ItemStack i) {
         if (backButton.isSimilar(i)) {
             p.closeInventory();
@@ -52,6 +54,7 @@ public class TradeListGui extends PaginatedGui {
         }
     }
 
+    @Override
     public List<ItemStack> getListItems() {
         List<ItemStack> trades = new ArrayList<>();
         tradeConfig.getTradeSection().getKeys(false).stream().sorted().forEach(key -> {

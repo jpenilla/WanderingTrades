@@ -4,28 +4,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public class JoinQuitListener implements Listener {
+@DefaultQualifier(NonNull.class)
+public final class JoinQuitListener implements Listener {
+    private final WanderingTrades plugin;
 
-    private final WanderingTrades wanderingTrades;
-
-    public JoinQuitListener(WanderingTrades wanderingTrades) {
-        this.wanderingTrades = wanderingTrades;
+    public JoinQuitListener(final WanderingTrades plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        if (this.wanderingTrades.config().playerHeadConfig().playerHeadsFromServer()) {
-            this.wanderingTrades.storedPlayers().addHeadIfPermissible(e.getPlayer());
-        }
+    public void onJoin(final PlayerJoinEvent event) {
+        this.plugin.playerHeads().handleLogin(event.getPlayer());
     }
 
     @EventHandler
-    public void onLeave(PlayerQuitEvent e) {
-        if (this.wanderingTrades.config().playerHeadConfig().playerHeadsFromServer()) {
-            this.wanderingTrades.storedPlayers().onLogout(e.getPlayer());
-        }
+    public void onLeave(final PlayerQuitEvent event) {
+        this.plugin.playerHeads().handleLogout(event.getPlayer());
     }
-
 }

@@ -2,7 +2,6 @@ package xyz.jpenilla.wanderingtrades.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -32,100 +31,98 @@ public class Config {
     private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
     private PlayerHeadConfig playerHeadConfig;
 
-    public Config(WanderingTrades instance) {
-        plugin = instance;
-        plugin.saveDefaultConfig();
-        load();
+    public Config(final WanderingTrades plugin) {
+        this.plugin = plugin;
+        this.plugin.saveDefaultConfig();
+        this.load();
     }
 
     public void load() {
-        plugin.reloadConfig();
-        FileConfiguration config = plugin.getConfig();
+        this.plugin.reloadConfig();
+        FileConfiguration config = this.plugin.getConfig();
 
-        debug = config.getBoolean(Fields.debug);
-        enabled = config.getBoolean(Fields.enabled);
-        disableCommands = config.getBoolean(Fields.disableCommands);
-        removeOriginalTrades = config.getBoolean(Fields.removeOriginalTrades);
-        allowMultipleSets = config.getBoolean(Fields.allowMultipleSets);
-        refreshCommandTraders = config.getBoolean(Fields.refreshCommandTraders);
-        refreshCommandTradersMinutes = config.getInt(Fields.refreshCommandTradersMinutes);
-        preventNightInvisibility = config.getBoolean(Fields.preventNightInvisibility);
-        wgRegionList = config.getStringList(Fields.wgRegionList);
-        wgWhitelist = config.getBoolean(Fields.wgWhitelist);
-        traderWorldList = config.getStringList(Fields.traderWorldList);
-        traderWorldWhitelist = config.getBoolean(Fields.traderWorldWhitelist);
-        language = config.getString(Fields.language);
-        updateLang = config.getBoolean(Fields.updateLang);
-        updateChecker = config.getBoolean(Fields.updateChecker, updateChecker);
+        this.debug = config.getBoolean(Fields.debug);
+        this.enabled = config.getBoolean(Fields.enabled);
+        this.disableCommands = config.getBoolean(Fields.disableCommands);
+        this.removeOriginalTrades = config.getBoolean(Fields.removeOriginalTrades);
+        this.allowMultipleSets = config.getBoolean(Fields.allowMultipleSets);
+        this.refreshCommandTraders = config.getBoolean(Fields.refreshCommandTraders);
+        this.refreshCommandTradersMinutes = config.getInt(Fields.refreshCommandTradersMinutes);
+        this.preventNightInvisibility = config.getBoolean(Fields.preventNightInvisibility);
+        this.wgRegionList = config.getStringList(Fields.wgRegionList);
+        this.wgWhitelist = config.getBoolean(Fields.wgWhitelist);
+        this.traderWorldList = config.getStringList(Fields.traderWorldList);
+        this.traderWorldWhitelist = config.getBoolean(Fields.traderWorldWhitelist);
+        this.language = config.getString(Fields.language);
+        this.updateLang = config.getBoolean(Fields.updateLang);
+        this.updateChecker = config.getBoolean(Fields.updateChecker, this.updateChecker);
 
-        loadTradeConfigs();
-        loadPlayerHeadConfig();
+        this.loadTradeConfigs();
+        this.loadPlayerHeadConfig();
     }
 
     public void save() {
-        FileConfiguration config = plugin.getConfig();
+        FileConfiguration config = this.plugin.getConfig();
 
-        config.set(Fields.debug, debug);
-        config.set(Fields.enabled, enabled);
-        config.set(Fields.disableCommands, disableCommands);
-        config.set(Fields.removeOriginalTrades, removeOriginalTrades);
-        config.set(Fields.allowMultipleSets, allowMultipleSets);
-        config.set(Fields.refreshCommandTraders, refreshCommandTraders);
-        config.set(Fields.refreshCommandTradersMinutes, refreshCommandTradersMinutes);
-        config.set(Fields.preventNightInvisibility, preventNightInvisibility);
-        config.set(Fields.wgRegionList, wgRegionList);
-        config.set(Fields.wgWhitelist, wgWhitelist);
-        config.set(Fields.traderWorldList, traderWorldList);
-        config.set(Fields.traderWorldWhitelist, traderWorldWhitelist);
-        config.set(Fields.language, language);
-        config.set(Fields.updateLang, updateLang);
-        config.set(Fields.updateChecker, updateChecker);
+        config.set(Fields.debug, this.debug);
+        config.set(Fields.enabled, this.enabled);
+        config.set(Fields.disableCommands, this.disableCommands);
+        config.set(Fields.removeOriginalTrades, this.removeOriginalTrades);
+        config.set(Fields.allowMultipleSets, this.allowMultipleSets);
+        config.set(Fields.refreshCommandTraders, this.refreshCommandTraders);
+        config.set(Fields.refreshCommandTradersMinutes, this.refreshCommandTradersMinutes);
+        config.set(Fields.preventNightInvisibility, this.preventNightInvisibility);
+        config.set(Fields.wgRegionList, this.wgRegionList);
+        config.set(Fields.wgWhitelist, this.wgWhitelist);
+        config.set(Fields.traderWorldList, this.traderWorldList);
+        config.set(Fields.traderWorldWhitelist, this.traderWorldWhitelist);
+        config.set(Fields.language, this.language);
+        config.set(Fields.updateLang, this.updateLang);
+        config.set(Fields.updateChecker, this.updateChecker);
 
-        String path = plugin.getDataFolder() + "/config.yml";
+        String path = this.plugin.getDataFolder() + "/config.yml";
         try {
             config.save(path);
         } catch (IOException e) {
             this.plugin.getLogger().log(Level.WARNING, "Failed to save config", e);
         }
 
-        load();
+        this.load();
     }
 
     private void loadPlayerHeadConfig() {
-        File f = new File(plugin.getDataFolder() + "/playerheads.yml");
+        final File f = new File(this.plugin.getDataFolder(), "playerheads.yml");
         if (!f.exists()) {
-            plugin.saveResource("playerheads.yml", false);
+            this.plugin.saveResource("playerheads.yml", false);
         }
-        f = new File(plugin.getDataFolder() + "/playerheads.yml");
         FileConfiguration data = YamlConfiguration.loadConfiguration(f);
-        playerHeadConfig = new PlayerHeadConfig(this.plugin, data);
+        this.playerHeadConfig = new PlayerHeadConfig(this.plugin, data);
     }
 
     private void loadTradeConfigs() {
-        tradeConfigs.clear();
+        this.tradeConfigs.clear();
 
-        String path = plugin.getDataFolder() + "/trades";
+        final String path = plugin.getDataFolder() + "/trades";
 
-        File folder = new File(path);
+        final File folder = new File(path);
         if (!folder.exists()) {
             if (folder.mkdir()) {
                 this.plugin.getLogger().info("Creating trades folder");
             }
         }
+
         if (Objects.requireNonNull(folder.listFiles()).length == 0) {
             this.plugin.getLogger().info("No trade configs found, copying example configs");
-            plugin.saveResource("trades/example.yml", false);
-            plugin.saveResource("trades/microblocks.yml", false);
-            plugin.saveResource("trades/hermitheads.yml", false);
+            this.plugin.saveResource("trades/example.yml", false);
+            this.plugin.saveResource("trades/microblocks.yml", false);
+            this.plugin.saveResource("trades/hermitheads.yml", false);
         }
 
-        File[] tradeConfigFiles = folder.listFiles();
-
-        Arrays.stream(Objects.requireNonNull(tradeConfigFiles)).forEach(file -> {
+        for (final File file : Objects.requireNonNull(folder.listFiles())) {
             final FileConfiguration data = YamlConfiguration.loadConfiguration(file);
             final String configName = file.getName().split("\\.")[0];
-            tradeConfigs.put(configName, new TradeConfig(plugin, configName, data));
-        });
+            this.tradeConfigs.put(configName, new TradeConfig(this.plugin, configName, data));
+        }
     }
 
     public boolean debug() {

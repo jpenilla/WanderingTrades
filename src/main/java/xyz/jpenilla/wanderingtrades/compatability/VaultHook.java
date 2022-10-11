@@ -6,7 +6,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public class VaultHook {
+public final class VaultHook {
     private Permission permissions;
 
     public VaultHook(final @NonNull WanderingTrades wanderingTrades) {

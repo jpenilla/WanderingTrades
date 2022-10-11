@@ -17,8 +17,8 @@ public final class GuiListener implements Listener {
         if (event.getRawSlot() < 0) {
             return;
         }
-        if (event.getView().getTopInventory().getHolder() instanceof BaseGui holder) {
-            holder.onInventoryClick(event);
+        if (event.getView().getTopInventory().getHolder() instanceof BaseGui gui) {
+            gui.handleClick(event);
         }
     }
 

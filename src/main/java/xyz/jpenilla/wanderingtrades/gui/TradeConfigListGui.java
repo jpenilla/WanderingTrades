@@ -50,6 +50,7 @@ public class TradeConfigListGui extends PaginatedGui {
             .collect(Collectors.toList());
     }
 
+    @Override
     public Inventory getInv(Inventory i) {
         i.setItem(i.getSize() - 5, newConfig);
         i.setItem(inventory.getSize() - 1, closeButton);
@@ -61,6 +62,7 @@ public class TradeConfigListGui extends PaginatedGui {
         return i;
     }
 
+    @Override
     public void onClick(Player p, ItemStack i) {
         if (closeButton.isSimilar(i)) {
             p.closeInventory();

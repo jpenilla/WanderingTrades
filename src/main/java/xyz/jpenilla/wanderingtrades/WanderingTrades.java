@@ -15,7 +15,7 @@ import xyz.jpenilla.wanderingtrades.compatability.WorldGuardHook;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
 import xyz.jpenilla.wanderingtrades.util.Listeners;
-import xyz.jpenilla.wanderingtrades.util.StoredPlayers;
+import xyz.jpenilla.wanderingtrades.util.PlayerHeads;
 import xyz.jpenilla.wanderingtrades.util.TradeApplicator;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
 
@@ -25,7 +25,7 @@ public final class WanderingTrades extends PluginBase {
 
     private @MonotonicNonNull Config cfg;
     private @MonotonicNonNull LangConfig lang;
-    private @MonotonicNonNull StoredPlayers storedPlayers;
+    private @MonotonicNonNull PlayerHeads playerHeads;
     private @MonotonicNonNull Listeners listeners;
     private @MonotonicNonNull TradeApplicator tradeApplicator;
 
@@ -50,7 +50,7 @@ public final class WanderingTrades extends PluginBase {
         this.cfg = new Config(this);
         this.lang = new LangConfig(this);
 
-        this.storedPlayers = new StoredPlayers(this);
+        this.playerHeads = PlayerHeads.create(this);
 
         if (!this.cfg.disableCommands()) {
             try {
@@ -83,6 +83,13 @@ public final class WanderingTrades extends PluginBase {
         metrics.addCustomChart(new SimplePie("amount_of_trade_configs", () -> String.valueOf(this.cfg.tradeConfigs().size())));
     }
 
+    public void reload() {
+        this.config().load();
+        this.langConfig().load();
+        this.listeners().reload();
+        this.playerHeads().configChanged();
+    }
+
     public Config config() {
         return this.cfg;
     }
@@ -91,8 +98,8 @@ public final class WanderingTrades extends PluginBase {
         return this.lang;
     }
 
-    public StoredPlayers storedPlayers() {
-        return this.storedPlayers;
+    public PlayerHeads playerHeads() {
+        return this.playerHeads;
     }
 
     public TradeApplicator tradeApplicator() {

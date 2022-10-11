@@ -33,7 +33,7 @@ public class Listeners {
         if (this.plugin.config().enabled()) {
             this.registerListener(AcquireTradeListener.class, new AcquireTradeListener(this.plugin));
             this.registerListener(TraderSpawnListener.class, new TraderSpawnListener(this.plugin));
-            this.registerListener(ProtectTradersListener.class, new ProtectTradersListener(this.plugin));
+            this.registerListener(ProtectTradersListener.class, new ProtectTradersListener());
         }
 
         if (this.plugin.config().refreshCommandTraders()) {

@@ -1,4 +1,4 @@
-package xyz.jpenilla.wanderingtrades.command;
+package xyz.jpenilla.wanderingtrades.command.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -7,23 +7,21 @@ import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
-import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.command.BaseCommand;
+import xyz.jpenilla.wanderingtrades.command.CommandManager;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
 @DefaultQualifier(NonNull.class)
-public final class CommandHelp implements WTCommand {
-    private final WanderingTrades wanderingTrades;
-    private final CommandManager commandManager;
+public final class CommandHelp extends BaseCommand {
     private final MinecraftHelp<CommandSender> minecraftHelp;
     private final CommandHelpHandler<CommandSender> commandHelpHandler;
 
-    public CommandHelp(final WanderingTrades wanderingTrades, final CommandManager commandManager) {
-        this.wanderingTrades = wanderingTrades;
-        this.commandManager = commandManager;
+    public CommandHelp(final WanderingTrades plugin, final CommandManager commandManager) {
+        super(plugin, commandManager);
         this.minecraftHelp = commandManager.minecraftHelp();
         this.commandHelpHandler = commandManager.createCommandHelpHandler();
     }
@@ -40,15 +38,15 @@ public final class CommandHelp implements WTCommand {
                 return indexHelpTopic.getEntries()
                     .stream()
                     .map(CommandHelpHandler.VerboseHelpEntry::getSyntaxString)
-                    .collect(Collectors.toList());
+                    .toList();
             })
             .build();
 
         /* Help Command */
         final Command<CommandSender> help = this.commandManager.commandBuilder("wt", "wanderingtrades")
-            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_WT_HELP))
+            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_WT_HELP))
             .literal("help")
-            .argument(helpQueryArgument, ArgumentDescription.of(this.wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
+            .argument(helpQueryArgument, ArgumentDescription.of(this.plugin.langConfig().get(Lang.COMMAND_ARGUMENT_HELP_QUERY)))
             .handler(context -> this.minecraftHelp.queryCommands(
                 context.getOptional(helpQueryArgument).orElse(""),
                 context.getSender()

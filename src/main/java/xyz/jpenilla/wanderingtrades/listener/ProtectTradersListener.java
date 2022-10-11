@@ -6,21 +6,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.persistence.PersistentDataType;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
-public class ProtectTradersListener implements Listener {
-
-    public ProtectTradersListener(WanderingTrades instance) {
-    }
-
+@DefaultQualifier(NonNull.class)
+public final class ProtectTradersListener implements Listener {
     @EventHandler
-    public void onDamageByEntity(EntityDamageByEntityEvent e) {
-        final Entity entity = e.getEntity();
+    public void onDamageByEntity(final EntityDamageByEntityEvent event) {
+        final Entity entity = event.getEntity();
         if (entity instanceof AbstractVillager) {
             if (entity.getPersistentDataContainer().has(Constants.PROTECT, PersistentDataType.STRING)) {
-                if (!e.getDamager().hasPermission("wanderingtrades.damage")) {
-                    e.setCancelled(true);
+                if (!event.getDamager().hasPermission("wanderingtrades.damage")) {
+                    event.setCancelled(true);
                 }
             }
         }

@@ -4,6 +4,7 @@ import java.util.function.DoubleFunction;
 import java.util.function.IntFunction;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -44,24 +45,42 @@ public abstract class BaseGui implements InventoryHolder {
             .build();
     }
 
-    public abstract void onInventoryClick(InventoryClickEvent event);
-
-    public void onInventoryDrag(InventoryDragEvent event) {
+    public final void handleClick(final InventoryClickEvent event) {
+        if (this.onInventoryClick0(event)) {
+            this.onInventoryClick(event);
+        }
     }
 
-    public void onInventoryOpen(InventoryOpenEvent event) {
+    protected boolean onInventoryClick0(final InventoryClickEvent event) {
+        final ClickType click = event.getClick();
+        if (event.getSlot() != event.getRawSlot()) {
+            if (click.isKeyboardClick() || click.isShiftClick()) {
+                event.setCancelled(true);
+            }
+            return false;
+        }
+        event.setCancelled(true);
+        return true;
     }
 
-    public void onInventoryClose(InventoryCloseEvent event) {
+    protected abstract void onInventoryClick(final InventoryClickEvent event);
+
+    public void onInventoryDrag(final InventoryDragEvent event) {
     }
 
-    public void open(@NonNull Player p) {
+    public void onInventoryOpen(final InventoryOpenEvent event) {
+    }
+
+    public void onInventoryClose(final InventoryCloseEvent event) {
+    }
+
+    public void open(final @NonNull Player p) {
         p.openInventory(getInventory());
     }
 
-    public abstract void reOpen(Player p);
+    public abstract void reOpen(final Player p);
 
-    public boolean validateIntRange(Player p, String s) {
+    public boolean validateIntRange(final Player p, final String s) {
         if (s.contains(":")) {
             try {
                 String[] split = s.split(":");
@@ -79,7 +98,7 @@ public abstract class BaseGui implements InventoryHolder {
         }
     }
 
-    private boolean validateIntForRange(Player player, String input) {
+    private boolean validateIntForRange(final Player player, final String input) {
         try {
             int i = Integer.parseInt(input);
             if (i < 0) {
@@ -161,13 +180,13 @@ public abstract class BaseGui implements InventoryHolder {
         });
     }
 
-    public String onConfirmYesNo(Player player, String s) {
+    public String onConfirmYesNo(final Player player, final String s) {
         this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
         this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YES_NO));
         return "";
     }
 
-    public void onEditCancelled(Player p, String s) {
+    public void onEditCancelled(final Player p, final String s) {
         this.plugin.chat().sendParsed(p, this.lang.get(Lang.MESSAGE_EDIT_CANCELLED));
         this.open(p);
     }

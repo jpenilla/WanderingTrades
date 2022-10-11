@@ -2,6 +2,7 @@ package xyz.jpenilla.wanderingtrades.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.WanderingTrader;
@@ -46,21 +47,23 @@ public final class TradeApplicator {
         final List<MerchantRecipe> newTrades = new ArrayList<>();
 
         if (this.plugin.config().playerHeadConfig().playerHeadsFromServer() && randBoolean(this.plugin.config().playerHeadConfig().playerHeadsFromServerChance())) {
-            newTrades.addAll(this.plugin.storedPlayers().randomlySelectPlayerHeads());
+            newTrades.addAll(this.plugin.playerHeads().randomlySelectPlayerHeads());
         }
 
+        final Map<String, TradeConfig> tradeConfigs = Map.copyOf(this.plugin.config().tradeConfigs());
+
         if (this.plugin.config().allowMultipleSets()) {
-            for (final TradeConfig config : List.copyOf(this.plugin.config().tradeConfigs().values())) {
+            for (final TradeConfig config : tradeConfigs.values()) {
                 if (randBoolean(config.chance())) {
                     newTrades.addAll(config.getTrades(false));
                 }
             }
         } else {
             final WeightedRandom<String> configNames = new WeightedRandom<>();
-            this.plugin.config().tradeConfigs().forEach((key, value) -> configNames.add(value.chance(), key));
+            tradeConfigs.forEach((key, value) -> configNames.add(value.chance(), key));
             final @Nullable String chosenConfig = configNames.next();
             if (chosenConfig != null) {
-                newTrades.addAll(this.plugin.config().tradeConfigs().get(chosenConfig).getTrades(false));
+                newTrades.addAll(tradeConfigs.get(chosenConfig).getTrades(false));
             }
         }
 

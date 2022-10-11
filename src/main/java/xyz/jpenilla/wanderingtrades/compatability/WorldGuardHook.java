@@ -5,15 +5,17 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Location;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public class WorldGuardHook {
-
+@DefaultQualifier(NonNull.class)
+public final class WorldGuardHook {
     private final WanderingTrades plugin;
 
-    public WorldGuardHook(WanderingTrades instance) {
-        plugin = instance;
+    public WorldGuardHook(final WanderingTrades plugin) {
+        this.plugin = plugin;
     }
 
     public WorldGuard getWG() {
@@ -27,8 +29,7 @@ public class WorldGuardHook {
 
     public boolean passesWhiteBlackList(Location loc) {
         final boolean inListedRegion = getRegions(loc).getRegions().stream()
-            .anyMatch(region -> TextUtil.containsCaseInsensitive(region.getId(), plugin.config().wgRegionList()));
-        return plugin.config().wgWhitelist() == inListedRegion;
+            .anyMatch(region -> TextUtil.containsCaseInsensitive(region.getId(), this.plugin.config().wgRegionList()));
+        return this.plugin.config().wgWhitelist() == inListedRegion;
     }
-
 }

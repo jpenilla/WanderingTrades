@@ -112,17 +112,11 @@ public class ConfigEditGui extends BaseGui {
         return inventory;
     }
 
+    @Override
     public void onInventoryClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
         ClickType click = event.getClick();
-        if (event.getSlot() != event.getRawSlot()) {
-            if (click.isKeyboardClick() || click.isShiftClick()) {
-                event.setCancelled(true);
-            }
-            return;
-        }
-        event.setCancelled(true);
 
         if (closeButton.isSimilar(item)) {
             p.closeInventory();

@@ -1,4 +1,4 @@
-package xyz.jpenilla.wanderingtrades.command;
+package xyz.jpenilla.wanderingtrades.command.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -31,10 +31,11 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
-import xyz.jpenilla.pluginbase.legacy.Chat;
 import xyz.jpenilla.pluginbase.legacy.Crafty;
 import xyz.jpenilla.pluginbase.legacy.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.command.BaseCommand;
+import xyz.jpenilla.wanderingtrades.command.CommandManager;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -43,53 +44,47 @@ import xyz.jpenilla.wanderingtrades.util.Constants;
 import static io.papermc.lib.PaperLib.isPaper;
 
 @DefaultQualifier(NonNull.class)
-public final class CommandSummon implements WTCommand {
-    private final WanderingTrades wanderingTrades;
-    private final CommandManager mgr;
-    private final Chat chat;
-
+public final class CommandSummon extends BaseCommand {
     public CommandSummon(
-        final WanderingTrades wanderingTrades,
-        final CommandManager mgr
+        final WanderingTrades plugin,
+        final CommandManager commandManager
     ) {
-        this.wanderingTrades = wanderingTrades;
-        this.mgr = mgr;
-        this.chat = wanderingTrades.chat();
+        super(plugin, commandManager);
 
-        mgr.registerFlag(
+        commandManager.registerFlag(
             "pitch",
-            mgr.flagBuilder("pitch")
+            commandManager.flagBuilder("pitch")
                 .withArgument(IntegerArgument.newBuilder("pitch").withMin(-180).withMax(180))
         );
-        mgr.registerFlag(
+        commandManager.registerFlag(
             "yaw",
-            mgr.flagBuilder("yaw")
+            commandManager.flagBuilder("yaw")
                 .withArgument(IntegerArgument.newBuilder("yaw").withMin(-90).withMax(90))
         );
-        mgr.registerFlag(
+        commandManager.registerFlag(
             "world",
-            mgr.flagBuilder("world")
+            commandManager.flagBuilder("world")
                 .withArgument(WorldArgument.of("world"))
         );
     }
 
     @Override
     public void register() {
-        final Command.Builder<CommandSender> wt = this.mgr.commandBuilder("wt");
+        final Command.Builder<CommandSender> wt = this.commandManager.commandBuilder("wt");
 
         final Command<CommandSender> summonNatural = wt
-            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
+            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
             .literal("summonnatural")
             .argument(LocationArgument.of("location"))
-            .flag(this.mgr.getFlag("world"))
-            .flag(this.mgr.getFlag("pitch"))
-            .flag(this.mgr.getFlag("yaw"))
-            .flag(this.mgr.flagBuilder("noai"))
-            .flag(this.mgr.flagBuilder("protect"))
-            .flag(this.mgr.flagBuilder("refresh"))
-            .flag(this.mgr.flagBuilder("noinvisibility"))
+            .flag(this.commandManager.getFlag("world"))
+            .flag(this.commandManager.getFlag("pitch"))
+            .flag(this.commandManager.getFlag("yaw"))
+            .flag(this.commandManager.flagBuilder("noai"))
+            .flag(this.commandManager.flagBuilder("protect"))
+            .flag(this.commandManager.flagBuilder("refresh"))
+            .flag(this.commandManager.flagBuilder("noinvisibility"))
             .permission("wanderingtrades.summonnatural")
-            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
                 this.summonNatural(
                     resolveLocation(context),
                     context.flags().isPresent("refresh"),
@@ -101,16 +96,16 @@ public final class CommandSummon implements WTCommand {
             .build();
 
         final Command<CommandSender> summon = wt
-            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON))
+            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_SUMMON))
             .literal("summon")
             .argument(TradeConfigArgument.of("trade_config"))
             .argument(LocationArgument.of("location"))
-            .flag(this.mgr.getFlag("world"))
-            .flag(this.mgr.getFlag("pitch"))
-            .flag(this.mgr.getFlag("yaw"))
-            .flag(this.mgr.flagBuilder("noai"))
+            .flag(this.commandManager.getFlag("world"))
+            .flag(this.commandManager.getFlag("pitch"))
+            .flag(this.commandManager.getFlag("yaw"))
+            .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.summon")
-            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
                 this.summonTrader(
                     context.getSender(),
                     context.get("trade_config"),
@@ -121,18 +116,18 @@ public final class CommandSummon implements WTCommand {
             .build();
 
         final Command<CommandSender> summonVillager = wt
-            .meta(CommandMeta.DESCRIPTION, this.wanderingTrades.langConfig().get(Lang.COMMAND_VSUMMON))
+            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_VSUMMON))
             .literal("summonvillager")
             .argument(TradeConfigArgument.of("trade_config"))
             .argument(EnumArgument.of(Villager.Type.class, "type"))
             .argument(EnumArgument.of(Villager.Profession.class, "profession"))
             .argument(LocationArgument.of("location"))
-            .flag(this.mgr.getFlag("world"))
-            .flag(this.mgr.getFlag("pitch"))
-            .flag(this.mgr.getFlag("yaw"))
-            .flag(this.mgr.flagBuilder("noai"))
+            .flag(this.commandManager.getFlag("world"))
+            .flag(this.commandManager.getFlag("pitch"))
+            .flag(this.commandManager.getFlag("yaw"))
+            .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.villager")
-            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
                 this.summonVillagerTrader(
                     context.getSender(),
                     context.get("trade_config"),
@@ -145,14 +140,14 @@ public final class CommandSummon implements WTCommand {
             .build();
 
         /* Entity Rename Command */
-        final Command<CommandSender> nameEntity = this.mgr.commandBuilder("nameentity")
+        final Command<CommandSender> nameEntity = this.commandManager.commandBuilder("nameentity")
             .meta(CommandMeta.DESCRIPTION, "Sets the name of an entity.")
             .argument(SingleEntitySelectorArgument.of("entity"))
             .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
                 ArgumentDescription.of("The MiniMessage string to use as a name."))
             .permission("wanderingtrades.name")
             .senderType(Player.class)
-            .handler(c -> this.mgr.taskRecipe().begin(c).synchronous(context -> {
+            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
                 final @Nullable Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
                 if (entity != null && !(entity instanceof Player)) {
                     setCustomName(entity, context.get("name"));
@@ -164,7 +159,7 @@ public final class CommandSummon implements WTCommand {
             }).execute())
             .build();
 
-        this.mgr.register(List.of(summonNatural, summon, summonVillager, nameEntity));
+        this.commandManager.register(List.of(summonNatural, summon, summonVillager, nameEntity));
     }
 
     private void summonNatural(
@@ -210,7 +205,7 @@ public final class CommandSummon implements WTCommand {
 
             this.applyConfig(tradeConfig, wanderingTrader);
 
-            if (this.wanderingTrades.config().preventNightInvisibility() && isPaper()) {
+            if (this.plugin.config().preventNightInvisibility() && isPaper()) {
                 wanderingTrader.setCanDrinkPotion(false);
             }
         });
@@ -246,7 +241,7 @@ public final class CommandSummon implements WTCommand {
         try {
             return tradeConfig.getTrades(true);
         } catch (final IllegalStateException ex) {
-            this.chat.sendParsed(sender, this.wanderingTrades.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+            this.chat.sendParsed(sender, this.plugin.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
             return null;
         }
     }
@@ -292,12 +287,12 @@ public final class CommandSummon implements WTCommand {
             Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
 
             Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
-            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(this.wanderingTrades.miniMessage().deserialize(miniMessage));
+            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(this.plugin.miniMessage().deserialize(miniMessage));
 
             _setCustomName.invoke(nmsEntity, nmsComponent);
         } catch (Throwable throwable) {
-            if (this.wanderingTrades.config().debug()) {
-                this.wanderingTrades.getLogger().log(
+            if (this.plugin.config().debug()) {
+                this.plugin.getLogger().log(
                     Level.WARNING,
                     "Failed to set entity name using reflection, falling back onto legacy text serialization",
                     throwable

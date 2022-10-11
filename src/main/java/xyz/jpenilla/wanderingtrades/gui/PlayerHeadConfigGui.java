@@ -123,13 +123,6 @@ public class PlayerHeadConfigGui extends TradeGui {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
         ClickType click = event.getClick();
-        if (event.getSlot() != event.getRawSlot()) {
-            if (click.isKeyboardClick() || click.isShiftClick()) {
-                event.setCancelled(true);
-            }
-            return;
-        }
-        event.setCancelled(true);
 
         if (closeButton.isSimilar(item)) {
             p.closeInventory();
@@ -139,10 +132,10 @@ public class PlayerHeadConfigGui extends TradeGui {
 
         if (enabledStack.isSimilar(item)) {
             config.playerHeadsFromServer(false);
-            this.plugin.storedPlayers().updateCacheTimerState();
+            this.plugin.playerHeads().configChanged();
         } else if (disabledStack.isSimilar(item)) {
             config.playerHeadsFromServer(true);
-            this.plugin.storedPlayers().updateCacheTimerState();
+            this.plugin.playerHeads().configChanged();
         }
 
         if (getExperienceEnabled().isSimilar(item)) {
@@ -272,7 +265,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                     l.remove(l.size() - 1);
                 }
                 config.usernameBlacklist(l);
-                this.plugin.storedPlayers().updateCacheTimerState();
+                this.plugin.playerHeads().configChanged();
             } else {
                 p.closeInventory();
                 new InputConversation()
@@ -349,7 +342,7 @@ public class PlayerHeadConfigGui extends TradeGui {
                 .onAccepted((player, s) -> {
                     config.days(Integer.parseInt(s));
                     config.save();
-                    this.plugin.storedPlayers().updateCacheTimerState();
+                    this.plugin.playerHeads().configChanged();
                     this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
                     open(player);
                 })

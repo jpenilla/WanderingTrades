@@ -3,7 +3,6 @@ package xyz.jpenilla.wanderingtrades.config;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
@@ -245,14 +244,12 @@ public class TradeConfig {
     }
 
     private List<MerchantRecipe> pickTrades(List<MerchantRecipe> lst, int amount) {
-        List<MerchantRecipe> copy = new LinkedList<>(lst);
+        List<MerchantRecipe> copy = new ArrayList<>(lst);
         Collections.shuffle(copy);
-        List<MerchantRecipe> f = new LinkedList<>(lst);
-        int i = 0;
-        while (i < amount) {
+        List<MerchantRecipe> f = new ArrayList<>(lst);
+        while (copy.size() < amount) {
             Collections.shuffle(f);
             copy.addAll(f);
-            i++;
         }
         return copy.subList(0, amount);
     }

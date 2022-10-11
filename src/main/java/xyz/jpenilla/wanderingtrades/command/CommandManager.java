@@ -31,9 +31,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
+import xyz.jpenilla.wanderingtrades.command.commands.CommandConfig;
+import xyz.jpenilla.wanderingtrades.command.commands.CommandHelp;
+import xyz.jpenilla.wanderingtrades.command.commands.CommandSummon;
+import xyz.jpenilla.wanderingtrades.command.commands.CommandWanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-import xyz.jpenilla.wanderingtrades.util.Components;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 @DefaultQualifier(NonNull.class)
@@ -41,20 +44,20 @@ public final class CommandManager extends PaperCommandManager<CommandSender> {
     public static final CloudKey<WanderingTrades> PLUGIN = SimpleCloudKey.of("wt:plugin", TypeToken.get(WanderingTrades.class));
     private static final Pattern SYNTAX_HIGHLIGHT_PATTERN = Pattern.compile("[^\\s\\w\\-]");
 
-    private final WanderingTrades wanderingTrades;
+    private final WanderingTrades plugin;
     private final MinecraftHelp<CommandSender> help;
     private final Map<String, CommandFlag.Builder<?>> flagRegistry = new HashMap<>();
 
-    public CommandManager(final WanderingTrades wanderingTrades) throws Exception {
+    public CommandManager(final WanderingTrades plugin) throws Exception {
         super(
-            wanderingTrades,
+            plugin,
             AsynchronousCommandExecutionCoordinator.<CommandSender>newBuilder().build(),
             Function.identity(),
             Function.identity()
         );
-        this.wanderingTrades = wanderingTrades;
+        this.plugin = plugin;
 
-        this.help = new MinecraftHelp<>("/wanderingtrades help", wanderingTrades.audiences()::sender, this);
+        this.help = new MinecraftHelp<>("/wanderingtrades help", plugin.audiences()::sender, this);
         this.help.setHelpColors(MinecraftHelp.HelpColors.of(
             TextColor.color(0x00a3ff),
             NamedTextColor.WHITE,
@@ -62,22 +65,22 @@ public final class CommandManager extends PaperCommandManager<CommandSender> {
             NamedTextColor.GRAY,
             NamedTextColor.DARK_GRAY
         ));
-        this.help.setMessageProvider((sender, key) -> wanderingTrades.langConfig().get(Lang.valueOf(String.format("HELP_%s", key).toUpperCase())));
+        this.help.setMessageProvider((sender, key) -> plugin.langConfig().get(Lang.valueOf(String.format("HELP_%s", key).toUpperCase())));
 
         this.registerExceptionHandlers();
 
         if (this.captionRegistry() instanceof final SimpleCaptionRegistry<CommandSender> registry) {
             registry.registerMessageFactory(
                 StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
-                (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM)
+                (caption, sender) -> plugin.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM)
             );
             registry.registerMessageFactory(
                 BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE,
-                (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE)
+                (caption, sender) -> plugin.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE)
             );
             registry.registerMessageFactory(
                 BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT,
-                (caption, sender) -> wanderingTrades.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT)
+                (caption, sender) -> plugin.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT)
             );
         }
 
@@ -88,13 +91,13 @@ public final class CommandManager extends PaperCommandManager<CommandSender> {
             if (brigManager != null) {
                 brigManager.setNativeNumberSuggestions(false);
             }
-            wanderingTrades.getLogger().info("Successfully registered Mojang Brigadier support for commands.");
+            plugin.getLogger().info("Successfully registered Mojang Brigadier support for commands.");
         }
 
         /* Register Asynchronous Completion Listener */
         if (this.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
             this.registerAsynchronousCompletions();
-            wanderingTrades.getLogger().info("Successfully registered asynchronous command completion listener.");
+            plugin.getLogger().info("Successfully registered asynchronous command completion listener.");
         }
 
         this.parserRegistry().registerParserSupplier(
@@ -102,15 +105,15 @@ public final class CommandManager extends PaperCommandManager<CommandSender> {
             parameters -> new TradeConfigArgument.Parser()
         );
 
-        this.registerCommandPreProcessor(ctx -> ctx.getCommandContext().store(PLUGIN, wanderingTrades));
+        this.registerCommandPreProcessor(ctx -> ctx.getCommandContext().store(PLUGIN, plugin));
 
         /* Register Commands */
         Stream.of(
-            new CommandHelp(wanderingTrades, this),
-            new CommandWanderingTrades(wanderingTrades, this),
-            new CommandSummon(wanderingTrades, this),
-            new CommandConfig(wanderingTrades, this)
-        ).forEach(WTCommand::register);
+            new CommandHelp(plugin, this),
+            new CommandWanderingTrades(plugin, this),
+            new CommandSummon(plugin, this),
+            new CommandConfig(plugin, this)
+        ).forEach(BaseCommand::register);
     }
 
     private void registerExceptionHandlers() {
@@ -119,7 +122,7 @@ public final class CommandManager extends PaperCommandManager<CommandSender> {
                 Component.translatable("commands.help.failed", NamedTextColor.RED))
             .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, e -> {
                 final InvalidSyntaxException exception = (InvalidSyntaxException) e;
-                final Component invalidSyntaxMessage = Component.text(this.wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_SYNTAX), NamedTextColor.RED);
+                final Component invalidSyntaxMessage = Component.text(this.plugin.langConfig().get(Lang.COMMAND_INVALID_SYNTAX), NamedTextColor.RED);
                 final Component correctSyntaxMessage = Component.text(
                     String.format("/%s", exception.getCorrectSyntax()),
                     NamedTextColor.GRAY
@@ -128,12 +131,12 @@ public final class CommandManager extends PaperCommandManager<CommandSender> {
                     config.replacement(builder -> builder.color(NamedTextColor.WHITE));
                 });
 
-                return Components.ofChildren(invalidSyntaxMessage, correctSyntaxMessage);
+                return Component.textOfChildren(invalidSyntaxMessage, correctSyntaxMessage);
             })
             .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, e -> {
                 final InvalidCommandSenderException exception = (InvalidCommandSenderException) e;
                 final Component invalidSenderMessage = Component.text(
-                    this.wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_SENDER),
+                    this.plugin.langConfig().get(Lang.COMMAND_INVALID_SENDER),
                     NamedTextColor.RED
                 );
                 final Component correctSenderType = Component.text(
@@ -146,13 +149,13 @@ public final class CommandManager extends PaperCommandManager<CommandSender> {
                 });
             })
             .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, e -> {
-                final Component invalidArgumentMessage = Component.text(this.wanderingTrades.langConfig().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
+                final Component invalidArgumentMessage = Component.text(this.plugin.langConfig().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
                 final Component causeMessage = Component.text(e.getCause().getMessage(), NamedTextColor.GRAY);
-                return Components.ofChildren(invalidArgumentMessage, causeMessage);
+                return Component.textOfChildren(invalidArgumentMessage, causeMessage);
             })
             .withCommandExecutionHandler()
-            .withDecorator(component -> Components.ofChildren(Constants.PREFIX_COMPONENT, component))
-            .apply(this, this.wanderingTrades.audiences()::sender);
+            .withDecorator(component -> Component.textOfChildren(Constants.PREFIX_COMPONENT, component))
+            .apply(this, this.plugin.audiences()::sender);
     }
 
     public CommandFlag.Builder<?> getFlag(final String name) {

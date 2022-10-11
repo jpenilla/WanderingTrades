@@ -3,7 +3,6 @@ package xyz.jpenilla.wanderingtrades.gui;
 import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -84,14 +83,6 @@ public abstract class TradeGui extends BaseGui {
     public void onInventoryClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
-        ClickType click = event.getClick();
-        if (event.getSlot() != event.getRawSlot()) {
-            if (click.isKeyboardClick() || click.isShiftClick()) {
-                event.setCancelled(true);
-            }
-            return;
-        }
-        event.setCancelled(true);
 
         if (cancelButton.isSimilar(item)) {
             p.closeInventory();
