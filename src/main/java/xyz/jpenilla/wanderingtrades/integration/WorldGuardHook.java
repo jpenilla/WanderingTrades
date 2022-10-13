@@ -1,4 +1,4 @@
-package xyz.jpenilla.wanderingtrades.compatability;
+package xyz.jpenilla.wanderingtrades.integration;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -23,12 +23,12 @@ public final class WorldGuardHook {
     }
 
     public ApplicableRegionSet getRegions(final Location loc) {
-        final RegionContainer container = getWG().getPlatform().getRegionContainer();
+        final RegionContainer container = this.getWG().getPlatform().getRegionContainer();
         return container.createQuery().getApplicableRegions(BukkitAdapter.adapt(loc));
     }
 
     public boolean passesWhiteBlackList(Location loc) {
-        final boolean inListedRegion = getRegions(loc).getRegions().stream()
+        final boolean inListedRegion = this.getRegions(loc).getRegions().stream()
             .anyMatch(region -> TextUtil.containsCaseInsensitive(region.getId(), this.plugin.config().wgRegionList()));
         return this.plugin.config().wgWhitelist() == inListedRegion;
     }

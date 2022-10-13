@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-class ProfileCompleter extends BukkitRunnable {
+final class ProfileCompleter extends BukkitRunnable {
 
     private final Queue<PlayerProfile> completionQueue = new ConcurrentLinkedQueue<>();
     private final WanderingTrades plugin;

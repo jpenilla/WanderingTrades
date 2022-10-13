@@ -1,5 +1,5 @@
 # Wandering Trades ${project.version} de_DE language config \\ German translation by Cantibra
-COMMAND_LIST_LOADED: '<gradient:green:blue>Geladene Angebots-Konfigurationen</gradient><gray>:'
+COMMAND_LIST_LOADED: '<blue>Geladene Angebots-Konfigurationen</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'Es sind keine Angebots-Konfigurationen mit diesem Namen geladen.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Diese Konfiguration enthält fehler. Stelle sicher, dass die Rezepte mindestens ein Item enthalten.'
 COMMAND_RELOAD: '<gradient:red:yellow>Lädt die WanderingTrades-Konfiguration neu...'
@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: 'Legt fest, ab wie vielen Tagen der letzten Anmel
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Die neue Konfiguration wurde erfolgreich erstellt und nachgeladen.'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Konfigurationserstellung abgebrochen.'
 MESSAGE_YOU_ENTERED: "<yellow>Deine Eingabe</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "Verwendest du diesen Wert? Eingabe oder Klicken: <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:yes><green>Ja</green></hover></click> oder <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:no><red>Nein</red></hover></click>"
+MESSAGE_YES_NO: "Verwendest du diesen Wert? Eingabe oder Klicken: <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:yes><green>Ja</green></hover> oder <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:no><red>Nein</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Änderungen verworfen"
 MESSAGE_EDIT_SAVED: "<italic><green>Änderungen gespeichert"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Gebe einen WorldGuard-Regionsnamen ein.</gradient><gray>:"

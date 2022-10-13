@@ -1,70 +1,84 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.ArrayList;
-import java.util.stream.IntStream;
+import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
-public class TradeCreateGui extends TradeGui {
-
-    public TradeCreateGui(final WanderingTrades plugin, TradeConfig tradeConfig) {
-        super(plugin, plugin.langConfig().get(Lang.GUI_TRADE_CREATE_TITLE), tradeConfig);
+@DefaultQualifier(NonNull.class)
+public final class TradeCreateGui extends TradeGui {
+    public TradeCreateGui(final WanderingTrades plugin, final TradeConfig tradeConfig) {
+        super(
+            plugin,
+            plugin.langConfig().get(Lang.GUI_TRADE_CREATE_TITLE),
+            tradeConfig
+        );
     }
 
-    public @NonNull Inventory getInventory() {
-        inventory = super.getInventory();
+    @Override
+    public Inventory getInventory() {
+        super.getInventory();
 
-        ArrayList<String> tradeNameLore = new ArrayList<>();
-        tradeNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + getTradeName());
-        tradeNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        inventory.setItem(10, new ItemBuilder(getTradeNameStack()).setLore(tradeNameLore).build());
+        final List<String> tradeNameLore = new ArrayList<>();
+        tradeNameLore.add(this.tradeNameValueLore());
+        tradeNameLore.add(this.lang.get(Lang.GUI_EDIT_LORE));
+        this.inventory.setItem(10, new ItemBuilder(this.getTradeNameStack()).setLore(tradeNameLore).build());
 
-        IntStream.range(0, inventory.getSize()).forEach(slot -> {
-            if (inventory.getItem(slot) == null) {
-                inventory.setItem(slot, filler);
-            }
-        });
+        this.fillEmptySlots();
 
-        return inventory;
+        return this.inventory;
     }
 
-    public void onClick(InventoryClickEvent event) {
-        ItemStack item = event.getCurrentItem();
-        Player p = (Player) event.getWhoClicked();
+    private String tradeNameValueLore() {
+        final @Nullable String tradeName = this.getTradeName();
+        final String displayName = tradeName == null ? "<gray>________" : "<white>" + tradeName;
+        return this.lang.get(Lang.GUI_VALUE_LORE) + displayName;
+    }
 
-        if (getTradeNameStack().isSimilar(item)) {
-            p.closeInventory();
-            new InputConversation()
-                .onPromptText(player -> {
-                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
-                    return "";
-                })
-                .onValidateInput((player, input) -> {
-                    if (input.contains(" ")) {
-                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_NO_SPACES));
-                        return false;
-                    }
-                    if (this.tradeConfig.fileConfiguration().getConfigurationSection("trades").contains(input)) {
-                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CREATE_UNIQUE));
-                        return false;
-                    }
-                    return true;
-                })
-                .onConfirmText(this::onConfirmYesNo)
-                .onAccepted((player, s) -> {
-                    setTradeName(s);
-                    open(player);
-                })
-                .onDenied(this::onEditCancelled)
-                .start(p);
+    @Override
+    public void onClick(final InventoryClickEvent event) {
+        final @Nullable ItemStack item = event.getCurrentItem();
+        final Player player = (Player) event.getWhoClicked();
+
+        if (this.getTradeNameStack().isSimilar(item)) {
+            player.closeInventory();
+            this.tradeNameClick(player);
         }
+    }
+
+    private void tradeNameClick(final Player p) {
+        new InputConversation()
+            .onPromptText(player -> {
+                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
+                return "";
+            })
+            .onValidateInput((player, input) -> {
+                if (input.contains(" ")) {
+                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NO_SPACES));
+                    return false;
+                }
+                if (this.tradeConfig.tradesByName().containsKey(input)) {
+                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                    return false;
+                }
+                return true;
+            })
+            .onConfirmText(this::confirmYesNo)
+            .onAccepted((player, s) -> {
+                this.setTradeName(s);
+                this.open(player);
+            })
+            .onDenied(this::editCancelled)
+            .start(p);
     }
 }

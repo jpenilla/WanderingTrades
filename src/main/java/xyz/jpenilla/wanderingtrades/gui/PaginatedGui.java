@@ -7,66 +7,75 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
+@DefaultQualifier(NonNull.class)
 public abstract class PaginatedGui extends BaseGui {
-    private final ItemStack nextPage = new ItemBuilder(Material.ARROW).setName(lang.get(Lang.GUI_PAGED_NEXT)).setLore(lang.get(Lang.GUI_PAGED_NEXT_LORE)).build();
-    private final ItemStack previousPage = new ItemBuilder(Material.FEATHER).setName(lang.get(Lang.GUI_PAGED_LAST)).setLore(lang.get(Lang.GUI_PAGED_LAST_LORE)).build();
+    private final ItemStack nextPage = new ItemBuilder(Material.ARROW)
+        .setName(this.lang.get(Lang.GUI_PAGED_NEXT))
+        .setLore(this.lang.get(Lang.GUI_PAGED_NEXT_LORE))
+        .build();
+    private final ItemStack previousPage = new ItemBuilder(Material.FEATHER)
+        .setName(this.lang.get(Lang.GUI_PAGED_LAST))
+        .setLore(this.lang.get(Lang.GUI_PAGED_LAST_LORE))
+        .build();
 
     private int page = 0;
 
-    public PaginatedGui(final WanderingTrades plugin, String name, int size) {
+    protected PaginatedGui(final WanderingTrades plugin, final String name, final int size) {
         super(plugin, name, size);
     }
 
-    @NonNull
+    @Override
     public final Inventory getInventory() {
-        inventory.clear();
+        this.inventory.clear();
 
-        final List<ItemStack> items = getListItems();
+        final List<ItemStack> items = this.getListItems();
 
-        int maxPages = (int) Math.ceil(items.size() / (double) (inventory.getSize() - 9));
-        page = Math.min(maxPages, page);
+        int maxPages = (int) Math.ceil(items.size() / (double) (this.inventory.getSize() - 9));
+        this.page = Math.min(maxPages, this.page);
 
-        if (page > 0) {
-            inventory.setItem(inventory.getSize() - 9, previousPage);
+        if (this.page > 0) {
+            this.inventory.setItem(this.inventory.getSize() - 9, this.previousPage);
         }
-        if (page < maxPages - 1) {
-            inventory.setItem(inventory.getSize() - 8, nextPage);
+        if (this.page < maxPages - 1) {
+            this.inventory.setItem(this.inventory.getSize() - 8, this.nextPage);
         }
 
-        int startIndex = page * (inventory.getSize() - 9);
-        for (int i = 0; i < inventory.getSize() - 9; i++) {
+        int startIndex = this.page * (this.inventory.getSize() - 9);
+        for (int i = 0; i < this.inventory.getSize() - 9; i++) {
             if (i + startIndex >= items.size()) {
                 break;
             }
-            inventory.setItem(i, items.get(startIndex + i));
+            this.inventory.setItem(i, items.get(startIndex + i));
         }
 
-        return getInv(inventory);
+        return this.getInventory(this.inventory);
     }
 
-    public abstract Inventory getInv(Inventory inv);
+    protected abstract Inventory getInventory(Inventory inventory);
 
-    public abstract List<ItemStack> getListItems();
+    protected abstract List<ItemStack> getListItems();
 
     @Override
     public final void onInventoryClick(InventoryClickEvent event) {
-        ItemStack item = event.getCurrentItem();
-        Player p = (Player) event.getWhoClicked();
-        if (nextPage.isSimilar(item)) {
-            page++;
-        } else if (previousPage.isSimilar(item)) {
-            page--;
+        final @Nullable ItemStack item = event.getCurrentItem();
+        final Player player = (Player) event.getWhoClicked();
+        if (this.nextPage.isSimilar(item)) {
+            this.page++;
+        } else if (this.previousPage.isSimilar(item)) {
+            this.page--;
         } else {
-            onClick(p, item);
+            this.onClick(player, item);
         }
-        getInventory();
+        this.getInventory();
     }
 
-    public abstract void onClick(Player p, ItemStack i);
+    protected abstract void onClick(Player player, @Nullable ItemStack stack);
 
     public int getPage() {
         return this.page;

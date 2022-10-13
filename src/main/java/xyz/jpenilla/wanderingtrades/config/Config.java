@@ -1,16 +1,12 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public class Config {
+public final class Config {
     private final WanderingTrades plugin;
 
     private boolean debug;
@@ -28,8 +24,6 @@ public class Config {
     private List<String> wgRegionList;
     private List<String> traderWorldList;
     private int refreshCommandTradersMinutes;
-    private final HashMap<String, TradeConfig> tradeConfigs = new HashMap<>();
-    private PlayerHeadConfig playerHeadConfig;
 
     public Config(final WanderingTrades plugin) {
         this.plugin = plugin;
@@ -56,13 +50,10 @@ public class Config {
         this.language = config.getString(Fields.language);
         this.updateLang = config.getBoolean(Fields.updateLang);
         this.updateChecker = config.getBoolean(Fields.updateChecker, this.updateChecker);
-
-        this.loadTradeConfigs();
-        this.loadPlayerHeadConfig();
     }
 
     public void save() {
-        FileConfiguration config = this.plugin.getConfig();
+        final FileConfiguration config = this.plugin.getConfig();
 
         config.set(Fields.debug, this.debug);
         config.set(Fields.enabled, this.enabled);
@@ -80,49 +71,14 @@ public class Config {
         config.set(Fields.updateLang, this.updateLang);
         config.set(Fields.updateChecker, this.updateChecker);
 
-        String path = this.plugin.getDataFolder() + "/config.yml";
+        final String path = this.plugin.getDataFolder() + "/config.yml";
         try {
             config.save(path);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             this.plugin.getLogger().log(Level.WARNING, "Failed to save config", e);
         }
 
         this.load();
-    }
-
-    private void loadPlayerHeadConfig() {
-        final File f = new File(this.plugin.getDataFolder(), "playerheads.yml");
-        if (!f.exists()) {
-            this.plugin.saveResource("playerheads.yml", false);
-        }
-        FileConfiguration data = YamlConfiguration.loadConfiguration(f);
-        this.playerHeadConfig = new PlayerHeadConfig(this.plugin, data);
-    }
-
-    private void loadTradeConfigs() {
-        this.tradeConfigs.clear();
-
-        final String path = plugin.getDataFolder() + "/trades";
-
-        final File folder = new File(path);
-        if (!folder.exists()) {
-            if (folder.mkdir()) {
-                this.plugin.getLogger().info("Creating trades folder");
-            }
-        }
-
-        if (Objects.requireNonNull(folder.listFiles()).length == 0) {
-            this.plugin.getLogger().info("No trade configs found, copying example configs");
-            this.plugin.saveResource("trades/example.yml", false);
-            this.plugin.saveResource("trades/microblocks.yml", false);
-            this.plugin.saveResource("trades/hermitheads.yml", false);
-        }
-
-        for (final File file : Objects.requireNonNull(folder.listFiles())) {
-            final FileConfiguration data = YamlConfiguration.loadConfiguration(file);
-            final String configName = file.getName().split("\\.")[0];
-            this.tradeConfigs.put(configName, new TradeConfig(this.plugin, configName, data));
-        }
     }
 
     public boolean debug() {
@@ -185,14 +141,6 @@ public class Config {
         return this.refreshCommandTradersMinutes;
     }
 
-    public HashMap<String, TradeConfig> tradeConfigs() {
-        return this.tradeConfigs;
-    }
-
-    public PlayerHeadConfig playerHeadConfig() {
-        return this.playerHeadConfig;
-    }
-
     public void enabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -226,7 +174,6 @@ public class Config {
     }
 
     public static final class Fields {
-        public static final String plugin = "plugin";
         public static final String debug = "debug";
         public static final String enabled = "enabled";
         public static final String disableCommands = "disableCommands";
@@ -241,8 +188,6 @@ public class Config {
         public static final String wgRegionList = "wgRegionList";
         public static final String traderWorldList = "traderWorldList";
         public static final String refreshCommandTradersMinutes = "refreshCommandTradersMinutes";
-        public static final String tradeConfigs = "tradeConfigs";
-        public static final String playerHeadConfig = "playerHeadConfig";
         public static final String updateChecker = "updateChecker";
     }
 }

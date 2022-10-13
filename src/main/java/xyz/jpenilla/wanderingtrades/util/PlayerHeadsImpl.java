@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -27,7 +26,6 @@ import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
 
 @DefaultQualifier(NonNull.class)
@@ -56,8 +54,8 @@ final class PlayerHeadsImpl implements PlayerHeads {
     @Override
     public List<MerchantRecipe> randomlySelectPlayerHeads() {
         final Map<UUID, MerchantRecipe> recipes = Map.copyOf(this.uuidMerchantRecipeMap);
-        final ArrayList<UUID> uuids = new ArrayList<>(recipes.keySet());
-        final int amount = this.plugin.config().playerHeadConfig().getRandAmount();
+        final List<UUID> uuids = new ArrayList<>(recipes.keySet());
+        final int amount = this.plugin.configManager().playerHeadConfig().getRandAmount();
         final Collection<UUID> selected = new ArrayList<>();
 
         if (uuids.size() < 2) {
@@ -80,7 +78,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     @Override
     public void handleLogin(final Player player) {
-        if (!this.plugin.config().playerHeadConfig().playerHeadsFromServer()) {
+        if (!this.plugin.configManager().playerHeadConfig().playerHeadsFromServer()) {
             return;
         }
 
@@ -89,11 +87,11 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     @Override
     public void handleLogout(final Player player) {
-        if (!this.plugin.config().playerHeadConfig().playerHeadsFromServer()) {
+        if (!this.plugin.configManager().playerHeadConfig().playerHeadsFromServer()) {
             return;
         }
 
-        if (this.plugin.isVaultPermissions() && this.plugin.config().playerHeadConfig().permissionWhitelist()) {
+        if (this.plugin.vaultHook() != null && this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
             if (!player.hasPermission(Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
                 this.uuidMerchantRecipeMap.remove(player.getUniqueId());
             }
@@ -107,15 +105,14 @@ final class PlayerHeadsImpl implements PlayerHeads {
     }
 
     private void scheduleCacheUpdateTimer() {
-        if (this.plugin.config().playerHeadConfig().playerHeadsFromServer() && this.updateTask == null) {
+        if (this.plugin.configManager().playerHeadConfig().playerHeadsFromServer() && this.updateTask == null) {
             this.updateTask = this.plugin.getServer().getScheduler()
                 .runTaskTimer(this.plugin, () -> this.load(), 0L, 864000L);
         }
     }
 
     private MerchantRecipe getHeadRecipe(final OfflinePlayer player, final String name) {
-        final Config cfg = this.plugin.config();
-        final PlayerHeadConfig playerHeadConfig = cfg.playerHeadConfig();
+        final PlayerHeadConfig playerHeadConfig = this.plugin.configManager().playerHeadConfig();
         final ItemBuilder headBuilder = new HeadBuilder(player.getUniqueId())
             .setLore(playerHeadConfig.lore())
             .setAmount(playerHeadConfig.headsPerTrade());
@@ -149,20 +146,21 @@ final class PlayerHeadsImpl implements PlayerHeads {
         if (this.profileCompleter != null) {
             this.profileCompleter.clearQueue();
         }
-        for (final OfflinePlayer offlinePlayer : new ArrayList<>(Arrays.asList(Bukkit.getOfflinePlayers()))) {
+        for (final OfflinePlayer offlinePlayer : List.copyOf(Arrays.asList(Bukkit.getOfflinePlayers()))) {
             try {
                 this.load(offlinePlayer);
             } catch (final Exception ex) {
-                this.plugin.getLogger().log(Level.WARNING, "Failed to load recipe for OfflinePlayer with UUID %s".formatted(offlinePlayer.getUniqueId()), ex);
+                Logging.logger().warn("Failed to load recipe for OfflinePlayer with UUID '{}'", offlinePlayer.getUniqueId(), ex);
             }
         }
     }
 
     @SuppressWarnings("deprecation")
     private void load(final OfflinePlayer offlinePlayer) {
+        final PlayerHeadConfig playerHeadConfig = this.plugin.configManager().playerHeadConfig();
         final @Nullable String username = offlinePlayer.getName();
         final boolean usernameAllowed = username != null && !username.isEmpty()
-            && !TextUtil.containsCaseInsensitive(username, this.plugin.config().playerHeadConfig().usernameBlacklist());
+            && !TextUtil.containsCaseInsensitive(username, playerHeadConfig.usernameBlacklist());
         if (!usernameAllowed) {
             return;
         }
@@ -171,8 +169,8 @@ final class PlayerHeadsImpl implements PlayerHeads {
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime();
         final LocalDateTime cutoff = LocalDateTime.now()
-            .minusDays(this.plugin.config().playerHeadConfig().days());
-        final boolean time = logout.isAfter(cutoff) || this.plugin.config().playerHeadConfig().days() == -1;
+            .minusDays(playerHeadConfig.days());
+        final boolean time = logout.isAfter(cutoff) || playerHeadConfig.days() == -1;
         if (!time) {
             return;
         }
@@ -182,7 +180,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     private void addOfflineHead(final OfflinePlayer offlinePlayer, final String username) {
         if (this.plugin.isVaultPermissions()) {
-            if (this.plugin.config().playerHeadConfig().permissionWhitelist()) {
+            if (this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
                 this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
                     if (this.plugin.vaultHook().permissions().playerHas(null, offlinePlayer, Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
                         this.plugin.getServer().getScheduler().runTask(
@@ -199,14 +197,14 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     private void addHead(final Player player) {
         if (!this.uuidMerchantRecipeMap.containsKey(player.getUniqueId())
-            && !TextUtil.containsCaseInsensitive(player.getName(), this.plugin.config().playerHeadConfig().usernameBlacklist())) {
+            && !TextUtil.containsCaseInsensitive(player.getName(), this.plugin.configManager().playerHeadConfig().usernameBlacklist())) {
             this.uuidMerchantRecipeMap.put(player.getUniqueId(), this.getHeadRecipe(player, player.getName()));
         }
     }
 
     private void addHeadIfPermissible(final Player player) {
         if (this.plugin.isVaultPermissions()) {
-            if (this.plugin.config().playerHeadConfig().permissionWhitelist()) {
+            if (this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
                 if (player.hasPermission(Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
                     this.addHead(player);
                 }

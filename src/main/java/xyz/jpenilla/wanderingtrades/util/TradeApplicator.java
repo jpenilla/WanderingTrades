@@ -1,12 +1,16 @@
 package xyz.jpenilla.wanderingtrades.util;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -24,8 +28,30 @@ public final class TradeApplicator {
         this.plugin = plugin;
     }
 
-    public void refreshTrades(final WanderingTrader wanderingTrader) {
-        this.addTrades(wanderingTrader, true);
+    public void maybeRefreshTrades(final AbstractVillager abstractVillager) {
+        final PersistentDataContainer persistentDataContainer = abstractVillager.getPersistentDataContainer();
+        final @Nullable String configName = persistentDataContainer.get(Constants.CONFIG_NAME, PersistentDataType.STRING);
+        final boolean refreshNatural = persistentDataContainer.has(Constants.REFRESH_NATURAL, PersistentDataType.STRING);
+        if (configName == null && !refreshNatural) {
+            return;
+        }
+
+        final long timeAtPreviousRefresh = persistentDataContainer.getOrDefault(Constants.LAST_REFRESH, PersistentDataType.LONG, 0L);
+        final LocalDateTime nextAllowedRefresh = Instant.ofEpochMilli(timeAtPreviousRefresh)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+            .plusMinutes(this.plugin.config().refreshCommandTradersMinutes());
+
+        if (timeAtPreviousRefresh == 0L || LocalDateTime.now().isAfter(nextAllowedRefresh)) {
+            if (configName != null) {
+                final TradeConfig tradeConfig = this.plugin.configManager().tradeConfigs().get(configName);
+                abstractVillager.setRecipes(tradeConfig.getTrades(true));
+            }
+            if (refreshNatural && abstractVillager instanceof WanderingTrader wanderingTrader) {
+                this.addTrades(wanderingTrader, true);
+            }
+            persistentDataContainer.set(Constants.LAST_REFRESH, PersistentDataType.LONG, System.currentTimeMillis());
+        }
     }
 
     public void addTrades(final WanderingTrader wanderingTrader) {
@@ -46,11 +72,11 @@ public final class TradeApplicator {
     private List<MerchantRecipe> selectTrades() {
         final List<MerchantRecipe> newTrades = new ArrayList<>();
 
-        if (this.plugin.config().playerHeadConfig().playerHeadsFromServer() && randBoolean(this.plugin.config().playerHeadConfig().playerHeadsFromServerChance())) {
+        if (this.plugin.configManager().playerHeadConfig().playerHeadsFromServer() && randBoolean(this.plugin.configManager().playerHeadConfig().playerHeadsFromServerChance())) {
             newTrades.addAll(this.plugin.playerHeads().randomlySelectPlayerHeads());
         }
 
-        final Map<String, TradeConfig> tradeConfigs = Map.copyOf(this.plugin.config().tradeConfigs());
+        final Map<String, TradeConfig> tradeConfigs = Map.copyOf(this.plugin.configManager().tradeConfigs());
 
         if (this.plugin.config().allowMultipleSets()) {
             for (final TradeConfig config : tradeConfigs.values()) {
@@ -110,11 +136,7 @@ public final class TradeApplicator {
             VillagerReflection.resetOffers(trader);
         } catch (final Throwable throwable) {
             trader.setRecipes(oldOffers);
-            this.plugin.getLogger().log(
-                Level.WARNING,
-                String.format("Failed to reset trades! Please report this bug to the issue tracker at %s !", this.plugin.getDescription().getWebsite()),
-                throwable
-            );
+            Logging.logger().warn("Failed to reset trades! Please report this bug to the issue tracker at {} !", this.plugin.getDescription().getWebsite(), throwable);
         }
     }
 

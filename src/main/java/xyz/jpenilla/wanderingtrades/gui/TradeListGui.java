@@ -1,77 +1,84 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
-public class TradeListGui extends PaginatedGui {
-    private final ItemStack editButton = new ItemBuilder(Material.CHEST).setName(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG)).setLore(lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE)).build();
+@DefaultQualifier(NonNull.class)
+public final class TradeListGui extends PaginatedGui {
+    private final ItemStack editButton = new ItemBuilder(Material.CHEST)
+        .setName(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG))
+        .setLore(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE))
+        .build();
     private final ItemStack newTradeStack = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19")
-        .setName(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE)).setLore(lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE)).build();
+        .setName(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE))
+        .setLore(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE))
+        .build();
     private final TradeConfig tradeConfig;
 
-    public TradeListGui(final WanderingTrades plugin, TradeConfig tradeConfig) {
+    public TradeListGui(final WanderingTrades plugin, final TradeConfig tradeConfig) {
         super(plugin, plugin.langConfig().get(Lang.GUI_TRADE_LIST_TITLE) + tradeConfig.configName(), 54);
         this.tradeConfig = tradeConfig;
     }
 
     @Override
-    public Inventory getInv(Inventory i) {
-        i.setItem(inventory.getSize() - 1, backButton);
-        i.setItem(inventory.getSize() - 2, editButton);
-        i.setItem(inventory.getSize() - 5, newTradeStack);
-        IntStream.range(i.getSize() - 9, i.getSize() - 1).forEach(s -> {
-            if (inventory.getItem(s) == null) {
-                inventory.setItem(s, filler);
+    public Inventory getInventory(final Inventory inventory) {
+        inventory.setItem(this.inventory.getSize() - 1, this.backButton);
+        inventory.setItem(this.inventory.getSize() - 2, this.editButton);
+        inventory.setItem(this.inventory.getSize() - 5, this.newTradeStack);
+        IntStream.range(inventory.getSize() - 9, inventory.getSize() - 1).forEach(s -> {
+            if (this.inventory.getItem(s) == null) {
+                this.inventory.setItem(s, this.filler);
             }
         });
-        return i;
+        return inventory;
     }
 
     @Override
-    public void onClick(Player p, ItemStack i) {
-        if (backButton.isSimilar(i)) {
-            p.closeInventory();
-            new TradeConfigListGui(this.plugin).open(p);
-        } else if (editButton.isSimilar(i)) {
-            p.closeInventory();
-            new TradeConfigEditGui(this.plugin, this.tradeConfig).open(p);
-        } else if (newTradeStack.isSimilar(i)) {
-            p.closeInventory();
-            new TradeCreateGui(this.plugin, this.tradeConfig).open(p);
-        } else if (getListItems().contains(i)) {
-            p.closeInventory();
-            new TradeEditGui(this.plugin, this.tradeConfig, i.getItemMeta().getDisplayName()).open(p);
+    public void onClick(final Player player, final @Nullable ItemStack stack) {
+        if (this.backButton.isSimilar(stack)) {
+            player.closeInventory();
+            new TradeConfigListGui(this.plugin).open(player);
+        } else if (this.editButton.isSimilar(stack)) {
+            player.closeInventory();
+            new TradeConfigEditGui(this.plugin, this.tradeConfig).open(player);
+        } else if (this.newTradeStack.isSimilar(stack)) {
+            player.closeInventory();
+            new TradeCreateGui(this.plugin, this.tradeConfig).open(player);
+        } else if (this.getListItems().contains(stack)) {
+            player.closeInventory();
+            new TradeEditGui(this.plugin, this.tradeConfig, stack.getItemMeta().getDisplayName()).open(player);
         }
     }
 
     @Override
     public List<ItemStack> getListItems() {
-        List<ItemStack> trades = new ArrayList<>();
-        tradeConfig.getTradeSection().getKeys(false).stream().sorted().forEach(key -> {
-            ItemStack itemStack = TradeConfig.getStack(tradeConfig.fileConfiguration(), "trades." + key + ".result");
-            if (itemStack != null) {
-                final ItemBuilder builder = new ItemBuilder(itemStack);
-                builder.setName(key);
+        return this.tradeConfig.tradesByName().entrySet().stream()
+            .sorted(Map.Entry.comparingByKey())
+            .map(entry -> {
+                final ItemBuilder builder = new ItemBuilder(entry.getValue().getResult());
+                builder.setName(entry.getKey());
                 builder.clearEnchants();
                 builder.clearLore();
-                trades.add(builder.build());
-            }
-        });
-        return trades;
+                return builder.build();
+            })
+            .toList();
     }
 
     @Override
-    public void reOpen(Player p) {
-        new TradeListGui(this.plugin, this.tradeConfig).open(p);
+    public void reOpen(final Player player) {
+        new TradeListGui(this.plugin, this.tradeConfig).open(player);
     }
 }

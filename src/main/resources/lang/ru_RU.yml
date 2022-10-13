@@ -1,5 +1,5 @@
 # Wandering Trades ${project.version} ru_RU language config \\ Russian translate by Z1xus, with love <3
-COMMAND_LIST_LOADED: '<gradient:green:blue>Загруженные конфигурации торгов</gradient><gray>:'
+COMMAND_LIST_LOADED: '<blue>Загруженные конфигурации торгов</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'Не существует конфигурации торгов с таким именем.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Эта конфигурация неправильно сформирована. Убедитесь, что в рецептах есть хотя бы один ингредиент.'
 COMMAND_RELOAD: '<gradient:red:yellow>Перезагрузка конфигурации WanderingTrades...'
@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: 'Установить количество дне
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Успешно создана и перезагружена новая конфигурация'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Отмена создания конфигурации'
 MESSAGE_YOU_ENTERED: "<yellow>Вы ввели</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "Использовать это значение? Введите или нажмите: <hover:show_text:'<green>Нажмите!'><click:run_command:yes><green>Да</green></hover></click> или <hover:show_text:'<green>Нажмите!'><click:run_command:no><red>Нет</red></hover></click>"
+MESSAGE_YES_NO: "Использовать это значение? Введите или нажмите: <hover:show_text:'<green>Нажмите!'><click:run_command:yes><green>Да</green></hover> или <hover:show_text:'<green>Нажмите!'><click:run_command:no><red>Нет</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Редактирование отменено"
 MESSAGE_EDIT_SAVED: "<italic><green>Редактирование сохранено"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Введите имя региона WorldGuard</gradient><gray>:"

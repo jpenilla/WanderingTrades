@@ -1,5 +1,5 @@
 # Wandering Trades ${project.version} zh_CN 语言文件 \\ 简体中文由 RinAfter 提供
-COMMAND_LIST_LOADED: '<gradient:green:blue>已加载交易配置</gradient><gray>:'
+COMMAND_LIST_LOADED: '<blue>已加载交易配置</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: '没有加载该名称的交易配置'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>配置格式不正确，请确保食谱至少拥有一种成分'
 COMMAND_RELOAD: '<gradient:red:yellow>重新加载WanderingTrades配置...'
@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: '设置从上次登录到忽略头颅的天数'
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>已成功创建新配置并重新加载'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>已取消配置创建'
 MESSAGE_YOU_ENTERED: "<yellow>你输入了</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "确认使用这个值？输入或点击: <hover:show_text:'<green>点击确认！'><click:run_command:yes><green>Yes</green></hover></click> 或 <hover:show_text:'<green>点击确认！'><click:run_command:no><red>No</red></hover></click>"
+MESSAGE_YES_NO: "确认使用这个值？输入或点击: <hover:show_text:'<green>点击确认！'><click:run_command:yes><green>Yes</green></hover> 或 <hover:show_text:'<green>点击确认！'><click:run_command:no><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>编辑已取消"
 MESSAGE_EDIT_SAVED: "<italic><green>编辑已保存"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>输入WorldGuard区域名称</gradient><gray>:"

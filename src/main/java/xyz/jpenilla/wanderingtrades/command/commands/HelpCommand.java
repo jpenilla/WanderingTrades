@@ -7,23 +7,35 @@ import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
-import xyz.jpenilla.wanderingtrades.command.CommandManager;
+import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 
 @DefaultQualifier(NonNull.class)
-public final class CommandHelp extends BaseCommand {
+public final class HelpCommand extends BaseCommand {
     private final MinecraftHelp<CommandSender> minecraftHelp;
     private final CommandHelpHandler<CommandSender> commandHelpHandler;
 
-    public CommandHelp(final WanderingTrades plugin, final CommandManager commandManager) {
-        super(plugin, commandManager);
-        this.minecraftHelp = commandManager.minecraftHelp();
-        this.commandHelpHandler = commandManager.createCommandHelpHandler();
+    public HelpCommand(final WanderingTrades plugin, final Commands commands) {
+        super(plugin, commands);
+
+        this.minecraftHelp = new MinecraftHelp<>("/wanderingtrades help", plugin.audiences()::sender, this.commandManager);
+        this.minecraftHelp.setHelpColors(MinecraftHelp.HelpColors.of(
+            TextColor.color(0x00a3ff),
+            NamedTextColor.WHITE,
+            TextColor.color(0x284fff),
+            NamedTextColor.GRAY,
+            NamedTextColor.DARK_GRAY
+        ));
+        this.minecraftHelp.setMessageProvider((sender, key) -> plugin.langConfig().get(Lang.valueOf(String.format("HELP_%s", key).toUpperCase())));
+
+        this.commandHelpHandler = this.commandManager.createCommandHelpHandler();
     }
 
     @Override

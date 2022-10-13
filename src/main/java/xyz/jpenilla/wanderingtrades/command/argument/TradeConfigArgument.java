@@ -13,7 +13,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.command.CommandManager;
+import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
@@ -37,7 +37,7 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
         return builder(name).asOptional().build();
     }
 
-    public static TradeConfigArgument.Builder builder(final String name) {
+    public static Builder builder(final String name) {
         return new Builder(name);
     }
 
@@ -47,8 +47,8 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
             final CommandContext<CommandSender> commandContext,
             final Queue<String> inputQueue
         ) {
-            final WanderingTrades plugin = commandContext.get(CommandManager.PLUGIN);
-            final TradeConfig tradeConfig = plugin.config().tradeConfigs().getOrDefault(inputQueue.peek(), null);
+            final WanderingTrades plugin = commandContext.get(Commands.PLUGIN);
+            final @Nullable TradeConfig tradeConfig = plugin.configManager().tradeConfigs().get(inputQueue.peek());
             if (tradeConfig != null) {
                 inputQueue.remove();
                 return ArgumentParseResult.success(tradeConfig);
@@ -61,7 +61,7 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
             final CommandContext<CommandSender> commandContext,
             final String input
         ) {
-            return List.copyOf(commandContext.get(CommandManager.PLUGIN).config().tradeConfigs().keySet());
+            return List.copyOf(commandContext.get(Commands.PLUGIN).configManager().tradeConfigs().keySet());
         }
     }
 

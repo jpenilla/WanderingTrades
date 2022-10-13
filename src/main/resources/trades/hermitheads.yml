@@ -1,4 +1,4 @@
-# WanderingTrades Hermit Head TradeConfig ${project.version}
+# WanderingTrades ${project.version} Hermit Head trade config
 
 # Enable this tradeset config
 enabled: false

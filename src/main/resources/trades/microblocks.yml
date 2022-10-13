@@ -1,4 +1,4 @@
-# WanderingTrades Microblocks TradeConfig ${project.version}
+# WanderingTrades ${project.version} Microblocks trade config
 
 # Enable this tradeset config
 enabled: true

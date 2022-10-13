@@ -11,13 +11,11 @@ import cloud.commandframework.bukkit.parsers.location.LocationArgument;
 import cloud.commandframework.bukkit.parsers.selector.SingleEntitySelectorArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
-import java.lang.invoke.MethodHandle;
+import io.papermc.lib.PaperLib;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
-import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import org.bukkit.Location;
+import org.bukkit.Nameable;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AbstractVillager;
@@ -31,39 +29,37 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
-import xyz.jpenilla.pluginbase.legacy.Crafty;
 import xyz.jpenilla.pluginbase.legacy.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
-import xyz.jpenilla.wanderingtrades.command.CommandManager;
+import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.Components;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
-import static io.papermc.lib.PaperLib.isPaper;
-
 @DefaultQualifier(NonNull.class)
-public final class CommandSummon extends BaseCommand {
-    public CommandSummon(
+public final class SummonCommands extends BaseCommand {
+    public SummonCommands(
         final WanderingTrades plugin,
-        final CommandManager commandManager
+        final Commands commands
     ) {
-        super(plugin, commandManager);
+        super(plugin, commands);
 
-        commandManager.registerFlag(
+        commands.registerFlag(
             "pitch",
-            commandManager.flagBuilder("pitch")
+            this.commandManager.flagBuilder("pitch")
                 .withArgument(IntegerArgument.newBuilder("pitch").withMin(-180).withMax(180))
         );
-        commandManager.registerFlag(
+        commands.registerFlag(
             "yaw",
-            commandManager.flagBuilder("yaw")
+            this.commandManager.flagBuilder("yaw")
                 .withArgument(IntegerArgument.newBuilder("yaw").withMin(-90).withMax(90))
         );
-        commandManager.registerFlag(
+        commands.registerFlag(
             "world",
-            commandManager.flagBuilder("world")
+            this.commandManager.flagBuilder("world")
                 .withArgument(WorldArgument.of("world"))
         );
     }
@@ -76,23 +72,21 @@ public final class CommandSummon extends BaseCommand {
             .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
             .literal("summonnatural")
             .argument(LocationArgument.of("location"))
-            .flag(this.commandManager.getFlag("world"))
-            .flag(this.commandManager.getFlag("pitch"))
-            .flag(this.commandManager.getFlag("yaw"))
+            .flag(this.commands.getFlag("world"))
+            .flag(this.commands.getFlag("pitch"))
+            .flag(this.commands.getFlag("yaw"))
             .flag(this.commandManager.flagBuilder("noai"))
             .flag(this.commandManager.flagBuilder("protect"))
             .flag(this.commandManager.flagBuilder("refresh"))
             .flag(this.commandManager.flagBuilder("noinvisibility"))
             .permission("wanderingtrades.summonnatural")
-            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
-                this.summonNatural(
-                    resolveLocation(context),
-                    context.flags().isPresent("refresh"),
-                    context.flags().isPresent("noai"),
-                    context.flags().isPresent("protect"),
-                    context.flags().isPresent("noinvisibility")
-                );
-            }).execute())
+            .handler(context -> this.summonNatural(
+                resolveLocation(context),
+                context.flags().isPresent("refresh"),
+                context.flags().isPresent("noai"),
+                context.flags().isPresent("protect"),
+                context.flags().isPresent("noinvisibility")
+            ))
             .build();
 
         final Command<CommandSender> summon = wt
@@ -100,19 +94,17 @@ public final class CommandSummon extends BaseCommand {
             .literal("summon")
             .argument(TradeConfigArgument.of("trade_config"))
             .argument(LocationArgument.of("location"))
-            .flag(this.commandManager.getFlag("world"))
-            .flag(this.commandManager.getFlag("pitch"))
-            .flag(this.commandManager.getFlag("yaw"))
+            .flag(this.commands.getFlag("world"))
+            .flag(this.commands.getFlag("pitch"))
+            .flag(this.commands.getFlag("yaw"))
             .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.summon")
-            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
-                this.summonTrader(
-                    context.getSender(),
-                    context.get("trade_config"),
-                    resolveLocation(context),
-                    context.flags().isPresent("noai")
-                );
-            }).execute())
+            .handler(context -> this.summonTrader(
+                context.getSender(),
+                context.get("trade_config"),
+                resolveLocation(context),
+                context.flags().isPresent("noai")
+            ))
             .build();
 
         final Command<CommandSender> summonVillager = wt
@@ -122,21 +114,19 @@ public final class CommandSummon extends BaseCommand {
             .argument(EnumArgument.of(Villager.Type.class, "type"))
             .argument(EnumArgument.of(Villager.Profession.class, "profession"))
             .argument(LocationArgument.of("location"))
-            .flag(this.commandManager.getFlag("world"))
-            .flag(this.commandManager.getFlag("pitch"))
-            .flag(this.commandManager.getFlag("yaw"))
+            .flag(this.commands.getFlag("world"))
+            .flag(this.commands.getFlag("pitch"))
+            .flag(this.commands.getFlag("yaw"))
             .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.villager")
-            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
-                this.summonVillagerTrader(
-                    context.getSender(),
-                    context.get("trade_config"),
-                    resolveLocation(context),
-                    context.get("type"),
-                    context.get("profession"),
-                    context.flags().isPresent("noai")
-                );
-            }).execute())
+            .handler(context -> this.summonVillagerTrader(
+                context.getSender(),
+                context.get("trade_config"),
+                resolveLocation(context),
+                context.get("type"),
+                context.get("profession"),
+                context.flags().isPresent("noai")
+            ))
             .build();
 
         /* Entity Rename Command */
@@ -147,19 +137,19 @@ public final class CommandSummon extends BaseCommand {
                 ArgumentDescription.of("The MiniMessage string to use as a name."))
             .permission("wanderingtrades.name")
             .senderType(Player.class)
-            .handler(c -> this.commandManager.taskRecipe().begin(c).synchronous(context -> {
+            .handler(context -> {
                 final @Nullable Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
                 if (entity != null && !(entity instanceof Player)) {
-                    setCustomName(entity, context.get("name"));
+                    this.setCustomName(entity, context.get("name"));
                     entity.setCustomNameVisible(true);
                     this.chat.send(context.getSender(), "Named entity<gray>:</gray> " + context.get("name"));
                 } else {
                     this.chat.send(context.getSender(), "<red>Cannot name player or non-living entity.");
                 }
-            }).execute())
+            })
             .build();
 
-        this.commandManager.register(List.of(summonNatural, summon, summonVillager, nameEntity));
+        this.commands.register(List.of(summonNatural, summon, summonVillager, nameEntity));
     }
 
     private void summonNatural(
@@ -181,7 +171,7 @@ public final class CommandSummon extends BaseCommand {
                 persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
             }
             if (noInvisibility) {
-                if (isPaper()) {
+                if (PaperLib.isPaper()) {
                     wanderingTrader.setCanDrinkPotion(false);
                 }
                 persistentDataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
@@ -189,14 +179,19 @@ public final class CommandSummon extends BaseCommand {
         });
     }
 
-    private void summonTrader(CommandSender sender, TradeConfig tradeConfig, Location loc, boolean noAI) {
+    private void summonTrader(
+        final CommandSender sender,
+        final TradeConfig tradeConfig,
+        final Location loc,
+        final boolean disableAI
+    ) {
         final @Nullable List<MerchantRecipe> recipes = this.tryGetTrades(sender, tradeConfig);
         if (recipes == null) {
             return;
         }
         loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
             wanderingTrader.setRecipes(recipes);
-            if (noAI) {
+            if (disableAI) {
                 wanderingTrader.setAI(false);
             }
 
@@ -205,7 +200,7 @@ public final class CommandSummon extends BaseCommand {
 
             this.applyConfig(tradeConfig, wanderingTrader);
 
-            if (this.plugin.config().preventNightInvisibility() && isPaper()) {
+            if (this.plugin.config().preventNightInvisibility() && PaperLib.isPaper()) {
                 wanderingTrader.setCanDrinkPotion(false);
             }
         });
@@ -265,40 +260,30 @@ public final class CommandSummon extends BaseCommand {
         }
     }
 
-    /**
-     * Set the custom name of an entity from a MiniMessage string using reflection. Falls back to Bukkit api using legacy text.
-     *
-     * @param entity      The Bukkit entity
-     * @param miniMessage The MiniMessage string. Clears the name if empty or null
-     */
+    @SuppressWarnings("deprecation")
     private void setCustomName(
-        final Entity entity,
+        final Nameable entity,
         final @Nullable String miniMessage
     ) {
-        if (miniMessage == null || miniMessage.isEmpty()) {
-            entity.setCustomName(null);
+        if (!PaperLib.isPaper()) {
+            if (miniMessage == null || miniMessage.isEmpty()) {
+                entity.setCustomName(null);
+                return;
+            }
+            entity.setCustomName(MiniMessageUtil.miniMessageToLegacy(miniMessage));
             return;
         }
         try {
-            Class<?> _CraftEntity = Crafty.needCraftClass("entity.CraftEntity");
-            Class<?> _Entity = Crafty.needNMSClassOrElse("Entity", "net.minecraft.world.entity.Entity");
-            Class<?> _IChatBaseComponent = Crafty.needNMSClassOrElse("IChatBaseComponent", "net.minecraft.network.chat.IChatBaseComponent");
-            MethodHandle _getHandle = Crafty.findMethod(_CraftEntity, "getHandle", _Entity);
-            Method _setCustomName = _Entity.getDeclaredMethod("setCustomName", _IChatBaseComponent);
+            final Method paperMethod = Nameable.class.getMethod("customName", Components.nativeAdventureComponentClass());
 
-            Object nmsEntity = Objects.requireNonNull(_getHandle).bindTo(entity).invoke();
-            final Object nmsComponent = MinecraftComponentSerializer.get().serialize(this.plugin.miniMessage().deserialize(miniMessage));
-
-            _setCustomName.invoke(nmsEntity, nmsComponent);
-        } catch (Throwable throwable) {
-            if (this.plugin.config().debug()) {
-                this.plugin.getLogger().log(
-                    Level.WARNING,
-                    "Failed to set entity name using reflection, falling back onto legacy text serialization",
-                    throwable
-                );
+            if (miniMessage == null || miniMessage.isEmpty()) {
+                paperMethod.invoke(entity, (Object) null);
+                return;
             }
-            entity.setCustomName(MiniMessageUtil.miniMessageToLegacy(miniMessage));
+
+            paperMethod.invoke(entity, Components.toNative(this.plugin.miniMessage().deserialize(miniMessage)));
+        } catch (final ReflectiveOperationException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

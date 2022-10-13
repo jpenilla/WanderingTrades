@@ -1,11 +1,7 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractVillager;
-import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -16,8 +12,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.compatability.WorldGuardHook;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.integration.WorldGuardHook;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 @DefaultQualifier(NonNull.class)
@@ -48,33 +43,7 @@ public final class RefreshTradesListener implements Listener {
         // Update trades
         final @Nullable WorldGuardHook worldGuard = this.plugin.worldGuardHook();
         if (worldGuard == null || worldGuard.passesWhiteBlackList(abstractVillager.getLocation())) {
-            this.updateTrades(abstractVillager);
-        }
-    }
-
-    private void updateTrades(final AbstractVillager abstractVillager) {
-        final PersistentDataContainer persistentDataContainer = abstractVillager.getPersistentDataContainer();
-        final @Nullable String configName = persistentDataContainer.get(Constants.CONFIG_NAME, PersistentDataType.STRING);
-        final boolean refreshNatural = persistentDataContainer.has(Constants.REFRESH_NATURAL, PersistentDataType.STRING);
-        if (configName == null && !refreshNatural) {
-            return;
-        }
-
-        final long timeAtPreviousRefresh = persistentDataContainer.getOrDefault(Constants.LAST_REFRESH, PersistentDataType.LONG, 0L);
-        final LocalDateTime nextAllowedRefresh = Instant.ofEpochMilli(timeAtPreviousRefresh)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime()
-            .plusMinutes(this.plugin.config().refreshCommandTradersMinutes());
-
-        if (timeAtPreviousRefresh == 0L || LocalDateTime.now().isAfter(nextAllowedRefresh)) {
-            if (configName != null) {
-                final TradeConfig tradeConfig = this.plugin.config().tradeConfigs().get(configName);
-                abstractVillager.setRecipes(tradeConfig.getTrades(true));
-            }
-            if (refreshNatural && abstractVillager instanceof WanderingTrader) {
-                this.plugin.tradeApplicator().refreshTrades((WanderingTrader) abstractVillager);
-            }
-            persistentDataContainer.set(Constants.LAST_REFRESH, PersistentDataType.LONG, System.currentTimeMillis());
+            this.plugin.tradeApplicator().maybeRefreshTrades(abstractVillager);
         }
     }
 }

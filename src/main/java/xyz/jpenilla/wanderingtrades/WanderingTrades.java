@@ -9,11 +9,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.PluginBase;
-import xyz.jpenilla.wanderingtrades.command.CommandManager;
-import xyz.jpenilla.wanderingtrades.compatability.VaultHook;
-import xyz.jpenilla.wanderingtrades.compatability.WorldGuardHook;
+import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Config;
+import xyz.jpenilla.wanderingtrades.config.ConfigManager;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
+import xyz.jpenilla.wanderingtrades.integration.VaultHook;
+import xyz.jpenilla.wanderingtrades.integration.WorldGuardHook;
 import xyz.jpenilla.wanderingtrades.util.Listeners;
 import xyz.jpenilla.wanderingtrades.util.PlayerHeads;
 import xyz.jpenilla.wanderingtrades.util.TradeApplicator;
@@ -23,79 +24,83 @@ import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
 public final class WanderingTrades extends PluginBase {
     private static @MonotonicNonNull WanderingTrades instance;
 
-    private @MonotonicNonNull Config cfg;
-    private @MonotonicNonNull LangConfig lang;
+    private @MonotonicNonNull ConfigManager configManager;
     private @MonotonicNonNull PlayerHeads playerHeads;
     private @MonotonicNonNull Listeners listeners;
     private @MonotonicNonNull TradeApplicator tradeApplicator;
-
     private @Nullable WorldGuardHook worldGuard = null;
     private @Nullable VaultHook vault = null;
-
-    private boolean vaultPermissions = false;
 
     @Override
     public void enable() {
         PaperLib.suggestPaper(this, Level.WARNING);
         instance = this;
+        this.setupIntegrations();
+        this.configManager = new ConfigManager(this);
+        this.configManager.load();
+        this.playerHeads = PlayerHeads.create(this);
+        this.tradeApplicator = new TradeApplicator(this);
+        this.listeners = Listeners.setup(this);
+        this.setupCommands();
+        this.updateCheck();
+        this.setupMetrics();
+    }
 
-        if (this.getServer().getPluginManager().isPluginEnabled("Vault")) {
-            this.vault = new VaultHook(this);
-        }
+    private void setupIntegrations() {
+        this.getServer().getScheduler().runTask(this, () -> {
+            if (this.getServer().getPluginManager().isPluginEnabled("Vault")) {
+                this.vault = new VaultHook(this.getServer());
+            }
+        });
         if (this.getServer().getPluginManager().isPluginEnabled("WorldGuard")
             && this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
             this.worldGuard = new WorldGuardHook(this);
         }
+    }
 
-        this.cfg = new Config(this);
-        this.lang = new LangConfig(this);
-
-        this.playerHeads = PlayerHeads.create(this);
-
-        if (!this.cfg.disableCommands()) {
+    private void setupCommands() {
+        if (!this.config().disableCommands()) {
             try {
-                new CommandManager(this);
+                Commands.setup(this);
             } catch (final Exception ex) {
-                throw new RuntimeException("Failed to initialize CommandManager", ex);
+                throw new RuntimeException("Failed to initialize Commands", ex);
             }
         }
+    }
 
-        this.tradeApplicator = new TradeApplicator(this);
-
-        this.listeners = new Listeners(this);
-        this.listeners.register();
-
-        if (this.cfg.updateChecker()) {
+    private void updateCheck() {
+        if (this.config().updateChecker()) {
             this.getServer().getScheduler().runTask(
                 this,
                 () -> new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion()
             );
         }
-
-        this.setupMetrics();
     }
 
     private void setupMetrics() {
         final Metrics metrics = new Metrics(this, 7597);
-        metrics.addCustomChart(new SimplePie("player_heads", () -> this.cfg.playerHeadConfig().playerHeadsFromServer() ? "On" : "Off"));
-        metrics.addCustomChart(new SimplePie("player_heads_per_trader", () -> String.valueOf(this.cfg.playerHeadConfig().playerHeadsFromServerAmount())));
-        metrics.addCustomChart(new SimplePie("plugin_language", () -> this.cfg.language()));
-        metrics.addCustomChart(new SimplePie("amount_of_trade_configs", () -> String.valueOf(this.cfg.tradeConfigs().size())));
+        metrics.addCustomChart(new SimplePie("player_heads", () -> this.configManager.playerHeadConfig().playerHeadsFromServer() ? "On" : "Off"));
+        metrics.addCustomChart(new SimplePie("player_heads_per_trader", () -> String.valueOf(this.configManager.playerHeadConfig().playerHeadsFromServerAmount())));
+        metrics.addCustomChart(new SimplePie("plugin_language", () -> this.config().language()));
+        metrics.addCustomChart(new SimplePie("amount_of_trade_configs", () -> String.valueOf(this.configManager.tradeConfigs().size())));
     }
 
     public void reload() {
-        this.config().load();
-        this.langConfig().load();
+        this.configManager().reload();
         this.listeners().reload();
         this.playerHeads().configChanged();
     }
 
+    public ConfigManager configManager() {
+        return this.configManager;
+    }
+
     public Config config() {
-        return this.cfg;
+        return this.configManager.config();
     }
 
     public LangConfig langConfig() {
-        return this.lang;
+        return this.configManager.langConfig();
     }
 
     public PlayerHeads playerHeads() {
@@ -103,7 +108,7 @@ public final class WanderingTrades extends PluginBase {
     }
 
     public TradeApplicator tradeApplicator() {
-        return tradeApplicator;
+        return this.tradeApplicator;
     }
 
     public Listeners listeners() {
@@ -119,11 +124,7 @@ public final class WanderingTrades extends PluginBase {
     }
 
     public boolean isVaultPermissions() {
-        return this.vaultPermissions;
-    }
-
-    public void setVaultPermissions(final boolean vaultPermissions) {
-        this.vaultPermissions = vaultPermissions;
+        return this.vault != null && this.vault.permissions() != null;
     }
 
     public void debug(final String message) {

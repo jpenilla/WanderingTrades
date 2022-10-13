@@ -18,15 +18,20 @@ import xyz.jpenilla.wanderingtrades.listener.TraderPotionListener;
 import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 
 @DefaultQualifier(NonNull.class)
-public class Listeners {
+public final class Listeners {
     private final WanderingTrades plugin;
     private final Map<Class<?>, Listener> listeners = new HashMap<>();
 
-    public Listeners(final WanderingTrades plugin) {
+    private Listeners(final WanderingTrades plugin) {
         this.plugin = plugin;
     }
 
-    public void register() {
+    private <L extends Listener> void registerListener(final Class<L> listenerClass, final L listener) {
+        this.listeners.put(listenerClass, listener);
+        this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
+    }
+
+    private void register() {
         this.registerListener(GuiListener.class, new GuiListener());
         this.registerListener(JoinQuitListener.class, new JoinQuitListener(this.plugin));
 
@@ -46,14 +51,19 @@ public class Listeners {
         }
     }
 
-    private <L extends Listener> void registerListener(final Class<L> listenerClass, final L listener) {
-        this.listeners.put(listenerClass, listener);
-        this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
+    private void unregister() {
+        this.listeners.forEach((clazz, listener) -> HandlerList.unregisterAll(listener));
+        this.listeners.clear();
     }
 
     public void reload() {
-        this.listeners.forEach((clazz, listener) -> HandlerList.unregisterAll(listener));
-        this.listeners.clear();
+        this.unregister();
         this.register();
+    }
+
+    public static Listeners setup(final WanderingTrades plugin) {
+        final Listeners instance = new Listeners(plugin);
+        instance.register();
+        return instance;
     }
 }

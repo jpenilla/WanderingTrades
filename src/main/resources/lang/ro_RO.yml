@@ -1,5 +1,5 @@
 # Wandering Trades ${project.version} ro_RO language config \\ Romanian translation by Oreoezi
-COMMAND_LIST_LOADED: '<gradient:green:blue>Configurațiile de schimburi au fost încărcate</gradient><gray>:'
+COMMAND_LIST_LOADED: '<blue>Configurațiile de schimburi au fost încărcate</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'Nu există nicio configurație încărcată cu numele acela.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Această configurație nu este formatată corect. Verifică dacă schimburile au măcar un obiect.'
 COMMAND_RELOAD: '<gradient:red:yellow>Se reîncarcă configuratia de la WanderingTrades...'
@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: 'Setează după câte zile de inactivitate să ex
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Configurația nouă a fost creată si încărcată cu succes'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Configurația a fost anulată'
 MESSAGE_YOU_ENTERED: "<yellow>Ai scris</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "Dorești să folosești această valoare? Scrie sau dă click: <hover:show_text:'<green>Click pentru a executa!'><click:run_command:yes><green>Yes</green></hover></click> sau <hover:show_text:'<green>Dă click pentru a executa'><click:run_command:no><red>No</red></hover></click>"
+MESSAGE_YES_NO: "Dorești să folosești această valoare? Scrie sau dă click: <hover:show_text:'<green>Click pentru a executa!'><click:run_command:yes><green>Yes</green></hover> sau <hover:show_text:'<green>Dă click pentru a executa'><click:run_command:no><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Editarea anulată"
 MESSAGE_EDIT_SAVED: "<italic><green>Editarea salvată"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Introduce numele unei regiuni de WorldGuard</gradient><gray>:"

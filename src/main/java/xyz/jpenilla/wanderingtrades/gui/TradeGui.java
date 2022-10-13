@@ -1,12 +1,14 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
@@ -15,138 +17,168 @@ import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 public abstract class TradeGui extends BaseGui {
-
     private final ItemStack cancelButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTZjNjBkYTQxNGJmMDM3MTU5YzhiZThkMDlhOGVjYjkxOWJmODlhMWEyMTUwMWI1YjJlYTc1OTYzOTE4YjdiIn19fQ==")
-        .setName(lang.get(Lang.GUI_TRADE_CANCEL)).setLore(lang.get(Lang.GUI_TRADE_CANCEL_LORE)).build();
+        .setName(this.lang.get(Lang.GUI_TRADE_CANCEL))
+        .setLore(this.lang.get(Lang.GUI_TRADE_CANCEL_LORE))
+        .build();
     private final ItemStack saveButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGE5OTM0MmUyYzczYTlmMzgyMjYyOGU3OTY0ODgyMzRmMjU4NDQ2ZjVhMmQ0ZDU5ZGRlNGFhODdkYjk4In19fQ==")
-        .setName(lang.get(Lang.GUI_TRADE_SAVE)).setLore(lang.get(Lang.GUI_TRADE_SAVE_LORE)).build();
+        .setName(this.lang.get(Lang.GUI_TRADE_SAVE))
+        .setLore(this.lang.get(Lang.GUI_TRADE_SAVE_LORE))
+        .build();
     private final ItemStack info = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTY0MzlkMmUzMDZiMjI1NTE2YWE5YTZkMDA3YTdlNzVlZGQyZDUwMTVkMTEzYjQyZjQ0YmU2MmE1MTdlNTc0ZiJ9fX0=")
-        .setName(lang.get(Lang.GUI_TRADE_INFO)).setLore(lang.getList(Lang.GUI_TRADE_INFO_LORE)).build();
+        .setName(this.lang.get(Lang.GUI_TRADE_INFO))
+        .setLore(this.lang.getList(Lang.GUI_TRADE_INFO_LORE))
+        .build();
     private final ItemStack plus = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzIzMzJiNzcwYTQ4NzQ2OTg4NjI4NTVkYTViM2ZlNDdmMTlhYjI5MWRmNzY2YjYwODNiNWY5YTBjM2M2ODQ3ZSJ9fX0=")
-        .setName("<color:blue>+").build();
+        .setName("<blue>+")
+        .build();
     private final ItemStack equals = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzkyNzY2ZmVhNmMwNTc1MGU0MGRjODNjZDdlOTNhYjM0ODQ2ZDQ0MDkyMDk1MWRhMjYzNTk4MzZlY2YwOGY0YiJ9fX0=")
-        .setName("<color:yellow>=").build();
+        .setName("<yellow>=")
+        .build();
     private final ItemStack deleteButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19")
-        .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_TRADE_DELETE_LORE)).build();
-    private final ItemStack experienceEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_EXP_REWARD)).setLore(gui_toggle_lore).build();
-    private final ItemStack experienceDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_NO_EXP_REWARD)).setLore(gui_toggle_lore).build();
-    private final ItemStack maxUsesStack = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_MAX_USES)).build();
-    private final ItemStack tradeNameStack = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TRADE_TRADE_NAME)).build();
-    private final ItemStack ingredient1 = new ItemBuilder(Material.STRUCTURE_VOID).setName(lang.get(Lang.GUI_TRADE_INGREDIENT_1)).setLore(lang.getList(Lang.GUI_TRADE_REQUIRED_LORE)).build();
-    private final ItemStack ingredient2 = new ItemBuilder(Material.STRUCTURE_VOID).setName(lang.get(Lang.GUI_TRADE_INGREDIENT_2)).setLore(lang.getList(Lang.GUI_TRADE_OPTIONAL_LORE)).build();
-    private final ItemStack resultStack = new ItemBuilder(Material.STRUCTURE_VOID).setName(lang.get(Lang.GUI_TRADE_RESULT)).setLore(lang.getList(Lang.GUI_TRADE_REQUIRED_LORE)).build();
-
+        .setName(this.lang.get(Lang.GUI_TRADE_DELETE))
+        .setLore(this.lang.get(Lang.GUI_TRADE_DELETE_LORE))
+        .build();
+    private final ItemStack experienceEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TRADE_EXP_REWARD))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack experienceDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TRADE_NO_EXP_REWARD))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack maxUsesStack = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TRADE_MAX_USES))
+        .build();
+    private final ItemStack tradeNameStack = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TRADE_TRADE_NAME))
+        .build();
+    private final ItemStack emptyIngredient1 = new ItemBuilder(Material.STRUCTURE_VOID)
+        .setName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_1))
+        .setLore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
+        .build();
+    private final ItemStack emptyIngredient2 = new ItemBuilder(Material.STRUCTURE_VOID)
+        .setName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_2))
+        .setLore(this.lang.getList(Lang.GUI_TRADE_OPTIONAL_LORE))
+        .build();
+    private final ItemStack emptyResult = new ItemBuilder(Material.STRUCTURE_VOID)
+        .setName(this.lang.get(Lang.GUI_TRADE_RESULT))
+        .setLore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
+        .build();
+    protected final TradeConfig tradeConfig;
     private String tradeName = null;
     private int maxUses = 1;
     private boolean experienceReward = true;
-    private ItemStack i1 = ingredient1;
-    private ItemStack i2 = ingredient2;
-    private ItemStack result = resultStack;
+    private ItemStack i1 = this.emptyIngredient1;
+    private ItemStack i2 = this.emptyIngredient2;
+    private ItemStack result = this.emptyResult;
 
-    protected final TradeConfig tradeConfig;
-
-    public TradeGui(final WanderingTrades plugin, String name, TradeConfig tradeConfig) {
+    public TradeGui(final WanderingTrades plugin, final String name, final TradeConfig tradeConfig) {
         super(plugin, name, 45);
         this.tradeConfig = tradeConfig;
     }
 
     @Override
     public @NonNull Inventory getInventory() {
-        inventory.clear();
+        this.inventory.clear();
 
-        inventory.setItem(inventory.getSize() - 1, cancelButton);
-        inventory.setItem(inventory.getSize() - 2, saveButton);
+        this.inventory.setItem(this.inventory.getSize() - 1, this.cancelButton);
+        this.inventory.setItem(this.inventory.getSize() - 2, this.saveButton);
 
-        inventory.setItem(8, info);
+        this.inventory.setItem(8, this.info);
 
-        inventory.setItem(28, i1);
-        inventory.setItem(29, plus);
-        inventory.setItem(30, i2);
-        inventory.setItem(31, equals);
-        inventory.setItem(32, result);
+        this.inventory.setItem(28, this.i1);
+        this.inventory.setItem(29, this.plus);
+        this.inventory.setItem(30, this.i2);
+        this.inventory.setItem(31, this.equals);
+        this.inventory.setItem(32, this.result);
 
-        if (experienceReward) {
-            inventory.setItem(12, experienceEnabled);
-        } else {
-            inventory.setItem(12, experienceDisabled);
-        }
+        this.inventory.setItem(12, this.experienceReward ? this.experienceEnabled : this.experienceDisabled);
 
-        ArrayList<String> maxUsesLore = new ArrayList<>();
-        maxUsesLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + maxUses);
-        maxUsesLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        inventory.setItem(14, new ItemBuilder(maxUsesStack).setLore(maxUsesLore).build());
+        final List<String> maxUsesLore = new ArrayList<>();
+        maxUsesLore.add(this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.maxUses);
+        maxUsesLore.add(this.lang.get(Lang.GUI_EDIT_LORE));
+        this.inventory.setItem(14, new ItemBuilder(this.maxUsesStack).setLore(maxUsesLore).build());
 
-        return inventory;
+        return this.inventory;
     }
 
     @Override
-    public void onInventoryClick(InventoryClickEvent event) {
-        ItemStack item = event.getCurrentItem();
-        Player p = (Player) event.getWhoClicked();
+    public void onInventoryClick(final InventoryClickEvent event) {
+        final @Nullable ItemStack item = event.getCurrentItem();
+        final Player p = (Player) event.getWhoClicked();
 
-        if (cancelButton.isSimilar(item)) {
+        if (this.cancelButton.isSimilar(item)) {
             p.closeInventory();
             new TradeListGui(this.plugin, this.tradeConfig).open(p);
+            return;
         }
 
-        if (experienceEnabled.isSimilar(item)) {
-            experienceReward = false;
-        }
-        if (experienceDisabled.isSimilar(item)) {
-            experienceReward = true;
+        if (this.experienceEnabled.isSimilar(item)) {
+            this.experienceReward = false;
+        } else if (this.experienceDisabled.isSimilar(item)) {
+            this.experienceReward = true;
         }
 
-        if (maxUsesStack.isSimilar(item)) {
-            p.closeInventory();
-            new InputConversation()
-                .onPromptText(player -> {
-                    this.plugin.chat().sendParsed(player,
-                        lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
-                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + maxUses
-                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                    return "";
-                })
-                .onValidateInput(this::onValidateIntGT0)
-                .onConfirmText(this::onConfirmYesNo)
-                .onAccepted((player, s) -> {
-                    maxUses = Integer.parseInt(s);
-                    open(player);
-                })
-                .onDenied(this::onEditCancelled)
-                .start(p);
+        if (this.maxUsesStack.isSimilar(item)) {
+            this.maxUsesClick(p);
         }
 
         int rS = event.getRawSlot();
         if (rS == 28) {
-            i1 = updateSlot(event, ingredient1);
+            this.i1 = this.updateSlot(event, this.emptyIngredient1);
         } else if (rS == 30) {
-            i2 = updateSlot(event, ingredient2);
+            this.i2 = this.updateSlot(event, this.emptyIngredient2);
         } else if (rS == 32) {
-            result = updateSlot(event, resultStack);
+            this.result = this.updateSlot(event, this.emptyResult);
         }
 
-        if (saveButton.isSimilar(item)) {
-            if (tradeName != null && !result.equals(resultStack) && !i1.equals(ingredient1)) {
-                ItemStack ingred2 = null;
-                if (!i2.equals(ingredient2)) {
-                    ingred2 = i2;
-                }
-                tradeConfig.writeTrade(tradeName, maxUses, experienceReward, i1, ingred2, result);
-                this.plugin.config().load();
-                p.closeInventory();
-                new TradeListGui(this.plugin, this.tradeConfig).open(p);
+        if (this.saveButton.isSimilar(item)) {
+            this.saveClick(p);
+        }
+
+        this.onClick(event);
+
+        this.getInventory();
+    }
+
+    private void maxUsesClick(final Player p) {
+        p.closeInventory();
+        new InputConversation()
+            .onPromptText(player -> {
+                this.plugin.chat().sendParsed(player,
+                    this.lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
+                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.maxUses
+                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                return "";
+            })
+            .onValidateInput(this::validateIntGT0)
+            .onConfirmText(this::confirmYesNo)
+            .onAccepted((player, s) -> {
+                this.maxUses = Integer.parseInt(s);
+                this.open(player);
+            })
+            .onDenied(this::editCancelled)
+            .start(p);
+    }
+
+    private void saveClick(final Player player) {
+        if (this.tradeName != null && !this.result.equals(this.emptyResult) && !this.i1.equals(this.emptyIngredient1)) {
+            @Nullable ItemStack ingred2 = null;
+            if (!this.i2.equals(this.emptyIngredient2)) {
+                ingred2 = this.i2;
             }
+            this.tradeConfig.writeTrade(this.tradeName, this.maxUses, this.experienceReward, this.i1, ingred2, this.result);
+            this.plugin.config().load();
+            player.closeInventory();
+            new TradeListGui(this.plugin, this.tradeConfig).open(player);
         }
-
-        onClick(event);
-
-        getInventory();
     }
 
     public abstract void onClick(InventoryClickEvent e);
 
-    public ItemStack updateSlot(InventoryClickEvent event, ItemStack def) {
-        ItemStack cursor = event.getCursor();
+    public ItemStack updateSlot(final InventoryClickEvent event, final ItemStack def) {
+        @Nullable ItemStack cursor = event.getCursor();
         if (cursor != null) {
             if (!Material.AIR.equals(cursor.getType())) {
                 event.getView().setCursor(null);
@@ -163,8 +195,8 @@ public abstract class TradeGui extends BaseGui {
     }
 
     @Override
-    public void reOpen(Player player) {
-        player.openInventory(getInventory());
+    public void reOpen(final Player player) {
+        player.openInventory(this.getInventory());
     }
 
     public ItemStack getCancelButton() {
@@ -207,63 +239,63 @@ public abstract class TradeGui extends BaseGui {
         return this.tradeNameStack;
     }
 
-    public ItemStack getIngredient1() {
-        return this.ingredient1;
+    public ItemStack emptyIngredient1() {
+        return this.emptyIngredient1;
     }
 
-    public ItemStack getIngredient2() {
-        return this.ingredient2;
+    public ItemStack emptyIngredient2() {
+        return this.emptyIngredient2;
     }
 
-    public ItemStack getResultStack() {
-        return this.resultStack;
+    public ItemStack emptyResult() {
+        return this.emptyResult;
     }
 
     public String getTradeName() {
         return this.tradeName;
     }
 
+    public void setTradeName(final String tradeName) {
+        this.tradeName = tradeName;
+    }
+
     public int getMaxUses() {
         return this.maxUses;
+    }
+
+    public void setMaxUses(final int maxUses) {
+        this.maxUses = maxUses;
     }
 
     public boolean isExperienceReward() {
         return this.experienceReward;
     }
 
+    public void setExperienceReward(final boolean experienceReward) {
+        this.experienceReward = experienceReward;
+    }
+
     public ItemStack getI1() {
         return this.i1;
+    }
+
+    public void setI1(final ItemStack i1) {
+        this.i1 = i1;
     }
 
     public ItemStack getI2() {
         return this.i2;
     }
 
+    public void setI2(final ItemStack i2) {
+        this.i2 = i2;
+    }
+
     public ItemStack getResult() {
         return this.result;
     }
 
-    public void setTradeName(String tradeName) {
-        this.tradeName = tradeName;
-    }
-
-    public void setMaxUses(int maxUses) {
-        this.maxUses = maxUses;
-    }
-
-    public void setExperienceReward(boolean experienceReward) {
-        this.experienceReward = experienceReward;
-    }
-
-    public void setI1(ItemStack i1) {
-        this.i1 = i1;
-    }
-
-    public void setI2(ItemStack i2) {
-        this.i2 = i2;
-    }
-
-    public void setResult(ItemStack result) {
+    public void setResult(final ItemStack result) {
         this.result = result;
     }
 }

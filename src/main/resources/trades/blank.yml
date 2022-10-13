@@ -1,4 +1,4 @@
-# WanderingTrades Example TradeConfig ${project.version}
+# WanderingTrades ${project.version} blank trade config
 
 # Enable this tradeset config
 enabled: false

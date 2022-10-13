@@ -3,8 +3,7 @@ package xyz.jpenilla.wanderingtrades.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.stream.IntStream;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,26 +11,55 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.Logging;
 
-public class TradeConfigEditGui extends BaseGui {
-    private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_ENABLED)).setLore(gui_toggle_lore).build();
-    private final ItemStack enabledDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_DISABLED)).setLore(gui_toggle_lore).build();
-    private final ItemStack randomizedEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_RANDOMIZED)).setLore(gui_toggle_lore).build();
-    private final ItemStack randomizedDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_NOT_RANDOMIZED)).setLore(gui_toggle_lore).build();
-    private final ItemStack invEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_INVINCIBLE)).setLore(gui_toggle_lore).build();
-    private final ItemStack invDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_NOT_INVINCIBLE)).setLore(gui_toggle_lore).build();
-    private final ItemStack randAmount = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT)).build();
-    private final ItemStack chance = new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CHANCE)).build();
-    private final ItemStack customName = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE).setName(lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME)).build();
+@DefaultQualifier(NonNull.class)
+public final class TradeConfigEditGui extends BaseGui {
+    private final ItemStack enabledEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_ENABLED))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack enabledDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_DISABLED))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack randomizedEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_RANDOMIZED))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack randomizedDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_NOT_RANDOMIZED))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack invEnabled = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_INVINCIBLE))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack invDisabled = new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_NOT_INVINCIBLE))
+        .setLore(this.toggleLore)
+        .build();
+    private final ItemStack randAmount = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT))
+        .build();
+    private final ItemStack chance = new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_CHANCE))
+        .build();
+    private final ItemStack customName = new ItemBuilder(Material.PINK_STAINED_GLASS_PANE)
+        .setName(this.lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME))
+        .build();
     private final ItemStack deleteButton = new HeadBuilder("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5NzY0NjE1ZGQ5Y2EwNTk5YmQ5ODg1ZjIyMmFhNWVhNWI0NzZiZDFiOTNlOTYyODUzNjZkMWQ0YzEifX19")
-        .setName(lang.get(Lang.GUI_TRADE_DELETE)).setLore(lang.get(Lang.GUI_CONFIG_DELETE_LORE)).build();
-
+        .setName(this.lang.get(Lang.GUI_TRADE_DELETE))
+        .setLore(this.lang.get(Lang.GUI_CONFIG_DELETE_LORE))
+        .build();
     private final TradeConfig tradeConfig;
 
     public TradeConfigEditGui(final WanderingTrades plugin, TradeConfig tradeConfig) {
@@ -39,188 +67,180 @@ public class TradeConfigEditGui extends BaseGui {
         this.tradeConfig = tradeConfig;
     }
 
-    public @NonNull Inventory getInventory() {
-        inventory.clear();
+    @Override
+    public Inventory getInventory() {
+        this.inventory.clear();
 
-        inventory.setItem(inventory.getSize() - 1, backButton);
+        this.inventory.setItem(this.inventory.getSize() - 1, this.backButton);
 
-        ItemStack enabled;
-        if (tradeConfig.enabled()) {
-            enabled = enabledEnabled;
-        } else {
-            enabled = enabledDisabled;
-        }
-        ItemStack randomized;
-        if (tradeConfig.randomized()) {
-            randomized = randomizedEnabled;
-        } else {
-            randomized = randomizedDisabled;
-        }
-        ItemStack inv;
-        if (tradeConfig.invincible()) {
-            inv = invEnabled;
-        } else {
-            inv = invDisabled;
-        }
-        inventory.setItem(10, enabled);
-        inventory.setItem(12, randomized);
-        inventory.setItem(14, inv);
+        this.inventory.setItem(10, this.tradeConfig.enabled() ? this.enabledEnabled : this.enabledDisabled);
+        this.inventory.setItem(12, this.tradeConfig.randomized() ? this.randomizedEnabled : this.randomizedDisabled);
+        this.inventory.setItem(14, this.tradeConfig.invincible() ? this.invEnabled : this.invDisabled);
 
-        ArrayList<String> randAmountLore = new ArrayList<>();
-        randAmountLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + tradeConfig.randomAmount());
-        randAmountLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        inventory.setItem(16, new ItemBuilder(randAmount).setLore(randAmountLore).build());
+        final List<String> randAmountLore = new ArrayList<>();
+        randAmountLore.add(this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.randomAmount());
+        randAmountLore.add(this.lang.get(Lang.GUI_EDIT_LORE));
+        this.inventory.setItem(16, new ItemBuilder(this.randAmount).setLore(randAmountLore).build());
 
-        ArrayList<String> chanceLore = new ArrayList<>();
-        chanceLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<color:#0092FF>" + tradeConfig.chance());
-        chanceLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        inventory.setItem(28, new ItemBuilder(chance).setLore(chanceLore).build());
+        final List<String> chanceLore = new ArrayList<>();
+        chanceLore.add(this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.chance());
+        chanceLore.add(this.lang.get(Lang.GUI_EDIT_LORE));
+        this.inventory.setItem(28, new ItemBuilder(this.chance).setLore(chanceLore).build());
 
-        ArrayList<String> customNameLore = new ArrayList<>();
-        customNameLore.add(lang.get(Lang.GUI_VALUE_LORE) + "<white>" + tradeConfig.customName());
-        customNameLore.add(lang.get(Lang.GUI_EDIT_LORE));
-        inventory.setItem(30, new ItemBuilder(customName).setLore(customNameLore).build());
+        final List<String> customNameLore = new ArrayList<>();
+        customNameLore.add(this.lang.get(Lang.GUI_VALUE_LORE) + "<white>" + this.tradeConfig.customName());
+        customNameLore.add(this.lang.get(Lang.GUI_EDIT_LORE));
+        this.inventory.setItem(30, new ItemBuilder(this.customName).setLore(customNameLore).build());
 
-        inventory.setItem(inventory.getSize() - 11, deleteButton);
+        this.inventory.setItem(this.inventory.getSize() - 11, this.deleteButton);
 
-        IntStream.range(0, inventory.getSize()).forEach(slot -> {
-            if (inventory.getItem(slot) == null) {
-                inventory.setItem(slot, filler);
-            }
-        });
+        this.fillEmptySlots();
 
-        return inventory;
+        return this.inventory;
     }
 
     @Override
-    public void onInventoryClick(InventoryClickEvent event) {
-        ItemStack item = event.getCurrentItem();
-        Player p = (Player) event.getWhoClicked();
+    public void onInventoryClick(final InventoryClickEvent event) {
+        final @Nullable ItemStack item = event.getCurrentItem();
+        final Player p = (Player) event.getWhoClicked();
 
-        if (backButton.isSimilar(item)) {
+        if (this.backButton.isSimilar(item)) {
             p.closeInventory();
             new TradeListGui(this.plugin, this.tradeConfig).open(p);
         }
 
-        if (enabledEnabled.isSimilar(item)) {
-            tradeConfig.enabled(false);
-        }
-        if (enabledDisabled.isSimilar(item)) {
-            tradeConfig.enabled(true);
-        }
-
-        if (randomizedEnabled.isSimilar(item)) {
-            tradeConfig.randomized(false);
-        }
-        if (randomizedDisabled.isSimilar(item)) {
-            tradeConfig.randomized(true);
+        if (this.enabledEnabled.isSimilar(item)) {
+            this.tradeConfig.enabled(false);
+        } else if (this.enabledDisabled.isSimilar(item)) {
+            this.tradeConfig.enabled(true);
         }
 
-        if (invEnabled.isSimilar(item)) {
-            tradeConfig.invincible(false);
-        }
-        if (invDisabled.isSimilar(item)) {
-            tradeConfig.invincible(true);
-        }
-
-        if (randAmount.isSimilar(item)) {
-            p.closeInventory();
-            new InputConversation()
-                .onPromptText(player -> {
-                    this.plugin.chat().sendParsed(player,
-                        lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
-                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.randomAmount()
-                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
-                    return "";
-                })
-                .onValidateInput(this::validateIntRange)
-                .onConfirmText(this::onConfirmYesNo)
-                .onAccepted((player, s) -> {
-                    tradeConfig.randomAmount(s);
-                    tradeConfig.save();
-                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                    open(player);
-                })
-                .onDenied(this::onEditCancelled)
-                .start(p);
+        if (this.randomizedEnabled.isSimilar(item)) {
+            this.tradeConfig.randomized(false);
+        } else if (this.randomizedDisabled.isSimilar(item)) {
+            this.tradeConfig.randomized(true);
         }
 
-        if (chance.isSimilar(item)) {
-            p.closeInventory();
-            new InputConversation()
-                .onPromptText(player -> {
-                    this.plugin.chat().sendParsed(player,
-                        lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
-                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + tradeConfig.chance()
-                            + "<reset>\n" + lang.get(Lang.MESSAGE_ENTER_NUMBER));
-                    return "";
-                })
-                .onValidateInput(this::onValidateDouble0T1)
-                .onConfirmText(this::onConfirmYesNo)
-                .onAccepted((player, s) -> {
-                    tradeConfig.chance(Double.parseDouble(s));
-                    tradeConfig.save();
-                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                    open(player);
-                })
-                .onDenied(this::onEditCancelled)
-                .start(p);
+        if (this.invEnabled.isSimilar(item)) {
+            this.tradeConfig.invincible(false);
+        } else if (this.invDisabled.isSimilar(item)) {
+            this.tradeConfig.invincible(true);
         }
 
-        if (customName.isSimilar(item)) {
-            p.closeInventory();
-            new InputConversation()
-                .onPromptText(player -> {
-                    this.plugin.chat().sendParsed(player,
-                        lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
-                            + "<reset>\n" + lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + tradeConfig.customName());
-                    return "";
-                })
-                .onValidateInput((pl, s) -> true)
-                .onConfirmText(this::onConfirmYesNo)
-                .onAccepted((player, string) -> {
-                    tradeConfig.customName(string);
-                    tradeConfig.save();
-                    open(player);
-                })
-                .onDenied(this::onEditCancelled)
-                .start(p);
+        if (this.randAmount.isSimilar(item)) {
+            this.randAmountClick(p);
         }
 
-        if (deleteButton.isSimilar(item)) {
-            p.closeInventory();
-            new InputConversation()
-                .onPromptText((player -> {
-                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", tradeConfig.configName()));
-                    this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", lang.get(Lang.MESSAGE_CONFIRM_KEY)));
-                    return "";
-                }))
-                .onValidateInput(((player, s) -> {
-                    if (s.equals(lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
-                        final Path tcFile = this.plugin.dataPath().resolve("trades/" + tradeConfig.configName() + ".yml");
-                        try {
-                            Files.delete(tcFile);
-                        } catch (Exception e) {
-                            this.plugin.getLogger().log(Level.WARNING, "File delete failed", e);
-                        }
-                        this.plugin.config().load();
-                        this.plugin.chat().sendParsed(player, lang.get(Lang.MESSAGE_EDIT_SAVED));
-                        new TradeConfigListGui(this.plugin).open(player);
-                    } else {
-                        onEditCancelled(player, s);
+        if (this.chance.isSimilar(item)) {
+            this.chanceClick(p);
+        }
+
+        if (this.customName.isSimilar(item)) {
+            this.customNameClick(p);
+        }
+
+        if (this.deleteButton.isSimilar(item)) {
+            this.deleteClick(p);
+        }
+
+        this.tradeConfig.save();
+
+        this.getInventory();
+    }
+
+    private void randAmountClick(final Player p) {
+        p.closeInventory();
+        new InputConversation()
+            .onPromptText(player -> {
+                this.plugin.chat().sendParsed(player,
+                    this.lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
+                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.tradeConfig.randomAmount()
+                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                return "";
+            })
+            .onValidateInput(this::validateIntRange)
+            .onConfirmText(this::confirmYesNo)
+            .onAccepted((player, s) -> {
+                this.tradeConfig.randomAmount(s);
+                this.tradeConfig.save();
+                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.open(player);
+            })
+            .onDenied(this::editCancelled)
+            .start(p);
+    }
+
+    private void chanceClick(final Player p) {
+        p.closeInventory();
+        new InputConversation()
+            .onPromptText(player -> {
+                this.plugin.chat().sendParsed(player,
+                    this.lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
+                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.tradeConfig.chance()
+                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                return "";
+            })
+            .onValidateInput(this::validateDouble0T1)
+            .onConfirmText(this::confirmYesNo)
+            .onAccepted((player, s) -> {
+                this.tradeConfig.chance(Double.parseDouble(s));
+                this.tradeConfig.save();
+                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.open(player);
+            })
+            .onDenied(this::editCancelled)
+            .start(p);
+    }
+
+    private void customNameClick(final Player p) {
+        p.closeInventory();
+        new InputConversation()
+            .onPromptText(player -> {
+                this.plugin.chat().sendParsed(player,
+                    this.lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
+                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + this.tradeConfig.customName());
+                return "";
+            })
+            .onValidateInput((pl, s) -> true)
+            .onConfirmText(this::confirmYesNo)
+            .onAccepted((player, string) -> {
+                this.tradeConfig.customName(string);
+                this.tradeConfig.save();
+                this.open(player);
+            })
+            .onDenied(this::editCancelled)
+            .start(p);
+    }
+
+    private void deleteClick(final Player p) {
+        p.closeInventory();
+        new InputConversation()
+            .onPromptText((player -> {
+                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", this.tradeConfig.configName()));
+                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", this.lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                return "";
+            }))
+            .onValidateInput(((player, s) -> {
+                if (s.equals(this.lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
+                    final Path tcFile = this.plugin.dataPath().resolve("trades/" + this.tradeConfig.configName() + ".yml");
+                    try {
+                        Files.delete(tcFile);
+                    } catch (Exception e) {
+                        Logging.logger().warn("File delete failed", e);
                     }
-                    return true;
-                }))
-                .start(p);
-        }
-
-        tradeConfig.save();
-
-        getInventory();
+                    this.plugin.config().load();
+                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    new TradeConfigListGui(this.plugin).open(player);
+                } else {
+                    this.editCancelled(player, s);
+                }
+                return true;
+            }))
+            .start(p);
     }
 
     @Override
-    public void reOpen(Player player) {
+    public void reOpen(final Player player) {
         Bukkit.getServer().getScheduler().runTaskLater(this.plugin, () -> new TradeConfigEditGui(this.plugin, this.tradeConfig).open(player), 1L);
     }
 }

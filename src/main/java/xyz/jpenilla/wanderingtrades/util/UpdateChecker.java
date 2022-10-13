@@ -1,12 +1,12 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +33,7 @@ public final class UpdateChecker {
 
     public void checkVersion() {
         final JsonArray result;
-        try (final InputStreamReader urlReader = new InputStreamReader(new URL("https://api.github.com/repos/" + this.githubRepo + "/releases").openStream(), Charsets.UTF_8)) {
+        try (final InputStreamReader urlReader = new InputStreamReader(new URL("https://api.github.com/repos/" + this.githubRepo + "/releases").openStream(), StandardCharsets.UTF_8)) {
             result = GSON.fromJson(urlReader, JsonArray.class);
         } catch (IOException exception) {
             this.plugin.getLogger().log(Level.INFO, "Failed to look for updates", exception);

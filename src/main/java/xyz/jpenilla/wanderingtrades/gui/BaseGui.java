@@ -1,7 +1,8 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import java.util.function.DoubleFunction;
-import java.util.function.IntFunction;
+import java.util.function.DoublePredicate;
+import java.util.function.IntPredicate;
+import java.util.stream.IntStream;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -13,28 +14,30 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
-import xyz.jpenilla.pluginbase.legacy.MiniMessageUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
+import xyz.jpenilla.wanderingtrades.util.Inventories;
 
+@DefaultQualifier(NonNull.class)
 public abstract class BaseGui implements InventoryHolder {
     protected final LangConfig lang;
-    protected final String gui_toggle_lore;
+    protected final String toggleLore;
     protected final ItemStack backButton;
     protected final ItemStack closeButton;
     protected final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
     protected final WanderingTrades plugin;
-    protected Inventory inventory;
+    protected final Inventory inventory;
 
-    public BaseGui(WanderingTrades plugin, String name, int size) {
+    public BaseGui(final WanderingTrades plugin, final String name, final int size) {
         this.plugin = plugin;
-        this.inventory = plugin.getServer().createInventory(this, size, MiniMessageUtil.miniMessageToLegacy(name));
+        this.inventory = Inventories.createInventory(this, size, name);
 
         this.lang = this.plugin.langConfig();
 
-        this.gui_toggle_lore = this.lang.get(Lang.GUI_TOGGLE_LORE);
+        this.toggleLore = this.lang.get(Lang.GUI_TOGGLE_LORE);
         this.backButton = new ItemBuilder(Material.BARRIER)
             .setName(this.lang.get(Lang.GUI_BACK))
             .setLore(this.lang.get(Lang.GUI_BACK_LORE))
@@ -74,74 +77,59 @@ public abstract class BaseGui implements InventoryHolder {
     public void onInventoryClose(final InventoryCloseEvent event) {
     }
 
-    public void open(final @NonNull Player p) {
-        p.openInventory(getInventory());
+    public void open(final Player player) {
+        player.openInventory(this.getInventory());
     }
 
     public abstract void reOpen(final Player p);
 
-    public boolean validateIntRange(final Player p, final String s) {
+    protected void fillEmptySlots() {
+        IntStream.range(0, this.inventory.getSize()).forEach(slot -> {
+            if (this.inventory.getItem(slot) == null) {
+                this.inventory.setItem(slot, this.filler);
+            }
+        });
+    }
+
+    protected boolean validateIntRange(final Player player, final String s) {
         if (s.contains(":")) {
             try {
                 String[] split = s.split(":");
-                if (validateIntForRange(null, split[0]) && validateIntForRange(null, split[1])) {
-                    return true;
-                } else {
-                    this.plugin.chat().sendParsed(p, this.plugin.langConfig().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
-                    return false;
-                }
+                return this.validateIntGTE0(player, split[0]) && this.validateIntGTE0(player, split[1]);
             } catch (Exception e) {
                 return false;
             }
         } else {
-            return validateIntForRange(p, s);
+            return this.validateIntGTE0(player, s);
         }
-    }
-
-    private boolean validateIntForRange(final Player player, final String input) {
-        try {
-            int i = Integer.parseInt(input);
-            if (i < 0) {
-                this.plugin.chat().sendParsed(player, this.plugin.langConfig().get(Lang.MESSAGE_NUMBER_GTE_0));
-                return false;
-            }
-        } catch (NumberFormatException ex) {
-            this.plugin.chat().sendParsed(player, this.plugin.langConfig().get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
-            return false;
-        }
-        return true;
     }
 
     private boolean validateInt(
-        final @NonNull Player player,
-        final @NonNull String input,
-        final @NonNull IntFunction<@NonNull Boolean> validator
+        final String input,
+        final IntPredicate validator
     ) {
         try {
             int i = Integer.parseInt(input);
-            return validator.apply(i);
+            return validator.test(i);
         } catch (final NumberFormatException ex) {
-            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
     }
 
     private boolean validateDouble(
-        final @NonNull Player player,
-        final @NonNull String input,
-        final @NonNull DoubleFunction<@NonNull Boolean> validator
+        final String input,
+        final DoublePredicate validator
     ) {
         try {
             double d = Double.parseDouble(input);
-            return validator.apply(d);
+            return validator.test(d);
         } catch (final NumberFormatException ex) {
-            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
             return false;
         }
     }
 
-    public boolean onValidateIntGT0(final @NonNull Player player, final @NonNull String input) {
-        return this.validateInt(player, input, i -> {
+    protected boolean validateIntGT0(final Player player, final String input) {
+        return this.validateInt(input, i -> {
             if (i >= 1) {
                 return true;
             }
@@ -150,8 +138,8 @@ public abstract class BaseGui implements InventoryHolder {
         });
     }
 
-    public boolean onValidateIntGTE0(final @NonNull Player player, final @NonNull String input) {
-        return this.validateInt(player, input, i -> {
+    protected boolean validateIntGTE0(final Player player, final String input) {
+        return this.validateInt(input, i -> {
             if (i >= 0) {
                 return true;
             }
@@ -160,8 +148,8 @@ public abstract class BaseGui implements InventoryHolder {
         });
     }
 
-    public boolean onValidateIntGTEN1(final @NonNull Player player, final @NonNull String input) {
-        return this.validateInt(player, input, i -> {
+    protected boolean validateIntGTEN1(final Player player, final String input) {
+        return this.validateInt(input, i -> {
             if (i >= -1) {
                 return true;
             }
@@ -170,8 +158,8 @@ public abstract class BaseGui implements InventoryHolder {
         });
     }
 
-    public boolean onValidateDouble0T1(final @NonNull Player player, final @NonNull String input) {
-        return this.validateDouble(player, input, d -> {
+    protected boolean validateDouble0T1(final Player player, final String input) {
+        return this.validateDouble(input, d -> {
             if (d < 0 || d > 1) {
                 this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_0T1));
                 return false;
@@ -180,13 +168,13 @@ public abstract class BaseGui implements InventoryHolder {
         });
     }
 
-    public String onConfirmYesNo(final Player player, final String s) {
+    protected String confirmYesNo(final Player player, final String s) {
         this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
         this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YES_NO));
         return "";
     }
 
-    public void onEditCancelled(final Player p, final String s) {
+    protected void editCancelled(final Player p, final String s) {
         this.plugin.chat().sendParsed(p, this.lang.get(Lang.MESSAGE_EDIT_CANCELLED));
         this.open(p);
     }

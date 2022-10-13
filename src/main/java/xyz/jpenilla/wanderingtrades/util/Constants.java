@@ -38,6 +38,8 @@ public final class Constants {
         .clickEvent(runCommand("/wanderingtrades help"))
         .build();
 
+    public static final String PREFIX_MINIMESSAGE = WanderingTrades.instance().miniMessage().serialize(PREFIX_COMPONENT);
+
     public static final class Permissions {
         private Permissions() {
         }
