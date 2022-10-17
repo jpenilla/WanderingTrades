@@ -86,20 +86,30 @@ public final class TradeConfig {
         ItemStackSerialization.writeOrRemove(this.config, path, itemStack);
     }
 
-    public void addTrade(String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
-        final String child = TRADES + "." + tradeName;
-        if (i1 != null) {
-            this.config.set(child + ".maxUses", maxUses);
-            this.config.set(child + ".experienceReward", experienceReward);
-            this.writeStack(child + ".result", result);
-            this.writeIngredient(tradeName, 1, i1);
-            this.writeIngredient(tradeName, 2, i2);
-            this.save();
+    public void setTrade(
+        final String tradeName,
+        final int maxUses,
+        final boolean experienceReward,
+        final @Nullable ItemStack i1,
+        final @Nullable ItemStack i2,
+        final ItemStack result
+    ) {
+        if (i1 == null) {
+            return;
+        }
 
-            final @Nullable MerchantRecipe recipe = this.readTrade(tradeName);
-            if (recipe != null) {
-                this.allTrades.put(tradeName, recipe);
-            }
+        final String child = TRADES + "." + tradeName;
+
+        this.config.set(child + ".maxUses", maxUses);
+        this.config.set(child + ".experienceReward", experienceReward);
+        this.writeStack(child + ".result", result);
+        this.writeIngredient(tradeName, 1, i1);
+        this.writeIngredient(tradeName, 2, i2);
+        this.save();
+
+        final @Nullable MerchantRecipe recipe = this.readTrade(tradeName);
+        if (recipe != null) {
+            this.allTrades.put(tradeName, recipe);
         }
     }
 

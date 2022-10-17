@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: 'Setting how many days since last login to ignore
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Successfully created new config and reloaded'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Cancelled config creation'
 MESSAGE_YOU_ENTERED: "<yellow>You Entered</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "Use this value? Type or Click: <hover:show_text:'<green>Click to run!'><click:run_command:yes><green>Yes</green></hover> or <hover:show_text:'<green>Click to run!'><click:run_command:no><red>No</red></hover>"
+MESSAGE_YES_NO: "Use this value? Type or Click: <hover:show_text:'<green>Click to run!'><click:run_command:'/wanderingtrades accept-input yes'><green>Yes</green></hover> or <hover:show_text:'<green>Click to run!'><click:run_command:'/wanderingtrades accept-input no'><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Edit cancelled"
 MESSAGE_EDIT_SAVED: "<italic><green>Edit saved"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Enter a WorldGuard region name</gradient><gray>:"

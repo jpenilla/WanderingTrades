@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: 'Установить количество дне
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Успешно создана и перезагружена новая конфигурация'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Отмена создания конфигурации'
 MESSAGE_YOU_ENTERED: "<yellow>Вы ввели</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "Использовать это значение? Введите или нажмите: <hover:show_text:'<green>Нажмите!'><click:run_command:yes><green>Да</green></hover> или <hover:show_text:'<green>Нажмите!'><click:run_command:no><red>Нет</red></hover>"
+MESSAGE_YES_NO: "Использовать это значение? Введите или нажмите: <hover:show_text:'<green>Нажмите!'><click:run_command:'/wanderingtrades accept-input yes'><green>Да</green></hover> или <hover:show_text:'<green>Нажмите!'><click:run_command:'/wanderingtrades accept-input no'><red>Нет</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Редактирование отменено"
 MESSAGE_EDIT_SAVED: "<italic><green>Редактирование сохранено"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Введите имя региона WorldGuard</gradient><gray>:"

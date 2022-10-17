@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: '设置从上次登录到忽略头颅的天数'
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>已成功创建新配置并重新加载'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>已取消配置创建'
 MESSAGE_YOU_ENTERED: "<yellow>你输入了</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "确认使用这个值？输入或点击: <hover:show_text:'<green>点击确认！'><click:run_command:yes><green>Yes</green></hover> 或 <hover:show_text:'<green>点击确认！'><click:run_command:no><red>No</red></hover>"
+MESSAGE_YES_NO: "确认使用这个值？输入或点击: <hover:show_text:'<green>点击确认！'><click:run_command:'/wanderingtrades accept-input yes'><green>Yes</green></hover> 或 <hover:show_text:'<green>点击确认！'><click:run_command:'/wanderingtrades accept-input no'><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>编辑已取消"
 MESSAGE_EDIT_SAVED: "<italic><green>编辑已保存"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>输入WorldGuard区域名称</gradient><gray>:"

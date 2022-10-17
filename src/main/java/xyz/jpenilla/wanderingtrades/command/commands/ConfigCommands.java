@@ -7,6 +7,7 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import java.util.ArrayList;
 import java.util.List;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,6 +23,8 @@ import xyz.jpenilla.wanderingtrades.gui.ListTradesInterface;
 import xyz.jpenilla.wanderingtrades.gui.MainConfigInterface;
 import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigInterface;
 import xyz.jpenilla.wanderingtrades.util.Constants;
+
+import static net.kyori.adventure.text.Component.text;
 
 public final class ConfigCommands extends BaseCommand {
     public ConfigCommands(final WanderingTrades plugin, final Commands commands) {
@@ -74,6 +77,21 @@ public final class ConfigCommands extends BaseCommand {
             .senderType(Player.class)
             .handler(context -> new PlayerHeadConfigInterface(this.plugin).open((Player) context.getSender()))
             .build();
+
+        // Needed for 1.19+ as run_command click events can no longer be used to send chat messages
+        this.commandManager.command(wt
+            .literal("accept-input")
+            .argument(StringArgument.greedy("input"))
+            .permission("wanderingtrades.edit")
+            .senderType(Player.class)
+            .handler(context -> {
+                final Player player = (Player) context.getSender();
+                if (!player.isConversing()) {
+                    this.plugin.audiences().player(player).sendMessage(text("Error. This command is meant for use by click events.", NamedTextColor.RED));
+                    return;
+                }
+                player.acceptConversationInput(context.get("input"));
+            }));
 
         /* Held ItemStack Rename Command */
         final Command<CommandSender> nameHeldItem = this.commandManager.commandBuilder("namehelditem")

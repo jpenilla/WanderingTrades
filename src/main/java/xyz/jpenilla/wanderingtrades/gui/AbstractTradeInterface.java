@@ -172,7 +172,7 @@ public abstract class AbstractTradeInterface extends BaseInterface {
     private void saveClick(final ClickContext<ChestPane, InventoryClickEvent, PlayerViewer> context) {
         final @Nullable String tradeName = this.tradeName();
         if (tradeName != null && this.result.item() != null && this.ingredientOne.item() != null) {
-            this.tradeConfig.addTrade(
+            this.tradeConfig.setTrade(
                 tradeName,
                 this.maxUses,
                 this.experienceReward,

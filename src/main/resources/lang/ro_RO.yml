@@ -121,7 +121,7 @@ MESSAGE_SET_HEADS_DAYS_PROMPT: 'Setează după câte zile de inactivitate să ex
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Configurația nouă a fost creată si încărcată cu succes'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Configurația a fost anulată'
 MESSAGE_YOU_ENTERED: "<yellow>Ai scris</yellow><gray>:</gray> "
-MESSAGE_YES_NO: "Dorești să folosești această valoare? Scrie sau dă click: <hover:show_text:'<green>Click pentru a executa!'><click:run_command:yes><green>Yes</green></hover> sau <hover:show_text:'<green>Dă click pentru a executa'><click:run_command:no><red>No</red></hover>"
+MESSAGE_YES_NO: "Dorești să folosești această valoare? Scrie sau dă click: <hover:show_text:'<green>Click pentru a executa!'><click:run_command:'/wanderingtrades accept-input yes'><green>Yes</green></hover> sau <hover:show_text:'<green>Dă click pentru a executa'><click:run_command:'/wanderingtrades accept-input no'><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Editarea anulată"
 MESSAGE_EDIT_SAVED: "<italic><green>Editarea salvată"
 MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Introduce numele unei regiuni de WorldGuard</gradient><gray>:"
