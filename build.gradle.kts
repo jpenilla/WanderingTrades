@@ -36,12 +36,14 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "$mcVersion-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+60-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+61-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 
     implementation(platform("cloud.commandframework:cloud-bom:1.7.1"))
     implementation("cloud.commandframework", "cloud-paper")
     implementation("cloud.commandframework", "cloud-minecraft-extras")
+
+    implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-legacy-SNAPSHOT")
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.essentialsx", "EssentialsX", "2.19.4") {
@@ -83,7 +85,8 @@ tasks {
             "xyz.jpenilla.pluginbase",
             "net.kyori",
             "io.papermc.lib",
-            "io.leangen.geantyref"
+            "io.leangen.geantyref",
+            "org.incendo.interfaces",
         ).forEach {
             relocate(it, "xyz.jpenilla.wanderingtrades.lib.$it")
         }

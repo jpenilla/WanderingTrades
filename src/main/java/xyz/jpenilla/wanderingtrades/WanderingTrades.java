@@ -4,10 +4,13 @@ import io.papermc.lib.PaperLib;
 import java.util.logging.Level;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.interfaces.core.view.InterfaceView;
+import org.incendo.interfaces.paper.PaperInterfaceListeners;
 import xyz.jpenilla.pluginbase.legacy.PluginBase;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Config;
@@ -35,6 +38,7 @@ public final class WanderingTrades extends PluginBase {
     public void enable() {
         PaperLib.suggestPaper(this, Level.WARNING);
         instance = this;
+        PaperInterfaceListeners.install(this);
         this.setupIntegrations();
         this.configManager = new ConfigManager(this);
         this.configManager.load();
@@ -86,7 +90,14 @@ public final class WanderingTrades extends PluginBase {
     }
 
     public void reload() {
+        for (final Player player : this.getServer().getOnlinePlayers()) {
+            if (player.getOpenInventory().getTopInventory().getHolder() instanceof InterfaceView<?,?>) {
+                player.closeInventory();
+            }
+        }
+
         this.configManager().reload();
+
         this.listeners().reload();
         this.playerHeads().configChanged();
     }

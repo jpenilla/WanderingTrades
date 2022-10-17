@@ -10,7 +10,6 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.listener.AcquireTradeListener;
 import xyz.jpenilla.wanderingtrades.listener.BrainModificationListener;
-import xyz.jpenilla.wanderingtrades.listener.GuiListener;
 import xyz.jpenilla.wanderingtrades.listener.JoinQuitListener;
 import xyz.jpenilla.wanderingtrades.listener.ProtectTradersListener;
 import xyz.jpenilla.wanderingtrades.listener.RefreshTradesListener;
@@ -32,7 +31,6 @@ public final class Listeners {
     }
 
     private void register() {
-        this.registerListener(GuiListener.class, new GuiListener());
         this.registerListener(JoinQuitListener.class, new JoinQuitListener(this.plugin));
 
         if (this.plugin.config().enabled()) {

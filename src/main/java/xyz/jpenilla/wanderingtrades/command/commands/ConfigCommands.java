@@ -17,10 +17,10 @@ import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-import xyz.jpenilla.wanderingtrades.gui.ConfigEditGui;
-import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigGui;
-import xyz.jpenilla.wanderingtrades.gui.TradeConfigListGui;
-import xyz.jpenilla.wanderingtrades.gui.TradeListGui;
+import xyz.jpenilla.wanderingtrades.gui.ListTradeConfigsInterface;
+import xyz.jpenilla.wanderingtrades.gui.ListTradesInterface;
+import xyz.jpenilla.wanderingtrades.gui.MainConfigInterface;
+import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigInterface;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 public final class ConfigCommands extends BaseCommand {
@@ -50,9 +50,9 @@ public final class ConfigCommands extends BaseCommand {
             .handler(context -> {
                 final TradeConfig config = context.<TradeConfig>getOptional("trade_config").orElse(null);
                 if (config == null) {
-                    new TradeConfigListGui(this.plugin).open((Player) context.getSender());
+                    new ListTradeConfigsInterface(this.plugin).open((Player) context.getSender());
                 } else {
-                    new TradeListGui(this.plugin, config).open((Player) context.getSender());
+                    new ListTradesInterface(this.plugin, config).open((Player) context.getSender());
                 }
             })
             .build();
@@ -63,7 +63,7 @@ public final class ConfigCommands extends BaseCommand {
             .literal("editconfig")
             .permission("wanderingtrades.edit")
             .senderType(Player.class)
-            .handler(context -> new ConfigEditGui(this.plugin).open((Player) context.getSender()))
+            .handler(context -> new MainConfigInterface(this.plugin).open((Player) context.getSender()))
             .build();
 
         /* Player Head Config Edit Command */
@@ -72,7 +72,7 @@ public final class ConfigCommands extends BaseCommand {
             .literal("editplayerheads")
             .permission("wanderingtrades.edit")
             .senderType(Player.class)
-            .handler(context -> new PlayerHeadConfigGui(this.plugin).open((Player) context.getSender()))
+            .handler(context -> new PlayerHeadConfigInterface(this.plugin).open((Player) context.getSender()))
             .build();
 
         /* Held ItemStack Rename Command */

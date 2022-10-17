@@ -76,8 +76,9 @@ public final class TradeConfig {
         this.load();
     }
 
-    public void deleteTrade(String tradeName) {
+    public void deleteTrade(final String tradeName) {
         this.config.set(TRADES + "." + tradeName, null);
+        this.allTrades.remove(tradeName);
         this.save();
     }
 
@@ -85,7 +86,7 @@ public final class TradeConfig {
         ItemStackSerialization.writeOrRemove(this.config, path, itemStack);
     }
 
-    public void writeTrade(String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
+    public void addTrade(String tradeName, int maxUses, boolean experienceReward, ItemStack i1, ItemStack i2, ItemStack result) {
         final String child = TRADES + "." + tradeName;
         if (i1 != null) {
             this.config.set(child + ".maxUses", maxUses);
@@ -94,6 +95,11 @@ public final class TradeConfig {
             this.writeIngredient(tradeName, 1, i1);
             this.writeIngredient(tradeName, 2, i2);
             this.save();
+
+            final @Nullable MerchantRecipe recipe = this.readTrade(tradeName);
+            if (recipe != null) {
+                this.allTrades.put(tradeName, recipe);
+            }
         }
     }
 
@@ -120,36 +126,44 @@ public final class TradeConfig {
         final Map<String, MerchantRecipe> tradeMap = new ConcurrentHashMap<>();
 
         for (final String key : this.getTradeSection().getKeys(false)) {
-            final String prefix = TRADES + "." + key + ".";
-
-            int maxUses = 1;
-            if (this.config.getInt(prefix + "maxUses") != 0) {
-                maxUses = this.config.getInt(prefix + "maxUses");
-            }
-
-            final ItemStack result = ItemStackSerialization.read(this.config, prefix + "result");
-            if (result != null) {
-                final MerchantRecipe recipe = new MerchantRecipe(
-                    result,
-                    0,
-                    maxUses,
-                    this.config.getBoolean(prefix + "experienceReward")
-                );
-
-                for (int i = 1; i < 3; i++) {
-                    final ItemStack ingredient = ItemStackSerialization.read(this.config, prefix + "ingredients." + i);
-                    if (ingredient != null) {
-                        recipe.addIngredient(ingredient);
-                    }
-                }
-
+            final @Nullable MerchantRecipe recipe = this.readTrade(key);
+            if (recipe != null) {
                 tradeMap.put(key, recipe);
-            } else {
-                this.plugin.getLogger().log(Level.WARNING, String.format("Failed to read trade: '%s', missing/invalid result item", prefix));
             }
         }
 
         return tradeMap;
+    }
+
+    private @Nullable MerchantRecipe readTrade(final String key) {
+        final String prefix = TRADES + "." + key + ".";
+
+        int maxUses = 1;
+        if (this.config.getInt(prefix + "maxUses") != 0) {
+            maxUses = this.config.getInt(prefix + "maxUses");
+        }
+
+        final ItemStack result = ItemStackSerialization.read(this.config, prefix + "result");
+        if (result != null) {
+            final MerchantRecipe recipe = new MerchantRecipe(
+                result,
+                0,
+                maxUses,
+                this.config.getBoolean(prefix + "experienceReward")
+            );
+
+            for (int i = 1; i < 3; i++) {
+                final ItemStack ingredient = ItemStackSerialization.read(this.config, prefix + "ingredients." + i);
+                if (ingredient != null) {
+                    recipe.addIngredient(ingredient);
+                }
+            }
+
+            return recipe;
+        } else {
+            this.plugin.getLogger().log(Level.WARNING, String.format("Failed to read trade: '%s', missing/invalid result item", prefix));
+        }
+        return null;
     }
 
     private List<MerchantRecipe> pickTrades(final Collection<MerchantRecipe> trades, final int amount) {
