@@ -41,7 +41,7 @@ public final class BrainModificationListener implements Listener {
 
     private void modifyBrain(final Villager villager) {
         final @Nullable String configName = villager.getPersistentDataContainer().get(Constants.CONFIG_NAME, PersistentDataType.STRING);
-        final @Nullable TradeConfig tradeConfig = this.plugin.configManager().tradeConfigs().get(configName);
+        final @Nullable TradeConfig tradeConfig = configName == null ? null : this.plugin.configManager().tradeConfigs().get(configName);
         if (configName == null || tradeConfig == null || !tradeConfig.disableHeroOfTheVillageGifts()) {
             return;
         }
