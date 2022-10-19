@@ -12,8 +12,8 @@ import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.Lang;
@@ -104,13 +104,13 @@ public final class MainConfigInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> refreshMinutesElement() {
         return ItemStackElement.of(
-            new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES))
-                .setLore(List.of(
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES))
+                .lore(
                     this.lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(this.plugin.config().refreshCommandTradersMinutes())),
                     this.lang.get(Lang.GUI_EDIT_LORE)
-                ))
-                .build(),
+                )
+                .exitAndBuild(),
             this::refreshMinutesClick
         );
     }
@@ -123,10 +123,10 @@ public final class MainConfigInterface extends BaseInterface {
         this.plugin.config().wgRegionList().forEach(region -> wgListLore.add(" <aqua>-</aqua> <white>" + region));
 
         return ItemStackElement.of(
-            new ItemBuilder(Material.PAPER)
-                .setName(this.lang.get(Lang.GUI_CONFIG_WG_LIST))
-                .setLore(wgListLore)
-                .build(),
+            ItemBuilder.create(Material.PAPER).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_CONFIG_WG_LIST))
+                .lore(wgListLore)
+                .exitAndBuild(),
             this::wgListClick
         );
     }

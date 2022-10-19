@@ -20,8 +20,8 @@ import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -64,7 +64,10 @@ public final class ListTradeConfigsInterface extends BaseInterface {
             finalLores.add(this.plugin.langConfig().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
         }
 
-        final ItemStack stack = new ItemBuilder(Material.PAPER).setName(tradeConfig.configName()).setLore(finalLores).build();
+        final ItemStack stack = ItemBuilder.create(Material.PAPER).miniMessageContext()
+            .customName(tradeConfig.configName())
+            .lore(finalLores)
+            .exitAndBuild();
 
         return ItemStackElement.of(stack, context -> new ListTradesInterface(
             this.plugin,
@@ -74,10 +77,10 @@ public final class ListTradeConfigsInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> newConfigElement() {
         return ItemStackElement.of(
-            new ItemBuilder(Material.WRITABLE_BOOK)
-                .setName(this.lang.get(Lang.GUI_TC_LIST_ADD_CONFIG))
-                .setLore(this.lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE))
-                .build(),
+            ItemBuilder.create(Material.WRITABLE_BOOK).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_TC_LIST_ADD_CONFIG))
+                .lore(this.lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE))
+                .exitAndBuild(),
             this::newConfigClick
         );
     }

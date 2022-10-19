@@ -22,9 +22,9 @@ import org.bukkit.scheduler.BukkitTask;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
-import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
 
@@ -113,13 +113,15 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     private MerchantRecipe getHeadRecipe(final OfflinePlayer player, final String name) {
         final PlayerHeadConfig playerHeadConfig = this.plugin.configManager().playerHeadConfig();
-        final ItemBuilder headBuilder = new HeadBuilder(player.getUniqueId())
-            .setLore(playerHeadConfig.lore())
-            .setAmount(playerHeadConfig.headsPerTrade());
+        ItemBuilder<?, ?>.MiniMessageContext headBuilder = new HeadBuilder(player.getUniqueId())
+            .stackSize(playerHeadConfig.headsPerTrade())
+            .miniMessageContext()
+            .lore(playerHeadConfig.lore());
         if (playerHeadConfig.name() != null) {
-            headBuilder.setName(playerHeadConfig.name().replace("{PLAYER}", name));
+            headBuilder = headBuilder
+                .customName(playerHeadConfig.name().replace("{PLAYER}", name));
         }
-        final ItemStack head = headBuilder.build();
+        final ItemStack head = headBuilder.exitAndBuild();
 
         if (this.profileCompleter != null) {
             final SkullMeta meta = (SkullMeta) head.getItemMeta();

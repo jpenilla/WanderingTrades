@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,8 +20,8 @@ import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.transform.PaperTransform;
-import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.LangConfig;
@@ -31,12 +33,14 @@ import static org.incendo.interfaces.paper.transform.PaperTransform.chestFill;
 public final class PartsFactory {
     private final LangConfig lang;
     private final ItemStack plus = new HeadBuilder(HeadSkins.LIGHT_BLUE_PLUS)
-        .setName("<yellow>+")
+        .customName(Component.text('+', NamedTextColor.YELLOW))
         .build();
     private final ItemStack equals = new HeadBuilder(HeadSkins.LIGHT_BLUE_EQUALS)
-        .setName("<yellow>=")
+        .customName(Component.text('=', NamedTextColor.YELLOW))
         .build();
-    private final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
+    private final ItemStack filler = ItemBuilder.create(Material.GRAY_STAINED_GLASS_PANE)
+        .customName(Component.text(' '))
+        .build();
     private final ItemStack saveTradeButton;
     private final ItemStack backButton;
     private final ItemStack closeButton;
@@ -47,42 +51,40 @@ public final class PartsFactory {
     PartsFactory(final WanderingTrades plugin) {
         this.lang = plugin.langConfig();
         this.toggleLore = this.lang.get(Lang.GUI_TOGGLE_LORE);
-        this.backButton = new HeadBuilder(HeadSkins.REDSTONE_BACKWARDS_ARROW)
-            .setName(this.lang.get(Lang.GUI_BACK))
-            .setLore(this.lang.get(Lang.GUI_BACK_LORE))
-            .build();
-        this.closeButton = new ItemBuilder(Material.BARRIER)
-            .setName(this.lang.get(Lang.GUI_CLOSE))
-            .setLore(this.lang.get(Lang.GUI_CLOSE_LORE))
-            .build();
-        this.saveTradeButton = new HeadBuilder(HeadSkins.GREEN_CHECK_ON_BLACK)
-            .setName(this.lang.get(Lang.GUI_TRADE_SAVE))
-            .setLore(this.lang.get(Lang.GUI_TRADE_SAVE_LORE))
-            .build();
-        this.nextPage = new ItemBuilder(Material.ARROW)
-            .setName(this.lang.get(Lang.GUI_PAGED_NEXT))
-            .setLore(this.lang.get(Lang.GUI_PAGED_NEXT_LORE))
-            .build();
-        this.previousPage = new ItemBuilder(Material.FEATHER)
-            .setName(this.lang.get(Lang.GUI_PAGED_LAST))
-            .setLore(this.lang.get(Lang.GUI_PAGED_LAST_LORE))
-            .build();
+        this.backButton = new HeadBuilder(HeadSkins.REDSTONE_BACKWARDS_ARROW).miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_BACK))
+            .lore(this.lang.get(Lang.GUI_BACK_LORE))
+            .exitAndBuild();
+        this.closeButton = ItemBuilder.create(Material.BARRIER).miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_CLOSE))
+            .lore(this.lang.get(Lang.GUI_CLOSE_LORE))
+            .exitAndBuild();
+        this.saveTradeButton = new HeadBuilder(HeadSkins.GREEN_CHECK_ON_BLACK).miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TRADE_SAVE))
+            .lore(this.lang.get(Lang.GUI_TRADE_SAVE_LORE))
+            .exitAndBuild();
+        this.nextPage = ItemBuilder.create(Material.ARROW).miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_PAGED_NEXT))
+            .lore(this.lang.get(Lang.GUI_PAGED_NEXT_LORE))
+            .exitAndBuild();
+        this.previousPage = ItemBuilder.create(Material.FEATHER).miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_PAGED_LAST))
+            .lore(this.lang.get(Lang.GUI_PAGED_LAST_LORE))
+            .exitAndBuild();
     }
 
     public ItemStackElement<ChestPane> maxUsesElement(
         final int value,
         final ClickHandler<ChestPane, InventoryClickEvent, PlayerViewer, ClickContext<ChestPane, InventoryClickEvent, PlayerViewer>> clickHandler
     ) {
-        return ItemStackElement.of(
-            new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_TRADE_MAX_USES))
-                .setLore(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + value,
-                    this.lang.get(Lang.GUI_EDIT_LORE)
-                )
-                .build(),
-            clickHandler
-        );
+        final ItemStack stack = ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TRADE_MAX_USES))
+            .lore(
+                this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + value,
+                this.lang.get(Lang.GUI_EDIT_LORE)
+            )
+            .exitAndBuild();
+        return ItemStackElement.of(stack, clickHandler);
     }
 
     public ItemStackElement<ChestPane> plus() {
@@ -196,14 +198,13 @@ public final class PartsFactory {
         final BooleanSupplier getter,
         final BooleanConsumer setter
     ) {
-        return toggle(
-            on -> new ItemBuilder(on ? onMaterial : offMaterial)
-                .setName(on ? onName : offName)
-                .setLore(this.toggleLore)
-                .build(),
-            getter,
-            setter
-        );
+        final Function<Boolean, ItemStack> item = on ->
+            ItemBuilder.create(on ? onMaterial : offMaterial)
+                .miniMessageContext()
+                .customName(on ? onName : offName)
+                .lore(this.toggleLore)
+                .exitAndBuild();
+        return toggle(item, getter, setter);
     }
 
     public static ItemStackElement<ChestPane> toggle(

@@ -10,8 +10,8 @@ import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
-import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -20,10 +20,10 @@ import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
 @DefaultQualifier(NonNull.class)
 public final class TradeEditInterface extends AbstractTradeInterface {
-    private final ItemStack deleteButton = new HeadBuilder(HeadSkins.RED_RECYCLE_BIN_FULL)
-        .setName(this.lang.get(Lang.GUI_TRADE_DELETE))
-        .setLore(this.lang.get(Lang.GUI_TRADE_DELETE_LORE))
-        .build();
+    private final ItemStack deleteButton = new HeadBuilder(HeadSkins.RED_RECYCLE_BIN_FULL).miniMessageContext()
+        .customName(this.lang.get(Lang.GUI_TRADE_DELETE))
+        .lore(this.lang.get(Lang.GUI_TRADE_DELETE_LORE))
+        .exitAndBuild();
     private final String tradeName;
 
     public TradeEditInterface(

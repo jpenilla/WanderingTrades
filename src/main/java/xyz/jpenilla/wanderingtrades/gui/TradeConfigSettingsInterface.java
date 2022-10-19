@@ -2,9 +2,9 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.click.ClickContext;
@@ -12,9 +12,9 @@ import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
-import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -71,52 +71,48 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
     }
 
     private ItemStackElement<ChestPane> randomAmountElement() {
-        return ItemStackElement.of(
-            new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT))
-                .setLore(List.of(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.randomAmount(),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
-                ))
-                .build(),
-            this::randAmountClick
-        );
+        final ItemStack stack = ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+            .miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT))
+            .lore(
+                this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.randomAmount(),
+                this.lang.get(Lang.GUI_EDIT_LORE)
+            )
+            .exitAndBuild();
+        return ItemStackElement.of(stack, this::randAmountClick);
     }
 
     private ItemStackElement<ChestPane> chanceElement() {
-        return ItemStackElement.of(
-            new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_TC_EDIT_CHANCE))
-                .setLore(List.of(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.chance(),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
-                ))
-                .build(),
-            this::chanceClick
-        );
+        final ItemStack stack = ItemBuilder.create(Material.PURPLE_STAINED_GLASS_PANE)
+            .miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TC_EDIT_CHANCE))
+            .lore(
+                this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.chance(),
+                this.lang.get(Lang.GUI_EDIT_LORE)
+            )
+            .exitAndBuild();
+        return ItemStackElement.of(stack, this::chanceClick);
     }
 
     private ItemStackElement<ChestPane> customNameElement() {
-        return ItemStackElement.of(
-            new ItemBuilder(Material.PINK_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME))
-                .setLore(List.of(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<white>" + this.tradeConfig.customName(),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
-                ))
-                .build(),
-            this::customNameClick
-        );
+        final ItemStack stack = ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE)
+            .miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME))
+            .lore(
+                this.lang.get(Lang.GUI_VALUE_LORE) + "<white>" + this.tradeConfig.customName(),
+                this.lang.get(Lang.GUI_EDIT_LORE)
+            )
+            .exitAndBuild();
+        return ItemStackElement.of(stack, this::customNameClick);
     }
 
     private ItemStackElement<ChestPane> deleteElement() {
-        return ItemStackElement.of(
-            new HeadBuilder(HeadSkins.RED_RECYCLE_BIN_FULL)
-                .setName(this.lang.get(Lang.GUI_TRADE_DELETE))
-                .setLore(this.lang.get(Lang.GUI_CONFIG_DELETE_LORE))
-                .build(),
-            this::deleteClick
-        );
+        final ItemStack stack = new HeadBuilder(HeadSkins.RED_RECYCLE_BIN_FULL)
+            .miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TRADE_DELETE))
+            .lore(this.lang.get(Lang.GUI_CONFIG_DELETE_LORE))
+            .exitAndBuild();
+        return ItemStackElement.of(stack, this::deleteClick);
     }
 
     private BooleanConsumer saveConfig(final BooleanConsumer setter) {

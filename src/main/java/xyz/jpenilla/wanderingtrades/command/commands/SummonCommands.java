@@ -30,13 +30,13 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.MiniMessageUtil;
+import xyz.jpenilla.pluginbase.legacy.PaperComponentUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
-import xyz.jpenilla.wanderingtrades.util.Components;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 @DefaultQualifier(NonNull.class)
@@ -274,14 +274,14 @@ public final class SummonCommands extends BaseCommand {
             return;
         }
         try {
-            final Method paperMethod = Nameable.class.getMethod("customName", Components.nativeAdventureComponentClass());
+            final Method paperMethod = Nameable.class.getMethod("customName", PaperComponentUtil.nativeAdventureComponentClass());
 
             if (miniMessage == null || miniMessage.isEmpty()) {
                 paperMethod.invoke(entity, (Object) null);
                 return;
             }
 
-            paperMethod.invoke(entity, Components.toNative(this.plugin.miniMessage().deserialize(miniMessage)));
+            paperMethod.invoke(entity, PaperComponentUtil.toNative(this.plugin.miniMessage().deserialize(miniMessage)));
         } catch (final ReflectiveOperationException ex) {
             throw new RuntimeException(ex);
         }

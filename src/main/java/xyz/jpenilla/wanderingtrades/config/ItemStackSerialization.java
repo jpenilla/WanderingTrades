@@ -11,8 +11,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.util.Logging;
 
 public final class ItemStackSerialization {
@@ -49,39 +49,38 @@ public final class ItemStackSerialization {
         }
 
         final String materialString = config.getString(key + ".material");
-        final int amount = config.getInt(key + ".amount", 1);
-
         if (materialString == null) {
             // Assume no item (ie ingredient 2)
             return null;
         }
 
-        final @Nullable ItemBuilder itemBuilder;
+        @Nullable ItemBuilder<?, ?> itemBuilder;
         if (materialString.startsWith("head-")) {
             itemBuilder = new HeadBuilder(materialString.substring(5));
         } else {
             final Material material = Material.getMaterial(materialString.toUpperCase());
             if (material != null) {
-                itemBuilder = new ItemBuilder(material);
+                itemBuilder = ItemBuilder.create(material);
             } else {
-                itemBuilder = new ItemBuilder(Material.STONE);
+                itemBuilder = ItemBuilder.create(Material.STONE);
                 Logging.logger().warn("Invalid material '{}' for item at '{}' (will use STONE)", materialString, key);
             }
         }
 
         final String customName = config.getString(key + ".customname");
         if (customName != null && !customName.equals("NONE") && !customName.isEmpty()) {
-            itemBuilder.setName(customName);
+            itemBuilder = itemBuilder.miniMessageContext().customName(customName).exit();
         }
 
         final List<String> lore = config.getStringList(key + ".lore");
         if (lore.size() != 0) {
-            itemBuilder.setLore(lore);
+            itemBuilder = itemBuilder.miniMessageContext().lore(lore).exit();
         }
 
-        itemBuilder.setAmount(amount);
+        final int amount = config.getInt(key + ".amount", 1);
+        itemBuilder = itemBuilder.stackSize(amount);
 
-        applyEnchants(
+        itemBuilder = applyEnchants(
             itemBuilder,
             config.getStringList(key + ".enchantments"),
             key
@@ -90,8 +89,9 @@ public final class ItemStackSerialization {
         return itemBuilder.build();
     }
 
-    private static void applyEnchants(
-        final ItemBuilder itemBuilder,
+    @SuppressWarnings("unchecked")
+    private static ItemBuilder<?, ?> applyEnchants(
+        ItemBuilder<?, ?> itemBuilder,
         final List<String> enchantStrings,
         final String itemKey
     ) {
@@ -105,11 +105,13 @@ public final class ItemStackSerialization {
             }
 
             if (material == Material.ENCHANTED_BOOK) {
-                itemBuilder.<EnchantmentStorageMeta>editMeta(meta -> meta.addStoredEnchant(enchantment.enchantment, enchantment.level, true));
+                itemBuilder = ((ItemBuilder<?, EnchantmentStorageMeta>) itemBuilder)
+                    .editMeta(meta -> meta.addStoredEnchant(enchantment.enchantment, enchantment.level, true));
             } else {
-                itemBuilder.addEnchant(enchantment.enchantment, enchantment.level);
+                itemBuilder = itemBuilder.addEnchant(enchantment.enchantment, enchantment.level);
             }
         }
+        return itemBuilder;
     }
 
     private record EnchantWithLevel(Enchantment enchantment, int level) {

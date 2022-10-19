@@ -11,7 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
@@ -103,7 +103,12 @@ public final class ConfigCommands extends BaseCommand {
             .handler(context -> {
                 final Player player = (Player) context.getSender();
                 if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
-                    player.getInventory().setItemInMainHand(new ItemBuilder(player.getInventory().getItemInMainHand()).setName(context.get("name")).build());
+                    player.getInventory().setItemInMainHand(
+                        ItemBuilder.create(player.getInventory().getItemInMainHand())
+                            .miniMessageContext()
+                            .customName(context.get("name"))
+                            .exitAndBuild()
+                    );
                 }
             })
             .build();

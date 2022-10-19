@@ -2,14 +2,18 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.List;
 import java.util.Map;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.interfaces.core.click.ClickContext;
+import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
-import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
@@ -41,23 +45,29 @@ public final class ListTradesInterface extends BaseInterface {
     }
 
     private ItemStackElement<ChestPane> settingsElement() {
-        return ItemStackElement.of(
-            new HeadBuilder(HeadSkins.WRENCH_ON_IRON)
-                .setName(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG))
-                .setLore(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE))
-                .build(),
-            context -> new TradeConfigSettingsInterface(this.plugin, this.tradeConfig).replaceActiveScreen(context)
-        );
+        final ItemStack stack = new HeadBuilder(HeadSkins.WRENCH_ON_IRON)
+            .miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG))
+            .lore(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE))
+            .exitAndBuild();
+        return ItemStackElement.of(stack, this::settingsClick);
+    }
+
+    private void settingsClick(final ClickContext<ChestPane, InventoryClickEvent, PlayerViewer> context) {
+        new TradeConfigSettingsInterface(this.plugin, this.tradeConfig).replaceActiveScreen(context);
     }
 
     private ItemStackElement<ChestPane> newTradeElement() {
-        return ItemStackElement.of(
-            new HeadBuilder(HeadSkins.GREEN_PLUS)
-                .setName(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE))
-                .setLore(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE))
-                .build(),
-            context -> new TradeCreateInterface(this.plugin, this.tradeConfig).replaceActiveScreen(context)
-        );
+        final ItemStack stack = new HeadBuilder(HeadSkins.GREEN_PLUS)
+            .miniMessageContext()
+            .customName(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE))
+            .lore(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE))
+            .exitAndBuild();
+        return ItemStackElement.of(stack, this::newTradeClick);
+    }
+
+    private void newTradeClick(final ClickContext<ChestPane, InventoryClickEvent, PlayerViewer> context) {
+        new TradeCreateInterface(this.plugin, this.tradeConfig).replaceActiveScreen(context);
     }
 
     private List<ItemStackElement<ChestPane>> listElements() {
@@ -68,13 +78,19 @@ public final class ListTradesInterface extends BaseInterface {
     }
 
     private ItemStackElement<ChestPane> tradeEntry(final String tradeName, final MerchantRecipe recipe) {
-        return ItemStackElement.of(
-            new ItemBuilder(recipe.getResult())
-                .setName(tradeName)
-                .clearEnchants()
-                .clearLore()
-                .build(),
-            context -> new TradeEditInterface(this.plugin, this.tradeConfig, tradeName).replaceActiveScreen(context)
-        );
+        final ItemStack stack = ItemBuilder.create(recipe.getResult())
+            .clearEnchants()
+            .clearLore()
+            .miniMessageContext()
+            .customName(tradeName)
+            .exitAndBuild();
+        return ItemStackElement.of(stack, context -> this.tradeEntryClick(tradeName, context));
+    }
+
+    private void tradeEntryClick(
+        final String tradeName,
+        final ClickContext<ChestPane, InventoryClickEvent, PlayerViewer> context
+    ) {
+        new TradeEditInterface(this.plugin, this.tradeConfig, tradeName).replaceActiveScreen(context);
     }
 }

@@ -12,10 +12,10 @@ import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
-import xyz.jpenilla.pluginbase.legacy.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
-import xyz.jpenilla.pluginbase.legacy.ItemBuilder;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
+import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Lang;
 import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
@@ -27,14 +27,14 @@ import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.toggle;
 
 @DefaultQualifier(NonNull.class)
 public final class PlayerHeadConfigInterface extends BaseInterface {
-    private final ItemStack permissionWhitelistStack = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
-        .setName(this.lang.get(Lang.GUI_PH_CONFIG_PWL_ENABLED))
-        .setLore(this.parts.toggleLore(), this.lang.get(Lang.GUI_PH_CONFIG_PWL_LORE))
-        .build();
-    private final ItemStack noPermissionsWhitelistStack = new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
-        .setName(this.lang.get(Lang.GUI_PH_CONFIG_PWL_DISABLED))
-        .setLore(this.parts.toggleLore(), this.lang.get(Lang.GUI_PH_CONFIG_PWL_LORE))
-        .build();
+    private final ItemStack permissionWhitelistStack = ItemBuilder.create(Material.LIME_STAINED_GLASS_PANE).miniMessageContext()
+        .customName(this.lang.get(Lang.GUI_PH_CONFIG_PWL_ENABLED))
+        .lore(this.parts.toggleLore(), this.lang.get(Lang.GUI_PH_CONFIG_PWL_LORE))
+        .exitAndBuild();
+    private final ItemStack noPermissionsWhitelistStack = ItemBuilder.create(Material.RED_STAINED_GLASS_PANE).miniMessageContext()
+        .customName(this.lang.get(Lang.GUI_PH_CONFIG_PWL_DISABLED))
+        .lore(this.parts.toggleLore(), this.lang.get(Lang.GUI_PH_CONFIG_PWL_LORE))
+        .exitAndBuild();
 
     public PlayerHeadConfigInterface(final WanderingTrades plugin) {
         super(plugin);
@@ -43,20 +43,20 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
     @Override
     protected ChestInterface buildInterface() {
         final SlotTransform ingredientOne = new SlotTransform(
-            new ItemBuilder(Material.STRUCTURE_VOID)
-                .setName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_1))
-                .setLore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
-                .build(),
+            ItemBuilder.create(Material.STRUCTURE_VOID).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_1))
+                .lore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
+                .exitAndBuild(),
             1,
             3
         );
         ingredientOne.item(this.playerHeadConfig().ingredientOne());
 
         final SlotTransform ingredientTwo = new SlotTransform(
-            new ItemBuilder(Material.STRUCTURE_VOID)
-                .setName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_2))
-                .setLore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
-                .build(),
+            ItemBuilder.create(Material.STRUCTURE_VOID).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_2))
+                .lore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
+                .exitAndBuild(),
             3,
             3
         );
@@ -123,66 +123,66 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> daysElement() {
         return ItemStackElement.of(
-            new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_PH_CONFIG_DAYS))
-                .setLore(
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_PH_CONFIG_DAYS))
+                .lore(
                     this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().days(),
                     this.lang.get(Lang.GUI_EDIT_LORE),
                     this.lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)
                 )
-                .build(),
+                .exitAndBuild(),
             this::daysClick
         );
     }
 
     private ItemStackElement<ChestPane> amountTradesElement() {
         return ItemStackElement.of(
-            new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_PH_CONFIG_AMOUNT))
-                .setLore(
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_PH_CONFIG_AMOUNT))
+                .lore(
                     this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().playerHeadsFromServerAmount(),
                     this.lang.get(Lang.GUI_EDIT_LORE)
                 )
-                .build(),
+                .exitAndBuild(),
             this::amountTradesClick
         );
     }
 
     private ItemStackElement<ChestPane> amountHeadsElement() {
         return ItemStackElement.of(
-            new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_PH_CONFIG_AMOUNT_HEADS))
-                .setLore(
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_PH_CONFIG_AMOUNT_HEADS))
+                .lore(
                     this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().headsPerTrade(),
                     this.lang.get(Lang.GUI_EDIT_LORE)
                 )
-                .build(),
+                .exitAndBuild(),
             this::amountHeadsClick
         );
     }
 
     public ItemStackElement<ChestPane> headChanceElement() {
         return ItemStackElement.of(
-            new ItemBuilder(Material.PURPLE_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_PH_CONFIG_CHANCE))
-                .setLore(
+            ItemBuilder.create(Material.PURPLE_STAINED_GLASS_PANE).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_PH_CONFIG_CHANCE))
+                .lore(
                     this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().playerHeadsFromServerChance(),
                     this.lang.get(Lang.GUI_EDIT_LORE)
                 )
-                .build(),
+                .exitAndBuild(),
             this::chanceClick
         );
     }
 
     public ItemStackElement<ChestPane> customNameElement() {
         return ItemStackElement.of(
-            new ItemBuilder(Material.PINK_STAINED_GLASS_PANE)
-                .setName(this.lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME))
-                .setLore(
+            ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME))
+                .lore(
                     this.lang.get(Lang.GUI_VALUE_LORE) + "<yellow>" + this.playerHeadConfig().name(),
                     this.lang.get(Lang.GUI_EDIT_LORE)
                 )
-                .build(),
+                .exitAndBuild(),
             this::customNameClick
         );
     }
@@ -194,10 +194,10 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         ));
         this.playerHeadConfig().usernameBlacklist().forEach(name -> blacklistLore.add(" <red>-</red> <white>" + name));
         return ItemStackElement.of(
-            new ItemBuilder(Material.PAPER)
-                .setName(this.lang.get(Lang.GUI_PH_CONFIG_BLACKLIST))
-                .setLore(blacklistLore)
-                .build(),
+            ItemBuilder.create(Material.PAPER).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_PH_CONFIG_BLACKLIST))
+                .lore(blacklistLore)
+                .exitAndBuild(),
             this::blacklistClick
         );
     }
@@ -209,10 +209,10 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         ));
         resultLore.addAll(this.playerHeadConfig().lore());
         return ItemStackElement.of(
-            new ItemBuilder(Material.PAPER)
-                .setName(this.lang.get(Lang.GUI_PH_CONFIG_RESULT_LORE))
-                .setLore(resultLore)
-                .build(),
+            ItemBuilder.create(Material.PAPER).miniMessageContext()
+                .customName(this.lang.get(Lang.GUI_PH_CONFIG_RESULT_LORE))
+                .lore(resultLore)
+                .exitAndBuild(),
             this::loreClick
         );
     }
@@ -222,9 +222,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         final SlotTransform ingredientTwo
     ) {
         return ItemStackElement.of(
-            new ItemBuilder(this.parts.saveTradeButton())
-                .setLore(this.lang.get(Lang.GUI_PH_CONFIG_SAVE_LORE))
-                .build(),
+            ItemBuilder.create(this.parts.saveTradeButton()).miniMessageContext()
+                .lore(this.lang.get(Lang.GUI_PH_CONFIG_SAVE_LORE))
+                .exitAndBuild(),
             context -> {
                 if (ingredientOne.item() != null) {
                     final PlayerHeadConfig config = this.playerHeadConfig();
@@ -240,9 +240,11 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
     private ItemStackElement<ChestPane> resultHeadElement() {
         return ItemStackElement.of(
             new HeadBuilder(HeadSkins.NOTCH)
-                .setName(this.playerHeadConfig().name().replace("{PLAYER}", "Notch"))
-                .setLore(this.playerHeadConfig().lore()).setAmount(this.playerHeadConfig().headsPerTrade())
-                .build()
+                .stackSize(this.playerHeadConfig().headsPerTrade())
+                .miniMessageContext()
+                .customName(this.playerHeadConfig().name().replace("{PLAYER}", "Notch"))
+                .lore(this.playerHeadConfig().lore())
+                .exitAndBuild()
         );
     }
 
