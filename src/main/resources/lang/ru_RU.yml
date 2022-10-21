@@ -2,7 +2,7 @@
 COMMAND_LIST_LOADED: '<blue>Загруженные конфигурации торгов</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'Не существует конфигурации торгов с таким именем.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Эта конфигурация неправильно сформирована. Убедитесь, что в рецептах есть хотя бы один ингредиент.'
-COMMAND_RELOAD: '<gradient:red:yellow>Перезагрузка конфигурации WanderingTrades...'
+COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>Перезагрузка конфигурации WanderingTrades...'
 COMMAND_RELOAD_DONE: '<green>Выполнено.'
 COMMAND_WT_HELP: 'Помощь WanderingTrades'
 COMMAND_WT_ABOUT: 'О WanderingTrades'
@@ -40,7 +40,7 @@ GUI_CONFIG_WG_BLACK: '<aqua>Режим</aqua><gray>:</gray> Черный спи�
 GUI_CONFIG_WG_LIST: '<aqua>Список регионов для белого/черного списка'
 GUI_CONFIG_WG_LIST_LORE: '  <gray>ЛКМ для добавления, ПКМ для удаления'
 GUI_CONFIG_REFRESH_MINUTES: '<green>Сколько минут между обновлениями сделок, если включено'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Значение</white><gray>:</gray> <aqua>{VALUE} минут(у)'
+GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Значение</white><gray>:</gray> <aqua><value> минут(у)'
 GUI_CONFIG_TITLE: '<gray>:</gray> Конфигурация <blue>WanderingTrades</blue>'
 GUI_TC_EDIT_ENABLED: '<green>Включено'
 GUI_TC_EDIT_DISABLED: '<red>Отключено'
@@ -55,7 +55,7 @@ GUI_TC_EDIT_TITLE: '<blue>Редактирование конфигурации<
 GUI_TC_LIST_TITLE: '<blue>Конфигурации торговли'
 GUI_TC_LIST_ADD_CONFIG: '<green>Добавить конфиг'
 GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  Нажмите для создания нового конфига'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...и {VALUE} больше'
+GUI_TC_LIST_AND_MORE: '  <gray><italic>...и <value> больше'
 GUI_TRADE_LIST_TITLE: '<blue>Конфигурация торговли</blue><gray>:</gray> '
 GUI_TRADE_LIST_EDIT_CONFIG: '<green>Редактирование настроек конфигурации'
 GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic>  Нажмите для редактирования параметров этой конфигурации'
@@ -104,8 +104,8 @@ MESSAGE_NUMBER_GTE_N1: 'Число должно быть >= -1'
 MESSAGE_NUMBER_0T1: 'Число должно быть от 0.00 до 1.00'
 MESSAGE_SET_MAX_USES_PROMPT: 'Установить максимальное кол-во сделок'
 MESSAGE_CONFIRM_KEY: 'да'
-MESSAGE_CONFIRM: 'Введите "{KEY}" для подтверждения или что-либо другое для отмены.'
-MESSAGE_DELETE_PROMPT: 'Вы уверены, что хотите удалить "{TRADE_NAME}"?'
+MESSAGE_CONFIRM: 'Введите "<key>" для подтверждения или что-либо другое для отмены.'
+MESSAGE_DELETE_PROMPT: 'Вы уверены, что хотите удалить "<name>"?'
 MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>Введите имя для новой конфигурации</gradient><gray>:'
 MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>Введите название для вашей новой сделки</gradient><gray>:'
 MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>Введите имя</gradient><gray>:'
@@ -116,11 +116,11 @@ MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>Должно быть нов�
 MESSAGE_SET_RAND_AMOUNT_PROMPT: 'Настройка количества случайных сделок'
 MESSAGE_SET_CHANCE_PROMPT: 'Настройка шанса 0.00-1.00'
 MESSAGE_SET_REFRESH_DELAY_PROMPT: 'Установка минут между обновлениями сделок<reset>'
-MESSAGE_CURRENT_VALUE: '<yellow>Текущее значение</yellow><gray>:</gray> <aqua>'
+MESSAGE_CURRENT_VALUE: '<white>Текущее значение<gray>:</gray> <value>'
 MESSAGE_SET_HEADS_DAYS_PROMPT: 'Установить количество дней с момента последнего входа в систему для игнорирования головы'
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Успешно создана и перезагружена новая конфигурация'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Отмена создания конфигурации'
-MESSAGE_YOU_ENTERED: "<yellow>Вы ввели</yellow><gray>:</gray> "
+MESSAGE_YOU_ENTERED: "<white>Вы ввели<gray>:</gray> <value>"
 MESSAGE_YES_NO: "Использовать это значение? Введите или нажмите: <hover:show_text:'<green>Нажмите!'><click:run_command:'/wanderingtrades accept-input yes'><green>Да</green></hover> или <hover:show_text:'<green>Нажмите!'><click:run_command:'/wanderingtrades accept-input no'><red>Нет</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Редактирование отменено"
 MESSAGE_EDIT_SAVED: "<italic><green>Редактирование сохранено"
@@ -141,9 +141,9 @@ HELP_CLICK_TO_SHOW_HELP: "Нажмите, чтобы показать справ
 HELP_PAGE_OUT_OF_RANGE: "Ошибка: Страница <page> не находится в диапазоне. Должна быть в диапазоне [1, <max_pages>]"
 HELP_CLICK_FOR_NEXT_PAGE: "Нажмите для перехода на следующую страницу"
 HELP_CLICK_FOR_PREVIOUS_PAGE: "Нажмите для просмотра предыдущей страницы"
-COMMAND_INVALID_SYNTAX: "Неправильный синтаксис команды. Правильный синтаксис команды: "
-COMMAND_INVALID_SENDER: "Неверный отправитель команды. Вы должны быть {type}"
-COMMAND_INVALID_ARGUMENT: "Недопустимый аргумент команды: "
+COMMAND_INVALID_SYNTAX: "<red>Неправильный синтаксис команды. Правильный синтаксис команды: <syntax>"
+COMMAND_INVALID_SENDER: "<red>Неверный отправитель команды. Вы должны быть <gray><type></gray>"
+COMMAND_INVALID_ARGUMENT: "<red>Недопустимый аргумент команды: <error>"
 COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "'{input}' не является одним из: {acceptableValues}"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "'{input}' не является допустимым местоположением. Требуемый формат '<x> <y> <z>'"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "Невозможно смешивать локальные и абсолютные координаты. (либо все координаты используют '^', либо ни одна не использует)"

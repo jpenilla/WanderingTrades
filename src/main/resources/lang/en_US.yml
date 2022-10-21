@@ -1,8 +1,8 @@
 # Wandering Trades ${project.version} en_US language config
 COMMAND_LIST_LOADED: '<blue>Loaded Trade Configs</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'There are no trade configs with that name loaded.'
-COMMAND_SUMMON_MALFORMED_CONFIG: '<red>That config is malformed. Make sure recipes have at least one ingredient.'
-COMMAND_RELOAD: '<gradient:red:yellow>Reloading WanderingTrades config...'
+COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Config is malformed. Make sure recipes have at least one ingredient.'
+COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>Reloading WanderingTrades config...'
 COMMAND_RELOAD_DONE: '<green>Done.'
 COMMAND_WT_HELP: 'WanderingTrades Help'
 COMMAND_WT_ABOUT: 'About WanderingTrades'
@@ -40,7 +40,7 @@ GUI_CONFIG_WG_BLACK: '<aqua>Mode</aqua><gray>:</gray> WorldGuard Region Blacklis
 GUI_CONFIG_WG_LIST: '<aqua>List of regions for White/Black list'
 GUI_CONFIG_WG_LIST_LORE: '  <gray>Left-click to add, Right-click to remove'
 GUI_CONFIG_REFRESH_MINUTES: '<green>How many minutes between trade refreshes if enabled'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Value</white><gray>:</gray> <aqua>{VALUE} minutes'
+GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Value</white><gray>:</gray> <aqua><value> minutes'
 GUI_CONFIG_TITLE: '<blue>WanderingTrades</blue><gray>:</gray> Config'
 GUI_TC_EDIT_ENABLED: '<green>Enabled'
 GUI_TC_EDIT_DISABLED: '<red>Disabled'
@@ -55,7 +55,7 @@ GUI_TC_EDIT_TITLE: '<blue>Editing Config</blue><gray>:</gray> '
 GUI_TC_LIST_TITLE: '<blue>Trade Configs'
 GUI_TC_LIST_ADD_CONFIG: '<green>Add config'
 GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  Click to create a new config'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...and {VALUE} more'
+GUI_TC_LIST_AND_MORE: '  <gray><italic>...and <value> more'
 GUI_TRADE_LIST_TITLE: '<blue>Trade Config</blue><gray>:</gray> '
 GUI_TRADE_LIST_EDIT_CONFIG: '<green>Edit Config Settings'
 GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic>  Click to edit settings for this config'
@@ -104,8 +104,8 @@ MESSAGE_NUMBER_GTE_N1: 'Number must be >= -1'
 MESSAGE_NUMBER_0T1: 'Number must be between 0.00 and 1.00'
 MESSAGE_SET_MAX_USES_PROMPT: 'Setting the max uses of the trade'
 MESSAGE_CONFIRM_KEY: 'yes'
-MESSAGE_CONFIRM: 'Type "{KEY}" to confirm or anything else to cancel'
-MESSAGE_DELETE_PROMPT: 'Are you sure you want to delete "{TRADE_NAME}"?'
+MESSAGE_CONFIRM: 'Type "<key>" to confirm or anything else to cancel'
+MESSAGE_DELETE_PROMPT: 'Are you sure you want to delete "<name>"?'
 MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>Enter a name for your new config</gradient><gray>:'
 MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>Enter a name for your new trade</gradient><gray>:'
 MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>Enter a custom name</gradient><gray>:'
@@ -116,11 +116,11 @@ MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>Must be a new/unique name'
 MESSAGE_SET_RAND_AMOUNT_PROMPT: 'Setting the amount of random trades'
 MESSAGE_SET_CHANCE_PROMPT: 'Setting chance 0.00-1.00'
 MESSAGE_SET_REFRESH_DELAY_PROMPT: 'Setting minutes between trade refreshes<reset>'
-MESSAGE_CURRENT_VALUE: '<yellow>Current Value</yellow><gray>:</gray> <aqua>'
+MESSAGE_CURRENT_VALUE: '<white>Current Value<gray>:</gray> <value>'
 MESSAGE_SET_HEADS_DAYS_PROMPT: 'Setting how many days since last login to ignore head'
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Successfully created new config and reloaded'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Cancelled config creation'
-MESSAGE_YOU_ENTERED: "<yellow>You Entered</yellow><gray>:</gray> "
+MESSAGE_YOU_ENTERED: "<white>You Entered<gray>:</gray> <value>"
 MESSAGE_YES_NO: "Use this value? Type or Click: <hover:show_text:'<green>Click to run!'><click:run_command:'/wanderingtrades accept-input yes'><green>Yes</green></hover> or <hover:show_text:'<green>Click to run!'><click:run_command:'/wanderingtrades accept-input no'><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Edit cancelled"
 MESSAGE_EDIT_SAVED: "<italic><green>Edit saved"
@@ -141,9 +141,9 @@ HELP_CLICK_TO_SHOW_HELP: "Click to show help for this command"
 HELP_PAGE_OUT_OF_RANGE: "Error: Page <page> is not in range. Must be in range [1, <max_pages>]"
 HELP_CLICK_FOR_NEXT_PAGE: "Click for next page"
 HELP_CLICK_FOR_PREVIOUS_PAGE: "Click for previous page"
-COMMAND_INVALID_SYNTAX: "Invalid command syntax. Correct command syntax is: "
-COMMAND_INVALID_SENDER: "Invalid command sender. You must be of type {type}"
-COMMAND_INVALID_ARGUMENT: "Invalid command argument: "
+COMMAND_INVALID_SYNTAX: "<red>Invalid command syntax. Correct command syntax is: <syntax>"
+COMMAND_INVALID_SENDER: "<red>Invalid command sender. You must be of type <gray><type></gray>."
+COMMAND_INVALID_ARGUMENT: "<red>Invalid command argument: <error>"
 COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "'{input}' is not one of the following: {acceptableValues}"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "'{input}' is not a valid location. Required format is '<x> <y> <z>'"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "Cannot mix local and absolute coordinates. (either all coordinates use '^' or none do)"

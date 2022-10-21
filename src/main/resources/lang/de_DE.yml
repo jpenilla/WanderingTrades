@@ -2,7 +2,7 @@
 COMMAND_LIST_LOADED: '<blue>Geladene Angebots-Konfigurationen</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'Es sind keine Angebots-Konfigurationen mit diesem Namen geladen.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Diese Konfiguration enthält fehler. Stelle sicher, dass die Rezepte mindestens ein Item enthalten.'
-COMMAND_RELOAD: '<gradient:red:yellow>Lädt die WanderingTrades-Konfiguration neu...'
+COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>Lädt die WanderingTrades-Konfiguration neu...'
 COMMAND_RELOAD_DONE: '<green>Erledigt...'
 COMMAND_WT_HELP: 'WanderingTrades Hilfe'
 COMMAND_WT_ABOUT: 'Über WanderingTrades'
@@ -40,7 +40,7 @@ GUI_CONFIG_WG_BLACK: '<aqua>Modus</aqua><gray>:</gray> WorldGuard Region Blackli
 GUI_CONFIG_WG_LIST: '<aqua>Liste der Regionen für die White-/Blacklist'
 GUI_CONFIG_WG_LIST_LORE: '<gray>  Linksklick/Rechtsklick = Hinzuzufügen/Entfernen'
 GUI_CONFIG_REFRESH_MINUTES: '<green>Wie viele Minuten bis zur Angebotsaktualisierung?'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Wert</white><gray>:</gray> <aqua>{VALUE} Minuten'
+GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Wert</white><gray>:</gray> <aqua><value> Minuten'
 GUI_CONFIG_TITLE: '<blue>WanderingTrades</blue><gray>:</gray> Konfiguration'
 GUI_TC_EDIT_ENABLED: '<green>Aktiviert'
 GUI_TC_EDIT_DISABLED: '<red>Deaktiviert'
@@ -55,7 +55,7 @@ GUI_TC_EDIT_TITLE: '<blue>Konfiguration bearbeiten</blue><gray>:</gray> '
 GUI_TC_LIST_TITLE: '<blue>Angebots-Konfigurationen'
 GUI_TC_LIST_ADD_CONFIG: '<green>Konfiguration hinzufügen'
 GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  Klicken um eine neue Konfiguration zu erstellen'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...und {VALUE} mehr.'
+GUI_TC_LIST_AND_MORE: '  <gray><italic>...und <value> mehr.'
 GUI_TRADE_LIST_TITLE: '<blue>Konfiguration</blue><gray>:</gray> '
 GUI_TRADE_LIST_EDIT_CONFIG: '<green>Bearbeite Einstellungen der Konfiguration'
 GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic>  Klicken um Einstellungen der Konfiguration zu bearbeiten'
@@ -104,8 +104,8 @@ MESSAGE_NUMBER_GTE_N1: 'Nummer muss >= -1 sein.'
 MESSAGE_NUMBER_0T1: 'Nummer muss sich zwischen 0.00 und 1.00 befinden.'
 MESSAGE_SET_MAX_USES_PROMPT: 'Legt die maximale Anzahl der Benutzung von einem Handel fest.'
 MESSAGE_CONFIRM_KEY: 'Ja'
-MESSAGE_CONFIRM: 'Zum Bestätigen gebe "{KEY}" ein, andere Eingaben führen zum Abbruch.'
-MESSAGE_DELETE_PROMPT: 'Bist du sicher, dass du "{TRADE_NAME}" löschen möchtest?'
+MESSAGE_CONFIRM: 'Zum Bestätigen gebe "<key>" ein, andere Eingaben führen zum Abbruch.'
+MESSAGE_DELETE_PROMPT: 'Bist du sicher, dass du "<name>" löschen möchtest?'
 MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>Gebe einen Namen für eine neue Konfiguration ein</gradient><gray>:'
 MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>Gebe einen Namen für einen neues Angebot ein</gradient><gray>:'
 MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>Gebe einen benutzerdefinierten Namen ein</gradient><gray>:'
@@ -116,11 +116,11 @@ MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>Es muss ein neuer/einzigartig
 MESSAGE_SET_RAND_AMOUNT_PROMPT: 'Stellt die Anzahl der zufälligen Angebote ein.'
 MESSAGE_SET_CHANCE_PROMPT: 'Legt die Chance zwischen 0.00 und 1.00 fest.'
 MESSAGE_SET_REFRESH_DELAY_PROMPT: 'Legt die Minuten zwischen den Angebotsaktualisierungen fest.'
-MESSAGE_CURRENT_VALUE: '<yellow>Momentaner Wert</yellow><gray>:</gray> <aqua>'
+MESSAGE_CURRENT_VALUE: '<white>Momentaner Wert<gray>:</gray> <value>'
 MESSAGE_SET_HEADS_DAYS_PROMPT: 'Legt fest, ab wie vielen Tagen der letzten Anmeldung die Spielerköpfe nicht mehr angeboten werden.'
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Die neue Konfiguration wurde erfolgreich erstellt und nachgeladen.'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Konfigurationserstellung abgebrochen.'
-MESSAGE_YOU_ENTERED: "<yellow>Deine Eingabe</yellow><gray>:</gray> "
+MESSAGE_YOU_ENTERED: "<white>Deine Eingabe<gray>:</gray> <value>"
 MESSAGE_YES_NO: "Verwendest du diesen Wert? Eingabe oder Klicken: <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:'/wanderingtrades accept-input yes'><green>Ja</green></hover> oder <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:'/wanderingtrades accept-input no'><red>Nein</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Änderungen verworfen"
 MESSAGE_EDIT_SAVED: "<italic><green>Änderungen gespeichert"
@@ -141,9 +141,9 @@ HELP_CLICK_TO_SHOW_HELP: "Klicken um Hilfe für diesen Befehl anzuzeigen."
 HELP_PAGE_OUT_OF_RANGE: "Fehler: Seite <page> ist nicht in Reichweite. Sie muss sich innerhalb der Reichweite befinden. [1, <max_pages>]"
 HELP_CLICK_FOR_NEXT_PAGE: "Klicken für die nächste Seite"
 HELP_CLICK_FOR_PREVIOUS_PAGE: "Klicken für die vorherige Seite"
-COMMAND_INVALID_SYNTAX: "Ungültige Befehlseingabe. Die korrekte Befehlssyntax lautet: "
-COMMAND_INVALID_SENDER: "Ungültiger Befehlseingabeort. Du musst vom Typ {type} sein."
-COMMAND_INVALID_ARGUMENT: "Ungültiges Befehlsargument: "
+COMMAND_INVALID_SYNTAX: "<red>Ungültige Befehlseingabe. Die korrekte Befehlssyntax lautet: <syntax>"
+COMMAND_INVALID_SENDER: "<red>Ungültiger Befehlseingabeort. Du musst vom Typ <gray><type></gray> sein."
+COMMAND_INVALID_ARGUMENT: "<red>Ungültiges Befehlsargument: <error>"
 COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "'{input}' ist keine von den folgenden: {acceptableValues}"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "'{input}' ist kein gültiger Ort. Erforderliches Format ist '<x> <y> <z>'"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "Absolute und relative Koordinaten können nicht gemischt werden. (Entweder alle Koordinaten nutzen '^' oder keine tut es.)"

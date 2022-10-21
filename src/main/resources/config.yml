@@ -1,7 +1,7 @@
 # WanderingTrades Config ${project.version}
 debug: false
 
-# Languages currently included: en_US, zh_CN, de_DE
+# Languages currently included: en_US, zh_CN, de_DE, ro_RO, ru_RU
 # Contribute translations for the menus and commands on GitHub
 language: 'en_US'
 

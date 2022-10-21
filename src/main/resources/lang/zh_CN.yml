@@ -2,7 +2,7 @@
 COMMAND_LIST_LOADED: '<blue>已加载交易配置</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: '没有加载该名称的交易配置'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>配置格式不正确，请确保食谱至少拥有一种成分'
-COMMAND_RELOAD: '<gradient:red:yellow>重新加载WanderingTrades配置...'
+COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>重新加载WanderingTrades配置...'
 COMMAND_RELOAD_DONE: '<green>完成。'
 COMMAND_WT_HELP: 'WanderingTrades 帮助'
 COMMAND_WT_ABOUT: '关于WanderingTrades'
@@ -40,7 +40,7 @@ GUI_CONFIG_WG_BLACK: '<aqua>模式</aqua><gray>:</gray> WorldGuard 地区黑名�
 GUI_CONFIG_WG_LIST: '<aqua>白/黑名单区域列表'
 GUI_CONFIG_WG_LIST_LORE: '  <gray>左键点击可添加，右键点击可删除'
 GUI_CONFIG_REFRESH_MINUTES: '<green>如果启用，交易刷新间隔多长时间'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>值</white><gray>:</gray> <aqua>{VALUE}分钟'
+GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>值</white><gray>:</gray> <aqua><value>分钟'
 GUI_CONFIG_TITLE: '<blue>WanderingTrades</blue><gray>:</gray>配置'
 GUI_TC_EDIT_ENABLED: '<green>启用'
 GUI_TC_EDIT_DISABLED: '<red>禁用'
@@ -55,7 +55,7 @@ GUI_TC_EDIT_TITLE: '<blue>编辑配置</blue><gray>:</gray> '
 GUI_TC_LIST_TITLE: '<blue>交易配置'
 GUI_TC_LIST_ADD_CONFIG: '<green>添加配置'
 GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  单击以创建新配置'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...和剩余 {VALUE} 项'
+GUI_TC_LIST_AND_MORE: '  <gray><italic>...和剩余 <value> 项'
 GUI_TRADE_LIST_TITLE: '<blue>配置</blue><gray>:</gray> '
 GUI_TRADE_LIST_EDIT_CONFIG: '<green>编辑配置设置'
 GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic>  单击可编辑此配置的设置'
@@ -104,8 +104,8 @@ MESSAGE_NUMBER_GTE_N1: '数字必须 >= -1'
 MESSAGE_NUMBER_0T1: '数字必须介于0.00和1.00之间'
 MESSAGE_SET_MAX_USES_PROMPT: '设置交易的最大使用次数'
 MESSAGE_CONFIRM_KEY: 'yes'
-MESSAGE_CONFIRM: '输入"{KEY}"以确认，或输入其它任何内容已取消'
-MESSAGE_DELETE_PROMPT: '确定要删除"{TRADE_NAME}"吗？'
+MESSAGE_CONFIRM: '输入"<key>"以确认，或输入其它任何内容已取消'
+MESSAGE_DELETE_PROMPT: '确定要删除"<name>"吗？'
 MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>输入新配置的名称</gradient><gray>:'
 MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>输入新交易的名称</gradient><gray>:'
 MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>输入自定义名称</gradient><gray>:'
@@ -116,11 +116,11 @@ MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>必须是新的/唯一的名�
 MESSAGE_SET_RAND_AMOUNT_PROMPT: '设置随机交易的数量'
 MESSAGE_SET_CHANCE_PROMPT: '设置概率 0.00-1.00'
 MESSAGE_SET_REFRESH_DELAY_PROMPT: '设置交易刷新间隔多少分钟<reset>'
-MESSAGE_CURRENT_VALUE: '<yellow>当前值</yellow><gray>:</gray> <aqua>'
+MESSAGE_CURRENT_VALUE: '<white>当前值<gray>:</gray> <value>'
 MESSAGE_SET_HEADS_DAYS_PROMPT: '设置从上次登录到忽略头颅的天数'
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>已成功创建新配置并重新加载'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>已取消配置创建'
-MESSAGE_YOU_ENTERED: "<yellow>你输入了</yellow><gray>:</gray> "
+MESSAGE_YOU_ENTERED: "<white>你输入了<gray>:</gray> <value>"
 MESSAGE_YES_NO: "确认使用这个值？输入或点击: <hover:show_text:'<green>点击确认！'><click:run_command:'/wanderingtrades accept-input yes'><green>Yes</green></hover> 或 <hover:show_text:'<green>点击确认！'><click:run_command:'/wanderingtrades accept-input no'><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>编辑已取消"
 MESSAGE_EDIT_SAVED: "<italic><green>编辑已保存"
@@ -141,9 +141,9 @@ HELP_CLICK_TO_SHOW_HELP: "单击此处显示此命令的帮助"
 HELP_PAGE_OUT_OF_RANGE: "错误: 第<page>页不在范围内。可用范围[1, <max_pages>]"
 HELP_CLICK_FOR_NEXT_PAGE: "点击进入下一页"
 HELP_CLICK_FOR_PREVIOUS_PAGE: "点击进入上一页"
-COMMAND_INVALID_SYNTAX: "无效的命令语法。正确的命令语法是："
-COMMAND_INVALID_SENDER: "使用此命令您必须是{type}"
-COMMAND_INVALID_ARGUMENT: "无效的命令参数： "
+COMMAND_INVALID_SYNTAX: "<red>无效的命令语法。正确的命令语法是：<syntax>"
+COMMAND_INVALID_SENDER: "<red>使用此命令您必须是<gray><type></gray>"
+COMMAND_INVALID_ARGUMENT: "<red>无效的命令参数：<error>"
 COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "'{input}'不属于下列情况: {acceptableValues}"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "'{input}'不是有效的位置坐标，所需格式为'<x> <y> <z>'"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "不能混合使用本地坐标和绝对坐标(所有坐标都使用'^'或不使用)"

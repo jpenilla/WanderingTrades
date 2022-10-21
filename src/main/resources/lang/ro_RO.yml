@@ -2,7 +2,7 @@
 COMMAND_LIST_LOADED: '<blue>Configurațiile de schimburi au fost încărcate</blue><gray>:'
 COMMAND_SUMMON_NO_CONFIG: 'Nu există nicio configurație încărcată cu numele acela.'
 COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Această configurație nu este formatată corect. Verifică dacă schimburile au măcar un obiect.'
-COMMAND_RELOAD: '<gradient:red:yellow>Se reîncarcă configuratia de la WanderingTrades...'
+COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>Se reîncarcă configuratia de la WanderingTrades...'
 COMMAND_RELOAD_DONE: '<green>Gata.'
 COMMAND_WT_HELP: 'WanderingTrades Help'
 COMMAND_WT_ABOUT: 'Despre WanderingTrades'
@@ -40,7 +40,7 @@ GUI_CONFIG_WG_BLACK: '<aqua>Mod</aqua><gray>:</gray> Blacklist in regiune de Wor
 GUI_CONFIG_WG_LIST: '<aqua>Lista de regiuni pentru White/Black list'
 GUI_CONFIG_WG_LIST_LORE: '  <gray>Left-click pentru a adăuga, Right-click pentru a elimina'
 GUI_CONFIG_REFRESH_MINUTES: '<green>La ce interval de minute să actualizeze schimburile dacă se permite.'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Valoare</white><gray>:</gray> <aqua>{VALUE} minute'
+GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Valoare</white><gray>:</gray> <aqua><value> minute'
 GUI_CONFIG_TITLE: 'Configurația <blue>WanderingTrades</blue>'
 GUI_TC_EDIT_ENABLED: '<green>Activat'
 GUI_TC_EDIT_DISABLED: '<red>Dezactivat'
@@ -55,7 +55,7 @@ GUI_TC_EDIT_TITLE: '<blue>Editează Configurația</blue><gray>:</gray> '
 GUI_TC_LIST_TITLE: '<blue>Configurații de schimburi'
 GUI_TC_LIST_ADD_CONFIG: '<green>Adaugă configurație'
 GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  Dă click pentru a crea o configurație nouă'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...și încă {VALUE}'
+GUI_TC_LIST_AND_MORE: '  <gray><italic>...și încă <value>'
 GUI_TRADE_LIST_TITLE: '<blue>Configurație de schimburi</blue><gray>:</gray> '
 GUI_TRADE_LIST_EDIT_CONFIG: '<green>Editează setările configurației'
 GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic> Dă click pentru a edita setările configurației'
@@ -104,8 +104,8 @@ MESSAGE_NUMBER_GTE_N1: 'Numărul trebuie să fie mai mare sau egal cu -1'
 MESSAGE_NUMBER_0T1: 'Numărul trebuie să fie între 0 și 1'
 MESSAGE_SET_MAX_USES_PROMPT: 'Utilizările maxime ale acestui schimb'
 MESSAGE_CONFIRM_KEY: 'Da'
-MESSAGE_CONFIRM: 'Scrie „{KEY}” pentru a confirma sau orice altceva pentru a anula'
-MESSAGE_DELETE_PROMPT: 'Ești sigur că vrei să ștergi schimbul „{TRADE_NAME}”?'
+MESSAGE_CONFIRM: 'Scrie „<key>” pentru a confirma sau orice altceva pentru a anula'
+MESSAGE_DELETE_PROMPT: 'Ești sigur că vrei să ștergi schimbul „<name>”?'
 MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>Introduce un nume pentru configurația nouă</gradient><gray>:'
 MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>Numește noul schimb</gradient><gray>:'
 MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>Dă-i un nume</gradient><gray>:'
@@ -116,11 +116,11 @@ MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>Trebuie să fie un nume nou/u
 MESSAGE_SET_RAND_AMOUNT_PROMPT: 'Setează numărul de schimburi aleatorii'
 MESSAGE_SET_CHANCE_PROMPT: 'Setează șansa (număr între 0 și 1)'
 MESSAGE_SET_REFRESH_DELAY_PROMPT: 'Setează numărul de minute între actualizări de schimburi<reset>'
-MESSAGE_CURRENT_VALUE: '<yellow>Valoarea actuală</yellow><gray>:</gray> <aqua>'
+MESSAGE_CURRENT_VALUE: '<white>Valoarea actuală<gray>:</gray> <value>'
 MESSAGE_SET_HEADS_DAYS_PROMPT: 'Setează după câte zile de inactivitate să excludă capul de jucător'
 MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Configurația nouă a fost creată si încărcată cu succes'
 MESSAGE_CREATE_CONFIG_CANCEL: '<red>Configurația a fost anulată'
-MESSAGE_YOU_ENTERED: "<yellow>Ai scris</yellow><gray>:</gray> "
+MESSAGE_YOU_ENTERED: "<white>Ai scris<gray>:</gray> <value>"
 MESSAGE_YES_NO: "Dorești să folosești această valoare? Scrie sau dă click: <hover:show_text:'<green>Click pentru a executa!'><click:run_command:'/wanderingtrades accept-input yes'><green>Yes</green></hover> sau <hover:show_text:'<green>Dă click pentru a executa'><click:run_command:'/wanderingtrades accept-input no'><red>No</red></hover>"
 MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Editarea anulată"
 MESSAGE_EDIT_SAVED: "<italic><green>Editarea salvată"
@@ -141,9 +141,9 @@ HELP_CLICK_TO_SHOW_HELP: "Dă click pentru a primi ajutor în folosirea comenzii
 HELP_PAGE_OUT_OF_RANGE: "Eroare: Pagina <page> nu este în interval. Trebuie să fie în intervalul [1, <max_pages>]"
 HELP_CLICK_FOR_NEXT_PAGE: "Dă click pentru pagina următoare"
 HELP_CLICK_FOR_PREVIOUS_PAGE: "Dă click pentru pagina precedentă"
-COMMAND_INVALID_SYNTAX: "Sintaxă invalidă. Sintaxa corectă a comenzii este: "
-COMMAND_INVALID_SENDER: "Command sender invalid. Trebuie să fii un {type}"
-COMMAND_INVALID_ARGUMENT: "Parametru invalid pentru comandă: "
+COMMAND_INVALID_SYNTAX: "<red>Sintaxă invalidă. Sintaxa corectă a comenzii este: <syntax>"
+COMMAND_INVALID_SENDER: "<red>Command sender invalid. Trebuie să fii un <gray><type></gray>"
+COMMAND_INVALID_ARGUMENT: "<red>Parametru invalid pentru comandă: <error>"
 COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "„{input}” nu este în mulțimea: {acceptableValues}"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "„{input}” nu este o locație validă. Formatul cerut este „<x> <y> <z>”"
 COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "Nu poate conține și coordonate absolute și coordonate locale (Ori folosesc toate coordonatele „^” sau niciuna)"
