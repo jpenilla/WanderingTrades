@@ -1,149 +1,213 @@
 # Wandering Trades ${project.version} ro_RO language config \\ Romanian translation by Oreoezi
-COMMAND_LIST_LOADED: '<blue>Configurațiile de schimburi au fost încărcate</blue><gray>:'
-COMMAND_SUMMON_NO_CONFIG: 'Nu există nicio configurație încărcată cu numele acela.'
-COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Această configurație nu este formatată corect. Verifică dacă schimburile au măcar un obiect.'
-COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>Se reîncarcă configuratia de la WanderingTrades...'
-COMMAND_RELOAD_DONE: '<green>Gata.'
-COMMAND_WT_HELP: 'WanderingTrades Help'
-COMMAND_WT_ABOUT: 'Despre WanderingTrades'
-COMMAND_WT_RELOAD: 'Reîncarcă toate configurațiile de la WanderingTrades'
-COMMAND_WT_LIST: 'Enumeră toate configurațiile de schimb încărcate.'
-COMMAND_WT_EDIT: 'Deschide un meniu pentru a crea si edita schimburi.'
-COMMAND_WT_CONFIG: 'Deschide un meniu pentru a edita setările din config.yml'
-COMMAND_WT_PH_CONFIG: 'Deschide un meniu pentru a edita setările din playerheads.yml'
-COMMAND_SUMMON: 'Spawnează un Wandering Trader după configurația specificată. Nu ia in calcul dacă configurația este dezactivată.'
-COMMAND_SUMMON_NATURAL: 'Spawnează un Wandering Trader ''natural'' cu opțiuni de modificare.'
-COMMAND_VSUMMON: 'Spawnează un Villager după configurația specificată. Nu ia in calcul dacă configurația este dezactivată.'
-GUI_BACK: '<red>Înapoi'
-GUI_BACK_LORE: '<gray><italic>  Dă click pentru a te duce înapoi'
-GUI_CLOSE: '<red>Închide'
-GUI_CLOSE_LORE: '<gray><italic>  Dă click pentru a închide'
-GUI_TOGGLE_LORE: '  <gray><italic>Dă click pentru a comuta'
-GUI_EDIT_LORE: '  <gray><italic>Dă click pentru a edita'
-GUI_VALUE_LORE: '<white>Valoare</white><gray>:</gray> '
-GUI_PAGED_NEXT: '<green>Pagina următoare'
-GUI_PAGED_NEXT_LORE: '<gray><italic>  Dă click pentru a intra pe pagina următoare'
-GUI_PAGED_LAST: '<green>Ultima pagină'
-GUI_PAGED_LAST_LORE: '<gray><italic>  Dă click pentru a reveni pe pagina precedentă'
-GUI_CONFIG_ENABLED: '<green>Adaugă schimburi la Traderii spawnați natural'
-GUI_CONFIG_DISABLED: '<red>Nu adăuga schimburi la Traderii spawnați natural'
-GUI_CONFIG_ALLOW_MULTIPLE_SETS: '<green>Permite mai mult de un config de schimb per trader'
-GUI_CONFIG_DISALLOW_MULTIPLE_SETS: '<red>Nu permite mai mult de un config de schimb per trader'
-GUI_CONFIG_REMOVE_ORIGINAL: '<green>Elimină schimburile originale de la Wandering Trader'
-GUI_CONFIG_KEEP_ORIGINAL: '<red>Nu elimina schimburile originale de la Wandering Trader'
-GUI_CONFIG_REFRESH: '<green>Actualizează automat schimburile traderilor spawnați cu /wt'
-GUI_CONFIG_NO_REFRESH: '<red>Nu actualiza automat schimburile traderilor spawnați cu /wt'
-GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY: '<green>Previne folosirea poțiunilor de invizibilitate la traderii spawnați cu /wt'
-GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY: '<red>Nu preveni folosirea poțiunilor de invizibilitate la traderii spawnați cu /wt'
-GUI_CONFIG_WG_WHITE: '<aqua>Mod</aqua><gray>:</gray> Whitelist in regiune de Worldguard'
-GUI_CONFIG_WG_BLACK: '<aqua>Mod</aqua><gray>:</gray> Blacklist in regiune de Worldguard'
-GUI_CONFIG_WG_LIST: '<aqua>Lista de regiuni pentru White/Black list'
-GUI_CONFIG_WG_LIST_LORE: '  <gray>Left-click pentru a adăuga, Right-click pentru a elimina'
-GUI_CONFIG_REFRESH_MINUTES: '<green>La ce interval de minute să actualizeze schimburile dacă se permite.'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Valoare</white><gray>:</gray> <aqua><value> minute'
-GUI_CONFIG_TITLE: 'Configurația <blue>WanderingTrades</blue>'
-GUI_TC_EDIT_ENABLED: '<green>Activat'
-GUI_TC_EDIT_DISABLED: '<red>Dezactivat'
-GUI_TC_EDIT_RANDOMIZED: '<green>Aleatoriu'
-GUI_TC_EDIT_NOT_RANDOMIZED: '<red>Nealeatoriu'
-GUI_TC_EDIT_INVINCIBLE: '<green>Invincibil'
-GUI_TC_EDIT_NOT_INVINCIBLE: '<red>Vulnerabil'
-GUI_TC_EDIT_RANDOM_AMOUNT: '<aqua>Cantitate aleatorie'
-GUI_TC_EDIT_CHANCE: '<aqua>Șansă'
-GUI_TC_EDIT_CUSTOM_NAME: '<aqua>Nume personalizat'
-GUI_TC_EDIT_TITLE: '<blue>Editează Configurația</blue><gray>:</gray> '
-GUI_TC_LIST_TITLE: '<blue>Configurații de schimburi'
-GUI_TC_LIST_ADD_CONFIG: '<green>Adaugă configurație'
-GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  Dă click pentru a crea o configurație nouă'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...și încă <value>'
-GUI_TRADE_LIST_TITLE: '<blue>Configurație de schimburi</blue><gray>:</gray> '
-GUI_TRADE_LIST_EDIT_CONFIG: '<green>Editează setările configurației'
-GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic> Dă click pentru a edita setările configurației'
-GUI_TRADE_LIST_NEW_TRADE: '<green>Schimb nou'
-GUI_TRADE_LIST_NEW_TRADE_LORE: '  <gray>Dă click pentru a crea un schimb nou'
-GUI_TRADE_CANCEL: '<red>Anulează'
-GUI_TRADE_CANCEL_LORE: '<gray><italic>  Dă click pentru a anula si a te întoarce'
-GUI_TRADE_SAVE: '<green>Salvează'
-GUI_TRADE_SAVE_LORE: '<gray><italic>  Dă click pentru a salva si a te întoarce'
-GUI_TRADE_INFO: '<yellow>Informații!'
-GUI_TRADE_INFO_LORE: ' <aqua>-</aqua> <white>Pentru a salva schimbările,|   <white>trebuie să ai un item rezultat,|   <white>numele schimbului și cel puțin|   <white>un ingredient.'
-GUI_TRADE_DELETE: '<red>Șterge'
-GUI_TRADE_DELETE_LORE: '<white> <aqua>-</aqua> Dă click pentru a șterge acest schimb'
-GUI_CONFIG_DELETE_LORE: '<white> <aqua>-</aqua> Dă click pentru a șterge această configurație'
-GUI_TRADE_EXP_REWARD: '<green>Experiență recompensată'
-GUI_TRADE_NO_EXP_REWARD: '<red>Fără recompansă de experiență'
-GUI_TRADE_MAX_USES: '<aqua>Utilizări maxime'
-GUI_TRADE_TRADE_NAME: '<aqua>Numele schimbului'
-GUI_TRADE_INGREDIENT_1: '<green>Primul ingredient'
-GUI_TRADE_INGREDIENT_2: '<green>Al doilea ingredient'
-GUI_TRADE_RESULT: '<green>Rezultat'
-GUI_TRADE_REQUIRED_LORE: ' <aqua>- <gray>Dă click pe un item pentru a seta| <aqua>- <gray>Sau fără pentru a reseta| <aqua>- <gray>Necesar'
-GUI_TRADE_OPTIONAL_LORE: ' <aqua>- <gray>Dă click pe un item pentru a seta| <aqua>- <gray>Sau fără pentru a reseta| <aqua>- <gray>Opțional'
-GUI_TRADE_CREATE_TITLE: '<blue>Schimb nou'
-GUI_TRADE_EDIT_TITLE: '<blue>Editează schimbul</blue><gray>:</gray> '
-GUI_PH_CONFIG_TITLE: 'Editează configurația pentru <blue>Capetele de jucători'
-GUI_PH_CONFIG_ENABLED: '<green>Adaugă capete de pe server pe Wandering Traders'
-GUI_PH_CONFIG_DISABLED: '<red>Nu adăuga capete de pe server pe Wandering Traders'
-GUI_PH_CONFIG_AMOUNT: '<aqua>Câte capete de jucător să adauge per trader'
-GUI_PH_CONFIG_AMOUNT_HEADS: '<aqua>Câte capete să dea fiecare schimb'
-GUI_PH_CONFIG_CHANCE: '<aqua>Care este probabilitatea ca un Wandering Trader să primească capete'
-GUI_PH_CONFIG_BLACKLIST: '<aqua>Excepții pentru capete'
-GUI_PH_CONFIG_RESULT_LORE: '<aqua>Descrierea capului de jucător'
-GUI_PH_CONFIG_SAVE_LORE: '  <gray><italic>Dă click pentru a salva ingredientele'
-GUI_PH_CONFIG_DAYS: '<aqua>După câte zile jucate să adauge player head-ul în listă'
-GUI_PH_CONFIG_DAYS_LORE: '  <gray><italic>Setează la -1 pentru a ignora'
-GUI_PH_CONFIG_PWL_DISABLED: '<red>Nu necesită permisiune să adaugi capul jucătorului'
-GUI_PH_CONFIG_PWL_ENABLED: '<green>Necesită permisiune să adaugi capul jucătorului'
-GUI_PH_CONFIG_PWL_LORE: '  <aqua>-</aqua> <gray>''<white>wanderingtrades.headavailable</white>'''
-MESSAGE_ENTER_NUMBER: '<gradient:blue:aqua>Introduce un număr</gradient><gray>:'
-MESSAGE_ENTER_NUMBER_OR_RANGE: '<aqua>Introduce un număr sau un interval<gray>. (</gray>Exemplu de interval<gray>: </gray>0<gray>:</gray>5<gray>)</gray></aqua><white>:'
-MESSAGE_NO_SPACES: '<gradient:red:gold><italic>Nu puteți introduce spații aici'
-MESSAGE_NUMBER_GT_0: 'Numărul trebuie să fie mai mare cu 0'
-MESSAGE_NUMBER_GTE_0: 'Numărul trebuie să fie mai mare sau egal cu 0'
-MESSAGE_NUMBER_GTE_N1: 'Numărul trebuie să fie mai mare sau egal cu -1'
-MESSAGE_NUMBER_0T1: 'Numărul trebuie să fie între 0 și 1'
-MESSAGE_SET_MAX_USES_PROMPT: 'Utilizările maxime ale acestui schimb'
-MESSAGE_CONFIRM_KEY: 'Da'
-MESSAGE_CONFIRM: 'Scrie „<key>” pentru a confirma sau orice altceva pentru a anula'
-MESSAGE_DELETE_PROMPT: 'Ești sigur că vrei să ștergi schimbul „<name>”?'
-MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>Introduce un nume pentru configurația nouă</gradient><gray>:'
-MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>Numește noul schimb</gradient><gray>:'
-MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>Dă-i un nume</gradient><gray>:'
-MESSAGE_SET_HEADS_AMOUNT_PROMPT: 'Setează câte capete per schimb'
-MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT: 'Setează câte capete per trader'
-MESSAGE_CREATE_TITLE_OR_NONE_PROMPT: 'Scrie un nume sau „NONE”'
-MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>Trebuie să fie un nume nou/unic'
-MESSAGE_SET_RAND_AMOUNT_PROMPT: 'Setează numărul de schimburi aleatorii'
-MESSAGE_SET_CHANCE_PROMPT: 'Setează șansa (număr între 0 și 1)'
-MESSAGE_SET_REFRESH_DELAY_PROMPT: 'Setează numărul de minute între actualizări de schimburi<reset>'
-MESSAGE_CURRENT_VALUE: '<white>Valoarea actuală<gray>:</gray> <value>'
-MESSAGE_SET_HEADS_DAYS_PROMPT: 'Setează după câte zile de inactivitate să excludă capul de jucător'
-MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Configurația nouă a fost creată si încărcată cu succes'
-MESSAGE_CREATE_CONFIG_CANCEL: '<red>Configurația a fost anulată'
-MESSAGE_YOU_ENTERED: "<white>Ai scris<gray>:</gray> <value>"
-MESSAGE_YES_NO: "Dorești să folosești această valoare? Scrie sau dă click: <hover:show_text:'<green>Click pentru a executa!'><click:run_command:'/wanderingtrades accept-input yes'><green>Yes</green></hover> sau <hover:show_text:'<green>Dă click pentru a executa'><click:run_command:'/wanderingtrades accept-input no'><red>No</red></hover>"
-MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Editarea anulată"
-MESSAGE_EDIT_SAVED: "<italic><green>Editarea salvată"
-MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Introduce numele unei regiuni de WorldGuard</gradient><gray>:"
-MESSAGE_ADD_BLACKLIST_PLAYER: "<gradient:aqua:blue>Introduce numele jucătorului pe care să îl excluzi</gradient><gray>:"
-MESSAGE_ADD_LORE_PROMPT: "<gradient:aqua:blue>Introduce un rând nou la descriere</gradient><gray>:"
-COMMAND_ARGUMENT_HELP_QUERY: "Help Query"
-HELP_HELP: "WanderingTrades Help"
-HELP_COMMAND: "Comandă"
-HELP_DESCRIPTION: "Descriere"
-HELP_NO_DESCRIPTION: "Nicio descriere"
-HELP_ARGUMENTS: "Parametrii"
-HELP_OPTIONAL: "Opțional"
-HELP_SHOWING_RESULTS_FOR_QUERY: "Rezultatele căutării"
-HELP_NO_RESULTS_FOR_QUERY: "Niciun rezultat pentru căutare"
-HELP_AVAILABLE_COMMANDS: "Comenzi disponibile"
-HELP_CLICK_TO_SHOW_HELP: "Dă click pentru a primi ajutor în folosirea comenzii"
-HELP_PAGE_OUT_OF_RANGE: "Eroare: Pagina <page> nu este în interval. Trebuie să fie în intervalul [1, <max_pages>]"
-HELP_CLICK_FOR_NEXT_PAGE: "Dă click pentru pagina următoare"
-HELP_CLICK_FOR_PREVIOUS_PAGE: "Dă click pentru pagina precedentă"
-COMMAND_INVALID_SYNTAX: "<red>Sintaxă invalidă. Sintaxa corectă a comenzii este: <syntax>"
-COMMAND_INVALID_SENDER: "<red>Command sender invalid. Trebuie să fii un <gray><type></gray>"
-COMMAND_INVALID_ARGUMENT: "<red>Parametru invalid pentru comandă: <error>"
-COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "„{input}” nu este în mulțimea: {acceptableValues}"
-COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "„{input}” nu este o locație validă. Formatul cerut este „<x> <y> <z>”"
-COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "Nu poate conține și coordonate absolute și coordonate locale (Ori folosesc toate coordonatele „^” sau niciuna)"
+command:
+  about:
+    description: Despre WanderingTrades
+  argument:
+    help-query: Help Query
+  exception:
+    parse:
+      failure-enum: '„{input}” nu este în mulțimea: {acceptableValues}'
+      failure-location-invalid-format: „{input}” nu este o locație validă. Formatul
+        cerut este „<x> <y> <z>”
+      failure-location-mixed-local-absolute: Nu poate conține și coordonate absolute
+        și coordonate locale (Ori folosesc toate coordonatele „^” sau niciuna)
+      no-trade-config: Nu există nicio configurație încărcată cu numele acela.
+    invalid-argument: '<red>Parametru invalid pentru comandă: <error>'
+    invalid-sender: <red>Command sender invalid. Trebuie să fii un <gray><type></gray>
+    invalid-syntax: '<red>Sintaxă invalidă. Sintaxa corectă a comenzii este: <syntax>'
+  editconfig:
+    description: Deschide un meniu pentru a edita setările din config.yml
+  editplayerheads:
+    description: Deschide un meniu pentru a edita setările din playerheads.yml
+  edit:
+    description: Deschide un meniu pentru a crea si edita schimburi.
+  help:
+    description: WanderingTrades Help
+    message:
+      arguments: Parametrii
+      available-commands: Comenzi disponibile
+      click-for-next-page: Dă click pentru pagina următoare
+      click-for-previous-page: Dă click pentru pagina precedentă
+      click-to-show-help: Dă click pentru a primi ajutor în folosirea comenzii
+      command: Comandă
+      description: Descriere
+      help: WanderingTrades Help
+      no-description: Nicio descriere
+      no-results-for-query: Niciun rezultat pentru căutare
+      optional: Opțional
+      page-out-of-range: 'Eroare: Pagina <page> nu este în interval. Trebuie să fie
+        în intervalul [1, <max_pages>]'
+      showing-results-for-query: Rezultatele căutării
+  list:
+    description: Enumeră toate configurațiile de schimb încărcate.
+    message: '<blue>Configurațiile de schimburi au fost încărcate</blue><gray>:'
+  reload:
+    message: <gradient:#6B0BDE:#BA0DFA>Se reîncarcă configuratia de la WanderingTrades...
+    description: Reîncarcă toate configurațiile de la WanderingTrades
+    done-message: <green>Gata.
+  summonnatural:
+    description: Spawnează un Wandering Trader 'natural' cu opțiuni de modificare.
+  summonvillager:
+    description: Spawnează un Villager după configurația specificată. Nu ia in calcul
+      dacă configurația este dezactivată.
+  summon:
+    description: Spawnează un Wandering Trader după configurația specificată. Nu ia
+      in calcul dacă configurația este dezactivată.
+    malformed-config: <red>Această configurație nu este formatată corect. Verifică
+      dacă schimburile au măcar un obiect.
+gui:
+  back:
+    name: <red>Înapoi
+    lore: <gray><italic>  Dă click pentru a te duce înapoi
+  close:
+    name: <red>Închide
+    lore: <gray><italic>  Dă click pentru a închide
+  config:
+    allow-multiple-sets: <green>Permite mai mult de un config de schimb per trader
+    allow-night-invisibility: <red>Nu preveni folosirea poțiunilor de invizibilitate
+      la traderii spawnați cu /wt
+    disabled: <red>Nu adăuga schimburi la Traderii spawnați natural
+    disallow-multiple-sets: <red>Nu permite mai mult de un config de schimb per trader
+    enabled: <green>Adaugă schimburi la Traderii spawnați natural
+    keep-original: <red>Nu elimina schimburile originale de la Wandering Trader
+    no-refresh: <red>Nu actualiza automat schimburile traderilor spawnați cu /wt
+    prevent-night-invisibility: <green>Previne folosirea poțiunilor de invizibilitate
+      la traderii spawnați cu /wt
+    refresh: <green>Actualizează automat schimburile traderilor spawnați cu /wt
+    refresh-minutes:
+      name: <green>La ce interval de minute să actualizeze schimburile dacă se permite.
+      lore: <white>Valoare</white><gray>:</gray> <aqua><value> minute
+    remove-original: <green>Elimină schimburile originale de la Wandering Trader
+    title: Configurația <blue>WanderingTrades</blue>
+    wg-black: <aqua>Mod</aqua><gray>:</gray> Blacklist in regiune de Worldguard
+    wg-list:
+      name: <aqua>Lista de regiuni pentru White/Black list
+      lore: '  <gray>Left-click pentru a adăuga, Right-click pentru a elimina'
+    wg-white: <aqua>Mod</aqua><gray>:</gray> Whitelist in regiune de Worldguard
+  tc-edit:
+    config-delete-lore: <white> <aqua>-</aqua> Dă click pentru a șterge această configurație
+    chance: <aqua>Șansă
+    custom-name: <aqua>Nume personalizat
+    disabled: <red>Dezactivat
+    enabled: <green>Activat
+    invincible: <green>Invincibil
+    not-invincible: <red>Vulnerabil
+    not-randomized: <red>Nealeatoriu
+    randomized: <green>Aleatoriu
+    random-amount: <aqua>Cantitate aleatorie
+    title: '<blue>Editează Configurația</blue><gray>:</gray> '
+  edit-lore: '  <gray><italic>Dă click pentru a edita'
+  paged:
+    last:
+      name: <green>Ultima pagină
+      lore: <gray><italic>  Dă click pentru a reveni pe pagina precedentă
+    next:
+      name: <green>Pagina următoare
+      lore: <gray><italic>  Dă click pentru a intra pe pagina următoare
+  ph-config:
+    amount: <aqua>Câte capete de jucător să adauge per trader
+    amount-heads: <aqua>Câte capete să dea fiecare schimb
+    blacklist: <aqua>Excepții pentru capete
+    chance: <aqua>Care este probabilitatea ca un Wandering Trader să primească capete
+    days: <aqua>După câte zile jucate să adauge player head-ul în listă
+    days-lore: '  <gray><italic>Setează la -1 pentru a ignora'
+    disabled: <red>Nu adăuga capete de pe server pe Wandering Traders
+    enabled: <green>Adaugă capete de pe server pe Wandering Traders
+    pwl-disabled: <red>Nu necesită permisiune să adaugi capul jucătorului
+    pwl-enabled: <green>Necesită permisiune să adaugi capul jucătorului
+    pwl-lore: '  <aqua>-</aqua> <gray>''<white>wanderingtrades.headavailable</white>'''
+    result-lore: <aqua>Descrierea capului de jucător
+    save-lore: '  <gray><italic>Dă click pentru a salva ingredientele'
+    title: Editează configurația pentru <blue>Capetele de jucători
+  tc-list:
+    add-config:
+      name: <green>Adaugă configurație
+      lore: <gray><italic>  Dă click pentru a crea o configurație nouă
+    and-more: '  <gray><italic>...și încă <value>'
+    title: <blue>Configurații de schimburi
+  toggle-lore: '  <gray><italic>Dă click pentru a comuta'
+  trade:
+    cancel:
+      name: <red>Anulează
+      lore: <gray><italic>  Dă click pentru a anula si a te întoarce
+    create:
+      title: <blue>Schimb nou
+    delete:
+      name: <red>Șterge
+      lore: <white> <aqua>-</aqua> Dă click pentru a șterge acest schimb
+    edit:
+      title: '<blue>Editează schimbul</blue><gray>:</gray> '
+    exp-reward: <green>Experiență recompensată
+    info:
+      name: <yellow>Informații!
+      lore:
+      - ' <aqua>-</aqua> <white>Pentru a salva schimbările,'
+      - '   <white>trebuie să ai un item rezultat,'
+      - '   <white>numele schimbului și cel puțin'
+      - '   <white>un ingredient.'
+    ingredient-1: <green>Primul ingredient
+    ingredient-2: <green>Al doilea ingredient
+    max-uses: <aqua>Utilizări maxime
+    no-exp-reward: <red>Fără recompansă de experiență
+    optional-lore:
+    - ' <aqua>- <gray>Dă click pe un item pentru a seta'
+    - ' <aqua>- <gray>Sau fără pentru a reseta'
+    - ' <aqua>- <gray>Opțional'
+    required-lore:
+    - ' <aqua>- <gray>Dă click pe un item pentru a seta'
+    - ' <aqua>- <gray>Sau fără pentru a reseta'
+    - ' <aqua>- <gray>Necesar'
+    result: <green>Rezultat
+    save:
+      name: <green>Salvează
+      lore: <gray><italic>  Dă click pentru a salva si a te întoarce
+    trade-name: <aqua>Numele schimbului
+  trade-list:
+    edit-config:
+      name: <green>Editează setările configurației
+      lore: <gray><italic> Dă click pentru a edita setările configurației
+    new-trade:
+      name: <green>Schimb nou
+      lore: '  <gray>Dă click pentru a crea un schimb nou'
+    title: '<blue>Configurație de schimburi</blue><gray>:</gray> '
+  value-lore: '<white>Valoare</white><gray>:</gray> '
+conversation:
+  add-blacklist-player: '<gradient:aqua:blue>Introduce numele jucătorului pe care
+    să îl excluzi</gradient><gray>:'
+  add-lore-prompt: '<gradient:aqua:blue>Introduce un rând nou la descriere</gradient><gray>:'
+  add-wg-region: '<gradient:aqua:blue>Introduce numele unei regiuni de WorldGuard</gradient><gray>:'
+  confirm: Scrie „<key>” pentru a confirma sau orice altceva pentru a anula
+  confirm-key: Da
+  create-config-cancel: <red>Configurația a fost anulată
+  create-config-prompt: '<gradient:blue:aqua>Introduce un nume pentru configurația
+    nouă</gradient><gray>:'
+  create-config-success: <green>Configurația nouă a fost creată si încărcată cu succes
+  create-title-or-none-prompt: Scrie un nume sau „NONE”
+  create-trade-prompt: '<gradient:blue:aqua>Numește noul schimb</gradient><gray>:'
+  create-unique: <gradient:red:gold><italic>Trebuie să fie un nume nou/unic
+  current-value: <white>Valoarea actuală<gray>:</gray> <value>
+  custom-name-prompt: '<gradient:blue:aqua>Dă-i un nume</gradient><gray>:'
+  delete-prompt: Ești sigur că vrei să ștergi schimbul „<name>”?
+  edit-cancelled: <italic><gradient:red:gold>Editarea anulată
+  edit-saved: <italic><green>Editarea salvată
+  enter-number: '<gradient:blue:aqua>Introduce un număr</gradient><gray>:'
+  enter-number-or-range: '<aqua>Introduce un număr sau un interval<gray>. (</gray>Exemplu
+    de interval<gray>: </gray>0<gray>:</gray>5<gray>)</gray></aqua><white>:'
+  no-spaces: <gradient:red:gold><italic>Nu puteți introduce spații aici
+  number-0t1: Numărul trebuie să fie între 0 și 1
+  number-gte-0: Numărul trebuie să fie mai mare sau egal cu 0
+  number-gte-n1: Numărul trebuie să fie mai mare sau egal cu -1
+  number-gt-0: Numărul trebuie să fie mai mare cu 0
+  set-chance-prompt: Setează șansa (număr între 0 și 1)
+  set-heads-amount-prompt: Setează câte capete per schimb
+  set-heads-days-prompt: Setează după câte zile de inactivitate să excludă capul de
+    jucător
+  set-heads-trades-amount-prompt: Setează câte capete per trader
+  set-max-uses-prompt: Utilizările maxime ale acestui schimb
+  set-rand-amount-prompt: Setează numărul de schimburi aleatorii
+  set-refresh-delay-prompt: Setează numărul de minute între actualizări de schimburi<reset>
+  yes-no: 'Dorești să folosești această valoare? Scrie sau dă click: <hover:show_text:''<green>Click
+    pentru a executa!''><click:run_command:''/wanderingtrades accept-input yes''><green>Yes</green></hover>
+    sau <hover:show_text:''<green>Dă click pentru a executa''><click:run_command:''/wanderingtrades
+    accept-input no''><red>No</red></hover>'
+  you-entered: <white>Ai scris<gray>:</gray> <value>

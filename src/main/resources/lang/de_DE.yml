@@ -1,149 +1,222 @@
 # Wandering Trades ${project.version} de_DE language config \\ German translation by Cantibra
-COMMAND_LIST_LOADED: '<blue>Geladene Angebots-Konfigurationen</blue><gray>:'
-COMMAND_SUMMON_NO_CONFIG: 'Es sind keine Angebots-Konfigurationen mit diesem Namen geladen.'
-COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Diese Konfiguration enthält fehler. Stelle sicher, dass die Rezepte mindestens ein Item enthalten.'
-COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>Lädt die WanderingTrades-Konfiguration neu...'
-COMMAND_RELOAD_DONE: '<green>Erledigt...'
-COMMAND_WT_HELP: 'WanderingTrades Hilfe'
-COMMAND_WT_ABOUT: 'Über WanderingTrades'
-COMMAND_WT_RELOAD: 'Lädt alle Konfigurationsdateien von WanderingTrades nach.'
-COMMAND_WT_LIST: 'Zeigt die geladenen Angebots-Konfigurationen an.'
-COMMAND_WT_EDIT: 'Öffnet ein Interface um Angebots-Konfigurationen zu erstellen oder bearbeiten.'
-COMMAND_WT_CONFIG: 'Öffnet ein Interface um die Plugineinstellungen (config.yml) zu bearbeiten.'
-COMMAND_WT_PH_CONFIG: 'Öffnet ein Interface um die Spielerkopfeinstellungen (playerheads.yml) zu bearbeiten.'
-COMMAND_SUMMON: 'Erzeugt einen Händler mit der spezifischen Konfiguration. Ignoriert ob die Konfiguration deaktiviert wurde.'
-COMMAND_SUMMON_NATURAL: 'Erzeugt einen natürlichen Händler mit einigen Anpassungsoptionen.'
-COMMAND_VSUMMON: 'Erzeugt einen Dorfbewohner mit der spezifischen Konfiguration. Ignoriert ob die Konfiguration deaktiviert wurde.'
-GUI_BACK: '<red>Zurück'
-GUI_BACK_LORE: '<gray><italic>  Klicken um zurückzukehren'
-GUI_CLOSE: '<red>Schließen'
-GUI_CLOSE_LORE: '<gray><italic>  Klicken um zu schließen'
-GUI_TOGGLE_LORE: '<gray><italic>  Klicken um umzuschalten'
-GUI_EDIT_LORE: '<gray><italic>  Klickem um zu bearbeiten'
-GUI_VALUE_LORE: '<white>Wert</white><gray>:</gray> '
-GUI_PAGED_NEXT: '<green>Nächste Seite'
-GUI_PAGED_NEXT_LORE: '<gray><italic>  Klicken für die nächste Seite'
-GUI_PAGED_LAST: '<green>Letzte Seite'
-GUI_PAGED_LAST_LORE: '<gray><italic>  Klicken für die letzte Seite'
-GUI_CONFIG_ENABLED: '<green>Fügt Angebote zu natürlich generierten Händlern hinzu.'
-GUI_CONFIG_DISABLED: '<red>Fügt keine Angebote zu natürlich generierten Händlern hinzu.'
-GUI_CONFIG_ALLOW_MULTIPLE_SETS: '<green>Erlaubt mehr als ein Angebot pro Angebots-Konfiguration.'
-GUI_CONFIG_DISALLOW_MULTIPLE_SETS: '<red>Erlaubt nicht mehr als ein Angebot pro Angebots-Konfiguration.'
-GUI_CONFIG_REMOVE_ORIGINAL: '<green>Entfernt die originalen Wandering Trader Angebote.'
-GUI_CONFIG_KEEP_ORIGINAL: '<red>Entfernt nicht die Wandering Trader Angebote.'
-GUI_CONFIG_REFRESH: '<green>Aktualisiert die Angebote von "/wt summon angebote"'
-GUI_CONFIG_NO_REFRESH: '<red>Aktualisiert nicht die Angebote von "/wt summon angebote"'
-GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY: '<green>Preventing use of invisibility potions of /wt summoned traders'
-GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY: '<red>Not preventing use of invisibility potions of /wt summoned traders'
-GUI_CONFIG_WG_WHITE: '<aqua>Modus</aqua><gray>:</gray> WorldGuard Region Whitelist'
-GUI_CONFIG_WG_BLACK: '<aqua>Modus</aqua><gray>:</gray> WorldGuard Region Blacklist'
-GUI_CONFIG_WG_LIST: '<aqua>Liste der Regionen für die White-/Blacklist'
-GUI_CONFIG_WG_LIST_LORE: '<gray>  Linksklick/Rechtsklick = Hinzuzufügen/Entfernen'
-GUI_CONFIG_REFRESH_MINUTES: '<green>Wie viele Minuten bis zur Angebotsaktualisierung?'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Wert</white><gray>:</gray> <aqua><value> Minuten'
-GUI_CONFIG_TITLE: '<blue>WanderingTrades</blue><gray>:</gray> Konfiguration'
-GUI_TC_EDIT_ENABLED: '<green>Aktiviert'
-GUI_TC_EDIT_DISABLED: '<red>Deaktiviert'
-GUI_TC_EDIT_RANDOMIZED: '<green>Zufällig'
-GUI_TC_EDIT_NOT_RANDOMIZED: '<red>Nicht zufällig'
-GUI_TC_EDIT_INVINCIBLE: '<green>Unbesiegbar'
-GUI_TC_EDIT_NOT_INVINCIBLE: '<red>Nicht unbesiegbar'
-GUI_TC_EDIT_RANDOM_AMOUNT: '<aqua>Zufällige Menge'
-GUI_TC_EDIT_CHANCE: '<aqua>Möglichkeit'
-GUI_TC_EDIT_CUSTOM_NAME: '<aqua>Benutzerdefinierter Name'
-GUI_TC_EDIT_TITLE: '<blue>Konfiguration bearbeiten</blue><gray>:</gray> '
-GUI_TC_LIST_TITLE: '<blue>Angebots-Konfigurationen'
-GUI_TC_LIST_ADD_CONFIG: '<green>Konfiguration hinzufügen'
-GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  Klicken um eine neue Konfiguration zu erstellen'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...und <value> mehr.'
-GUI_TRADE_LIST_TITLE: '<blue>Konfiguration</blue><gray>:</gray> '
-GUI_TRADE_LIST_EDIT_CONFIG: '<green>Bearbeite Einstellungen der Konfiguration'
-GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic>  Klicken um Einstellungen der Konfiguration zu bearbeiten'
-GUI_TRADE_LIST_NEW_TRADE: '<green>Neuer Handel'
-GUI_TRADE_LIST_NEW_TRADE_LORE: '<gray>  Klicken um ein neues Angebot zu erstellen'
-GUI_TRADE_CANCEL: '<red>Abbrechen'
-GUI_TRADE_CANCEL_LORE: '<gray><italic>  Klicken um abzubrechen und zurückzukehren'
-GUI_TRADE_SAVE: '<green>Speichern'
-GUI_TRADE_SAVE_LORE: '<gray><italic>  Klicken um zu speichern und zurückzukehren'
-GUI_TRADE_INFO: '<yellow>Information!'
-GUI_TRADE_INFO_LORE: ' <aqua>-</aqua> <white>Damit die Einstellungen gespeichert werden können,|   <white>musst du ein Hauptitem,|   <white>und ein Nebenitem einstellen.'
-GUI_TRADE_DELETE: '<red>Löschen'
-GUI_TRADE_DELETE_LORE: '<white> <aqua>-</aqua> Klicken um dieses Angebot zu löschen'
-GUI_CONFIG_DELETE_LORE: '<white> <aqua>-</aqua> Klicken um die Händlerkonfiguration zu löschen'
-GUI_TRADE_EXP_REWARD: '<green>Erfahrungsbelohnung'
-GUI_TRADE_NO_EXP_REWARD: '<red>Keine Erfahrungsbelohnung'
-GUI_TRADE_MAX_USES: '<aqua>Maximale Benutzer'
-GUI_TRADE_TRADE_NAME: '<aqua>Angebotsname'
-GUI_TRADE_INGREDIENT_1: '<green>Item Nr. 1'
-GUI_TRADE_INGREDIENT_2: '<green>Item Nr. 2'
-GUI_TRADE_RESULT: '<green>Ergebnis'
-GUI_TRADE_REQUIRED_LORE: '<aqua> - <gray>Klicke mit einem Item um einzustellen| <aqua>- <gray>Klicke ohne Item um zurückzusetzen| <aqua>- <gray>Erforderlich'
-GUI_TRADE_OPTIONAL_LORE: '<aqua> - <gray>Klicke mit einem Item um einzustellen| <aqua>- <gray>Klicke ohne Item um zurückzusetzen| <aqua>- <gray>Optional'
-GUI_TRADE_CREATE_TITLE: '<blue>Neues Angebot'
-GUI_TRADE_EDIT_TITLE: '<blue>Konfiguration der Angebote</blue><gray>:</gray> '
-GUI_PH_CONFIG_TITLE: 'Konfiguaration <blue>Spielerköpfe</blue>'
-GUI_PH_CONFIG_ENABLED: '<green>Fügt Spielerköpfe vom Server zu Wandering Traders hinzu.'
-GUI_PH_CONFIG_DISABLED: '<red>Fükt keine Spielerköpfe vom Server zu Wandering Traders hinzu.'
-GUI_PH_CONFIG_AMOUNT: '<aqua>Wie viele Spielerkopfe werden dem Händler hinzugefügt?'
-GUI_PH_CONFIG_AMOUNT_HEADS: '<aqua>Wie viele Spielerköpfe von jedem Händler?'
-GUI_PH_CONFIG_CHANCE: '<aqua>Wie hoch ist die Chance, dass ein Händler einen Spielerkopf anbietet?'
-GUI_PH_CONFIG_BLACKLIST: '<aqua>Spielerkopf Blacklist'
-GUI_PH_CONFIG_RESULT_LORE: '<aqua>Ergebnis der Überlieferungszeile'
-GUI_PH_CONFIG_SAVE_LORE: '<gray><italic>  Klicken um Einstellungen zu speichern'
-GUI_PH_CONFIG_DAYS: '<aqua>Wie viele Tage seit der letzten Anmeldung werden Spielerköpfe hinzugefügt?'
-GUI_PH_CONFIG_DAYS_LORE: '<gray><italic>  Zum Ignorieren auf -1 setzen.'
-GUI_PH_CONFIG_PWL_DISABLED: '<red>Berechtigung wird nicht benötigt, um einen Kopf hinzuzufügen.'
-GUI_PH_CONFIG_PWL_ENABLED: '<green>Berechtigung wird benötigt, um einen Kopf hinzuzufügen.'
-GUI_PH_CONFIG_PWL_LORE: '<aqua>-</aqua> <gray>  ''<white>wanderingtrades.headavailable</white>'''
-MESSAGE_ENTER_NUMBER: '<gradient:blue:aqua>Gebe eine Nummer ein</gradient><gray>:'
-MESSAGE_ENTER_NUMBER_OR_RANGE: '<aqua>Gebe eine Nummer oder Zahlenspanne ein<gray>. (</gray>Beispiel der Zahlenspanne<gray>: </gray>0<gray>:</gray>5<gray>)</gray></aqua><white>:'
-MESSAGE_NO_SPACES: '<gradient:red:gold><italic>Leerzeichen sind hier nicht erlaubt.'
-MESSAGE_NUMBER_GT_0: 'Nummer muss > 0 sein.'
-MESSAGE_NUMBER_GTE_0: 'Nummer muss >= 0 sein.'
-MESSAGE_NUMBER_GTE_N1: 'Nummer muss >= -1 sein.'
-MESSAGE_NUMBER_0T1: 'Nummer muss sich zwischen 0.00 und 1.00 befinden.'
-MESSAGE_SET_MAX_USES_PROMPT: 'Legt die maximale Anzahl der Benutzung von einem Handel fest.'
-MESSAGE_CONFIRM_KEY: 'Ja'
-MESSAGE_CONFIRM: 'Zum Bestätigen gebe "<key>" ein, andere Eingaben führen zum Abbruch.'
-MESSAGE_DELETE_PROMPT: 'Bist du sicher, dass du "<name>" löschen möchtest?'
-MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>Gebe einen Namen für eine neue Konfiguration ein</gradient><gray>:'
-MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>Gebe einen Namen für einen neues Angebot ein</gradient><gray>:'
-MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>Gebe einen benutzerdefinierten Namen ein</gradient><gray>:'
-MESSAGE_SET_HEADS_AMOUNT_PROMPT: 'Legt die Anzahl von einem Spielerkopf-Angebot fest.'
-MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT: 'Legt fest, wie viele unterschiedliche Spielerköpfe man pro Angebot erhält.'
-MESSAGE_CREATE_TITLE_OR_NONE_PROMPT: 'Gebe einen Namen oder "NONE" ein.'
-MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>Es muss ein neuer/einzigartiger Name sein.'
-MESSAGE_SET_RAND_AMOUNT_PROMPT: 'Stellt die Anzahl der zufälligen Angebote ein.'
-MESSAGE_SET_CHANCE_PROMPT: 'Legt die Chance zwischen 0.00 und 1.00 fest.'
-MESSAGE_SET_REFRESH_DELAY_PROMPT: 'Legt die Minuten zwischen den Angebotsaktualisierungen fest.'
-MESSAGE_CURRENT_VALUE: '<white>Momentaner Wert<gray>:</gray> <value>'
-MESSAGE_SET_HEADS_DAYS_PROMPT: 'Legt fest, ab wie vielen Tagen der letzten Anmeldung die Spielerköpfe nicht mehr angeboten werden.'
-MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Die neue Konfiguration wurde erfolgreich erstellt und nachgeladen.'
-MESSAGE_CREATE_CONFIG_CANCEL: '<red>Konfigurationserstellung abgebrochen.'
-MESSAGE_YOU_ENTERED: "<white>Deine Eingabe<gray>:</gray> <value>"
-MESSAGE_YES_NO: "Verwendest du diesen Wert? Eingabe oder Klicken: <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:'/wanderingtrades accept-input yes'><green>Ja</green></hover> oder <hover:show_text:'<green>Klicken um auszuführen!'><click:run_command:'/wanderingtrades accept-input no'><red>Nein</red></hover>"
-MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Änderungen verworfen"
-MESSAGE_EDIT_SAVED: "<italic><green>Änderungen gespeichert"
-MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Gebe einen WorldGuard-Regionsnamen ein.</gradient><gray>:"
-MESSAGE_ADD_BLACKLIST_PLAYER: "<gradient:aqua:blue>Fügt einen Spielernamen zur Blacklist hinzu</gradient><gray>:"
-MESSAGE_ADD_LORE_PROMPT: "<gradient:aqua:blue>Geben Sie eine neue Überlieferungszeile ein</gradient><gray>:"
-COMMAND_ARGUMENT_HELP_QUERY: "Abfragehilfe"
-HELP_HELP: "WanderingTrades Hilfe"
-HELP_COMMAND: "Befehl"
-HELP_DESCRIPTION: "Beschreibung"
-HELP_NO_DESCRIPTION: "Keine Beschreibung"
-HELP_ARGUMENTS: "Argumente"
-HELP_OPTIONAL: "Optional"
-HELP_SHOWING_RESULTS_FOR_QUERY: "Zeigt die Ergebnisse der Abfrage."
-HELP_NO_RESULTS_FOR_QUERY: "Keine Ergebnisse für die Abfrage."
-HELP_AVAILABLE_COMMANDS: "Verfügbare Befehle"
-HELP_CLICK_TO_SHOW_HELP: "Klicken um Hilfe für diesen Befehl anzuzeigen."
-HELP_PAGE_OUT_OF_RANGE: "Fehler: Seite <page> ist nicht in Reichweite. Sie muss sich innerhalb der Reichweite befinden. [1, <max_pages>]"
-HELP_CLICK_FOR_NEXT_PAGE: "Klicken für die nächste Seite"
-HELP_CLICK_FOR_PREVIOUS_PAGE: "Klicken für die vorherige Seite"
-COMMAND_INVALID_SYNTAX: "<red>Ungültige Befehlseingabe. Die korrekte Befehlssyntax lautet: <syntax>"
-COMMAND_INVALID_SENDER: "<red>Ungültiger Befehlseingabeort. Du musst vom Typ <gray><type></gray> sein."
-COMMAND_INVALID_ARGUMENT: "<red>Ungültiges Befehlsargument: <error>"
-COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "'{input}' ist keine von den folgenden: {acceptableValues}"
-COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "'{input}' ist kein gültiger Ort. Erforderliches Format ist '<x> <y> <z>'"
-COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "Absolute und relative Koordinaten können nicht gemischt werden. (Entweder alle Koordinaten nutzen '^' oder keine tut es.)"
+command:
+  about:
+    description: Über WanderingTrades
+  argument:
+    help-query: Abfragehilfe
+  exception:
+    parse:
+      failure-enum: '''{input}'' ist keine von den folgenden: {acceptableValues}'
+      failure-location-invalid-format: '''{input}'' ist kein gültiger Ort. Erforderliches
+        Format ist ''<x> <y> <z>'''
+      failure-location-mixed-local-absolute: Absolute und relative Koordinaten können
+        nicht gemischt werden. (Entweder alle Koordinaten nutzen '^' oder keine tut
+        es.)
+      no-trade-config: Es sind keine Angebots-Konfigurationen mit diesem Namen geladen.
+    invalid-argument: '<red>Ungültiges Befehlsargument: <error>'
+    invalid-sender: <red>Ungültiger Befehlseingabeort. Du musst vom Typ <gray><type></gray>
+      sein.
+    invalid-syntax: '<red>Ungültige Befehlseingabe. Die korrekte Befehlssyntax lautet:
+      <syntax>'
+  editconfig:
+    description: Öffnet ein Interface um die Plugineinstellungen (config.yml) zu bearbeiten.
+  editplayerheads:
+    description: Öffnet ein Interface um die Spielerkopfeinstellungen (playerheads.yml)
+      zu bearbeiten.
+  edit:
+    description: Öffnet ein Interface um Angebots-Konfigurationen zu erstellen oder
+      bearbeiten.
+  help:
+    description: WanderingTrades Hilfe
+    message:
+      arguments: Argumente
+      available-commands: Verfügbare Befehle
+      click-for-next-page: Klicken für die nächste Seite
+      click-for-previous-page: Klicken für die vorherige Seite
+      click-to-show-help: Klicken um Hilfe für diesen Befehl anzuzeigen.
+      command: Befehl
+      description: Beschreibung
+      help: WanderingTrades Hilfe
+      no-description: Keine Beschreibung
+      no-results-for-query: Keine Ergebnisse für die Abfrage.
+      optional: Optional
+      page-out-of-range: 'Fehler: Seite <page> ist nicht in Reichweite. Sie muss sich
+        innerhalb der Reichweite befinden. [1, <max_pages>]'
+      showing-results-for-query: Zeigt die Ergebnisse der Abfrage.
+  list:
+    description: Zeigt die geladenen Angebots-Konfigurationen an.
+    message: '<blue>Geladene Angebots-Konfigurationen</blue><gray>:'
+  reload:
+    message: <gradient:#6B0BDE:#BA0DFA>Lädt die WanderingTrades-Konfiguration neu...
+    description: Lädt alle Konfigurationsdateien von WanderingTrades nach.
+    done-message: <green>Erledigt...
+  summonnatural:
+    description: Erzeugt einen natürlichen Händler mit einigen Anpassungsoptionen.
+  summonvillager:
+    description: Erzeugt einen Dorfbewohner mit der spezifischen Konfiguration. Ignoriert
+      ob die Konfiguration deaktiviert wurde.
+  summon:
+    description: Erzeugt einen Händler mit der spezifischen Konfiguration. Ignoriert
+      ob die Konfiguration deaktiviert wurde.
+    malformed-config: <red>Diese Konfiguration enthält fehler. Stelle sicher, dass
+      die Rezepte mindestens ein Item enthalten.
+gui:
+  back:
+    name: <red>Zurück
+    lore: <gray><italic>  Klicken um zurückzukehren
+  close:
+    name: <red>Schließen
+    lore: <gray><italic>  Klicken um zu schließen
+  config:
+    allow-multiple-sets: <green>Erlaubt mehr als ein Angebot pro Angebots-Konfiguration.
+    allow-night-invisibility: <red>Not preventing use of invisibility potions of /wt
+      summoned traders
+    disabled: <red>Fügt keine Angebote zu natürlich generierten Händlern hinzu.
+    disallow-multiple-sets: <red>Erlaubt nicht mehr als ein Angebot pro Angebots-Konfiguration.
+    enabled: <green>Fügt Angebote zu natürlich generierten Händlern hinzu.
+    keep-original: <red>Entfernt nicht die Wandering Trader Angebote.
+    no-refresh: <red>Aktualisiert nicht die Angebote von "/wt summon angebote"
+    prevent-night-invisibility: <green>Preventing use of invisibility potions of /wt
+      summoned traders
+    refresh: <green>Aktualisiert die Angebote von "/wt summon angebote"
+    refresh-minutes:
+      name: <green>Wie viele Minuten bis zur Angebotsaktualisierung?
+      lore: <white>Wert</white><gray>:</gray> <aqua><value> Minuten
+    remove-original: <green>Entfernt die originalen Wandering Trader Angebote.
+    title: <blue>WanderingTrades</blue><gray>:</gray> Konfiguration
+    wg-black: <aqua>Modus</aqua><gray>:</gray> WorldGuard Region Blacklist
+    wg-list:
+      name: <aqua>Liste der Regionen für die White-/Blacklist
+      lore: <gray>  Linksklick/Rechtsklick = Hinzuzufügen/Entfernen
+    wg-white: <aqua>Modus</aqua><gray>:</gray> WorldGuard Region Whitelist
+  tc-edit:
+    config-delete-lore: <white> <aqua>-</aqua> Klicken um die Händlerkonfiguration
+      zu löschen
+    chance: <aqua>Möglichkeit
+    custom-name: <aqua>Benutzerdefinierter Name
+    disabled: <red>Deaktiviert
+    enabled: <green>Aktiviert
+    invincible: <green>Unbesiegbar
+    not-invincible: <red>Nicht unbesiegbar
+    not-randomized: <red>Nicht zufällig
+    randomized: <green>Zufällig
+    random-amount: <aqua>Zufällige Menge
+    title: '<blue>Konfiguration bearbeiten</blue><gray>:</gray> '
+  edit-lore: <gray><italic>  Klickem um zu bearbeiten
+  paged:
+    last:
+      name: <green>Letzte Seite
+      lore: <gray><italic>  Klicken für die letzte Seite
+    next:
+      name: <green>Nächste Seite
+      lore: <gray><italic>  Klicken für die nächste Seite
+  ph-config:
+    amount: <aqua>Wie viele Spielerkopfe werden dem Händler hinzugefügt?
+    amount-heads: <aqua>Wie viele Spielerköpfe von jedem Händler?
+    blacklist: <aqua>Spielerkopf Blacklist
+    chance: <aqua>Wie hoch ist die Chance, dass ein Händler einen Spielerkopf anbietet?
+    days: <aqua>Wie viele Tage seit der letzten Anmeldung werden Spielerköpfe hinzugefügt?
+    days-lore: <gray><italic>  Zum Ignorieren auf -1 setzen.
+    disabled: <red>Fükt keine Spielerköpfe vom Server zu Wandering Traders hinzu.
+    enabled: <green>Fügt Spielerköpfe vom Server zu Wandering Traders hinzu.
+    pwl-disabled: <red>Berechtigung wird nicht benötigt, um einen Kopf hinzuzufügen.
+    pwl-enabled: <green>Berechtigung wird benötigt, um einen Kopf hinzuzufügen.
+    pwl-lore: <aqua>-</aqua> <gray>  '<white>wanderingtrades.headavailable</white>'
+    result-lore: <aqua>Ergebnis der Überlieferungszeile
+    save-lore: <gray><italic>  Klicken um Einstellungen zu speichern
+    title: Konfiguaration <blue>Spielerköpfe</blue>
+  tc-list:
+    add-config:
+      name: <green>Konfiguration hinzufügen
+      lore: <gray><italic>  Klicken um eine neue Konfiguration zu erstellen
+    and-more: '  <gray><italic>...und <value> mehr.'
+    title: <blue>Angebots-Konfigurationen
+  toggle-lore: <gray><italic>  Klicken um umzuschalten
+  trade:
+    cancel:
+      name: <red>Abbrechen
+      lore: <gray><italic>  Klicken um abzubrechen und zurückzukehren
+    create:
+      title: <blue>Neues Angebot
+    delete:
+      name: <red>Löschen
+      lore: <white> <aqua>-</aqua> Klicken um dieses Angebot zu löschen
+    edit:
+      title: '<blue>Konfiguration der Angebote</blue><gray>:</gray> '
+    exp-reward: <green>Erfahrungsbelohnung
+    info:
+      name: <yellow>Information!
+      lore:
+      - ' <aqua>-</aqua> <white>Damit die Einstellungen gespeichert werden können,'
+      - '   <white>musst du ein Hauptitem,'
+      - '   <white>und ein Nebenitem einstellen.'
+    ingredient-1: <green>Item Nr. 1
+    ingredient-2: <green>Item Nr. 2
+    max-uses: <aqua>Maximale Benutzer
+    no-exp-reward: <red>Keine Erfahrungsbelohnung
+    optional-lore:
+    - <aqua> - <gray>Klicke mit einem Item um einzustellen
+    - ' <aqua>- <gray>Klicke ohne Item um zurückzusetzen'
+    - ' <aqua>- <gray>Optional'
+    required-lore:
+    - <aqua> - <gray>Klicke mit einem Item um einzustellen
+    - ' <aqua>- <gray>Klicke ohne Item um zurückzusetzen'
+    - ' <aqua>- <gray>Erforderlich'
+    result: <green>Ergebnis
+    save:
+      name: <green>Speichern
+      lore: <gray><italic>  Klicken um zu speichern und zurückzukehren
+    trade-name: <aqua>Angebotsname
+  trade-list:
+    edit-config:
+      name: <green>Bearbeite Einstellungen der Konfiguration
+      lore: <gray><italic>  Klicken um Einstellungen der Konfiguration zu bearbeiten
+    new-trade:
+      name: <green>Neuer Handel
+      lore: <gray>  Klicken um ein neues Angebot zu erstellen
+    title: '<blue>Konfiguration</blue><gray>:</gray> '
+  value-lore: '<white>Wert</white><gray>:</gray> '
+conversation:
+  add-blacklist-player: '<gradient:aqua:blue>Fügt einen Spielernamen zur Blacklist
+    hinzu</gradient><gray>:'
+  add-lore-prompt: '<gradient:aqua:blue>Geben Sie eine neue Überlieferungszeile ein</gradient><gray>:'
+  add-wg-region: '<gradient:aqua:blue>Gebe einen WorldGuard-Regionsnamen ein.</gradient><gray>:'
+  confirm: Zum Bestätigen gebe "<key>" ein, andere Eingaben führen zum Abbruch.
+  confirm-key: Ja
+  create-config-cancel: <red>Konfigurationserstellung abgebrochen.
+  create-config-prompt: '<gradient:blue:aqua>Gebe einen Namen für eine neue Konfiguration
+    ein</gradient><gray>:'
+  create-config-success: <green>Die neue Konfiguration wurde erfolgreich erstellt
+    und nachgeladen.
+  create-title-or-none-prompt: Gebe einen Namen oder "NONE" ein.
+  create-trade-prompt: '<gradient:blue:aqua>Gebe einen Namen für einen neues Angebot
+    ein</gradient><gray>:'
+  create-unique: <gradient:red:gold><italic>Es muss ein neuer/einzigartiger Name sein.
+  current-value: <white>Momentaner Wert<gray>:</gray> <value>
+  custom-name-prompt: '<gradient:blue:aqua>Gebe einen benutzerdefinierten Namen ein</gradient><gray>:'
+  delete-prompt: Bist du sicher, dass du "<name>" löschen möchtest?
+  edit-cancelled: <italic><gradient:red:gold>Änderungen verworfen
+  edit-saved: <italic><green>Änderungen gespeichert
+  enter-number: '<gradient:blue:aqua>Gebe eine Nummer ein</gradient><gray>:'
+  enter-number-or-range: '<aqua>Gebe eine Nummer oder Zahlenspanne ein<gray>. (</gray>Beispiel
+    der Zahlenspanne<gray>: </gray>0<gray>:</gray>5<gray>)</gray></aqua><white>:'
+  no-spaces: <gradient:red:gold><italic>Leerzeichen sind hier nicht erlaubt.
+  number-0t1: Nummer muss sich zwischen 0.00 und 1.00 befinden.
+  number-gte-0: Nummer muss >= 0 sein.
+  number-gte-n1: Nummer muss >= -1 sein.
+  number-gt-0: Nummer muss > 0 sein.
+  set-chance-prompt: Legt die Chance zwischen 0.00 und 1.00 fest.
+  set-heads-amount-prompt: Legt die Anzahl von einem Spielerkopf-Angebot fest.
+  set-heads-days-prompt: Legt fest, ab wie vielen Tagen der letzten Anmeldung die
+    Spielerköpfe nicht mehr angeboten werden.
+  set-heads-trades-amount-prompt: Legt fest, wie viele unterschiedliche Spielerköpfe
+    man pro Angebot erhält.
+  set-max-uses-prompt: Legt die maximale Anzahl der Benutzung von einem Handel fest.
+  set-rand-amount-prompt: Stellt die Anzahl der zufälligen Angebote ein.
+  set-refresh-delay-prompt: Legt die Minuten zwischen den Angebotsaktualisierungen
+    fest.
+  yes-no: 'Verwendest du diesen Wert? Eingabe oder Klicken: <hover:show_text:''<green>Klicken
+    um auszuführen!''><click:run_command:''/wanderingtrades accept-input yes''><green>Ja</green></hover>
+    oder <hover:show_text:''<green>Klicken um auszuführen!''><click:run_command:''/wanderingtrades
+    accept-input no''><red>Nein</red></hover>'
+  you-entered: <white>Deine Eingabe<gray>:</gray> <value>

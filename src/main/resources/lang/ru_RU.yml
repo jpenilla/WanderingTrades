@@ -1,149 +1,218 @@
 # Wandering Trades ${project.version} ru_RU language config \\ Russian translate by Z1xus, with love <3
-COMMAND_LIST_LOADED: '<blue>Загруженные конфигурации торгов</blue><gray>:'
-COMMAND_SUMMON_NO_CONFIG: 'Не существует конфигурации торгов с таким именем.'
-COMMAND_SUMMON_MALFORMED_CONFIG: '<red>Эта конфигурация неправильно сформирована. Убедитесь, что в рецептах есть хотя бы один ингредиент.'
-COMMAND_RELOAD: '<gradient:#6B0BDE:#BA0DFA>Перезагрузка конфигурации WanderingTrades...'
-COMMAND_RELOAD_DONE: '<green>Выполнено.'
-COMMAND_WT_HELP: 'Помощь WanderingTrades'
-COMMAND_WT_ABOUT: 'О WanderingTrades'
-COMMAND_WT_RELOAD: 'Перезагружает все файлы конфигурации для WanderingTrades'
-COMMAND_WT_LIST: 'Список загруженных конфигураций торгов.'
-COMMAND_WT_EDIT: 'Открывает меню для редактирования и создания торговых конфигураций'
-COMMAND_WT_CONFIG: 'Открывает меню для редактирования параметров config.yml'
-COMMAND_WT_PH_CONFIG: 'Открывает меню для редактирования настроек playerheads.yml'
-COMMAND_SUMMON: 'Вызывает Странствующего торговца с указанным конфигом. Игнорирует, отключен ли конфиг.'
-COMMAND_SUMMON_NATURAL: 'Вызывает ''естественного'' Странствующего торговца с некоторыми возможностями модификации'
-COMMAND_VSUMMON: 'Вызывает жителя деревни с указанным конфигом. Игнорирует, отключен ли конфиг.'
-GUI_BACK: '<red>Назад'
-GUI_BACK_LORE: '<gray><italic>  Нажмите, чтобы вернуться назад'
-GUI_CLOSE: '<red>Закрыть'
-GUI_CLOSE_LORE: '<gray><italic>  Нажмите, чтобы закрыть'
-GUI_TOGGLE_LORE: '  <gray><italic>Нажмите, чтобы переключить'
-GUI_EDIT_LORE: '  <gray><italic>Нажмите для редактирования'
-GUI_VALUE_LORE: '<white>Значение</white><gray>:</gray> '
-GUI_PAGED_NEXT: '<green>Следующая страница'
-GUI_PAGED_NEXT_LORE: '<gray><italic>  Нажмите для перехода на следующую страницу'
-GUI_PAGED_LAST: '<green>Последняя страница'
-GUI_PAGED_LAST_LORE: '<gray><italic>  Нажмите для просмотра предыдущей страницы'
-GUI_CONFIG_ENABLED: '<green>Добавление сделок к торговцам, заспавненых естественным путем'
-GUI_CONFIG_DISABLED: '<red>Не добавлять сделки к трейдерам, заспавненых естественным путем'
-GUI_CONFIG_ALLOW_MULTIPLE_SETS: '<green>Разрешить более одной торговой конфигурации для одного торговца'
-GUI_CONFIG_DISALLOW_MULTIPLE_SETS: '<red>Не разрешать более одной торговой конфигурации для одного торговца'
-GUI_CONFIG_REMOVE_ORIGINAL: '<green>Удалять оригинальных сделок Странствующего торговца'
-GUI_CONFIG_KEEP_ORIGINAL: '<red>Не удалять оригинальные сделки Странствующего торговца'
-GUI_CONFIG_REFRESH: '<green>Автообновлять сделки торговцев вызванных через /wt'
-GUI_CONFIG_NO_REFRESH: '<red>Не автообновлять сделки торговцев вызванных через /wt'
-GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY: '<green>Preventing use of invisibility potions of /wt summoned traders'
-GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY: '<red>Not preventing use of invisibility potions of /wt summoned traders'
-GUI_CONFIG_WG_WHITE: '<aqua>Режим</aqua><gray>:</gray> Белый список регионов WorldGuard'
-GUI_CONFIG_WG_BLACK: '<aqua>Режим</aqua><gray>:</gray> Черный список регионов WorldGuard'
-GUI_CONFIG_WG_LIST: '<aqua>Список регионов для белого/черного списка'
-GUI_CONFIG_WG_LIST_LORE: '  <gray>ЛКМ для добавления, ПКМ для удаления'
-GUI_CONFIG_REFRESH_MINUTES: '<green>Сколько минут между обновлениями сделок, если включено'
-GUI_CONFIG_REFRESH_MINUTES_LORE: '<white>Значение</white><gray>:</gray> <aqua><value> минут(у)'
-GUI_CONFIG_TITLE: '<gray>:</gray> Конфигурация <blue>WanderingTrades</blue>'
-GUI_TC_EDIT_ENABLED: '<green>Включено'
-GUI_TC_EDIT_DISABLED: '<red>Отключено'
-GUI_TC_EDIT_RANDOMIZED: '<green>Рандомизированное'
-GUI_TC_EDIT_NOT_RANDOMIZED: '<red>Не рандомизированное'
-GUI_TC_EDIT_INVINCIBLE: '<green>Неуязвимый'
-GUI_TC_EDIT_NOT_INVINCIBLE: '<red>Уязвимый'
-GUI_TC_EDIT_RANDOM_AMOUNT: '<aqua>Случайное количество'
-GUI_TC_EDIT_CHANCE: '<aqua>Шанс'
-GUI_TC_EDIT_CUSTOM_NAME: '<aqua>Пользовательское имя'
-GUI_TC_EDIT_TITLE: '<blue>Редактирование конфигурации</blue><gray>:</gray> '
-GUI_TC_LIST_TITLE: '<blue>Конфигурации торговли'
-GUI_TC_LIST_ADD_CONFIG: '<green>Добавить конфиг'
-GUI_TC_LIST_ADD_CONFIG_LORE: '<gray><italic>  Нажмите для создания нового конфига'
-GUI_TC_LIST_AND_MORE: '  <gray><italic>...и <value> больше'
-GUI_TRADE_LIST_TITLE: '<blue>Конфигурация торговли</blue><gray>:</gray> '
-GUI_TRADE_LIST_EDIT_CONFIG: '<green>Редактирование настроек конфигурации'
-GUI_TRADE_LIST_EDIT_CONFIG_LORE: '<gray><italic>  Нажмите для редактирования параметров этой конфигурации'
-GUI_TRADE_LIST_NEW_TRADE: '<green>Новая сделка'
-GUI_TRADE_LIST_NEW_TRADE_LORE: '  <gray>Нажмите для создания новой сделки'
-GUI_TRADE_CANCEL: '<red>Отмена'
-GUI_TRADE_CANCEL_LORE: '<gray><italic>  Нажмите, чтобы отменить и вернуться назад'
-GUI_TRADE_SAVE: '<green>Сохранить'
-GUI_TRADE_SAVE_LORE: '<gray><italic>  Нажмите, чтобы сохранить и вернуться назад'
-GUI_TRADE_INFO: '<yellow>Информация!'
-GUI_TRADE_INFO_LORE: ' <aqua>-</aqua> <white>Чтобы сохранить изменения,|   <white>у вас должен быть предмет результата,|   <white>имя сделки, и по крайней мере|   <white>один ингредиент.'
-GUI_TRADE_DELETE: '<red>Удалить'
-GUI_TRADE_DELETE_LORE: '<white> <aqua>-</aqua> Нажмите, чтобы удалить эту сделку'
-GUI_CONFIG_DELETE_LORE: '<white> <aqua>-</aqua> Нажмите, чтобы удалить эту конфигурацию торговли'
-GUI_TRADE_EXP_REWARD: '<green>Получать опыт'
-GUI_TRADE_NO_EXP_REWARD: '<red>Не получать опыт'
-GUI_TRADE_MAX_USES: '<aqua>Максимальное кол-во использований'
-GUI_TRADE_TRADE_NAME: '<aqua>Имя сделки'
-GUI_TRADE_INGREDIENT_1: '<green>Первый ингредиент'
-GUI_TRADE_INGREDIENT_2: '<green>Второй ингредиент'
-GUI_TRADE_RESULT: '<green>Результат'
-GUI_TRADE_REQUIRED_LORE: ' <aqua>- <gray>Нажмите на предмет, чтобы установить| <aqua>- <gray>Нажмите без предмета для сброса| <aqua>- <gray>Required'
-GUI_TRADE_OPTIONAL_LORE: ' <aqua>- <gray>Нажмите на предмет, чтобы установить| <aqua>- <gray>Нажмите без предмета для сброса| <aqua>- <gray>Optional'
-GUI_TRADE_CREATE_TITLE: '<blue>Новая сделка'
-GUI_TRADE_EDIT_TITLE: '<blue>Редактирование сделки</blue><gray>:</gray> '
-GUI_PH_CONFIG_TITLE: 'Редактирование <blue>конфигурация голов игроков'
-GUI_PH_CONFIG_ENABLED: '<green>Добавлять головы с сервера к Странствующим торговцам'
-GUI_PH_CONFIG_DISABLED: '<red>Не добавлять головы с сервера Странствующим торговцам'
-GUI_PH_CONFIG_AMOUNT: '<aqua>Сколько сделок головы игрока нужно добавить для каждого торговца'
-GUI_PH_CONFIG_AMOUNT_HEADS: '<aqua>Сколько голов от каждой сделки'
-GUI_PH_CONFIG_CHANCE: '<aqua>Какова вероятность того, что Странствующий торговец получит голову.'
-GUI_PH_CONFIG_BLACKLIST: '<aqua>Черный список голов игроков'
-GUI_PH_CONFIG_RESULT_LORE: '<aqua>Результат лора головы'
-GUI_PH_CONFIG_SAVE_LORE: '  <gray><italic>Нажмите, чтобы сохранить ингредиенты'
-GUI_PH_CONFIG_DAYS: '<aqua>Сколько дней прошло с момента последнего входа в систему, чтобы включить голову'
-GUI_PH_CONFIG_DAYS_LORE: '  <gray><italic>Установите значение -1, чтобы игнорировать'
-GUI_PH_CONFIG_PWL_DISABLED: '<red>Не требует разрешения на добавление головы'
-GUI_PH_CONFIG_PWL_ENABLED: '<green>Требует разрешение на добавление головы'
-GUI_PH_CONFIG_PWL_LORE: '  <aqua>-</aqua> <gray>''<white>wanderingtrades.headavailable</white>'''
-MESSAGE_ENTER_NUMBER: '<gradient:blue:aqua>Введите число</gradient><gray>:'
-MESSAGE_ENTER_NUMBER_OR_RANGE: '<aqua>Введите число или диапазон<gray>. (</gray>Пример диапазона<gray>: </gray>0<gray>:</gray>5<gray>)</gray></aqua><white>:'
-MESSAGE_NO_SPACES: '<gradient:red:gold><italic>Spaces are not allowed here'
-MESSAGE_NUMBER_GT_0: 'Число должно быть > 0'
-MESSAGE_NUMBER_GTE_0: 'Число должно быть >= 0'
-MESSAGE_NUMBER_GTE_N1: 'Число должно быть >= -1'
-MESSAGE_NUMBER_0T1: 'Число должно быть от 0.00 до 1.00'
-MESSAGE_SET_MAX_USES_PROMPT: 'Установить максимальное кол-во сделок'
-MESSAGE_CONFIRM_KEY: 'да'
-MESSAGE_CONFIRM: 'Введите "<key>" для подтверждения или что-либо другое для отмены.'
-MESSAGE_DELETE_PROMPT: 'Вы уверены, что хотите удалить "<name>"?'
-MESSAGE_CREATE_CONFIG_PROMPT: '<gradient:blue:aqua>Введите имя для новой конфигурации</gradient><gray>:'
-MESSAGE_CREATE_TRADE_PROMPT: '<gradient:blue:aqua>Введите название для вашей новой сделки</gradient><gray>:'
-MESSAGE_CUSTOM_NAME_PROMPT: '<gradient:blue:aqua>Введите имя</gradient><gray>:'
-MESSAGE_SET_HEADS_AMOUNT_PROMPT: 'Установить количество голов на одну сделку'
-MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT: 'Установить количество сделок на головы для каждого торговца'
-MESSAGE_CREATE_TITLE_OR_NONE_PROMPT: 'Введите имя или "NONE"'
-MESSAGE_CREATE_UNIQUE: '<gradient:red:gold><italic>Должно быть новое/уникальное имя'
-MESSAGE_SET_RAND_AMOUNT_PROMPT: 'Настройка количества случайных сделок'
-MESSAGE_SET_CHANCE_PROMPT: 'Настройка шанса 0.00-1.00'
-MESSAGE_SET_REFRESH_DELAY_PROMPT: 'Установка минут между обновлениями сделок<reset>'
-MESSAGE_CURRENT_VALUE: '<white>Текущее значение<gray>:</gray> <value>'
-MESSAGE_SET_HEADS_DAYS_PROMPT: 'Установить количество дней с момента последнего входа в систему для игнорирования головы'
-MESSAGE_CREATE_CONFIG_SUCCESS: '<green>Успешно создана и перезагружена новая конфигурация'
-MESSAGE_CREATE_CONFIG_CANCEL: '<red>Отмена создания конфигурации'
-MESSAGE_YOU_ENTERED: "<white>Вы ввели<gray>:</gray> <value>"
-MESSAGE_YES_NO: "Использовать это значение? Введите или нажмите: <hover:show_text:'<green>Нажмите!'><click:run_command:'/wanderingtrades accept-input yes'><green>Да</green></hover> или <hover:show_text:'<green>Нажмите!'><click:run_command:'/wanderingtrades accept-input no'><red>Нет</red></hover>"
-MESSAGE_EDIT_CANCELLED: "<italic><gradient:red:gold>Редактирование отменено"
-MESSAGE_EDIT_SAVED: "<italic><green>Редактирование сохранено"
-MESSAGE_ADD_WG_REGION: "<gradient:aqua:blue>Введите имя региона WorldGuard</gradient><gray>:"
-MESSAGE_ADD_BLACKLIST_PLAYER: "<gradient:aqua:blue>Введите имя игрока для внесения в черный список</gradient><gray>:"
-MESSAGE_ADD_LORE_PROMPT: "<gradient:aqua:blue>Введите новую строку лора</gradient><gray>:"
-COMMAND_ARGUMENT_HELP_QUERY: "Справка"
-HELP_HELP: "Помощь WanderingTrades"
-HELP_COMMAND: "Команда"
-HELP_DESCRIPTION: "Описание"
-HELP_NO_DESCRIPTION: "Нет описания"
-HELP_ARGUMENTS: "Аргументы"
-HELP_OPTIONAL: "Опционально"
-HELP_SHOWING_RESULTS_FOR_QUERY: "Показаны результаты поиска по запросу"
-HELP_NO_RESULTS_FOR_QUERY: "Нет результатов по запросу"
-HELP_AVAILABLE_COMMANDS: "Доступные команды"
-HELP_CLICK_TO_SHOW_HELP: "Нажмите, чтобы показать справку для этой команды"
-HELP_PAGE_OUT_OF_RANGE: "Ошибка: Страница <page> не находится в диапазоне. Должна быть в диапазоне [1, <max_pages>]"
-HELP_CLICK_FOR_NEXT_PAGE: "Нажмите для перехода на следующую страницу"
-HELP_CLICK_FOR_PREVIOUS_PAGE: "Нажмите для просмотра предыдущей страницы"
-COMMAND_INVALID_SYNTAX: "<red>Неправильный синтаксис команды. Правильный синтаксис команды: <syntax>"
-COMMAND_INVALID_SENDER: "<red>Неверный отправитель команды. Вы должны быть <gray><type></gray>"
-COMMAND_INVALID_ARGUMENT: "<red>Недопустимый аргумент команды: <error>"
-COMMAND_ARGUMENT_PARSE_FAILURE_ENUM: "'{input}' не является одним из: {acceptableValues}"
-COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT: "'{input}' не является допустимым местоположением. Требуемый формат '<x> <y> <z>'"
-COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE: "Невозможно смешивать локальные и абсолютные координаты. (либо все координаты используют '^', либо ни одна не использует)"
+command:
+  about:
+    description: О WanderingTrades
+  argument:
+    help-query: Справка
+  exception:
+    parse:
+      failure-enum: '''{input}'' не является одним из: {acceptableValues}'
+      failure-location-invalid-format: '''{input}'' не является допустимым местоположением.
+        Требуемый формат ''<x> <y> <z>'''
+      failure-location-mixed-local-absolute: Невозможно смешивать локальные и абсолютные
+        координаты. (либо все координаты используют '^', либо ни одна не использует)
+      no-trade-config: Не существует конфигурации торгов с таким именем.
+    invalid-argument: '<red>Недопустимый аргумент команды: <error>'
+    invalid-sender: <red>Неверный отправитель команды. Вы должны быть <gray><type></gray>
+    invalid-syntax: '<red>Неправильный синтаксис команды. Правильный синтаксис команды:
+      <syntax>'
+  editconfig:
+    description: Открывает меню для редактирования параметров config.yml
+  editplayerheads:
+    description: Открывает меню для редактирования настроек playerheads.yml
+  edit:
+    description: Открывает меню для редактирования и создания торговых конфигураций
+  help:
+    description: Помощь WanderingTrades
+    message:
+      arguments: Аргументы
+      available-commands: Доступные команды
+      click-for-next-page: Нажмите для перехода на следующую страницу
+      click-for-previous-page: Нажмите для просмотра предыдущей страницы
+      click-to-show-help: Нажмите, чтобы показать справку для этой команды
+      command: Команда
+      description: Описание
+      help: Помощь WanderingTrades
+      no-description: Нет описания
+      no-results-for-query: Нет результатов по запросу
+      optional: Опционально
+      page-out-of-range: 'Ошибка: Страница <page> не находится в диапазоне. Должна
+        быть в диапазоне [1, <max_pages>]'
+      showing-results-for-query: Показаны результаты поиска по запросу
+  list:
+    description: Список загруженных конфигураций торгов.
+    message: '<blue>Загруженные конфигурации торгов</blue><gray>:'
+  reload:
+    message: <gradient:#6B0BDE:#BA0DFA>Перезагрузка конфигурации WanderingTrades...
+    description: Перезагружает все файлы конфигурации для WanderingTrades
+    done-message: <green>Выполнено.
+  summonnatural:
+    description: Вызывает 'естественного' Странствующего торговца с некоторыми возможностями
+      модификации
+  summonvillager:
+    description: Вызывает жителя деревни с указанным конфигом. Игнорирует, отключен
+      ли конфиг.
+  summon:
+    description: Вызывает Странствующего торговца с указанным конфигом. Игнорирует,
+      отключен ли конфиг.
+    malformed-config: <red>Эта конфигурация неправильно сформирована. Убедитесь, что
+      в рецептах есть хотя бы один ингредиент.
+gui:
+  back:
+    name: <red>Назад
+    lore: <gray><italic>  Нажмите, чтобы вернуться назад
+  close:
+    name: <red>Закрыть
+    lore: <gray><italic>  Нажмите, чтобы закрыть
+  config:
+    allow-multiple-sets: <green>Разрешить более одной торговой конфигурации для одного
+      торговца
+    allow-night-invisibility: <red>Not preventing use of invisibility potions of /wt
+      summoned traders
+    disabled: <red>Не добавлять сделки к трейдерам, заспавненых естественным путем
+    disallow-multiple-sets: <red>Не разрешать более одной торговой конфигурации для
+      одного торговца
+    enabled: <green>Добавление сделок к торговцам, заспавненых естественным путем
+    keep-original: <red>Не удалять оригинальные сделки Странствующего торговца
+    no-refresh: <red>Не автообновлять сделки торговцев вызванных через /wt
+    prevent-night-invisibility: <green>Preventing use of invisibility potions of /wt
+      summoned traders
+    refresh: <green>Автообновлять сделки торговцев вызванных через /wt
+    refresh-minutes:
+      name: <green>Сколько минут между обновлениями сделок, если включено
+      lore: <white>Значение</white><gray>:</gray> <aqua><value> минут(у)
+    remove-original: <green>Удалять оригинальных сделок Странствующего торговца
+    title: <gray>:</gray> Конфигурация <blue>WanderingTrades</blue>
+    wg-black: <aqua>Режим</aqua><gray>:</gray> Черный список регионов WorldGuard
+    wg-list:
+      name: <aqua>Список регионов для белого/черного списка
+      lore: '  <gray>ЛКМ для добавления, ПКМ для удаления'
+    wg-white: <aqua>Режим</aqua><gray>:</gray> Белый список регионов WorldGuard
+  tc-edit:
+    config-delete-lore: <white> <aqua>-</aqua> Нажмите, чтобы удалить эту конфигурацию
+      торговли
+    chance: <aqua>Шанс
+    custom-name: <aqua>Пользовательское имя
+    disabled: <red>Отключено
+    enabled: <green>Включено
+    invincible: <green>Неуязвимый
+    not-invincible: <red>Уязвимый
+    not-randomized: <red>Не рандомизированное
+    randomized: <green>Рандомизированное
+    random-amount: <aqua>Случайное количество
+    title: '<blue>Редактирование конфигурации</blue><gray>:</gray> '
+  edit-lore: '  <gray><italic>Нажмите для редактирования'
+  paged:
+    last:
+      name: <green>Последняя страница
+      lore: <gray><italic>  Нажмите для просмотра предыдущей страницы
+    next:
+      name: <green>Следующая страница
+      lore: <gray><italic>  Нажмите для перехода на следующую страницу
+  ph-config:
+    amount: <aqua>Сколько сделок головы игрока нужно добавить для каждого торговца
+    amount-heads: <aqua>Сколько голов от каждой сделки
+    blacklist: <aqua>Черный список голов игроков
+    chance: <aqua>Какова вероятность того, что Странствующий торговец получит голову.
+    days: <aqua>Сколько дней прошло с момента последнего входа в систему, чтобы включить
+      голову
+    days-lore: '  <gray><italic>Установите значение -1, чтобы игнорировать'
+    disabled: <red>Не добавлять головы с сервера Странствующим торговцам
+    enabled: <green>Добавлять головы с сервера к Странствующим торговцам
+    pwl-disabled: <red>Не требует разрешения на добавление головы
+    pwl-enabled: <green>Требует разрешение на добавление головы
+    pwl-lore: '  <aqua>-</aqua> <gray>''<white>wanderingtrades.headavailable</white>'''
+    result-lore: <aqua>Результат лора головы
+    save-lore: '  <gray><italic>Нажмите, чтобы сохранить ингредиенты'
+    title: Редактирование <blue>конфигурация голов игроков
+  tc-list:
+    add-config:
+      name: <green>Добавить конфиг
+      lore: <gray><italic>  Нажмите для создания нового конфига
+    and-more: '  <gray><italic>...и <value> больше'
+    title: <blue>Конфигурации торговли
+  toggle-lore: '  <gray><italic>Нажмите, чтобы переключить'
+  trade:
+    cancel:
+      name: <red>Отмена
+      lore: <gray><italic>  Нажмите, чтобы отменить и вернуться назад
+    create:
+      title: <blue>Новая сделка
+    delete:
+      name: <red>Удалить
+      lore: <white> <aqua>-</aqua> Нажмите, чтобы удалить эту сделку
+    edit:
+      title: '<blue>Редактирование сделки</blue><gray>:</gray> '
+    exp-reward: <green>Получать опыт
+    info:
+      name: <yellow>Информация!
+      lore:
+      - ' <aqua>-</aqua> <white>Чтобы сохранить изменения,'
+      - '   <white>у вас должен быть предмет результата,'
+      - '   <white>имя сделки, и по крайней мере'
+      - '   <white>один ингредиент.'
+    ingredient-1: <green>Первый ингредиент
+    ingredient-2: <green>Второй ингредиент
+    max-uses: <aqua>Максимальное кол-во использований
+    no-exp-reward: <red>Не получать опыт
+    optional-lore:
+    - ' <aqua>- <gray>Нажмите на предмет, чтобы установить'
+    - ' <aqua>- <gray>Нажмите без предмета для сброса'
+    - ' <aqua>- <gray>Optional'
+    required-lore:
+    - ' <aqua>- <gray>Нажмите на предмет, чтобы установить'
+    - ' <aqua>- <gray>Нажмите без предмета для сброса'
+    - ' <aqua>- <gray>Required'
+    result: <green>Результат
+    save:
+      name: <green>Сохранить
+      lore: <gray><italic>  Нажмите, чтобы сохранить и вернуться назад
+    trade-name: <aqua>Имя сделки
+  trade-list:
+    edit-config:
+      name: <green>Редактирование настроек конфигурации
+      lore: <gray><italic>  Нажмите для редактирования параметров этой конфигурации
+    new-trade:
+      name: <green>Новая сделка
+      lore: '  <gray>Нажмите для создания новой сделки'
+    title: '<blue>Конфигурация торговли</blue><gray>:</gray> '
+  value-lore: '<white>Значение</white><gray>:</gray> '
+conversation:
+  add-blacklist-player: '<gradient:aqua:blue>Введите имя игрока для внесения в черный
+    список</gradient><gray>:'
+  add-lore-prompt: '<gradient:aqua:blue>Введите новую строку лора</gradient><gray>:'
+  add-wg-region: '<gradient:aqua:blue>Введите имя региона WorldGuard</gradient><gray>:'
+  confirm: Введите "<key>" для подтверждения или что-либо другое для отмены.
+  confirm-key: да
+  create-config-cancel: <red>Отмена создания конфигурации
+  create-config-prompt: '<gradient:blue:aqua>Введите имя для новой конфигурации</gradient><gray>:'
+  create-config-success: <green>Успешно создана и перезагружена новая конфигурация
+  create-title-or-none-prompt: Введите имя или "NONE"
+  create-trade-prompt: '<gradient:blue:aqua>Введите название для вашей новой сделки</gradient><gray>:'
+  create-unique: <gradient:red:gold><italic>Должно быть новое/уникальное имя
+  current-value: <white>Текущее значение<gray>:</gray> <value>
+  custom-name-prompt: '<gradient:blue:aqua>Введите имя</gradient><gray>:'
+  delete-prompt: Вы уверены, что хотите удалить "<name>"?
+  edit-cancelled: <italic><gradient:red:gold>Редактирование отменено
+  edit-saved: <italic><green>Редактирование сохранено
+  enter-number: '<gradient:blue:aqua>Введите число</gradient><gray>:'
+  enter-number-or-range: '<aqua>Введите число или диапазон<gray>. (</gray>Пример диапазона<gray>:
+    </gray>0<gray>:</gray>5<gray>)</gray></aqua><white>:'
+  no-spaces: <gradient:red:gold><italic>Spaces are not allowed here
+  number-0t1: Число должно быть от 0.00 до 1.00
+  number-gte-0: Число должно быть >= 0
+  number-gte-n1: Число должно быть >= -1
+  number-gt-0: Число должно быть > 0
+  set-chance-prompt: Настройка шанса 0.00-1.00
+  set-heads-amount-prompt: Установить количество голов на одну сделку
+  set-heads-days-prompt: Установить количество дней с момента последнего входа в систему
+    для игнорирования головы
+  set-heads-trades-amount-prompt: Установить количество сделок на головы для каждого
+    торговца
+  set-max-uses-prompt: Установить максимальное кол-во сделок
+  set-rand-amount-prompt: Настройка количества случайных сделок
+  set-refresh-delay-prompt: Установка минут между обновлениями сделок<reset>
+  yes-no: 'Использовать это значение? Введите или нажмите: <hover:show_text:''<green>Нажмите!''><click:run_command:''/wanderingtrades
+    accept-input yes''><green>Да</green></hover> или <hover:show_text:''<green>Нажмите!''><click:run_command:''/wanderingtrades
+    accept-input no''><red>Нет</red></hover>'
+  you-entered: <white>Вы ввели<gray>:</gray> <value>
