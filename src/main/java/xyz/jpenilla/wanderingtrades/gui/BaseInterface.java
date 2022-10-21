@@ -10,21 +10,18 @@ import org.incendo.interfaces.core.click.ClickContext;
 import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.LangConfig;
 
 @DefaultQualifier(NonNull.class)
 public abstract class BaseInterface {
     protected final WanderingTrades plugin;
-    protected final LangConfig lang;
     protected final Validators validators;
     protected final PartsFactory parts;
     private final Supplier<ChestInterface> builtInterface = Suppliers.memoize(this::buildInterface);
 
     protected BaseInterface(final WanderingTrades plugin) {
         this.plugin = plugin;
-        this.lang = plugin.langConfig();
         this.validators = new Validators(this, plugin);
-        this.parts = new PartsFactory(plugin);
+        this.parts = new PartsFactory();
     }
 
     protected abstract ChestInterface buildInterface();

@@ -2,6 +2,9 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -16,8 +19,9 @@ import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Config;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
+import xyz.jpenilla.wanderingtrades.util.Components;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
@@ -31,11 +35,11 @@ public final class MainConfigInterface extends BaseInterface {
     protected ChestInterface buildInterface() {
         return ChestInterface.builder()
             .rows(5)
-            .title(this.plugin.miniMessage().deserialize(this.plugin.langConfig().get(Lang.GUI_CONFIG_TITLE)))
+            .title(Messages.GUI_CONFIG_TITLE.asComponent())
             .addTransform(this.parts.fill())
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_CONFIG_ENABLED),
-                this.lang.get(Lang.GUI_CONFIG_DISABLED),
+                Messages.GUI_CONFIG_ENABLED,
+                Messages.GUI_CONFIG_DISABLED,
                 this.plugin.config()::enabled,
                 this.saveConfig(value -> {
                     this.plugin.config().enabled(value);
@@ -45,24 +49,24 @@ public final class MainConfigInterface extends BaseInterface {
                 1
             ))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_CONFIG_ALLOW_MULTIPLE_SETS),
-                this.lang.get(Lang.GUI_CONFIG_DISALLOW_MULTIPLE_SETS),
+                Messages.GUI_CONFIG_ALLOW_MULTIPLE_SETS,
+                Messages.GUI_CONFIG_DISALLOW_MULTIPLE_SETS,
                 this.plugin.config()::allowMultipleSets,
                 this.saveConfig(this.plugin.config()::allowMultipleSets),
                 3,
                 1
             ))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_CONFIG_REMOVE_ORIGINAL),
-                this.lang.get(Lang.GUI_CONFIG_KEEP_ORIGINAL),
+                Messages.GUI_CONFIG_REMOVE_ORIGINAL,
+                Messages.GUI_CONFIG_KEEP_ORIGINAL,
                 this.plugin.config()::removeOriginalTrades,
                 this.saveConfig(this.plugin.config()::removeOriginalTrades),
                 5,
                 1
             ))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_CONFIG_REFRESH),
-                this.lang.get(Lang.GUI_CONFIG_NO_REFRESH),
+                Messages.GUI_CONFIG_REFRESH,
+                Messages.GUI_CONFIG_NO_REFRESH,
                 this.plugin.config()::refreshCommandTraders,
                 this.saveConfig(value -> {
                     this.plugin.config().refreshCommandTraders(value);
@@ -72,8 +76,8 @@ public final class MainConfigInterface extends BaseInterface {
                 1
             ))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY),
-                this.lang.get(Lang.GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY),
+                Messages.GUI_CONFIG_PREVENT_NIGHT_INVISIBILITY,
+                Messages.GUI_CONFIG_ALLOW_NIGHT_INVISIBILITY,
                 this.plugin.config()::preventNightInvisibility,
                 this.saveConfig(this.plugin.config()::preventNightInvisibility),
                 1,
@@ -81,9 +85,9 @@ public final class MainConfigInterface extends BaseInterface {
             ))
             .addTransform(chestItem(this::refreshMinutesElement, 3, 3))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_CONFIG_WG_WHITE),
+                Messages.GUI_CONFIG_WG_WHITE,
                 Material.WHITE_STAINED_GLASS_PANE,
-                this.lang.get(Lang.GUI_CONFIG_WG_BLACK),
+                Messages.GUI_CONFIG_WG_BLACK,
                 Material.BEDROCK,
                 this.plugin.config()::wgWhitelist,
                 this.saveConfig(this.plugin.config()::wgWhitelist),
@@ -104,29 +108,34 @@ public final class MainConfigInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> refreshMinutesElement() {
         return ItemStackElement.of(
-            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES))
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+                .customName(Messages.GUI_CONFIG_REFRESH_MINUTES)
                 .lore(
-                    this.lang.get(Lang.GUI_CONFIG_REFRESH_MINUTES_LORE).replace("{VALUE}", String.valueOf(this.plugin.config().refreshCommandTradersMinutes())),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
+                    Messages.GUI_CONFIG_REFRESH_MINUTES_LORE.withPlaceholders(Components.placeholder("value", this.plugin.config().refreshCommandTradersMinutes())),
+                    Messages.GUI_EDIT_LORE
                 )
-                .exitAndBuild(),
+                .build(),
             this::refreshMinutesClick
         );
     }
 
     private ItemStackElement<ChestPane> wgListElement() {
-        final List<String> wgListLore = new ArrayList<>(List.of(
-            this.lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
-            ""
+        final List<ComponentLike> wgListLore = new ArrayList<>(List.of(
+            Messages.GUI_CONFIG_WG_LIST_LORE,
+            Component.empty()
         ));
-        this.plugin.config().wgRegionList().forEach(region -> wgListLore.add(" <aqua>-</aqua> <white>" + region));
+        for (final String region : this.plugin.config().wgRegionList()) {
+            wgListLore.add(Component.textOfChildren(
+                Component.text(" - ", NamedTextColor.AQUA),
+                Component.text(region, NamedTextColor.WHITE)
+            ));
+        }
 
         return ItemStackElement.of(
-            ItemBuilder.create(Material.PAPER).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_CONFIG_WG_LIST))
+            ItemBuilder.create(Material.PAPER)
+                .customName(Messages.GUI_CONFIG_WG_LIST)
                 .lore(wgListLore)
-                .exitAndBuild(),
+                .build(),
             this::wgListClick
         );
     }
@@ -135,16 +144,15 @@ public final class MainConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_REFRESH_DELAY_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.plugin.config().refreshCommandTradersMinutes()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_REFRESH_DELAY_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.plugin.config().refreshCommandTradersMinutes())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGTE0)
             .onConfirmText(this.validators::confirmYesNo)
             .onAccepted((player, s) -> {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.plugin.config().refreshCommandTradersMinutes(Integer.parseInt(s));
                 this.plugin.config().save();
                 this.open(player);
@@ -171,16 +179,16 @@ public final class MainConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_ADD_WG_REGION));
+                this.plugin.chat().send(player, Messages.MESSAGE_ADD_WG_REGION);
                 return "";
             })
             .onValidateInput((player, input) -> {
                 if (input.contains(" ")) {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NO_SPACES));
+                    this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
                     return false;
                 }
                 if (TextUtil.containsCaseInsensitive(input, config.wgRegionList())) {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
                     return false;
                 }
                 return true;
@@ -191,7 +199,7 @@ public final class MainConfigInterface extends BaseInterface {
                 temp.add(s);
                 config.wgRegionList(temp);
                 config.save();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)

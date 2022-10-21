@@ -5,7 +5,9 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,16 +24,13 @@ import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.transform.PaperTransform;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.LangConfig;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
 
 import static org.incendo.interfaces.paper.transform.PaperTransform.chestFill;
 
 @DefaultQualifier(NonNull.class)
 public final class PartsFactory {
-    private final LangConfig lang;
     private final ItemStack plus = new HeadBuilder(HeadSkins.LIGHT_BLUE_PLUS)
         .customName(Component.text('+', NamedTextColor.YELLOW))
         .build();
@@ -46,44 +45,51 @@ public final class PartsFactory {
     private final ItemStack closeButton;
     private final ItemStack nextPage;
     private final ItemStack previousPage;
-    private final String toggleLore;
+    private final Messages.SingleMessage toggleLore;
 
-    PartsFactory(final WanderingTrades plugin) {
-        this.lang = plugin.langConfig();
-        this.toggleLore = this.lang.get(Lang.GUI_TOGGLE_LORE);
-        this.backButton = new HeadBuilder(HeadSkins.REDSTONE_BACKWARDS_ARROW).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_BACK))
-            .lore(this.lang.get(Lang.GUI_BACK_LORE))
-            .exitAndBuild();
-        this.closeButton = ItemBuilder.create(Material.BARRIER).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_CLOSE))
-            .lore(this.lang.get(Lang.GUI_CLOSE_LORE))
-            .exitAndBuild();
-        this.saveTradeButton = new HeadBuilder(HeadSkins.GREEN_CHECK_ON_BLACK).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_SAVE))
-            .lore(this.lang.get(Lang.GUI_TRADE_SAVE_LORE))
-            .exitAndBuild();
-        this.nextPage = ItemBuilder.create(Material.ARROW).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_PAGED_NEXT))
-            .lore(this.lang.get(Lang.GUI_PAGED_NEXT_LORE))
-            .exitAndBuild();
-        this.previousPage = ItemBuilder.create(Material.FEATHER).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_PAGED_LAST))
-            .lore(this.lang.get(Lang.GUI_PAGED_LAST_LORE))
-            .exitAndBuild();
+    PartsFactory() {
+        this.toggleLore = Messages.GUI_TOGGLE_LORE;
+        this.backButton = new HeadBuilder(HeadSkins.REDSTONE_BACKWARDS_ARROW)
+            .customName(Messages.GUI_BACK)
+            .lore(Messages.GUI_BACK_LORE)
+            .build();
+        this.closeButton = ItemBuilder.create(Material.BARRIER)
+            .customName(Messages.GUI_CLOSE)
+            .lore(Messages.GUI_CLOSE_LORE)
+            .build();
+        this.saveTradeButton = new HeadBuilder(HeadSkins.GREEN_CHECK_ON_BLACK)
+            .customName(Messages.GUI_TRADE_SAVE)
+            .lore(Messages.GUI_TRADE_SAVE_LORE)
+            .build();
+        this.nextPage = ItemBuilder.create(Material.ARROW)
+            .customName(Messages.GUI_PAGED_NEXT)
+            .lore(Messages.GUI_PAGED_NEXT_LORE)
+            .build();
+        this.previousPage = ItemBuilder.create(Material.FEATHER)
+            .customName(Messages.GUI_PAGED_LAST)
+            .lore(Messages.GUI_PAGED_LAST_LORE)
+            .build();
+    }
+
+    public Component valueLore(final Object value, final TextColor color) {
+        return this.valueLore(Component.text(value.toString(), color));
+    }
+
+    public Component valueLore(final ComponentLike value) {
+        return Component.textOfChildren(Messages.GUI_VALUE_LORE, value);
     }
 
     public ItemStackElement<ChestPane> maxUsesElement(
         final int value,
         final ClickHandler<ChestPane, InventoryClickEvent, PlayerViewer, ClickContext<ChestPane, InventoryClickEvent, PlayerViewer>> clickHandler
     ) {
-        final ItemStack stack = ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_MAX_USES))
+        final ItemStack stack = ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+            .customName(Messages.GUI_TRADE_MAX_USES)
             .lore(
-                this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + value,
-                this.lang.get(Lang.GUI_EDIT_LORE)
+                this.valueLore(value, TextColor.color(0x0092FF)),
+                Messages.GUI_EDIT_LORE
             )
-            .exitAndBuild();
+            .build();
         return ItemStackElement.of(stack, clickHandler);
     }
 
@@ -99,7 +105,7 @@ public final class PartsFactory {
         return this.saveTradeButton;
     }
 
-    public String toggleLore() {
+    public Messages.SingleMessage toggleLore() {
         return this.toggleLore;
     }
 
@@ -158,8 +164,8 @@ public final class PartsFactory {
     }
 
     public Transform<ChestPane, PlayerViewer> toggle(
-        final String onName,
-        final String offName,
+        final ComponentLike onName,
+        final ComponentLike offName,
         final BooleanSupplier getter,
         final BooleanConsumer setter,
         final int x,
@@ -169,9 +175,9 @@ public final class PartsFactory {
     }
 
     public Transform<ChestPane, PlayerViewer> toggle(
-        final String onName,
+        final ComponentLike onName,
         final Material onMaterial,
-        final String offName,
+        final ComponentLike offName,
         final Material offMaterial,
         final BooleanSupplier getter,
         final BooleanConsumer setter,
@@ -182,8 +188,8 @@ public final class PartsFactory {
     }
 
     public ItemStackElement<ChestPane> toggle(
-        final String onName,
-        final String offName,
+        final ComponentLike onName,
+        final ComponentLike offName,
         final BooleanSupplier getter,
         final BooleanConsumer setter
     ) {
@@ -191,20 +197,29 @@ public final class PartsFactory {
     }
 
     public ItemStackElement<ChestPane> toggle(
-        final String onName,
+        final ComponentLike onName,
         final Material onMaterial,
-        final String offName,
+        final ComponentLike offName,
         final Material offMaterial,
         final BooleanSupplier getter,
         final BooleanConsumer setter
     ) {
         final Function<Boolean, ItemStack> item = on ->
             ItemBuilder.create(on ? onMaterial : offMaterial)
-                .miniMessageContext()
                 .customName(on ? onName : offName)
                 .lore(this.toggleLore)
-                .exitAndBuild();
+                .build();
         return toggle(item, getter, setter);
+    }
+
+    public static Transform<ChestPane, PlayerViewer> toggle(
+        final Function<Boolean, ItemStack> stack,
+        final BooleanSupplier getter,
+        final BooleanConsumer setter,
+        final int x,
+        final int y
+    ) {
+        return chestItem(() -> toggle(stack, getter, setter), x, y);
     }
 
     public static ItemStackElement<ChestPane> toggle(

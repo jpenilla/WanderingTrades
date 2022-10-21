@@ -10,7 +10,7 @@ import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
@@ -33,7 +33,7 @@ public final class TradeCreateInterface extends AbstractTradeInterface {
 
         return ChestInterface.builder()
             .rows(5)
-            .title(this.plugin.miniMessage().deserialize(this.lang.get(Lang.GUI_TRADE_CREATE_TITLE)))
+            .title(Messages.GUI_TRADE_CREATE_TITLE.asComponent())
             .addTransform(this.parts.fill())
             .addTransform(this.infoTransform())
             .addTransform(this.tradeNameTransform(this::tradeNameClick))
@@ -58,16 +58,16 @@ public final class TradeCreateInterface extends AbstractTradeInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_TRADE_PROMPT));
+                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_TRADE_PROMPT);
                 return "";
             })
             .onValidateInput((player, input) -> {
                 if (input.contains(" ")) {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NO_SPACES));
+                    this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
                     return false;
                 }
                 if (this.tradeConfig.tradesByName().containsKey(input)) {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
                     return false;
                 }
                 return true;

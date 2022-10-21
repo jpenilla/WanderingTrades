@@ -27,7 +27,7 @@ import xyz.jpenilla.wanderingtrades.command.commands.ConfigCommands;
 import xyz.jpenilla.wanderingtrades.command.commands.HelpCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.ReloadCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.SummonCommands;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 @DefaultQualifier(NonNull.class)
@@ -43,7 +43,7 @@ public final class Commands {
         this.commandManager = commandManager;
 
         new ExceptionHandler(plugin, commandManager).register();
-        this.registerMessageFactories(plugin);
+        this.registerMessageFactories();
         if (this.commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             this.commandManager.registerBrigadier();
             final @Nullable CloudBrigadierManager<CommandSender, ?> brigManager = this.commandManager.brigadierManager();
@@ -71,21 +71,21 @@ public final class Commands {
         return this.commandManager;
     }
 
-    private void registerMessageFactories(WanderingTrades plugin) {
+    private void registerMessageFactories() {
         if (!(this.commandManager.captionRegistry() instanceof final SimpleCaptionRegistry<CommandSender> registry)) {
             return;
         }
         registry.registerMessageFactory(
             StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
-            (caption, sender) -> plugin.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM)
+            (caption, sender) -> Messages.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM.message()
         );
         registry.registerMessageFactory(
             BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE,
-            (caption, sender) -> plugin.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE)
+            (caption, sender) -> Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE.message()
         );
         registry.registerMessageFactory(
             BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT,
-            (caption, sender) -> plugin.langConfig().get(Lang.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT)
+            (caption, sender) -> Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT.message()
         );
     }
 
@@ -112,13 +112,16 @@ public final class Commands {
         commands.forEach(this.commandManager::command);
     }
 
-    public static void setup(final WanderingTrades plugin) throws Exception {
-        new Commands(
-            plugin,
-            PaperCommandManager.createNative(
+    public static void setup(final WanderingTrades plugin) {
+        final PaperCommandManager<CommandSender> manager;
+        try {
+            manager = PaperCommandManager.createNative(
                 plugin,
-                CommandExecutionCoordinator.SimpleCoordinator.simpleCoordinator()
-            )
-        );
+                CommandExecutionCoordinator.simpleCoordinator()
+            );
+        } catch (final Exception ex) {
+            throw new RuntimeException("Failed to initialize command manager", ex);
+        }
+        new Commands(plugin, manager);
     }
 }

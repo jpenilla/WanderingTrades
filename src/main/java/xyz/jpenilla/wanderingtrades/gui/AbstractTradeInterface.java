@@ -2,6 +2,8 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,26 +20,27 @@ import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.gui.transform.SlotTransform;
+import xyz.jpenilla.wanderingtrades.util.Components;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
 @DefaultQualifier(NonNull.class)
 public abstract class AbstractTradeInterface extends BaseInterface {
-    private final ItemStack info = new HeadBuilder(HeadSkins.INFO).miniMessageContext()
-        .customName(this.lang.get(Lang.GUI_TRADE_INFO))
-        .lore(this.lang.getList(Lang.GUI_TRADE_INFO_LORE))
-        .exitAndBuild();
-    private final ItemStack cancelButton = new HeadBuilder(HeadSkins.RED_X_ON_BLACK).miniMessageContext()
-        .customName(this.lang.get(Lang.GUI_TRADE_CANCEL))
-        .lore(this.lang.get(Lang.GUI_TRADE_CANCEL_LORE))
-        .exitAndBuild();
-    private final ItemStack saveButton = new HeadBuilder(HeadSkins.GREEN_CHECK_ON_BLACK).miniMessageContext()
-        .customName(this.lang.get(Lang.GUI_TRADE_SAVE))
-        .lore(this.lang.get(Lang.GUI_TRADE_SAVE_LORE))
-        .exitAndBuild();
+    private final ItemStack info = new HeadBuilder(HeadSkins.INFO)
+        .customName(Messages.GUI_TRADE_INFO)
+        .lore(Messages.GUI_TRADE_INFO_LORE.asComponents())
+        .build();
+    private final ItemStack cancelButton = new HeadBuilder(HeadSkins.RED_X_ON_BLACK)
+        .customName(Messages.GUI_TRADE_CANCEL)
+        .lore(Messages.GUI_TRADE_CANCEL_LORE)
+        .build();
+    private final ItemStack saveButton = new HeadBuilder(HeadSkins.GREEN_CHECK_ON_BLACK)
+        .customName(Messages.GUI_TRADE_SAVE)
+        .lore(Messages.GUI_TRADE_SAVE_LORE)
+        .build();
     protected final TradeConfig tradeConfig;
     protected final SlotTransform ingredientOne;
     protected final SlotTransform ingredientTwo;
@@ -49,18 +52,18 @@ public abstract class AbstractTradeInterface extends BaseInterface {
         super(plugin);
         this.tradeConfig = tradeConfig;
 
-        final ItemStack emptySlotOne = ItemBuilder.create(Material.STRUCTURE_VOID).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_1))
-            .lore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
-            .exitAndBuild();
-        final ItemStack emptySlotTwo = ItemBuilder.create(Material.STRUCTURE_VOID).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_2))
-            .lore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
-            .exitAndBuild();
-        final ItemStack emptyResult = ItemBuilder.create(Material.STRUCTURE_VOID).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_RESULT))
-            .lore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
-            .exitAndBuild();
+        final ItemStack emptySlotOne = ItemBuilder.create(Material.STRUCTURE_VOID)
+            .customName(Messages.GUI_TRADE_INGREDIENT_1)
+            .lore(Messages.GUI_TRADE_REQUIRED_LORE.asComponents())
+            .build();
+        final ItemStack emptySlotTwo = ItemBuilder.create(Material.STRUCTURE_VOID)
+            .customName(Messages.GUI_TRADE_INGREDIENT_2)
+            .lore(Messages.GUI_TRADE_OPTIONAL_LORE.asComponents())
+            .build();
+        final ItemStack emptyResult = ItemBuilder.create(Material.STRUCTURE_VOID)
+            .customName(Messages.GUI_TRADE_RESULT)
+            .lore(Messages.GUI_TRADE_REQUIRED_LORE.asComponents())
+            .build();
         this.ingredientOne = new SlotTransform(emptySlotOne, 1, 3);
         this.ingredientTwo = new SlotTransform(emptySlotTwo, 3, 3);
         this.result = new SlotTransform(emptyResult, 5, 3);
@@ -80,10 +83,9 @@ public abstract class AbstractTradeInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.maxUses
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_MAX_USES_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.maxUses)));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGT0)
@@ -97,15 +99,13 @@ public abstract class AbstractTradeInterface extends BaseInterface {
     }
 
     protected Transform<ChestPane, PlayerViewer> experienceRewardTransform() {
-        return chestItem(this::experienceRewardElement, 3, 1);
-    }
-
-    private ItemStackElement<ChestPane> experienceRewardElement() {
         return this.parts.toggle(
-            this.lang.get(Lang.GUI_TRADE_EXP_REWARD),
-            this.lang.get(Lang.GUI_TRADE_NO_EXP_REWARD),
+            Messages.GUI_TRADE_EXP_REWARD,
+            Messages.GUI_TRADE_NO_EXP_REWARD,
             () -> this.experienceReward,
-            value -> this.experienceReward = value
+            value -> this.experienceReward = value,
+            3,
+            1
         );
     }
 
@@ -135,21 +135,21 @@ public abstract class AbstractTradeInterface extends BaseInterface {
     }
 
     private ItemStack tradeNameStack(final boolean canEdit) {
-        final List<String> lore = new ArrayList<>();
+        final List<ComponentLike> lore = new ArrayList<>();
         lore.add(this.tradeNameValueLore());
         if (canEdit) {
-            lore.add(this.lang.get(Lang.GUI_EDIT_LORE));
+            lore.add(Messages.GUI_EDIT_LORE);
         }
-        return ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE).miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_TRADE_NAME))
+        return ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE)
+            .customName(Messages.GUI_TRADE_TRADE_NAME)
             .lore(lore)
-            .exitAndBuild();
+            .build();
     }
 
-    private String tradeNameValueLore() {
+    private Component tradeNameValueLore() {
         final @Nullable String tradeName = this.tradeName();
         final String displayName = tradeName == null ? "<gray>________" : "<white>" + tradeName;
-        return this.lang.get(Lang.GUI_VALUE_LORE) + displayName;
+        return this.parts.valueLore(this.plugin.miniMessage().deserialize(displayName));
     }
 
     protected Transform<ChestPane, PlayerViewer> saveTransform() {

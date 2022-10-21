@@ -5,8 +5,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import java.util.ArrayList;
 import java.util.List;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -16,7 +18,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.gui.ListTradeConfigsInterface;
 import xyz.jpenilla.wanderingtrades.gui.ListTradesInterface;
@@ -37,7 +39,7 @@ public final class ConfigCommands extends BaseCommand {
 
         /* List Trade Configs Command */
         final Command<CommandSender> list = wt
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_WT_LIST))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_LIST_DESCRIPTION.asComponent())
             .literal("list")
             .permission("wanderingtrades.list")
             .handler(this::executeList)
@@ -45,7 +47,7 @@ public final class ConfigCommands extends BaseCommand {
 
         /* Trade Config Edit Command */
         final Command<CommandSender> edit = wt
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_WT_EDIT))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_EDIT_DESCRIPTION.asComponent())
             .literal("edit")
             .argument(TradeConfigArgument.optional("trade_config"))
             .permission("wanderingtrades.edit")
@@ -62,7 +64,7 @@ public final class ConfigCommands extends BaseCommand {
 
         /* Plugin Config Edit Command */
         final Command<CommandSender> editConfig = wt
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_WT_CONFIG))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_EDITCONFIG_DESCRIPTION.asComponent())
             .literal("editconfig")
             .permission("wanderingtrades.edit")
             .senderType(Player.class)
@@ -71,7 +73,7 @@ public final class ConfigCommands extends BaseCommand {
 
         /* Player Head Config Edit Command */
         final Command<CommandSender> editPlayerHeadConfig = wt
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_WT_PH_CONFIG))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_EDITPLAYERHEADS_DESCRIPTION.asComponent())
             .literal("editplayerheads")
             .permission("wanderingtrades.edit")
             .senderType(Player.class)
@@ -117,7 +119,10 @@ public final class ConfigCommands extends BaseCommand {
     }
 
     private void executeList(final CommandContext<CommandSender> context) {
-        this.chat.send(context.getSender(), Constants.PREFIX_MINIMESSAGE + this.plugin.langConfig().get(Lang.COMMAND_LIST_LOADED));
+        this.chat.send(
+            context.getSender(),
+            Component.textOfChildren(Constants.PREFIX_COMPONENT, Messages.COMMAND_LIST_LOADED)
+        );
         final List<String> toSort = new ArrayList<>(this.plugin.configManager().tradeConfigs().keySet());
         toSort.sort(null);
         int index = 1;

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -23,8 +25,9 @@ import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.Components;
 
 @DefaultQualifier(NonNull.class)
 public final class ListTradeConfigsInterface extends BaseInterface {
@@ -37,7 +40,7 @@ public final class ListTradeConfigsInterface extends BaseInterface {
         final int rows = 4;
         return ChestInterface.builder()
             .rows(rows)
-            .title(this.plugin.miniMessage().deserialize(this.plugin.langConfig().get(Lang.GUI_TC_LIST_TITLE)))
+            .title(Messages.GUI_TC_LIST_TITLE.asComponent())
             .addTransform(this.parts.fillBottomRow())
             .addTransform((pane, view) -> pane.element(this.newConfigElement(), 4, pane.rows() - 1))
             .addTransform(this.parts.closeButton())
@@ -55,19 +58,19 @@ public final class ListTradeConfigsInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> configElement(final TradeConfig tradeConfig) {
         final Set<String> tradeKeys = new HashSet<>(tradeConfig.tradesByName().keySet());
-        final List<String> finalLores = new ArrayList<>();
+        final List<Component> finalLores = new ArrayList<>();
         tradeKeys.stream()
             .sorted()
             .limit(10)
-            .forEach(key -> finalLores.add("<gray>  " + key));
+            .forEach(key -> finalLores.add(Component.text("  " + key, NamedTextColor.GRAY)));
         if (finalLores.size() == 10) {
-            finalLores.add(this.plugin.langConfig().get(Lang.GUI_TC_LIST_AND_MORE).replace("{VALUE}", String.valueOf(tradeKeys.size() - 10)));
+            finalLores.add(Messages.GUI_TC_LIST_AND_MORE.withPlaceholders(Components.placeholder("value", tradeKeys.size() - 10)));
         }
 
-        final ItemStack stack = ItemBuilder.create(Material.PAPER).miniMessageContext()
-            .customName(tradeConfig.configName())
+        final ItemStack stack = ItemBuilder.create(Material.PAPER)
+            .customName(Component.text(tradeConfig.configName()))
             .lore(finalLores)
-            .exitAndBuild();
+            .build();
 
         return ItemStackElement.of(stack, context -> new ListTradesInterface(
             this.plugin,
@@ -77,10 +80,10 @@ public final class ListTradeConfigsInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> newConfigElement() {
         return ItemStackElement.of(
-            ItemBuilder.create(Material.WRITABLE_BOOK).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_TC_LIST_ADD_CONFIG))
-                .lore(this.lang.get(Lang.GUI_TC_LIST_ADD_CONFIG_LORE))
-                .exitAndBuild(),
+            ItemBuilder.create(Material.WRITABLE_BOOK)
+                .customName(Messages.GUI_TC_LIST_ADD_CONFIG)
+                .lore(Messages.GUI_TC_LIST_ADD_CONFIG_LORE)
+                .build(),
             this::newConfigClick
         );
     }
@@ -89,16 +92,16 @@ public final class ListTradeConfigsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_CONFIG_PROMPT));
+                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_CONFIG_PROMPT);
                 return "";
             })
             .onValidateInput((player, input) -> {
                 if (input.contains(" ")) {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NO_SPACES));
+                    this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
                     return false;
                 }
                 if (TextUtil.containsCaseInsensitive(input, List.copyOf(this.plugin.configManager().tradeConfigs().keySet()))) {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
                     return false;
                 }
                 return true;
@@ -112,7 +115,7 @@ public final class ListTradeConfigsInterface extends BaseInterface {
                     );
 
                     this.plugin.configManager().reload();
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_CONFIG_SUCCESS));
+                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_CONFIG_SUCCESS);
                 } catch (final IOException ex) {
                     ex.printStackTrace();
                     this.plugin.chat().sendParsed(player, "<red>Error");
@@ -120,7 +123,7 @@ public final class ListTradeConfigsInterface extends BaseInterface {
                 this.open(player);
             })
             .onDenied((player, s) -> {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_CONFIG_CANCEL));
+                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_CONFIG_CANCEL);
                 this.open(player);
             })
             .start(context.viewer().player());

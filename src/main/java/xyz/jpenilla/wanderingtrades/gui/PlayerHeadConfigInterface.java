@@ -2,6 +2,10 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,24 +21,25 @@ import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
 import xyz.jpenilla.wanderingtrades.gui.transform.SlotTransform;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
+import xyz.jpenilla.wanderingtrades.util.Components;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.toggle;
 
 @DefaultQualifier(NonNull.class)
 public final class PlayerHeadConfigInterface extends BaseInterface {
-    private final ItemStack permissionWhitelistStack = ItemBuilder.create(Material.LIME_STAINED_GLASS_PANE).miniMessageContext()
-        .customName(this.lang.get(Lang.GUI_PH_CONFIG_PWL_ENABLED))
-        .lore(this.parts.toggleLore(), this.lang.get(Lang.GUI_PH_CONFIG_PWL_LORE))
-        .exitAndBuild();
-    private final ItemStack noPermissionsWhitelistStack = ItemBuilder.create(Material.RED_STAINED_GLASS_PANE).miniMessageContext()
-        .customName(this.lang.get(Lang.GUI_PH_CONFIG_PWL_DISABLED))
-        .lore(this.parts.toggleLore(), this.lang.get(Lang.GUI_PH_CONFIG_PWL_LORE))
-        .exitAndBuild();
+    private final ItemStack permissionWhitelistStack = ItemBuilder.create(Material.LIME_STAINED_GLASS_PANE)
+        .customName(Messages.GUI_PH_CONFIG_PWL_ENABLED)
+        .lore(this.parts.toggleLore(), Messages.GUI_PH_CONFIG_PWL_LORE)
+        .build();
+    private final ItemStack noPermissionsWhitelistStack = ItemBuilder.create(Material.RED_STAINED_GLASS_PANE)
+        .customName(Messages.GUI_PH_CONFIG_PWL_DISABLED)
+        .lore(this.parts.toggleLore(), Messages.GUI_PH_CONFIG_PWL_LORE)
+        .build();
 
     public PlayerHeadConfigInterface(final WanderingTrades plugin) {
         super(plugin);
@@ -43,20 +48,20 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
     @Override
     protected ChestInterface buildInterface() {
         final SlotTransform ingredientOne = new SlotTransform(
-            ItemBuilder.create(Material.STRUCTURE_VOID).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_1))
-                .lore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
-                .exitAndBuild(),
+            ItemBuilder.create(Material.STRUCTURE_VOID)
+                .customName(Messages.GUI_TRADE_INGREDIENT_1)
+                .lore(Messages.GUI_TRADE_REQUIRED_LORE.asComponents())
+                .build(),
             1,
             3
         );
         ingredientOne.item(this.playerHeadConfig().ingredientOne());
 
         final SlotTransform ingredientTwo = new SlotTransform(
-            ItemBuilder.create(Material.STRUCTURE_VOID).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_TRADE_INGREDIENT_2))
-                .lore(this.lang.getList(Lang.GUI_TRADE_REQUIRED_LORE))
-                .exitAndBuild(),
+            ItemBuilder.create(Material.STRUCTURE_VOID)
+                .customName(Messages.GUI_TRADE_INGREDIENT_2)
+                .lore(Messages.GUI_TRADE_OPTIONAL_LORE.asComponents())
+                .build(),
             3,
             3
         );
@@ -64,28 +69,26 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
 
         return ChestInterface.builder()
             .rows(5)
-            .title(this.plugin.miniMessage().deserialize(this.plugin.langConfig().get(Lang.GUI_PH_CONFIG_TITLE)))
+            .title(Messages.GUI_PH_CONFIG_TITLE.asComponent())
             .addTransform(this.parts.fill())
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_PH_CONFIG_ENABLED),
-                this.lang.get(Lang.GUI_PH_CONFIG_DISABLED),
+                Messages.GUI_PH_CONFIG_ENABLED,
+                Messages.GUI_PH_CONFIG_DISABLED,
                 this.playerHeadConfig()::playerHeadsFromServer,
                 this.saveConfig(this.playerHeadConfig()::playerHeadsFromServer),
                 0,
                 1
             ))
-            .addTransform(chestItem(
-                () -> toggle(
-                    on -> on ? this.permissionWhitelistStack : this.noPermissionsWhitelistStack,
-                    this.playerHeadConfig()::permissionWhitelist,
-                    this.saveConfig(this.playerHeadConfig()::permissionWhitelist)
-                ),
+            .addTransform(toggle(
+                on -> on ? this.permissionWhitelistStack : this.noPermissionsWhitelistStack,
+                this.playerHeadConfig()::permissionWhitelist,
+                this.saveConfig(this.playerHeadConfig()::permissionWhitelist),
                 1,
                 1
             ))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_TRADE_EXP_REWARD),
-                this.lang.get(Lang.GUI_TRADE_NO_EXP_REWARD),
+                Messages.GUI_TRADE_EXP_REWARD,
+                Messages.GUI_TRADE_NO_EXP_REWARD,
                 this.playerHeadConfig()::experienceReward,
                 this.saveConfig(this.playerHeadConfig()::experienceReward),
                 2,
@@ -123,96 +126,98 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> daysElement() {
         return ItemStackElement.of(
-            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_PH_CONFIG_DAYS))
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+                .customName(Messages.GUI_PH_CONFIG_DAYS)
                 .lore(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().days(),
-                    this.lang.get(Lang.GUI_EDIT_LORE),
-                    this.lang.get(Lang.GUI_PH_CONFIG_DAYS_LORE)
+                    this.parts.valueLore(this.playerHeadConfig().days(), TextColor.color(0x0092FF)),
+                    Messages.GUI_EDIT_LORE,
+                    Messages.GUI_PH_CONFIG_DAYS_LORE
                 )
-                .exitAndBuild(),
+                .build(),
             this::daysClick
         );
     }
 
     private ItemStackElement<ChestPane> amountTradesElement() {
         return ItemStackElement.of(
-            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_PH_CONFIG_AMOUNT))
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+                .customName(Messages.GUI_PH_CONFIG_AMOUNT)
                 .lore(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().playerHeadsFromServerAmount(),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
+                    this.parts.valueLore(this.playerHeadConfig().playerHeadsFromServerAmount(), TextColor.color(0x0092FF)),
+                    Messages.GUI_EDIT_LORE
                 )
-                .exitAndBuild(),
+                .build(),
             this::amountTradesClick
         );
     }
 
     private ItemStackElement<ChestPane> amountHeadsElement() {
         return ItemStackElement.of(
-            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_PH_CONFIG_AMOUNT_HEADS))
+            ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+                .customName(Messages.GUI_PH_CONFIG_AMOUNT_HEADS)
                 .lore(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().headsPerTrade(),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
+                    this.parts.valueLore(this.playerHeadConfig().headsPerTrade(), TextColor.color(0x0092FF)),
+                    Messages.GUI_EDIT_LORE
                 )
-                .exitAndBuild(),
+                .build(),
             this::amountHeadsClick
         );
     }
 
     public ItemStackElement<ChestPane> headChanceElement() {
         return ItemStackElement.of(
-            ItemBuilder.create(Material.PURPLE_STAINED_GLASS_PANE).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_PH_CONFIG_CHANCE))
+            ItemBuilder.create(Material.PURPLE_STAINED_GLASS_PANE)
+                .customName(Messages.GUI_PH_CONFIG_CHANCE)
                 .lore(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.playerHeadConfig().playerHeadsFromServerChance(),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
+                    this.parts.valueLore(this.playerHeadConfig().playerHeadsFromServerChance(), TextColor.color(0x0092FF)),
+                    Messages.GUI_EDIT_LORE
                 )
-                .exitAndBuild(),
+                .build(),
             this::chanceClick
         );
     }
 
     public ItemStackElement<ChestPane> customNameElement() {
         return ItemStackElement.of(
-            ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME))
+            ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE)
+                .customName(Messages.GUI_TC_EDIT_CUSTOM_NAME)
                 .lore(
-                    this.lang.get(Lang.GUI_VALUE_LORE) + "<yellow>" + this.playerHeadConfig().name(),
-                    this.lang.get(Lang.GUI_EDIT_LORE)
+                    this.parts.valueLore(this.plugin.miniMessage().deserialize(this.playerHeadConfig().name()).colorIfAbsent(NamedTextColor.YELLOW)),
+                    Messages.GUI_EDIT_LORE
                 )
-                .exitAndBuild(),
+                .build(),
             this::customNameClick
         );
     }
 
     private ItemStackElement<ChestPane> blacklistElement() {
-        final List<String> blacklistLore = new ArrayList<>(List.of(
-            this.lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
-            ""
+        final List<ComponentLike> blacklistLore = new ArrayList<>(List.of(
+            Messages.GUI_CONFIG_WG_LIST_LORE,
+            Component.empty()
         ));
-        this.playerHeadConfig().usernameBlacklist().forEach(name -> blacklistLore.add(" <red>-</red> <white>" + name));
+        this.playerHeadConfig().usernameBlacklist().forEach(name -> blacklistLore.add(
+            this.plugin.miniMessage().deserialize(" <red>-</red> <white>" + name)
+        ));
         return ItemStackElement.of(
-            ItemBuilder.create(Material.PAPER).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_PH_CONFIG_BLACKLIST))
+            ItemBuilder.create(Material.PAPER)
+                .customName(Messages.GUI_PH_CONFIG_BLACKLIST)
                 .lore(blacklistLore)
-                .exitAndBuild(),
+                .build(),
             this::blacklistClick
         );
     }
 
     private ItemStackElement<ChestPane> loreElement() {
-        final List<String> resultLore = new ArrayList<>(List.of(
-            this.lang.get(Lang.GUI_CONFIG_WG_LIST_LORE),
-            "<white>------------"
+        final List<ComponentLike> resultLore = new ArrayList<>(List.of(
+            Messages.GUI_CONFIG_WG_LIST_LORE,
+            Component.text("------------", NamedTextColor.WHITE)
         ));
-        resultLore.addAll(this.playerHeadConfig().lore());
+        resultLore.addAll(this.playerHeadConfig().lore().stream().map(this.plugin.miniMessage()::deserialize).toList());
         return ItemStackElement.of(
-            ItemBuilder.create(Material.PAPER).miniMessageContext()
-                .customName(this.lang.get(Lang.GUI_PH_CONFIG_RESULT_LORE))
+            ItemBuilder.create(Material.PAPER)
+                .customName(Messages.GUI_PH_CONFIG_RESULT_LORE)
                 .lore(resultLore)
-                .exitAndBuild(),
+                .build(),
             this::loreClick
         );
     }
@@ -222,9 +227,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         final SlotTransform ingredientTwo
     ) {
         return ItemStackElement.of(
-            ItemBuilder.create(this.parts.saveTradeButton()).miniMessageContext()
-                .lore(this.lang.get(Lang.GUI_PH_CONFIG_SAVE_LORE))
-                .exitAndBuild(),
+            ItemBuilder.create(this.parts.saveTradeButton())
+                .lore(Messages.GUI_PH_CONFIG_SAVE_LORE)
+                .build(),
             context -> {
                 if (ingredientOne.item() != null) {
                     final PlayerHeadConfig config = this.playerHeadConfig();
@@ -252,10 +257,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_HEADS_DAYS_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.playerHeadConfig().days()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_HEADS_DAYS_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().days())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGTEN1)
@@ -264,7 +268,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                 this.playerHeadConfig().days(Integer.parseInt(s));
                 this.playerHeadConfig().save();
                 this.plugin.playerHeads().configChanged();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -275,10 +279,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.playerHeadConfig().playerHeadsFromServerAmount()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().playerHeadsFromServerAmount())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER_OR_RANGE);
                 return "";
             })
             .onValidateInput(this.validators::validateIntRange)
@@ -286,7 +289,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.playerHeadConfig().playerHeadsFromServerAmount(s);
                 this.playerHeadConfig().save();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -297,10 +300,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_HEADS_AMOUNT_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.playerHeadConfig().headsPerTrade()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_HEADS_AMOUNT_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().headsPerTrade())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGT0)
@@ -309,7 +311,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                 this.playerHeadConfig().headsPerTrade(Integer.parseInt(s));
                 this.playerHeadConfig().save();
                 this.plugin.playerHeads().configChanged();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -320,10 +322,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_MAX_USES_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.playerHeadConfig().maxUses()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_MAX_USES_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().maxUses())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGT0)
@@ -332,7 +333,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                 this.playerHeadConfig().maxUses(Integer.parseInt(s));
                 this.playerHeadConfig().save();
                 this.plugin.playerHeads().configChanged();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -343,10 +344,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.playerHeadConfig().playerHeadsFromServerChance()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_CHANCE_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().playerHeadsFromServerChance())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateDouble0T1)
@@ -354,7 +354,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.playerHeadConfig().playerHeadsFromServerChance(Double.parseDouble(s));
                 this.playerHeadConfig().save();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -365,13 +365,14 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_CUSTOM_NAME_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + this.playerHeadConfig().name());
+                this.plugin.chat().send(player, Messages.MESSAGE_CUSTOM_NAME_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(
+                    Components.valuePlaceholder(this.plugin.miniMessage().deserialize(this.playerHeadConfig().name()))
+                ));
                 return "";
             })
             .onValidateInput((pl, s) -> true)
-            .onConfirmText(this.validators::confirmYesNo)
+            .onConfirmText(this.validators.confirmYesNo(s -> this.plugin.miniMessage().deserialize(s).colorIfAbsent(NamedTextColor.YELLOW)))
             .onAccepted((player, string) -> {
                 this.playerHeadConfig().name(string);
                 this.playerHeadConfig().save();
@@ -396,16 +397,16 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             context.viewer().player().closeInventory();
             InputConversation.create()
                 .onPromptText(player -> {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_ADD_BLACKLIST_PLAYER));
+                    this.plugin.chat().send(player, Messages.MESSAGE_ADD_BLACKLIST_PLAYER);
                     return "";
                 })
                 .onValidateInput((player, input) -> {
                     if (input.contains(" ")) {
-                        this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NO_SPACES));
+                        this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
                         return false;
                     }
                     if (TextUtil.containsCaseInsensitive(input, this.playerHeadConfig().usernameBlacklist())) {
-                        this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CREATE_UNIQUE));
+                        this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
                         return false;
                     }
                     return true;
@@ -417,7 +418,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                     this.playerHeadConfig().usernameBlacklist(temp);
                     this.playerHeadConfig().save();
                     this.plugin.playerHeads().configChanged();
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                     this.open(player);
                 })
                 .onDenied(this.validators::editCancelled)
@@ -437,18 +438,18 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             context.viewer().player().closeInventory();
             InputConversation.create()
                 .onPromptText(player -> {
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_ADD_LORE_PROMPT));
+                    this.plugin.chat().send(player, Messages.MESSAGE_ADD_LORE_PROMPT);
                     return "";
                 })
                 .onValidateInput((player, input) -> true)
-                .onConfirmText(this.validators::confirmYesNo)
+                .onConfirmText(this.validators.confirmYesNo(s -> this.plugin.miniMessage().deserialize(s).colorIfAbsent(NamedTextColor.DARK_PURPLE)))
                 .onAccepted((player, s) -> {
                     List<String> temp = this.playerHeadConfig().lore();
                     temp.add(s);
                     this.playerHeadConfig().lore(temp);
                     this.playerHeadConfig().save();
                     this.plugin.playerHeads().configChanged();
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                     this.open(player);
                 })
                 .onDenied(this.validators::editCancelled)

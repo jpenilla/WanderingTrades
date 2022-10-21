@@ -2,6 +2,8 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,9 +18,10 @@ import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
+import xyz.jpenilla.wanderingtrades.util.Components;
 import xyz.jpenilla.wanderingtrades.util.Logging;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
@@ -36,27 +39,27 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
     protected ChestInterface buildInterface() {
         return ChestInterface.builder()
             .rows(5)
-            .title(this.plugin.miniMessage().deserialize(this.lang.get(Lang.GUI_TC_EDIT_TITLE) + this.tradeConfig.configName()))
+            .title(Component.textOfChildren(Messages.GUI_TC_EDIT_TITLE, Component.text(this.tradeConfig.configName())))
             .addTransform(this.parts.fill())
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_TC_EDIT_ENABLED),
-                this.lang.get(Lang.GUI_TC_EDIT_DISABLED),
+                Messages.GUI_TC_EDIT_ENABLED,
+                Messages.GUI_TC_EDIT_DISABLED,
                 this.tradeConfig::enabled,
                 this.saveConfig(this.tradeConfig::enabled),
                 1,
                 1
             ))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_TC_EDIT_RANDOMIZED),
-                this.lang.get(Lang.GUI_TC_EDIT_NOT_RANDOMIZED),
+                Messages.GUI_TC_EDIT_RANDOMIZED,
+                Messages.GUI_TC_EDIT_NOT_RANDOMIZED,
                 this.tradeConfig::randomized,
                 this.saveConfig(this.tradeConfig::randomized),
                 3,
                 1
             ))
             .addTransform(this.parts.toggle(
-                this.lang.get(Lang.GUI_TC_EDIT_INVINCIBLE),
-                this.lang.get(Lang.GUI_TC_EDIT_NOT_INVINCIBLE),
+                Messages.GUI_TC_EDIT_INVINCIBLE,
+                Messages.GUI_TC_EDIT_NOT_INVINCIBLE,
                 this.tradeConfig::invincible,
                 this.saveConfig(this.tradeConfig::invincible),
                 5,
@@ -72,46 +75,42 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> randomAmountElement() {
         final ItemStack stack = ItemBuilder.create(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-            .miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TC_EDIT_RANDOM_AMOUNT))
+            .customName(Messages.GUI_TC_EDIT_RANDOM_AMOUNT)
             .lore(
-                this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.randomAmount(),
-                this.lang.get(Lang.GUI_EDIT_LORE)
+                this.parts.valueLore(this.tradeConfig.randomAmount(), TextColor.color(0x0092FF)),
+                Messages.GUI_EDIT_LORE
             )
-            .exitAndBuild();
+            .build();
         return ItemStackElement.of(stack, this::randAmountClick);
     }
 
     private ItemStackElement<ChestPane> chanceElement() {
         final ItemStack stack = ItemBuilder.create(Material.PURPLE_STAINED_GLASS_PANE)
-            .miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TC_EDIT_CHANCE))
+            .customName(Messages.GUI_TC_EDIT_CHANCE)
             .lore(
-                this.lang.get(Lang.GUI_VALUE_LORE) + "<#0092FF>" + this.tradeConfig.chance(),
-                this.lang.get(Lang.GUI_EDIT_LORE)
+                this.parts.valueLore(this.tradeConfig.chance(), TextColor.color(0x0092FF)),
+                Messages.GUI_EDIT_LORE
             )
-            .exitAndBuild();
+            .build();
         return ItemStackElement.of(stack, this::chanceClick);
     }
 
     private ItemStackElement<ChestPane> customNameElement() {
         final ItemStack stack = ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE)
-            .miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TC_EDIT_CUSTOM_NAME))
+            .customName(Messages.GUI_TC_EDIT_CUSTOM_NAME)
             .lore(
-                this.lang.get(Lang.GUI_VALUE_LORE) + "<white>" + this.tradeConfig.customName(),
-                this.lang.get(Lang.GUI_EDIT_LORE)
+                this.parts.valueLore(this.plugin.miniMessage().deserialize("<white>" + this.tradeConfig.customName())),
+                Messages.GUI_EDIT_LORE
             )
-            .exitAndBuild();
+            .build();
         return ItemStackElement.of(stack, this::customNameClick);
     }
 
     private ItemStackElement<ChestPane> deleteElement() {
         final ItemStack stack = new HeadBuilder(HeadSkins.RED_RECYCLE_BIN_FULL)
-            .miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_DELETE))
-            .lore(this.lang.get(Lang.GUI_CONFIG_DELETE_LORE))
-            .exitAndBuild();
+            .customName(Messages.GUI_TRADE_DELETE)
+            .lore(Messages.GUI_CONFIG_DELETE_LORE)
+            .build();
         return ItemStackElement.of(stack, this::deleteClick);
     }
 
@@ -126,10 +125,9 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_RAND_AMOUNT_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.tradeConfig.randomAmount()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER_OR_RANGE));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_RAND_AMOUNT_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.tradeConfig.randomAmount())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER_OR_RANGE);
                 return "";
             })
             .onValidateInput(this.validators::validateIntRange)
@@ -137,7 +135,7 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.tradeConfig.randomAmount(s);
                 this.tradeConfig.save();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -148,10 +146,9 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_SET_CHANCE_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + this.tradeConfig.chance()
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_ENTER_NUMBER));
+                this.plugin.chat().send(player, Messages.MESSAGE_SET_CHANCE_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.tradeConfig.chance())));
+                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateDouble0T1)
@@ -159,7 +156,7 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.tradeConfig.chance(Double.parseDouble(s));
                 this.tradeConfig.save();
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -170,13 +167,14 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player,
-                    this.lang.get(Lang.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT)
-                        + "<reset>\n" + this.lang.get(Lang.MESSAGE_CURRENT_VALUE) + "<reset>" + this.tradeConfig.customName());
+                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT);
+                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(
+                    Components.valuePlaceholder(this.plugin.miniMessage().deserialize(this.tradeConfig.customName()))
+                ));
                 return "";
             })
             .onValidateInput((pl, s) -> true)
-            .onConfirmText(this.validators::confirmYesNo)
+            .onConfirmText(this.validators.confirmYesNo(this.plugin.miniMessage()::deserialize))
             .onAccepted((player, string) -> {
                 this.tradeConfig.customName(string);
                 this.tradeConfig.save();
@@ -190,12 +188,18 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", this.tradeConfig.configName()));
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", this.lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                this.plugin.chat().send(
+                    player,
+                    Messages.MESSAGE_DELETE_PROMPT.withPlaceholders(Components.placeholder("name", this.tradeConfig.configName()))
+                );
+                this.plugin.chat().send(
+                    player,
+                    Messages.MESSAGE_CONFIRM.withPlaceholders(Components.placeholder("key", Messages.MESSAGE_CONFIRM_KEY.message()))
+                );
                 return "";
             })
             .onValidateInput((player, s) -> {
-                if (s.equals(this.lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
+                if (s.equals(Messages.MESSAGE_CONFIRM_KEY.message())) {
                     final Path tcFile = this.plugin.dataPath().resolve("trades/" + this.tradeConfig.configName() + ".yml");
                     try {
                         Files.delete(tcFile);
@@ -203,7 +207,7 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
                         Logging.logger().warn("File delete failed", e);
                     }
                     this.plugin.configManager().reload();
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                     new ListTradeConfigsInterface(this.plugin).open(player);
                 } else {
                     this.validators.editCancelled(player, s);

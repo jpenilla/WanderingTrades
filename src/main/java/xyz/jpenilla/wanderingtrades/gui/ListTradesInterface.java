@@ -2,6 +2,8 @@ package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.List;
 import java.util.Map;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -15,7 +17,7 @@ import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 @DefaultQualifier(NonNull.class)
@@ -35,7 +37,7 @@ public final class ListTradesInterface extends BaseInterface {
         final int rows = 6;
         return ChestInterface.builder()
             .rows(rows)
-            .title(this.plugin.miniMessage().deserialize(this.lang.get(Lang.GUI_TRADE_LIST_TITLE) + this.tradeConfig.configName()))
+            .title(Component.textOfChildren(Messages.GUI_TRADE_LIST_TITLE, Component.text(this.tradeConfig.configName())))
             .addTransform(this.parts.fillBottomRow())
             .addTransform((pane, view) -> pane.element(this.newTradeElement(), 4, pane.rows() - 1))
             .addTransform((pane, view) -> pane.element(this.settingsElement(), 7, pane.rows() - 1))
@@ -46,10 +48,9 @@ public final class ListTradesInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> settingsElement() {
         final ItemStack stack = new HeadBuilder(HeadSkins.WRENCH_ON_IRON)
-            .miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG))
-            .lore(this.lang.get(Lang.GUI_TRADE_LIST_EDIT_CONFIG_LORE))
-            .exitAndBuild();
+            .customName(Messages.GUI_TRADE_LIST_EDIT_CONFIG)
+            .lore(Messages.GUI_TRADE_LIST_EDIT_CONFIG_LORE)
+            .build();
         return ItemStackElement.of(stack, this::settingsClick);
     }
 
@@ -59,10 +60,9 @@ public final class ListTradesInterface extends BaseInterface {
 
     private ItemStackElement<ChestPane> newTradeElement() {
         final ItemStack stack = new HeadBuilder(HeadSkins.GREEN_PLUS)
-            .miniMessageContext()
-            .customName(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE))
-            .lore(this.lang.get(Lang.GUI_TRADE_LIST_NEW_TRADE_LORE))
-            .exitAndBuild();
+            .customName(Messages.GUI_TRADE_LIST_NEW_TRADE)
+            .lore(Messages.GUI_TRADE_LIST_NEW_TRADE_LORE)
+            .build();
         return ItemStackElement.of(stack, this::newTradeClick);
     }
 
@@ -81,9 +81,8 @@ public final class ListTradesInterface extends BaseInterface {
         final ItemStack stack = ItemBuilder.create(recipe.getResult())
             .clearEnchants()
             .clearLore()
-            .miniMessageContext()
-            .customName(tradeName)
-            .exitAndBuild();
+            .customName(Component.text(tradeName, NamedTextColor.AQUA))
+            .build();
         return ItemStackElement.of(stack, context -> this.tradeEntryClick(tradeName, context));
     }
 

@@ -1,5 +1,6 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -13,17 +14,18 @@ import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.Components;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
 @DefaultQualifier(NonNull.class)
 public final class TradeEditInterface extends AbstractTradeInterface {
-    private final ItemStack deleteButton = new HeadBuilder(HeadSkins.RED_RECYCLE_BIN_FULL).miniMessageContext()
-        .customName(this.lang.get(Lang.GUI_TRADE_DELETE))
-        .lore(this.lang.get(Lang.GUI_TRADE_DELETE_LORE))
-        .exitAndBuild();
+    private final ItemStack deleteButton = new HeadBuilder(HeadSkins.RED_RECYCLE_BIN_FULL)
+        .customName(Messages.GUI_TRADE_DELETE)
+        .lore(Messages.GUI_TRADE_DELETE_LORE)
+        .build();
     private final String tradeName;
 
     public TradeEditInterface(
@@ -49,7 +51,7 @@ public final class TradeEditInterface extends AbstractTradeInterface {
 
         return ChestInterface.builder()
             .rows(5)
-            .title(this.plugin.miniMessage().deserialize(this.lang.get(Lang.GUI_TRADE_EDIT_TITLE) + this.tradeName))
+            .title(Component.textOfChildren(Messages.GUI_TRADE_EDIT_TITLE, Component.text(this.tradeName)))
             .addTransform(this.parts.fill())
             .addTransform(this.infoTransform())
             .addTransform(this.tradeNameTransform())
@@ -75,14 +77,20 @@ public final class TradeEditInterface extends AbstractTradeInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_DELETE_PROMPT).replace("{TRADE_NAME}", this.tradeName));
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_CONFIRM).replace("{KEY}", this.lang.get(Lang.MESSAGE_CONFIRM_KEY)));
+                this.plugin.chat().send(
+                    player,
+                    Messages.MESSAGE_DELETE_PROMPT.withPlaceholders(Components.placeholder("name", this.tradeName))
+                );
+                this.plugin.chat().send(
+                    player,
+                    Messages.MESSAGE_CONFIRM.withPlaceholders(Components.placeholder("key", Messages.MESSAGE_CONFIRM_KEY.message()))
+                );
                 return "";
             })
             .onValidateInput((player, s) -> {
-                if (s.equals(this.lang.get(Lang.MESSAGE_CONFIRM_KEY))) {
+                if (s.equals(Messages.MESSAGE_CONFIRM_KEY.message())) {
                     this.tradeConfig.deleteTrade(this.tradeName);
-                    this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_SAVED));
+                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
                     new ListTradesInterface(this.plugin, this.tradeConfig).open(player);
                 } else {
                     this.validators.editCancelled(player, s);

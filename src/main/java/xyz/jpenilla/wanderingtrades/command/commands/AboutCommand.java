@@ -2,7 +2,7 @@ package xyz.jpenilla.wanderingtrades.command.commands;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import java.util.stream.Stream;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -11,7 +11,7 @@ import xyz.jpenilla.pluginbase.legacy.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 
 @DefaultQualifier(NonNull.class)
 public final class AboutCommand extends BaseCommand {
@@ -22,7 +22,7 @@ public final class AboutCommand extends BaseCommand {
     @Override
     public void register() {
         final Command<CommandSender> about = this.commandManager.commandBuilder("wt")
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_WT_ABOUT))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_ABOUT_DESCRIPTION.asComponent())
             .literal("about")
             .handler(this::execute)
             .build();

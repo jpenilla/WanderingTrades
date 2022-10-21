@@ -4,14 +4,17 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.exceptions.InvalidCommandSenderException;
 import cloud.commandframework.exceptions.InvalidSyntaxException;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.util.ComponentMessageThrowable;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
+import xyz.jpenilla.wanderingtrades.util.Components;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 @DefaultQualifier(NonNull.class)
@@ -39,7 +42,6 @@ final class ExceptionHandler {
 
     private Component invalidSyntax(final Exception ex) {
         final InvalidSyntaxException exception = (InvalidSyntaxException) ex;
-        final Component invalidSyntaxMessage = Component.text(this.plugin.langConfig().get(Lang.COMMAND_INVALID_SYNTAX), NamedTextColor.RED);
         final Component correctSyntaxMessage = Component.text(
             String.format("/%s", exception.getCorrectSyntax()),
             NamedTextColor.GRAY
@@ -47,30 +49,24 @@ final class ExceptionHandler {
             config.match(SYNTAX_HIGHLIGHT_PATTERN);
             config.replacement(builder -> builder.color(NamedTextColor.WHITE));
         });
-
-        return Component.textOfChildren(invalidSyntaxMessage, correctSyntaxMessage);
+        return Messages.COMMAND_INVALID_SYNTAX.withPlaceholders(
+            Components.placeholder("syntax", correctSyntaxMessage)
+        );
     }
 
     private Component invalidSender(final Exception ex) {
         final InvalidCommandSenderException exception = (InvalidCommandSenderException) ex;
-        final Component invalidSenderMessage = Component.text(
-            this.plugin.langConfig().get(Lang.COMMAND_INVALID_SENDER),
-            NamedTextColor.RED
+        return Messages.COMMAND_INVALID_SENDER.withPlaceholders(
+            Components.placeholder("type", exception.getRequiredSender().getSimpleName())
         );
-        final Component correctSenderType = Component.text(
-            exception.getRequiredSender().getSimpleName(),
-            NamedTextColor.GRAY
-        );
-        return invalidSenderMessage.replaceText(config -> {
-            config.matchLiteral("{type}");
-            config.replacement(match -> correctSenderType);
-        });
     }
 
     private Component argumentParsing(final Exception ex) {
-        final Component invalidArgumentMessage = Component.text(this.plugin.langConfig().get(Lang.COMMAND_INVALID_ARGUMENT), NamedTextColor.RED);
-        final Component causeMessage = Component.text(ex.getCause().getMessage(), NamedTextColor.GRAY);
-        return Component.textOfChildren(invalidArgumentMessage, causeMessage);
+        final Component causeMessage = Objects.requireNonNull(ComponentMessageThrowable.getOrConvertMessage(ex.getCause()))
+            .colorIfAbsent(NamedTextColor.GRAY);
+        return Messages.COMMAND_INVALID_ARGUMENT.withPlaceholders(
+            Components.placeholder("error", causeMessage)
+        );
     }
 
     private static Component noPermission(final Exception e) {

@@ -1,19 +1,22 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
+import java.util.function.BiFunction;
 import java.util.function.DoublePredicate;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.config.Lang;
-import xyz.jpenilla.wanderingtrades.config.LangConfig;
+import xyz.jpenilla.wanderingtrades.config.Messages;
+import xyz.jpenilla.wanderingtrades.util.Components;
 
 @DefaultQualifier(NonNull.class)
 public final class Validators {
     private final BaseInterface baseInterface;
     private final WanderingTrades plugin;
-    private final LangConfig lang;
 
     Validators(
         final BaseInterface baseInterface,
@@ -21,7 +24,6 @@ public final class Validators {
     ) {
         this.baseInterface = baseInterface;
         this.plugin = plugin;
-        this.lang = plugin.langConfig();
     }
 
     public boolean validateIntRange(final Player player, final String s) {
@@ -66,7 +68,7 @@ public final class Validators {
             if (i >= 1) {
                 return true;
             }
-            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_GT_0));
+            this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_GT_0);
             return false;
         });
     }
@@ -76,7 +78,7 @@ public final class Validators {
             if (i >= 0) {
                 return true;
             }
-            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_GTE_0));
+            this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_GTE_0);
             return false;
         });
     }
@@ -86,7 +88,7 @@ public final class Validators {
             if (i >= -1) {
                 return true;
             }
-            this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_GTE_N1));
+            this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_GTE_N1);
             return false;
         });
     }
@@ -94,7 +96,7 @@ public final class Validators {
     public boolean validateDouble0T1(final Player player, final String input) {
         return this.validateDouble(input, d -> {
             if (d < 0 || d > 1) {
-                this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_NUMBER_0T1));
+                this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_0T1);
                 return false;
             }
             return true;
@@ -102,13 +104,21 @@ public final class Validators {
     }
 
     public String confirmYesNo(final Player player, final String s) {
-        this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YOU_ENTERED) + s);
-        this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_YES_NO));
+        return this.confirmYesNo(player, Components.valuePlaceholder(s));
+    }
+
+    public BiFunction<Player, String, String> confirmYesNo(final Function<String, Component> formatValue) {
+        return (player, s) -> this.confirmYesNo(player, Components.valuePlaceholder(formatValue.apply(s)));
+    }
+
+    private String confirmYesNo(final Player player, final TagResolver placeholder) {
+        this.plugin.chat().send(player, Messages.MESSAGE_YOU_ENTERED.withPlaceholders(placeholder));
+        this.plugin.chat().send(player, Messages.MESSAGE_YES_NO);
         return "";
     }
 
     public void editCancelled(final Player player, final String s) {
-        this.plugin.chat().sendParsed(player, this.lang.get(Lang.MESSAGE_EDIT_CANCELLED));
+        this.plugin.chat().send(player, Messages.MESSAGE_EDIT_CANCELLED);
         this.baseInterface.open(player);
     }
 }

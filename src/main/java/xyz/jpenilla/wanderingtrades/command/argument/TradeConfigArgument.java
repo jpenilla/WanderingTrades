@@ -14,7 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.Commands;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 @DefaultQualifier(NonNull.class)
@@ -53,7 +53,7 @@ public final class TradeConfigArgument extends CommandArgument<CommandSender, Tr
                 inputQueue.remove();
                 return ArgumentParseResult.success(tradeConfig);
             }
-            return ArgumentParseResult.failure(new IllegalArgumentException(plugin.langConfig().get(Lang.COMMAND_SUMMON_NO_CONFIG)));
+            return ArgumentParseResult.failure(new IllegalArgumentException(Messages.COMMAND_PARSE_EXCEPTION_NO_TRADE_CONFIG.message()));
         }
 
         @Override

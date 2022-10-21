@@ -15,7 +15,6 @@ public final class ConfigManager {
     private final WanderingTrades plugin;
     private final Map<String, TradeConfig> tradeConfigs = new ConcurrentHashMap<>();
     private @MonotonicNonNull Config config;
-    private @MonotonicNonNull LangConfig lang;
     private @MonotonicNonNull PlayerHeadConfig playerHeadConfig;
 
     public ConfigManager(final WanderingTrades plugin) {
@@ -24,14 +23,14 @@ public final class ConfigManager {
 
     public void load() {
         this.config = new Config(this.plugin);
-        this.lang = new LangConfig(this.plugin);
+        this.loadMessages();
         this.loadPlayerHeadConfig();
         this.loadTradeConfigs();
     }
 
     public void reload() {
         this.config.load();
-        this.lang.load();
+        this.loadMessages();
         this.loadTradeConfigs();
         this.loadPlayerHeadConfig();
     }
@@ -40,16 +39,24 @@ public final class ConfigManager {
         return this.config;
     }
 
-    public LangConfig langConfig() {
-        return this.lang;
-    }
-
     public Map<String, TradeConfig> tradeConfigs() {
         return Collections.unmodifiableMap(this.tradeConfigs);
     }
 
     public PlayerHeadConfig playerHeadConfig() {
         return this.playerHeadConfig;
+    }
+
+    private void loadMessages() {
+        final File file = new File(this.plugin.getDataFolder() + "/lang/" + this.config.language() + ".yml");
+        if (this.config.updateLang() || !file.exists()) {
+            try {
+                this.plugin.saveResource("lang/" + this.config.language() + ".yml", true);
+            } catch (final IllegalArgumentException ex) {
+                this.plugin.getLogger().warning("Invalid/missing language file name");
+            }
+        }
+        Messages.load(file);
     }
 
     private void loadTradeConfigs() {

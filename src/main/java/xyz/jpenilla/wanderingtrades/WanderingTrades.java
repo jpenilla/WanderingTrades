@@ -15,7 +15,6 @@ import xyz.jpenilla.pluginbase.legacy.PluginBase;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.ConfigManager;
-import xyz.jpenilla.wanderingtrades.config.LangConfig;
 import xyz.jpenilla.wanderingtrades.integration.VaultHook;
 import xyz.jpenilla.wanderingtrades.integration.WorldGuardHook;
 import xyz.jpenilla.wanderingtrades.util.Listeners;
@@ -45,9 +44,16 @@ public final class WanderingTrades extends PluginBase {
         this.playerHeads = PlayerHeads.create(this);
         this.tradeApplicator = new TradeApplicator(this);
         this.listeners = Listeners.setup(this);
-        this.setupCommands();
+        if (!this.configManager.config().disableCommands()) {
+            Commands.setup(this);
+        }
         this.updateCheck();
         this.setupMetrics();
+    }
+
+    @Override
+    public void onDisable() {
+        this.closeInterfaces();
     }
 
     private void setupIntegrations() {
@@ -59,16 +65,6 @@ public final class WanderingTrades extends PluginBase {
         if (this.getServer().getPluginManager().isPluginEnabled("WorldGuard")
             && this.getServer().getPluginManager().isPluginEnabled("WorldEdit")) {
             this.worldGuard = new WorldGuardHook(this);
-        }
-    }
-
-    private void setupCommands() {
-        if (!this.config().disableCommands()) {
-            try {
-                Commands.setup(this);
-            } catch (final Exception ex) {
-                throw new RuntimeException("Failed to initialize Commands", ex);
-            }
         }
     }
 
@@ -90,16 +86,20 @@ public final class WanderingTrades extends PluginBase {
     }
 
     public void reload() {
-        for (final Player player : this.getServer().getOnlinePlayers()) {
-            if (player.getOpenInventory().getTopInventory().getHolder() instanceof InterfaceView<?,?>) {
-                player.closeInventory();
-            }
-        }
+        this.closeInterfaces();
 
         this.configManager().reload();
 
         this.listeners().reload();
         this.playerHeads().configChanged();
+    }
+
+    private void closeInterfaces() {
+        for (final Player player : this.getServer().getOnlinePlayers()) {
+            if (player.getOpenInventory().getTopInventory().getHolder() instanceof InterfaceView<?, ?>) {
+                player.closeInventory();
+            }
+        }
     }
 
     public ConfigManager configManager() {
@@ -108,10 +108,6 @@ public final class WanderingTrades extends PluginBase {
 
     public Config config() {
         return this.configManager.config();
-    }
-
-    public LangConfig langConfig() {
-        return this.configManager.langConfig();
     }
 
     public PlayerHeads playerHeads() {

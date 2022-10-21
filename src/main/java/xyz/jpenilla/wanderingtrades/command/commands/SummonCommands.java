@@ -11,6 +11,7 @@ import cloud.commandframework.bukkit.parsers.location.LocationArgument;
 import cloud.commandframework.bukkit.parsers.selector.SingleEntitySelectorArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import io.papermc.lib.PaperLib;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -35,7 +36,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
-import xyz.jpenilla.wanderingtrades.config.Lang;
+import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
@@ -69,7 +70,7 @@ public final class SummonCommands extends BaseCommand {
         final Command.Builder<CommandSender> wt = this.commandManager.commandBuilder("wt");
 
         final Command<CommandSender> summonNatural = wt
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_SUMMON_NATURAL))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_SUMMONNATURAL_DESCRIPTION.asComponent())
             .literal("summonnatural")
             .argument(LocationArgument.of("location"))
             .flag(this.commands.getFlag("world"))
@@ -90,7 +91,7 @@ public final class SummonCommands extends BaseCommand {
             .build();
 
         final Command<CommandSender> summon = wt
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_SUMMON))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_SUMMON_DESCRIPTION.asComponent())
             .literal("summon")
             .argument(TradeConfigArgument.of("trade_config"))
             .argument(LocationArgument.of("location"))
@@ -108,7 +109,7 @@ public final class SummonCommands extends BaseCommand {
             .build();
 
         final Command<CommandSender> summonVillager = wt
-            .meta(CommandMeta.DESCRIPTION, this.plugin.langConfig().get(Lang.COMMAND_VSUMMON))
+            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_SUMMONVILLAGER_DESCRIPTION.asComponent())
             .literal("summonvillager")
             .argument(TradeConfigArgument.of("trade_config"))
             .argument(EnumArgument.of(Villager.Type.class, "type"))
@@ -236,7 +237,7 @@ public final class SummonCommands extends BaseCommand {
         try {
             return tradeConfig.getTrades(true);
         } catch (final IllegalStateException ex) {
-            this.chat.sendParsed(sender, this.plugin.langConfig().get(Lang.COMMAND_SUMMON_MALFORMED_CONFIG));
+            this.chat.send(sender, Messages.COMMAND_SUMMON_MALFORMED_CONFIG);
             return null;
         }
     }
