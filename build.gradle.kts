@@ -73,8 +73,11 @@ tasks {
     runServer {
         minecraftVersion(mcVersion)
     }
-    build {
+    assemble {
         dependsOn(shadowJar)
+    }
+    jar {
+        archiveClassifier.set("noshade")
     }
     shadowJar {
         minimize()
