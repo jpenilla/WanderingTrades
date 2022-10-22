@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.inventory.MerchantRecipe;
@@ -59,12 +60,16 @@ public final class TradeApplicator {
     }
 
     private void addTrades(final WanderingTrader wanderingTrader, final boolean refresh) {
+        this.selectTrades(newTrades -> this.addSelectedTrades(wanderingTrader, refresh, newTrades));
+    }
+
+    public void selectTrades(final Consumer<List<MerchantRecipe>> mainThreadCallback) {
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
             final List<MerchantRecipe> newTrades = this.selectTrades();
 
             this.plugin.getServer().getScheduler().runTask(
                 this.plugin,
-                () -> this.addSelectedTrades(wanderingTrader, refresh, newTrades)
+                () -> mainThreadCallback.accept(newTrades)
             );
         });
     }

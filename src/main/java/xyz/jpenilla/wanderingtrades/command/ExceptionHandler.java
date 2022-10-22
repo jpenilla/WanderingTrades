@@ -1,8 +1,10 @@
 package xyz.jpenilla.wanderingtrades.command;
 
 import cloud.commandframework.CommandManager;
+import cloud.commandframework.exceptions.ArgumentParseException;
 import cloud.commandframework.exceptions.InvalidCommandSenderException;
 import cloud.commandframework.exceptions.InvalidSyntaxException;
+import cloud.commandframework.exceptions.NoPermissionException;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -35,9 +37,25 @@ final class ExceptionHandler {
             .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, this::invalidSyntax)
             .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, this::invalidSender)
             .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, this::argumentParsing)
-            .withCommandExecutionHandler()
+            .withHandler(MinecraftExceptionHandler.ExceptionType.COMMAND_EXECUTION, this::commandExecution)
             .withDecorator(ExceptionHandler::decorate)
             .apply(this.commandManager, this.plugin.audiences()::sender);
+    }
+
+    private Component commandExecution(final CommandSender commandSender, final Exception ex) {
+        final Throwable cause = ex.getCause();
+
+        if (cause instanceof NoPermissionException noPermissionException) {
+            return noPermission(noPermissionException);
+        } else if (cause instanceof InvalidSyntaxException invalidSyntaxException) {
+            return this.invalidSyntax(invalidSyntaxException);
+        } else if (cause instanceof InvalidCommandSenderException invalidCommandSenderException) {
+            return this.invalidSender(invalidCommandSenderException);
+        } else if (cause instanceof ArgumentParseException argumentParseException) {
+            return this.argumentParsing(argumentParseException);
+        }
+
+        return MinecraftExceptionHandler.DEFAULT_COMMAND_EXECUTION_FUNCTION.apply(ex);
     }
 
     private Component invalidSyntax(final Exception ex) {

@@ -27,6 +27,7 @@ import xyz.jpenilla.wanderingtrades.command.commands.ConfigCommands;
 import xyz.jpenilla.wanderingtrades.command.commands.HelpCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.ReloadCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.SummonCommands;
+import xyz.jpenilla.wanderingtrades.command.commands.TradeCommands;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
@@ -62,6 +63,7 @@ public final class Commands {
             new ReloadCommand(this.plugin, this),
             new AboutCommand(this.plugin, this),
             new SummonCommands(this.plugin, this),
+            new TradeCommands(this.plugin, this),
             new ConfigCommands(this.plugin, this)
         );
         commands.forEach(BaseCommand::register);

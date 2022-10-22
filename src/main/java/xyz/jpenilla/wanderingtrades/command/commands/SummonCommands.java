@@ -186,7 +186,7 @@ public final class SummonCommands extends BaseCommand {
         final Location loc,
         final boolean disableAI
     ) {
-        final @Nullable List<MerchantRecipe> recipes = this.tryGetTrades(sender, tradeConfig);
+        final @Nullable List<MerchantRecipe> recipes = tradeConfig.tryGetTrades(sender);
         if (recipes == null) {
             return;
         }
@@ -215,7 +215,7 @@ public final class SummonCommands extends BaseCommand {
         final Villager.Profession profession,
         final boolean disableAI
     ) {
-        final @Nullable List<MerchantRecipe> recipes = this.tryGetTrades(sender, tradeConfig);
+        final @Nullable List<MerchantRecipe> recipes = tradeConfig.tryGetTrades(sender);
         if (recipes == null) {
             return;
         }
@@ -228,18 +228,6 @@ public final class SummonCommands extends BaseCommand {
             this.applyConfig(tradeConfig, villager);
         });
         v.setRecipes(recipes);
-    }
-
-    private @Nullable List<MerchantRecipe> tryGetTrades(
-        final CommandSender sender,
-        final TradeConfig tradeConfig
-    ) {
-        try {
-            return tradeConfig.getTrades(true);
-        } catch (final IllegalStateException ex) {
-            this.chat.send(sender, Messages.COMMAND_SUMMON_MALFORMED_CONFIG);
-            return null;
-        }
     }
 
     private void applyConfig(

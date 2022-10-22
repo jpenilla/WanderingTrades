@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -195,6 +196,15 @@ public final class TradeConfig {
 
     public Map<String, MerchantRecipe> tradesByName() {
         return this.allTrades;
+    }
+
+    public @Nullable List<MerchantRecipe> tryGetTrades(final CommandSender sender) {
+        try {
+            return this.getTrades(true);
+        } catch (final IllegalStateException ex) {
+            this.plugin.chat().send(sender, Messages.COMMAND_SUMMON_MALFORMED_CONFIG);
+            return null;
+        }
     }
 
     public List<MerchantRecipe> getTrades(boolean bypassDisabled) {

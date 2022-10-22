@@ -51,6 +51,10 @@ final class PlayerHeadsImpl implements PlayerHeads {
         }
     }
 
+    Map<UUID, MerchantRecipe> recipeMap() {
+        return this.uuidMerchantRecipeMap;
+    }
+
     @Override
     public List<MerchantRecipe> randomlySelectPlayerHeads() {
         final Map<UUID, MerchantRecipe> recipes = Map.copyOf(this.uuidMerchantRecipeMap);
