@@ -9,6 +9,7 @@ import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.util.ComponentMessageThrowable;
 import org.bukkit.command.CommandSender;
@@ -91,7 +92,7 @@ final class ExceptionHandler {
         return Component.translatable("commands.help.failed", NamedTextColor.RED);
     }
 
-    private static Component decorate(final Component component) {
+    private static Component decorate(final ComponentLike component) {
         return Component.textOfChildren(Constants.PREFIX_COMPONENT, component);
     }
 }

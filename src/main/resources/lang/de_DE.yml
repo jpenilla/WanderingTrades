@@ -18,6 +18,8 @@ command:
       sein.
     invalid-syntax: '<red>Ungültige Befehlseingabe. Die korrekte Befehlssyntax lautet:
       <syntax>'
+    malformed-config: <red>Diese Konfiguration enthält fehler. Stelle sicher, dass
+      die Rezepte mindestens ein Item enthalten.
   editconfig:
     description: Öffnet ein Interface um die Plugineinstellungen (config.yml) zu bearbeiten.
   editplayerheads:
@@ -58,8 +60,6 @@ command:
   summon:
     description: Erzeugt einen Händler mit der spezifischen Konfiguration. Ignoriert
       ob die Konfiguration deaktiviert wurde.
-    malformed-config: <red>Diese Konfiguration enthält fehler. Stelle sicher, dass
-      die Rezepte mindestens ein Item enthalten.
 gui:
   back:
     name: <red>Zurück

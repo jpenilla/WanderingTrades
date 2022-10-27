@@ -13,6 +13,7 @@ command:
     invalid-argument: <red>无效的命令参数：<error>
     invalid-sender: <red>使用此命令您必须是<gray><type></gray>
     invalid-syntax: <red>无效的命令语法。正确的命令语法是：<syntax>
+    malformed-config: <red>配置格式不正确，请确保食谱至少拥有一种成分
   editconfig:
     description: 打开GUI以编辑 config.yml 配置
   editplayerheads:
@@ -48,7 +49,6 @@ command:
     description: 召唤一个具有指定配置的村民，忽略配置是否已禁用
   summon:
     description: 召唤一个具有指定配置的流浪商人，忽略配置是否已禁用
-    malformed-config: <red>配置格式不正确，请确保食谱至少拥有一种成分
 gui:
   back:
     name: <red>返回

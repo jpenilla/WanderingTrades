@@ -31,7 +31,9 @@ import xyz.jpenilla.wanderingtrades.util.Logging;
 @DefaultQualifier(NonNull.class)
 @SuppressWarnings("unused") // Command help messages retrieved by key
 public final class Messages {
-    private static final List<Consumer<YamlConfiguration>> MIGRATIONS = List.of();
+    private static final List<Consumer<YamlConfiguration>> MIGRATIONS = List.of(
+        migrate("command.summon.malformed-config", "command.exception.malformed-config")
+    );
     private static final Map<String, Message> MESSAGES = new HashMap<>();
 
     @Key(value = "command.about.description", legacyKey = "COMMAND_WT_ABOUT")
@@ -84,6 +86,8 @@ public final class Messages {
     public static SingleMessage COMMAND_INVALID_SENDER;
     @Key(value = "command.exception.invalid-syntax", legacyKey = "COMMAND_INVALID_SYNTAX")
     public static SingleMessage COMMAND_INVALID_SYNTAX;
+    @Key(value = "command.exception.malformed-config", legacyKey = "COMMAND_SUMMON_MALFORMED_CONFIG")
+    public static SingleMessage COMMAND_EXCEPTION_MALFORMED_CONFIG;
     @Key(value = "command.list.description", legacyKey = "COMMAND_WT_LIST")
     public static SingleMessage COMMAND_LIST_DESCRIPTION;
     @Key(value = "command.list.message", legacyKey = "COMMAND_LIST_LOADED")
@@ -102,8 +106,6 @@ public final class Messages {
     public static SingleMessage COMMAND_SUMMONVILLAGER_DESCRIPTION;
     @Key(value = "command.summon.description", legacyKey = "COMMAND_SUMMON")
     public static SingleMessage COMMAND_SUMMON_DESCRIPTION;
-    @Key(value = "command.summon.malformed-config", legacyKey = "COMMAND_SUMMON_MALFORMED_CONFIG")
-    public static SingleMessage COMMAND_SUMMON_MALFORMED_CONFIG;
     @Key(value = "gui.back.name", legacyKey = "GUI_BACK")
     public static SingleMessage GUI_BACK;
     @Key(value = "gui.back.lore", legacyKey = "GUI_BACK_LORE")

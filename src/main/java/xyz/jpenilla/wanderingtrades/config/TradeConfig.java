@@ -202,7 +202,7 @@ public final class TradeConfig {
         try {
             return this.getTrades(true);
         } catch (final IllegalStateException ex) {
-            this.plugin.chat().send(sender, Messages.COMMAND_SUMMON_MALFORMED_CONFIG);
+            this.plugin.chat().send(sender, Messages.COMMAND_EXCEPTION_MALFORMED_CONFIG);
             return null;
         }
     }

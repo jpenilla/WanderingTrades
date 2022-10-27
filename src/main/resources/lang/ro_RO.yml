@@ -15,6 +15,8 @@ command:
     invalid-argument: '<red>Parametru invalid pentru comandă: <error>'
     invalid-sender: <red>Command sender invalid. Trebuie să fii un <gray><type></gray>
     invalid-syntax: '<red>Sintaxă invalidă. Sintaxa corectă a comenzii este: <syntax>'
+    malformed-config: <red>Această configurație nu este formatată corect. Verifică
+      dacă schimburile au măcar un obiect.
   editconfig:
     description: Deschide un meniu pentru a edita setările din config.yml
   editplayerheads:
@@ -53,8 +55,6 @@ command:
   summon:
     description: Spawnează un Wandering Trader după configurația specificată. Nu ia
       in calcul dacă configurația este dezactivată.
-    malformed-config: <red>Această configurație nu este formatată corect. Verifică
-      dacă schimburile au măcar un obiect.
 gui:
   back:
     name: <red>Înapoi
