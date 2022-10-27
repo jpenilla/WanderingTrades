@@ -29,7 +29,7 @@ public final class ConfigManager {
     }
 
     public void reload() {
-        this.config.load();
+        this.config.reload();
         this.loadMessages();
         this.loadTradeConfigs();
         this.loadPlayerHeadConfig();
@@ -87,6 +87,6 @@ public final class ConfigManager {
         if (!file.exists()) {
             this.plugin.saveResource("playerheads.yml", false);
         }
-        this.playerHeadConfig = PlayerHeadConfig.load(file);
+        this.playerHeadConfig = PlayerHeadConfig.load(this.plugin, file);
     }
 }

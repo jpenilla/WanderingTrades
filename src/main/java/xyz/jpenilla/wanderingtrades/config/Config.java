@@ -1,14 +1,10 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public final class Config {
-    private final WanderingTrades plugin;
-
+public final class Config extends DefaultedConfig {
     private boolean debug;
     private boolean enabled;
     private boolean disableCommands;
@@ -19,23 +15,33 @@ public final class Config {
     private boolean wgWhitelist;
     private boolean traderWorldWhitelist;
     private boolean updateLang;
-    private boolean updateChecker = true;
+    private boolean updateChecker;
     private String language;
     private List<String> wgRegionList;
     private List<String> traderWorldList;
     private int refreshCommandTradersMinutes;
-    private int traderSpawnNotificationRadius = -1;
+    private int traderSpawnNotificationRadius;
     private List<String> traderSpawnNotificationCommands;
 
     public Config(final WanderingTrades plugin) {
-        this.plugin = plugin;
-        this.plugin.saveDefaultConfig();
+        super(plugin, "config.yml");
+        this.reload();
+    }
+
+    @Override
+    protected FileConfiguration config() {
+        return this.plugin.getConfig();
+    }
+
+    public void reload() {
         this.load();
+        this.save();
     }
 
     public void load() {
+        this.plugin.saveDefaultConfig();
         this.plugin.reloadConfig();
-        FileConfiguration config = this.plugin.getConfig();
+        final FileConfiguration config = this.plugin.getConfig();
 
         this.debug = config.getBoolean(Fields.debug);
         this.enabled = config.getBoolean(Fields.enabled);
@@ -51,40 +57,31 @@ public final class Config {
         this.traderWorldWhitelist = config.getBoolean(Fields.traderWorldWhitelist);
         this.language = config.getString(Fields.language);
         this.updateLang = config.getBoolean(Fields.updateLang);
-        this.updateChecker = config.getBoolean(Fields.updateChecker, this.updateChecker);
-        this.traderSpawnNotificationRadius = config.getInt(Fields.traderSpawnNotificationRadius, this.traderSpawnNotificationRadius);
+        this.updateChecker = config.getBoolean(Fields.updateChecker);
+        this.traderSpawnNotificationRadius = config.getInt(Fields.traderSpawnNotificationRadius);
         this.traderSpawnNotificationCommands = config.getStringList(Fields.traderSpawnNotificationCommands);
     }
 
     public void save() {
-        final FileConfiguration config = this.plugin.getConfig();
+        this.set(Fields.debug, this.debug);
+        this.set(Fields.enabled, this.enabled);
+        this.set(Fields.disableCommands, this.disableCommands);
+        this.set(Fields.removeOriginalTrades, this.removeOriginalTrades);
+        this.set(Fields.allowMultipleSets, this.allowMultipleSets);
+        this.set(Fields.refreshCommandTraders, this.refreshCommandTraders);
+        this.set(Fields.refreshCommandTradersMinutes, this.refreshCommandTradersMinutes);
+        this.set(Fields.preventNightInvisibility, this.preventNightInvisibility);
+        this.set(Fields.wgRegionList, this.wgRegionList);
+        this.set(Fields.wgWhitelist, this.wgWhitelist);
+        this.set(Fields.traderWorldList, this.traderWorldList);
+        this.set(Fields.traderWorldWhitelist, this.traderWorldWhitelist);
+        this.set(Fields.language, this.language);
+        this.set(Fields.updateLang, this.updateLang);
+        this.set(Fields.updateChecker, this.updateChecker);
+        this.set(Fields.traderSpawnNotificationRadius, this.traderSpawnNotificationRadius);
+        this.set(Fields.traderSpawnNotificationCommands, this.traderSpawnNotificationCommands);
 
-        config.set(Fields.debug, this.debug);
-        config.set(Fields.enabled, this.enabled);
-        config.set(Fields.disableCommands, this.disableCommands);
-        config.set(Fields.removeOriginalTrades, this.removeOriginalTrades);
-        config.set(Fields.allowMultipleSets, this.allowMultipleSets);
-        config.set(Fields.refreshCommandTraders, this.refreshCommandTraders);
-        config.set(Fields.refreshCommandTradersMinutes, this.refreshCommandTradersMinutes);
-        config.set(Fields.preventNightInvisibility, this.preventNightInvisibility);
-        config.set(Fields.wgRegionList, this.wgRegionList);
-        config.set(Fields.wgWhitelist, this.wgWhitelist);
-        config.set(Fields.traderWorldList, this.traderWorldList);
-        config.set(Fields.traderWorldWhitelist, this.traderWorldWhitelist);
-        config.set(Fields.language, this.language);
-        config.set(Fields.updateLang, this.updateLang);
-        config.set(Fields.updateChecker, this.updateChecker);
-        config.set(Fields.traderSpawnNotificationRadius, this.traderSpawnNotificationRadius);
-        config.set(Fields.traderSpawnNotificationCommands, this.traderSpawnNotificationCommands);
-
-        final String path = this.plugin.getDataFolder() + "/config.yml";
-        try {
-            config.save(path);
-        } catch (final IOException e) {
-            this.plugin.getLogger().log(Level.WARNING, "Failed to save config", e);
-        }
-
-        this.load();
+        this.plugin.saveConfig();
     }
 
     public boolean debug() {

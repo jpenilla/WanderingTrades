@@ -16,6 +16,10 @@ import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.util.Logging;
 
 public final class ItemStackSerialization {
+    private static final List<String> COMMENT = List.of(
+        "The following value was serialized from an in-game item and is not meant to be human-readable or editable. As long as it is present other options for this item will be ignored."
+    );
+
     private ItemStackSerialization() {
     }
 
@@ -28,10 +32,22 @@ public final class ItemStackSerialization {
         // Meaning if the item was originally added via config, and is later saved in serialized form, both will be in the config
         // but only the serialized form will be used. This avoids accidental data loss at the cost of config clutter which could confuse
         // some users...
-        if (PaperLib.isPaper()) {
-            config.set(path + ".itemStackAsBytes", itemStack.serializeAsBytes());
-        } else {
-            config.set(path + ".itemStack", itemStack.serialize());
+
+        final String paperPath = path + ".itemStackAsBytes";
+        final String bukkitPath = path + ".itemStack";
+        final String selectedPath = PaperLib.isPaper() ? paperPath : bukkitPath;
+        final Object value = PaperLib.isPaper() ? itemStack.serializeAsBytes() : itemStack.serialize();
+        config.set(selectedPath, value);
+
+        // Remove old bukkit value if re-saving as paper value or changed while on paper
+        if (PaperLib.isPaper() && config.get(bukkitPath, null) != null) {
+            config.set(bukkitPath, null);
+        }
+
+        try {
+            config.getClass().getMethod("getComments", String.class);
+            config.setComments(selectedPath, COMMENT);
+        } catch (final NoSuchMethodException ignore) {
         }
     }
 

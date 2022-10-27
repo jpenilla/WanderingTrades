@@ -9,8 +9,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-public final class PlayerHeadConfig {
+public final class PlayerHeadConfig extends DefaultedConfig {
     private static final String HEAD_TRADE_PREFIX = "headTrade.";
 
     private final File file;
@@ -30,10 +31,16 @@ public final class PlayerHeadConfig {
     private List<String> usernameBlacklist;
     private int days;
 
-    private PlayerHeadConfig(final @NonNull File file) {
+    private PlayerHeadConfig(final @NonNull WanderingTrades plugin, final @NonNull File file) {
+        super(plugin, "playerheads.yml");
         this.file = file;
         this.config = YamlConfiguration.loadConfiguration(file);
         this.load();
+    }
+
+    @Override
+    protected FileConfiguration config() {
+        return this.config;
     }
 
     public void load() {
@@ -55,19 +62,19 @@ public final class PlayerHeadConfig {
     }
 
     public void save() {
-        this.config.set(Fields.playerHeadsFromServer, this.playerHeadsFromServer);
-        this.config.set(Fields.playerHeadsFromServerChance, this.playerHeadsFromServerChance);
-        this.config.set(Fields.playerHeadsFromServerAmount, this.playerHeadsFromServerAmount);
-        this.config.set(Fields.days, this.days);
-        this.config.set(Fields.usernameBlacklist, this.usernameBlacklist);
-        this.config.set(Fields.permissionWhitelist, this.permissionWhitelist);
-        this.config.set(HEAD_TRADE_PREFIX + Fields.maxUses, this.maxUses);
-        this.config.set(HEAD_TRADE_PREFIX + Fields.experienceReward, this.experienceReward);
+        this.set(Fields.playerHeadsFromServer, this.playerHeadsFromServer);
+        this.set(Fields.playerHeadsFromServerChance, this.playerHeadsFromServerChance);
+        this.set(Fields.playerHeadsFromServerAmount, this.playerHeadsFromServerAmount);
+        this.set(Fields.days, this.days);
+        this.set(Fields.usernameBlacklist, this.usernameBlacklist);
+        this.set(Fields.permissionWhitelist, this.permissionWhitelist);
+        this.set(HEAD_TRADE_PREFIX + Fields.maxUses, this.maxUses);
+        this.set(HEAD_TRADE_PREFIX + Fields.experienceReward, this.experienceReward);
         ItemStackSerialization.writeOrRemove(this.config, HEAD_TRADE_PREFIX + "ingredients.1", this.ingredient1);
         ItemStackSerialization.writeOrRemove(this.config, HEAD_TRADE_PREFIX + "ingredients.2", this.ingredient2);
-        this.config.set(HEAD_TRADE_PREFIX + "head.amount", this.headsPerTrade);
-        this.config.set(HEAD_TRADE_PREFIX + "head.customname", this.name);
-        this.config.set(HEAD_TRADE_PREFIX + "head.lore", this.lore);
+        this.set(HEAD_TRADE_PREFIX + "head.amount", this.headsPerTrade);
+        this.set(HEAD_TRADE_PREFIX + "head.customname", this.name);
+        this.set(HEAD_TRADE_PREFIX + "head.lore", this.lore);
 
         try {
             this.config.save(this.file);
@@ -197,8 +204,8 @@ public final class PlayerHeadConfig {
         this.days = days;
     }
 
-    public static PlayerHeadConfig load(final File file) {
-        return new PlayerHeadConfig(file);
+    public static PlayerHeadConfig load(final WanderingTrades plugin, final File file) {
+        return new PlayerHeadConfig(plugin, file);
     }
 
     private static final class Fields {
