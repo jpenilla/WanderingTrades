@@ -1,6 +1,8 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
+import java.util.Collection;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,6 +39,10 @@ public final class TraderSpawnListener implements Listener {
             trader.getPersistentDataContainer().remove(Constants.TEMPORARY_BLACKLISTED);
             return;
         }
+
+        // Delay by 1 tick so entity is in world
+        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.notifyPlayers(event));
+
         if (this.plugin.config().traderWorldWhitelist()) {
             if (this.plugin.config().traderWorldList().contains(event.getEntity().getWorld().getName())) {
                 this.plugin.tradeApplicator().addTrades(trader);
@@ -44,6 +50,26 @@ public final class TraderSpawnListener implements Listener {
         } else {
             if (!this.plugin.config().traderWorldList().contains(event.getEntity().getWorld().getName())) {
                 this.plugin.tradeApplicator().addTrades(trader);
+            }
+        }
+    }
+
+    private void notifyPlayers(final CreatureSpawnEvent event) {
+        final int radius = this.plugin.config().traderSpawnNotificationRadius();
+        if (radius < 0) {
+            return;
+        }
+        final Collection<Player> players = event.getEntity().getWorld()
+                .getNearbyPlayers(event.getEntity().getLocation(), radius);
+        for (final Player player : players) {
+            for (String command : this.plugin.config().traderSpawnNotificationCommands()) {
+                command = command.replace("{player}", player.getName())
+                        .replace("{x-pos}", String.valueOf(event.getEntity().getLocation().getBlockX()))
+                        .replace("{y-pos}", String.valueOf(event.getEntity().getLocation().getBlockY()))
+                        .replace("{z-pos}", String.valueOf(event.getEntity().getLocation().getBlockZ()))
+                        .replace("{trader-uuid}", event.getEntity().getUniqueId().toString())
+                        .replace("{distance}", String.valueOf(Math.round(player.getLocation().distance(event.getEntity().getLocation()))));
+                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), command);
             }
         }
     }

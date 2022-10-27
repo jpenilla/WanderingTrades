@@ -89,9 +89,7 @@ public final class HelpCommand extends BaseCommand {
             };
         }
 
-        return this.plugin.miniMessage().deserialize(
-            ((Messages.SingleMessage) Messages.get("command.help.message." + key.replace("_", "-"))).message(),
-            placeholders
-        );
+        return ((Messages.SingleMessage) Messages.get("command.help.message." + key.replace("_", "-")))
+            .withPlaceholders(placeholders);
     }
 }

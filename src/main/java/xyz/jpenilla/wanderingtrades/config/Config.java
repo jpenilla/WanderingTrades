@@ -24,6 +24,8 @@ public final class Config {
     private List<String> wgRegionList;
     private List<String> traderWorldList;
     private int refreshCommandTradersMinutes;
+    private int traderSpawnNotificationRadius = -1;
+    private List<String> traderSpawnNotificationCommands;
 
     public Config(final WanderingTrades plugin) {
         this.plugin = plugin;
@@ -50,6 +52,8 @@ public final class Config {
         this.language = config.getString(Fields.language);
         this.updateLang = config.getBoolean(Fields.updateLang);
         this.updateChecker = config.getBoolean(Fields.updateChecker, this.updateChecker);
+        this.traderSpawnNotificationRadius = config.getInt(Fields.traderSpawnNotificationRadius, this.traderSpawnNotificationRadius);
+        this.traderSpawnNotificationCommands = config.getStringList(Fields.traderSpawnNotificationCommands);
     }
 
     public void save() {
@@ -70,6 +74,8 @@ public final class Config {
         config.set(Fields.language, this.language);
         config.set(Fields.updateLang, this.updateLang);
         config.set(Fields.updateChecker, this.updateChecker);
+        config.set(Fields.traderSpawnNotificationRadius, this.traderSpawnNotificationRadius);
+        config.set(Fields.traderSpawnNotificationCommands, this.traderSpawnNotificationCommands);
 
         final String path = this.plugin.getDataFolder() + "/config.yml";
         try {
@@ -173,6 +179,14 @@ public final class Config {
         this.refreshCommandTradersMinutes = refreshCommandTradersMinutes;
     }
 
+    public int traderSpawnNotificationRadius() {
+        return this.traderSpawnNotificationRadius;
+    }
+
+    public List<String> traderSpawnNotificationCommands() {
+        return this.traderSpawnNotificationCommands;
+    }
+
     public static final class Fields {
         public static final String debug = "debug";
         public static final String enabled = "enabled";
@@ -189,5 +203,7 @@ public final class Config {
         public static final String traderWorldList = "traderWorldList";
         public static final String refreshCommandTradersMinutes = "refreshCommandTradersMinutes";
         public static final String updateChecker = "updateChecker";
+        public static final String traderSpawnNotificationRadius = "traderSpawnNotificationRadius";
+        public static final String traderSpawnNotificationCommands = "traderSpawnNotificationCommands";
     }
 }
