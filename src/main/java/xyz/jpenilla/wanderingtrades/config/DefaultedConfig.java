@@ -17,14 +17,14 @@ public abstract class DefaultedConfig {
     private static final boolean COMMENTS = canUseComments();
 
     protected final WanderingTrades plugin;
-    private final YamlConfiguration defaultConfig;
+    protected final YamlConfiguration defaultConfig;
 
     protected DefaultedConfig(
         final WanderingTrades plugin,
         final String defaultConfigPathInJar
     ) {
         this.plugin = plugin;
-        this.defaultConfig = COMMENTS ? this.defaultConfig(defaultConfigPathInJar) : null;
+        this.defaultConfig = this.defaultConfig(defaultConfigPathInJar);
     }
 
     protected abstract FileConfiguration config();
@@ -51,7 +51,7 @@ public abstract class DefaultedConfig {
         if (prev != null || value == null) {
             return;
         }
-        if (!COMMENTS || this.defaultConfig == null) {
+        if (!COMMENTS) {
             return;
         }
         final List<String> comments = this.defaultConfig.getComments(key);

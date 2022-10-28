@@ -3,12 +3,16 @@ package xyz.jpenilla.wanderingtrades.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.IntSupplier;
+import java.util.logging.Level;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public final class PlayerHeadConfig extends DefaultedConfig {
@@ -23,6 +27,7 @@ public final class PlayerHeadConfig extends DefaultedConfig {
     private boolean permissionWhitelist;
     private double playerHeadsFromServerChance;
     private String playerHeadsFromServerAmount;
+    private IntSupplier playerHeadsFromServerAmountFunction;
     private int headsPerTrade;
     private String name;
     private List<String> lore;
@@ -35,7 +40,13 @@ public final class PlayerHeadConfig extends DefaultedConfig {
         super(plugin, "playerheads.yml");
         this.file = file;
         this.config = YamlConfiguration.loadConfiguration(file);
+        this.config.setDefaults(this.defaultConfig);
+        this.reload();
+    }
+
+    public void reload() {
         this.load();
+        this.save();
     }
 
     @Override
@@ -44,9 +55,16 @@ public final class PlayerHeadConfig extends DefaultedConfig {
     }
 
     public void load() {
+        try {
+            this.config.load(this.file);
+        } catch (final IOException | InvalidConfigurationException ex) {
+            throw new RuntimeException("Failed to load config", ex);
+        }
+
         this.playerHeadsFromServer = this.config.getBoolean(Fields.playerHeadsFromServer);
         this.playerHeadsFromServerChance = this.config.getDouble(Fields.playerHeadsFromServerChance);
         this.playerHeadsFromServerAmount = this.config.getString(Fields.playerHeadsFromServerAmount);
+        this.playerHeadsFromServerAmountFunction = randAmountFunction(this.playerHeadsFromServerAmount);
         this.days = this.config.getInt(Fields.days);
         if (this.config.getInt(HEAD_TRADE_PREFIX + Fields.maxUses) != 0) {
             this.maxUses = this.config.getInt(HEAD_TRADE_PREFIX + Fields.maxUses);
@@ -78,26 +96,26 @@ public final class PlayerHeadConfig extends DefaultedConfig {
 
         try {
             this.config.save(this.file);
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException ex) {
+            this.plugin.getLogger().log(Level.WARNING, "Failed to save config", ex);
         }
+    }
 
-        try {
-            this.config.load(this.file);
-        } catch (final IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+    private static IntSupplier randAmountFunction(final @Nullable String playerHeadsFromServerAmount) {
+        Objects.requireNonNull(playerHeadsFromServerAmount, "Missing playerHeadsFromServerAmount config");
+        if (playerHeadsFromServerAmount.contains(":")) {
+            final String[] intStrings = playerHeadsFromServerAmount.split(":");
+            final int i0 = Integer.parseInt(intStrings[0]);
+            final int i1 = Integer.parseInt(intStrings[1]);
+            return () -> ThreadLocalRandom.current().nextInt(i0, i1);
+        } else {
+            final int value = Integer.parseInt(playerHeadsFromServerAmount);
+            return () -> value;
         }
-
-        this.load();
     }
 
     public int getRandAmount() {
-        if (this.playerHeadsFromServerAmount.contains(":")) {
-            String[] ints = this.playerHeadsFromServerAmount.split(":");
-            return ThreadLocalRandom.current().nextInt(Integer.parseInt(ints[0]), Integer.parseInt(ints[1]));
-        } else {
-            return Integer.parseInt(this.playerHeadsFromServerAmount);
-        }
+        return this.playerHeadsFromServerAmountFunction.getAsInt();
     }
 
     public int maxUses() {
@@ -204,7 +222,11 @@ public final class PlayerHeadConfig extends DefaultedConfig {
         this.days = days;
     }
 
-    public static PlayerHeadConfig load(final WanderingTrades plugin, final File file) {
+    public static PlayerHeadConfig load(final WanderingTrades plugin) {
+        final File file = new File(plugin.getDataFolder(), "playerheads.yml");
+        if (!file.exists()) {
+            plugin.saveResource("playerheads.yml", false);
+        }
         return new PlayerHeadConfig(plugin, file);
     }
 

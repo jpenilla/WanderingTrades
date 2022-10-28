@@ -22,17 +22,17 @@ public final class ConfigManager {
     }
 
     public void load() {
-        this.config = new Config(this.plugin);
+        this.config = Config.load(this.plugin);
         this.loadMessages();
-        this.loadPlayerHeadConfig();
+        this.playerHeadConfig = PlayerHeadConfig.load(this.plugin);
         this.loadTradeConfigs();
     }
 
     public void reload() {
         this.config.reload();
         this.loadMessages();
+        this.playerHeadConfig.reload();
         this.loadTradeConfigs();
-        this.loadPlayerHeadConfig();
     }
 
     public Config config() {
@@ -80,13 +80,5 @@ public final class ConfigManager {
             final TradeConfig tradeConfig = TradeConfig.load(this.plugin, file);
             this.tradeConfigs.put(tradeConfig.configName(), tradeConfig);
         }
-    }
-
-    private void loadPlayerHeadConfig() {
-        final File file = new File(this.plugin.getDataFolder(), "playerheads.yml");
-        if (!file.exists()) {
-            this.plugin.saveResource("playerheads.yml", false);
-        }
-        this.playerHeadConfig = PlayerHeadConfig.load(this.plugin, file);
     }
 }

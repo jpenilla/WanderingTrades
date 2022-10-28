@@ -23,7 +23,7 @@ public final class Config extends DefaultedConfig {
     private int traderSpawnNotificationRadius;
     private List<String> traderSpawnNotificationCommands;
 
-    public Config(final WanderingTrades plugin) {
+    private Config(final WanderingTrades plugin) {
         super(plugin, "config.yml");
         this.reload();
     }
@@ -182,6 +182,10 @@ public final class Config extends DefaultedConfig {
 
     public List<String> traderSpawnNotificationCommands() {
         return this.traderSpawnNotificationCommands;
+    }
+
+    public static Config load(final WanderingTrades plugin) {
+        return new Config(plugin);
     }
 
     public static final class Fields {
