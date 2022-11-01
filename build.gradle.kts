@@ -49,7 +49,7 @@ dependencies {
     compileOnly("net.essentialsx", "EssentialsX", "2.19.4") {
         isTransitive = false
     }
-    compileOnly("org.checkerframework", "checker-qual", "3.26.0")
+    compileOnly("org.checkerframework", "checker-qual", "3.27.0")
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7") {
         exclude("org.bukkit")
     }
