@@ -43,7 +43,7 @@ dependencies {
     implementation("cloud.commandframework", "cloud-paper")
     implementation("cloud.commandframework", "cloud-minecraft-extras")
 
-    implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-legacy-SNAPSHOT")
+    implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-SNAPSHOT")
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
     compileOnly("net.essentialsx", "EssentialsX", "2.19.4") {
