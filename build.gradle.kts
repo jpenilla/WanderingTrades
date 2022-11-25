@@ -46,7 +46,7 @@ dependencies {
     implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-SNAPSHOT")
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
-    compileOnly("net.essentialsx", "EssentialsX", "2.19.4") {
+    compileOnly("net.essentialsx", "EssentialsX", "2.19.7") {
         isTransitive = false
     }
     compileOnly("org.checkerframework", "checker-qual", "3.27.0")
