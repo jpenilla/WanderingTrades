@@ -16,9 +16,8 @@ val mcVersion = "1.19.2"
 
 repositories {
     mavenCentral()
-    maven("https://oss.sonatype.org/content/groups/public/") {
-        mavenContent { snapshotsOnly() }
-    }
+    sonatype.s01Snapshots()
+    sonatype.ossSnapshots()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.jpenilla.xyz/snapshots/") {
         mavenContent { snapshotsOnly() }
@@ -36,7 +35,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "$mcVersion-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+70-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+71-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 
     implementation(platform("cloud.commandframework:cloud-bom:1.7.1"))
