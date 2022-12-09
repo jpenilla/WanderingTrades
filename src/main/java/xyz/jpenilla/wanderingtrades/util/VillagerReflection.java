@@ -44,7 +44,7 @@ public final class VillagerReflection {
             case 16 -> "eW";
             case 17 -> "fF";
             case 18 -> "fH";
-            case 19 -> "fS";
+            case 19 -> "fU";
             default -> throw new IllegalStateException("Don't know updateTrades method name for 1." + getMinecraftVersion());
         };
         try {
