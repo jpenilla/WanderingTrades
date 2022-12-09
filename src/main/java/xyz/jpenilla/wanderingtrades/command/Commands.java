@@ -8,6 +8,7 @@ import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.captions.SimpleCaptionRegistry;
 import cloud.commandframework.captions.StandardCaptionKeys;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import cloud.commandframework.execution.FilteringCommandSuggestionProcessor;
 import cloud.commandframework.execution.preprocessor.CommandPreprocessingContext;
 import cloud.commandframework.keys.CloudKey;
 import cloud.commandframework.keys.SimpleCloudKey;
@@ -43,6 +44,9 @@ public final class Commands {
         this.plugin = plugin;
         this.commandManager = commandManager;
 
+        this.commandManager.commandSuggestionProcessor(new FilteringCommandSuggestionProcessor<>(
+            FilteringCommandSuggestionProcessor.Filter.<CommandSender>contains(true).andTrimBeforeLastSpace()
+        ));
         new ExceptionHandler(plugin, commandManager).register();
         this.registerMessageFactories();
         if (this.commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
