@@ -12,7 +12,7 @@ group = "xyz.jpenilla"
 version = "1.8.1-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.19.2"
+val mcVersion = "1.19.3"
 
 repositories {
     mavenCentral()
@@ -35,10 +35,10 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "$mcVersion-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8-SNAPSHOT")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+71-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+73-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
 
-    implementation(platform("cloud.commandframework:cloud-bom:1.7.1"))
+    implementation(platform("cloud.commandframework:cloud-bom:1.8.0-SNAPSHOT"))
     implementation("cloud.commandframework", "cloud-paper")
     implementation("cloud.commandframework", "cloud-minecraft-extras")
 
