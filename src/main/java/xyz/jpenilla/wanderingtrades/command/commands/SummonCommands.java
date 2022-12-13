@@ -51,12 +51,12 @@ public final class SummonCommands extends BaseCommand {
         commands.registerFlag(
             "pitch",
             this.commandManager.flagBuilder("pitch")
-                .withArgument(IntegerArgument.newBuilder("pitch").withMin(-180).withMax(180))
+                .withArgument(IntegerArgument.builder("pitch").withMin(-180).withMax(180))
         );
         commands.registerFlag(
             "yaw",
             this.commandManager.flagBuilder("yaw")
-                .withArgument(IntegerArgument.newBuilder("yaw").withMin(-90).withMax(90))
+                .withArgument(IntegerArgument.builder("yaw").withMin(-90).withMax(90))
         );
         commands.registerFlag(
             "world",

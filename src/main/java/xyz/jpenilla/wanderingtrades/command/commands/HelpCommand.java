@@ -33,7 +33,7 @@ public final class HelpCommand extends BaseCommand {
     @Override
     public void register() {
         /* Help Query Argument */
-        final CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>newBuilder("query")
+        final CommandArgument<CommandSender, String> helpQueryArgument = StringArgument.<CommandSender>builder("query")
             .greedy()
             .asOptional()
             .withSuggestionsProvider((context, input) -> {
