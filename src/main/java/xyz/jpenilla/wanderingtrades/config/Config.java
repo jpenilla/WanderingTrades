@@ -1,7 +1,9 @@
 package xyz.jpenilla.wanderingtrades.config;
 
 import java.util.List;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 public final class Config extends DefaultedConfig {
@@ -20,8 +22,7 @@ public final class Config extends DefaultedConfig {
     private List<String> wgRegionList;
     private List<String> traderWorldList;
     private int refreshCommandTradersMinutes;
-    private int traderSpawnNotificationRadius;
-    private List<String> traderSpawnNotificationCommands;
+    private TraderSpawnNotificationOptions traderSpawnNotificationOptions;
 
     private Config(final WanderingTrades plugin) {
         super(plugin, "config.yml");
@@ -58,8 +59,18 @@ public final class Config extends DefaultedConfig {
         this.language = config.getString(Fields.language);
         this.updateLang = config.getBoolean(Fields.updateLang);
         this.updateChecker = config.getBoolean(Fields.updateChecker);
-        this.traderSpawnNotificationRadius = config.getInt(Fields.traderSpawnNotificationRadius);
-        this.traderSpawnNotificationCommands = config.getStringList(Fields.traderSpawnNotificationCommands);
+
+        final int oldTraderSpawnNotificationRadius = config.getInt(Fields.traderSpawnNotificationRadius);
+        final List<String> oldTraderSpawnNotificationCommands = config.getStringList(Fields.traderSpawnNotificationCommands);
+        if (oldTraderSpawnNotificationRadius != 0 || !oldTraderSpawnNotificationCommands.isEmpty()) {
+            config.set(Fields.traderSpawnNotificationRadius, null);
+            config.set(Fields.traderSpawnNotificationCommands, null);
+            this.traderSpawnNotificationOptions = new TraderSpawnNotificationOptions(
+                oldTraderSpawnNotificationRadius, oldTraderSpawnNotificationCommands);
+        } else {
+            this.traderSpawnNotificationOptions = TraderSpawnNotificationOptions.createFrom(
+                config.getConfigurationSection(Fields.traderSpawnNotifications));
+        }
     }
 
     public void save() {
@@ -78,8 +89,7 @@ public final class Config extends DefaultedConfig {
         this.set(Fields.language, this.language);
         this.set(Fields.updateLang, this.updateLang);
         this.set(Fields.updateChecker, this.updateChecker);
-        this.set(Fields.traderSpawnNotificationRadius, this.traderSpawnNotificationRadius);
-        this.set(Fields.traderSpawnNotificationCommands, this.traderSpawnNotificationCommands);
+        this.traderSpawnNotificationOptions.setTo(this, Fields.traderSpawnNotifications);
 
         this.plugin.saveConfig();
     }
@@ -176,16 +186,44 @@ public final class Config extends DefaultedConfig {
         this.refreshCommandTradersMinutes = refreshCommandTradersMinutes;
     }
 
-    public int traderSpawnNotificationRadius() {
-        return this.traderSpawnNotificationRadius;
-    }
-
-    public List<String> traderSpawnNotificationCommands() {
-        return this.traderSpawnNotificationCommands;
+    public TraderSpawnNotificationOptions traderSpawnNotificationOptions() {
+        return this.traderSpawnNotificationOptions;
     }
 
     public static Config load(final WanderingTrades plugin) {
         return new Config(plugin);
+    }
+
+    public record TraderSpawnNotificationOptions(
+        int radius,
+        List<String> perPlayerCommands
+    ) {
+        public static final TraderSpawnNotificationOptions DEFAULT = new TraderSpawnNotificationOptions(
+            -1,
+            List.of(
+                "tellraw {player} [\"A wandering trader has spawned {distance} blocks away! ({x-pos}, {y-pos}, {z-pos}) (uuid: {trader-uuid})\"]",
+                "execute at {player} run playsound minecraft:block.note_block.cow_bell neutral {player}",
+                "effect give {trader-uuid} glowing 30"
+            )
+        );
+
+        private static final String RADIUS = "radius";
+        private static final String PER_PLAYER_COMMANDS = "perPlayerCommands";
+
+        public void setTo(final DefaultedConfig config, final String path) {
+            config.set(path + "." + RADIUS, this.radius);
+            config.set(path + "." + PER_PLAYER_COMMANDS, this.perPlayerCommands);
+        }
+
+        public static TraderSpawnNotificationOptions createFrom(final @Nullable ConfigurationSection section) {
+            if (section == null) {
+                return DEFAULT;
+            }
+            return new TraderSpawnNotificationOptions(
+                section.getInt(RADIUS, DEFAULT.radius()),
+                section.getStringList(PER_PLAYER_COMMANDS)
+            );
+        }
     }
 
     public static final class Fields {
@@ -206,5 +244,6 @@ public final class Config extends DefaultedConfig {
         public static final String updateChecker = "updateChecker";
         public static final String traderSpawnNotificationRadius = "traderSpawnNotificationRadius";
         public static final String traderSpawnNotificationCommands = "traderSpawnNotificationCommands";
+        public static final String traderSpawnNotifications = "traderSpawnNotifications";
     }
 }

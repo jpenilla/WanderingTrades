@@ -62,11 +62,15 @@ disableCommands: false
 # Should WanderingTrades check GitHub for updates on startup?
 updateChecker: true
 
-# Radius for notifying nearby players of trader spawns. -1 disables the feature.
-traderSpawnNotificationRadius: -1
+# Options for notifying players of Wandering Trader spawns
+traderSpawnNotifications:
+  # Radius for notifying nearby players of trader spawns. -1 disables the feature.
+  radius: -1
 
-# Commands to notify a player
-traderSpawnNotificationCommands:
-  - 'tellraw {player} ["A wandering trader has spawned {distance} blocks away! ({x-pos}, {y-pos}, {z-pos}) (uuid: {trader-uuid})"]'
-  - 'execute at {player} run playsound minecraft:block.note_block.cow_bell neutral {player}'
-  - 'effect give {trader-uuid} glowing 30'
+  # Commands to notify a player
+  perPlayerCommands:
+  - 'tellraw {player} ["A wandering trader has spawned {distance} blocks away! ({x-pos},
+    {y-pos}, {z-pos}) (uuid: {trader-uuid})"]'
+  - execute at {player} run playsound minecraft:block.note_block.cow_bell neutral
+    {player}
+  - effect give {trader-uuid} glowing 30

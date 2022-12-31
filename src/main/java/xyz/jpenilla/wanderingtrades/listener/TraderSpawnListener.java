@@ -55,14 +55,14 @@ public final class TraderSpawnListener implements Listener {
     }
 
     private void notifyPlayers(final CreatureSpawnEvent event) {
-        final int radius = this.plugin.config().traderSpawnNotificationRadius();
+        final int radius = this.plugin.config().traderSpawnNotificationOptions().radius();
         if (radius < 0) {
             return;
         }
         final Collection<Player> players = event.getEntity().getWorld()
                 .getNearbyPlayers(event.getEntity().getLocation(), radius);
         for (final Player player : players) {
-            for (String command : this.plugin.config().traderSpawnNotificationCommands()) {
+            for (String command : this.plugin.config().traderSpawnNotificationOptions().perPlayerCommands()) {
                 command = command.replace("{player}", player.getName())
                         .replace("{x-pos}", String.valueOf(event.getEntity().getLocation().getBlockX()))
                         .replace("{y-pos}", String.valueOf(event.getEntity().getLocation().getBlockY()))
