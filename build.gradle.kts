@@ -1,3 +1,5 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -66,6 +68,11 @@ bukkit {
     website = "https://github.com/jpenilla/WanderingTrades"
     authors = listOf("jmp")
     softDepend = listOf("WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
+    permissions {
+        register("wanderingtrades.trader-spawn-notifications") {
+            default = BukkitPluginDescription.Permission.Default.TRUE
+        }
+    }
 }
 
 tasks {

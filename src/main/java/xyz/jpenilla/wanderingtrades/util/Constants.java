@@ -45,5 +45,6 @@ public final class Constants {
         }
 
         public static final String WANDERINGTRADES_HEADAVAILABLE = "wanderingtrades.headavailable";
+        public static final String TRADER_SPAWN_NOTIFICATIONS = "wanderingtrades.trader-spawn-notifications";
     }
 }

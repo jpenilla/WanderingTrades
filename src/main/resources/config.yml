@@ -64,13 +64,22 @@ updateChecker: true
 
 # Options for notifying players of Wandering Trader spawns
 traderSpawnNotifications:
-  # Radius for notifying nearby players of trader spawns. -1 disables the feature.
-  radius: -1
+  # Toggle the notification feature
+  enabled: false
 
-  # Commands to notify a player
+  # Who to notify. Can be 'all' for all online players, 'world' for all players in the world
+  # the trader spawned in, or a number for a block radius around the spawned trader.
+  #
+  # Requires 'wanderingtrades.trader-spawn-notifications' permission, which defaults to true
+  notifyPlayers: 500
+
+  # Commands to run when a trader spawns
+  commands:
+    - "effect give {trader-uuid} glowing 30"
+
+  # Commands to run for each (optionally nearby) player when a trader spawns
   perPlayerCommands:
-  - 'tellraw {player} ["A wandering trader has spawned {distance} blocks away! ({x-pos},
-    {y-pos}, {z-pos}) (uuid: {trader-uuid})"]'
-  - execute at {player} run playsound minecraft:block.note_block.cow_bell neutral
-    {player}
-  - effect give {trader-uuid} glowing 30
+    - 'tellraw {player} ["A wandering trader has spawned {distance} blocks away! ({x-pos},
+      {y-pos}, {z-pos}) (uuid: {trader-uuid})"]'
+    - execute at {player} run playsound minecraft:block.note_block.cow_bell neutral
+      {player}

@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.listener;
 
-import java.util.Collection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WanderingTrader;
@@ -11,8 +10,10 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
+import xyz.jpenilla.wanderingtrades.config.TraderSpawnNotificationOptions;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
 @DefaultQualifier(NonNull.class)
@@ -41,7 +42,7 @@ public final class TraderSpawnListener implements Listener {
         }
 
         // Delay by 1 tick so entity is in world
-        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.notifyPlayers(event));
+        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.notifyPlayers(trader));
 
         if (this.plugin.config().traderWorldWhitelist()) {
             if (this.plugin.config().traderWorldList().contains(event.getEntity().getWorld().getName())) {
@@ -54,23 +55,41 @@ public final class TraderSpawnListener implements Listener {
         }
     }
 
-    private void notifyPlayers(final CreatureSpawnEvent event) {
-        final int radius = this.plugin.config().traderSpawnNotificationOptions().radius();
-        if (radius < 0) {
+    private void notifyPlayers(final WanderingTrader entity) {
+        final TraderSpawnNotificationOptions options = this.plugin.config().traderSpawnNotificationOptions();
+        if (!options.enabled()) {
             return;
         }
-        final Collection<Player> players = event.getEntity().getWorld()
-                .getNearbyPlayers(event.getEntity().getLocation(), radius);
-        for (final Player player : players) {
-            for (String command : this.plugin.config().traderSpawnNotificationOptions().perPlayerCommands()) {
-                command = command.replace("{player}", player.getName())
-                        .replace("{x-pos}", String.valueOf(event.getEntity().getLocation().getBlockX()))
-                        .replace("{y-pos}", String.valueOf(event.getEntity().getLocation().getBlockY()))
-                        .replace("{z-pos}", String.valueOf(event.getEntity().getLocation().getBlockZ()))
-                        .replace("{trader-uuid}", event.getEntity().getUniqueId().toString())
-                        .replace("{distance}", String.valueOf(Math.round(player.getLocation().distance(event.getEntity().getLocation()))));
-                this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), command);
+        for (final String command : options.commands()) {
+            this.plugin.getServer().dispatchCommand(
+                this.plugin.getServer().getConsoleSender(),
+                applyNotifyCommandReplacements(entity, null, command)
+            );
+        }
+        for (final Player player : options.notifyPlayers().find(entity)) {
+            if (!player.hasPermission(Constants.Permissions.TRADER_SPAWN_NOTIFICATIONS)) {
+                continue;
+            }
+            for (final String command : options.perPlayerCommands()) {
+                this.plugin.getServer().dispatchCommand(
+                    this.plugin.getServer().getConsoleSender(),
+                    applyNotifyCommandReplacements(entity, player, command)
+                );
             }
         }
+    }
+
+    private static String applyNotifyCommandReplacements(final WanderingTrader entity, final @Nullable Player player, String command) {
+        if (player != null) {
+            command = command.replace("{player}", player.getName());
+            if (player.getWorld().equals(entity.getWorld())) {
+                command = command.replace("{distance}", String.valueOf(Math.round(player.getLocation().distance(entity.getLocation()))));
+            }
+        }
+        return command.replace("{world-name}", entity.getWorld().getName())
+            .replace("{x-pos}", String.valueOf(entity.getLocation().getBlockX()))
+            .replace("{y-pos}", String.valueOf(entity.getLocation().getBlockY()))
+            .replace("{z-pos}", String.valueOf(entity.getLocation().getBlockZ()))
+            .replace("{trader-uuid}", entity.getUniqueId().toString());
     }
 }
