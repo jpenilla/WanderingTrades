@@ -64,7 +64,7 @@ public final class ItemStackSerialization {
             return ItemStack.deserialize(configSection.getValues(true));
         }
 
-        final String materialString = config.getString(key + ".material");
+        final String materialString = config.getString(key + ".material", null);
         if (materialString == null) {
             // Assume no item (ie ingredient 2)
             return null;
