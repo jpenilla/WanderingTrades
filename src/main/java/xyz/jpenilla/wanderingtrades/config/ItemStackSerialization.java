@@ -24,7 +24,7 @@ public final class ItemStackSerialization {
     }
 
     public static void writeOrRemove(final FileConfiguration config, final String path, final @Nullable ItemStack itemStack) {
-        if (itemStack == null) {
+        if (itemStack == null || itemStack.getType().isAir()) {
             config.set(path, null);
             return;
         }
