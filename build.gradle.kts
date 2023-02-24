@@ -3,7 +3,7 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
     val indraVersion = "3.0.1"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
