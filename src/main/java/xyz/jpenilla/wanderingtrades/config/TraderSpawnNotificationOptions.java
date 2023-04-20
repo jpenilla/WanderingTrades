@@ -15,17 +15,20 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 public record TraderSpawnNotificationOptions(
     boolean enabled,
     Players notifyPlayers,
+    boolean sphereRadius,
     List<String> commands,
     List<String> perPlayerCommands
 ) {
     private static final String ENABLED = "enabled";
     private static final String NOTIFY_PLAYERS = "notifyPlayers";
+    private static final String SPHERE_RADIUS = "sphereRadius";
     private static final String COMMANDS = "commands";
     private static final String PER_PLAYER_COMMANDS = "perPlayerCommands";
 
     void setTo(final DefaultedConfig config, final String path) {
         config.set(path + "." + ENABLED, this.enabled);
         config.set(path + "." + NOTIFY_PLAYERS, this.notifyPlayers.input());
+        config.set(path+ "." + SPHERE_RADIUS, this.sphereRadius);
         config.set(path + "." + COMMANDS, this.commands);
         config.set(path + "." + PER_PLAYER_COMMANDS, this.perPlayerCommands);
     }
@@ -34,7 +37,8 @@ public record TraderSpawnNotificationOptions(
         Objects.requireNonNull(section, "section");
         return new TraderSpawnNotificationOptions(
             section.getBoolean(ENABLED),
-            Players.parse(section.getString(NOTIFY_PLAYERS)),
+            Players.parse(section.getString(NOTIFY_PLAYERS), section.getBoolean(SPHERE_RADIUS)),
+            section.getBoolean(SPHERE_RADIUS),
             section.getStringList(COMMANDS),
             section.getStringList(PER_PLAYER_COMMANDS)
         );
@@ -59,7 +63,7 @@ public record TraderSpawnNotificationOptions(
             };
         }
 
-        static Players parse(final @Nullable String value) {
+        static Players parse(final @Nullable String value, final boolean sphereRadius) {
             Objects.requireNonNull(value, "value");
             if (value.equalsIgnoreCase("all")) {
                 return withInput(value, trader -> trader.getServer().getOnlinePlayers());
@@ -68,7 +72,7 @@ public record TraderSpawnNotificationOptions(
             }
             try {
                 final int radius = Integer.parseInt(value);
-                return withInput(value, trader -> trader.getLocation().getNearbyEntitiesByType(Player.class, radius, trader.getLocation().getWorld().getMaxHeight(), radius));
+                return withInput(value, trader -> trader.getLocation().getNearbyEntitiesByType(Player.class, radius, sphereRadius ? radius : trader.getLocation().getWorld().getMaxHeight(), radius));
             } catch (final NumberFormatException ex) {
                 throw new IllegalArgumentException("Invalid players option, got '" + value + "', expected 'all', 'world', or an integer number for radius.");
             }
