@@ -72,7 +72,7 @@ public record TraderSpawnNotificationOptions(
             }
             try {
                 final int radius = Integer.parseInt(value);
-                return withInput(value, trader -> trader.getLocation().getNearbyEntitiesByType(Player.class, radius, sphereRadius ? radius : trader.getLocation().getWorld().getMaxHeight(), radius));
+                return withInput(value, trader -> trader.getLocation().getWorld().getNearbyEntities(trader.getLocation(), radius, sphereRadius ? radius : trader.getLocation().getWorld().getMaxHeight() - trader.getLocation().getWorld().getMinHeight(), radius, k -> k instanceof Player).stream().map(k -> (Player) k).toList());
             } catch (final NumberFormatException ex) {
                 throw new IllegalArgumentException("Invalid players option, got '" + value + "', expected 'all', 'world', or an integer number for radius.");
             }
