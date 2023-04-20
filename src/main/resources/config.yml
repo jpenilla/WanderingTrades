@@ -72,7 +72,7 @@ traderSpawnNotifications:
   #
   # Requires 'wanderingtrades.trader-spawn-notifications' permission, which defaults to true
   notifyPlayers: 500
-
+  sphereRadius: true
   # Commands to run when a trader spawns
   commands:
     - "effect give {trader-uuid} glowing 30"
