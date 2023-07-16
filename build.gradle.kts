@@ -7,14 +7,14 @@ plugins {
     val indraVersion = "3.0.1"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
-    id("xyz.jpenilla.run-paper") version "2.0.1"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 group = "xyz.jpenilla"
 version = "1.8.2-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.19.3"
+val mcVersion = "1.20.1"
 
 repositories {
     mavenCentral()
@@ -37,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "$mcVersion-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+79-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+83-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.1")
 
     implementation(platform("cloud.commandframework:cloud-bom:1.8.3"))

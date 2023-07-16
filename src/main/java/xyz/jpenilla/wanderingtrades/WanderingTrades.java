@@ -52,7 +52,7 @@ public final class WanderingTrades extends PluginBase {
     }
 
     @Override
-    public void onDisable() {
+    public void disable() {
         this.closeInterfaces();
     }
 

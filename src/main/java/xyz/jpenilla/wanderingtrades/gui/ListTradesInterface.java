@@ -1,7 +1,6 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
 import java.util.List;
-import java.util.Map;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -72,7 +71,6 @@ public final class ListTradesInterface extends BaseInterface {
 
     private List<ItemStackElement<ChestPane>> listElements() {
         return this.tradeConfig.tradesByName().entrySet().stream()
-            .sorted(Map.Entry.comparingByKey())
             .map(entry -> this.tradeEntry(entry.getKey(), entry.getValue()))
             .toList();
     }

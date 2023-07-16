@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -31,7 +33,7 @@ public final class TradeConfig {
     private boolean randomized;
     private boolean enabled;
     private String randomAmount;
-    private Map<String, MerchantRecipe> allTrades;
+    private volatile Map<String, MerchantRecipe> allTrades;
     private double chance;
     private boolean invincible;
     private String customName;
@@ -49,7 +51,7 @@ public final class TradeConfig {
     }
 
     public void load() {
-        this.allTrades = this.readTrades();
+        this.readTrades();
         this.randomized = this.config.getBoolean(Fields.randomized);
         this.randomAmount = this.config.getString(Fields.randomAmount);
         this.enabled = this.config.getBoolean(Fields.enabled);
@@ -79,7 +81,7 @@ public final class TradeConfig {
 
     public void deleteTrade(final String tradeName) {
         this.config.set(TRADES + "." + tradeName, null);
-        this.allTrades.remove(tradeName);
+        this.modifyTrades(map -> map.remove(tradeName));
         this.save();
     }
 
@@ -110,8 +112,14 @@ public final class TradeConfig {
 
         final @Nullable MerchantRecipe recipe = this.readTrade(tradeName);
         if (recipe != null) {
-            this.allTrades.put(tradeName, recipe);
+            this.modifyTrades(map -> map.put(tradeName, recipe));
         }
+    }
+
+    private void modifyTrades(final Consumer<Map<String, MerchantRecipe>> op) {
+        final Map<String, MerchantRecipe> map = new TreeMap<>(this.allTrades);
+        op.accept(map);
+        this.allTrades = Collections.unmodifiableMap(new LinkedHashMap<>(map));
     }
 
     private @NonNull ConfigurationSection getTradeSection() {
@@ -133,8 +141,8 @@ public final class TradeConfig {
         }
     }
 
-    private Map<String, MerchantRecipe> readTrades() {
-        final Map<String, MerchantRecipe> tradeMap = new ConcurrentHashMap<>();
+    private void readTrades() {
+        final Map<String, MerchantRecipe> tradeMap = new TreeMap<>();
 
         for (final String key : this.getTradeSection().getKeys(false)) {
             final @Nullable MerchantRecipe recipe = this.readTrade(key);
@@ -143,7 +151,7 @@ public final class TradeConfig {
             }
         }
 
-        return tradeMap;
+        this.allTrades = Collections.unmodifiableMap(new LinkedHashMap<>(tradeMap));
     }
 
     private @Nullable MerchantRecipe readTrade(final String key) {
@@ -210,10 +218,11 @@ public final class TradeConfig {
     public List<MerchantRecipe> getTrades(boolean bypassDisabled) {
         final List<MerchantRecipe> trades = new ArrayList<>();
         if (this.enabled || bypassDisabled) {
+            final Map<String, MerchantRecipe> allTrades = this.allTrades;
             if (this.randomized) {
-                trades.addAll(this.pickTrades(this.allTrades.values(), this.getRandAmount()));
+                trades.addAll(this.pickTrades(allTrades.values(), this.getRandAmount()));
             } else {
-                trades.addAll(this.allTrades.values());
+                trades.addAll(allTrades.values());
             }
         }
         return trades;
