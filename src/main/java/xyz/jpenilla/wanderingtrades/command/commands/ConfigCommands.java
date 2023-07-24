@@ -7,6 +7,7 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -123,11 +124,15 @@ public final class ConfigCommands extends BaseCommand {
             context.getSender(),
             Component.textOfChildren(Constants.PREFIX_COMPONENT, Messages.COMMAND_LIST_LOADED)
         );
-        final List<String> toSort = new ArrayList<>(this.plugin.configManager().tradeConfigs().keySet());
-        toSort.sort(null);
+        final List<TradeConfig> toSort = new ArrayList<>(this.plugin.configManager().tradeConfigs().values());
+        toSort.sort(Comparator.comparing(TradeConfig::configName));
         int index = 1;
-        for (final String cfg : toSort) {
-            this.chat.send(context.getSender(), String.format(" <gray>%s.</gray> <hover:show_text:'<green>Click to edit'><click:run_command:/wanderingtrades edit %s>%s", index++, cfg, cfg));
+        for (final TradeConfig cfg : toSort) {
+            final String color = cfg.enabled() ? "green" : "red";
+            this.chat.send(
+                context.getSender(),
+                String.format(" <gray>%s.</gray> <hover:show_text:'<green>Click to edit'><click:run_command:/wanderingtrades edit %s><%s>%s", index++, cfg.configName(), color, cfg.configName())
+            );
         }
     }
 }

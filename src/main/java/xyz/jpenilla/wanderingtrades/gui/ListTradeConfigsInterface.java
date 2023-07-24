@@ -12,8 +12,9 @@ import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemFlag;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.click.ClickContext;
@@ -67,12 +68,16 @@ public final class ListTradeConfigsInterface extends BaseInterface {
             finalLores.add(Messages.GUI_TC_LIST_AND_MORE.withPlaceholders(Components.placeholder("value", tradeKeys.size() - 10)));
         }
 
-        final ItemStack stack = ItemBuilder.create(Material.PAPER)
-            .customName(Component.text(tradeConfig.configName()))
-            .lore(finalLores)
-            .build();
+        ItemBuilder<?, ?> stack = ItemBuilder.create(Material.BOOK)
+            .customName(Component.text(tradeConfig.configName(), tradeConfig.enabled() ? NamedTextColor.GREEN : NamedTextColor.RED))
+            .lore(finalLores);
 
-        return ItemStackElement.of(stack, context -> new ListTradesInterface(
+        if (tradeConfig.enabled()) {
+            stack = stack.addEnchant(Enchantment.DAMAGE_ALL, 1)
+                .editMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ENCHANTS));
+        }
+
+        return ItemStackElement.of(stack.build(), context -> new ListTradesInterface(
             this.plugin,
             this.plugin.configManager().tradeConfigs().get(tradeConfig.configName())
         ).replaceActiveScreen(context));
