@@ -51,7 +51,7 @@ dependencies {
         isTransitive = false
     }
     compileOnly("org.checkerframework", "checker-qual", "3.36.0")
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7") {
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.9") {
         exclude("org.bukkit")
     }
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.13")
