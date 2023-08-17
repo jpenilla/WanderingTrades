@@ -37,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "$mcVersion-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+83-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+88-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
     implementation(platform("cloud.commandframework:cloud-bom:1.8.3"))
@@ -47,14 +47,14 @@ dependencies {
     implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-SNAPSHOT")
 
     compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
-    compileOnly("net.essentialsx", "EssentialsX", "2.20.0") {
+    compileOnly("net.essentialsx", "EssentialsX", "2.20.1") {
         isTransitive = false
     }
-    compileOnly("org.checkerframework", "checker-qual", "3.36.0")
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.7") {
+    compileOnly("org.checkerframework", "checker-qual", "3.37.0")
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.9") {
         exclude("org.bukkit")
     }
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.13")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.2.15")
 }
 
 indra {
