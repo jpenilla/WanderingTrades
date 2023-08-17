@@ -397,7 +397,7 @@ trades:
         amount: 1
     result:
       customname: "<yellow>GeminiTay's Head"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q2MDQxZWJlYWJmOWMyZTk5YmE5ZWExMjhiYjBjYjNiZTI0YTljNzc3OTRhZTJiNjBiZThlMWJhZWZiMjcxMSJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGQ1Mzk0NGRmYmYwY2QxM2JmMWJmZmY5NTU4ZTIyZjc5MGQwYjcyZTE2YzVmZDlhOTQ4NDlhNWRlZjc5YmQifX19
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
@@ -410,7 +410,7 @@ trades:
         amount: 1
     result:
       customname: "<yellow>PearlescentMoon's Head"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDYwNjdlNzg5MGM4ZmY2ZTE3Yjk1NmY0YjA4ZTcwZjAzM2MzNWU1YzJjMmM2YTU3YjJjODE2MTMwNWNhMzk3YiJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjdkOTEwZGI5YjRmOWQ3NWUwOTFkMWI1YWI3NzQ5ZjRhNjUyZGY1MDAxOTZiZWU2YjUxMmQ4NmQ4OWJhNmZhMCJ9fX0=
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
