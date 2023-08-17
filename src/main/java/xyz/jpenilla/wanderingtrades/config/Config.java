@@ -59,7 +59,6 @@ public final class Config extends DefaultedConfig {
         this.updateChecker = config.getBoolean(Fields.updateChecker);
 
         final int oldTraderSpawnNotificationRadius = config.getInt(Fields.traderSpawnNotificationRadius);
-        final boolean sphereTraderNotificationRadius = config.getBoolean(Fields.traderSpawnSphereNotificationRadius);
         final List<String> oldTraderSpawnNotificationCommands = config.getStringList(Fields.traderSpawnNotificationCommands);
         if (oldTraderSpawnNotificationRadius != 0 || !oldTraderSpawnNotificationCommands.isEmpty()) {
             config.set(Fields.traderSpawnNotificationRadius, null);
@@ -68,8 +67,7 @@ public final class Config extends DefaultedConfig {
                 oldTraderSpawnNotificationRadius != -1,
                 TraderSpawnNotificationOptions.Players.parse(String.valueOf(
                     oldTraderSpawnNotificationRadius == -1 ? 500 : oldTraderSpawnNotificationRadius
-                ), sphereTraderNotificationRadius),
-                sphereTraderNotificationRadius,
+                )),
                 List.of(),
                 oldTraderSpawnNotificationCommands
             );
@@ -217,7 +215,6 @@ public final class Config extends DefaultedConfig {
         public static final String refreshCommandTradersMinutes = "refreshCommandTradersMinutes";
         public static final String updateChecker = "updateChecker";
         public static final String traderSpawnNotificationRadius = "traderSpawnNotificationRadius";
-        public static final String traderSpawnSphereNotificationRadius = "traderSpawnSphereNotificationRadius";
         public static final String traderSpawnNotificationCommands = "traderSpawnNotificationCommands";
         public static final String traderSpawnNotifications = "traderSpawnNotifications";
     }

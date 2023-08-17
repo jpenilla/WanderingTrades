@@ -67,12 +67,15 @@ traderSpawnNotifications:
   # Toggle the notification feature
   enabled: false
 
-  # Who to notify. Can be 'all' for all online players, 'world' for all players in the world
-  # the trader spawned in, or a number for a block radius around the spawned trader.
+  # Who to notify. Can be:
+  #  - 'all': all online players
+  #  - 'world': all players in the world the trader spawned in
+  #  - a number (B), i.e. '500': notify players within B blocks of the spawned trader (on the X and Z (horizontal) axes)
+  #  - a number (B) followed by 'box', i.e. '500box': notify players within B blocks of the spawned trader (on the X, Y, and Z (horizontal and vertical) axes)
   #
   # Requires 'wanderingtrades.trader-spawn-notifications' permission, which defaults to true
   notifyPlayers: 500
-  sphereRadius: true
+
   # Commands to run when a trader spawns
   commands:
     - "effect give {trader-uuid} glowing 30"
