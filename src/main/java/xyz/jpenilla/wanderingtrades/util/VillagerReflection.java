@@ -45,7 +45,7 @@ public final class VillagerReflection {
             case 17 -> "fF";
             case 18 -> "fH";
             case 19 -> "fU";
-            case 20 -> "gf";
+            case 20 -> "gk";
             default -> throw new IllegalStateException("Don't know updateTrades method name for 1." + getMinecraftVersion());
         };
         try {
@@ -76,7 +76,7 @@ public final class VillagerReflection {
                     case 16, 17 -> "getBehaviorController";
                     case 18 -> "du";
                     case 19 -> "dD";
-                    case 20 -> "dK";
+                    case 20 -> "dN";
                     default -> throw new IllegalStateException("Don't know getBrain method name for 1." + getMinecraftVersion());
                 };
                 LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, getBrainName, Brain_class), "LivingEntity#getBrain");
