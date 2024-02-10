@@ -37,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.20.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+98-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+106-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
     implementation(platform("cloud.commandframework:cloud-bom:1.8.4"))
