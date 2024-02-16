@@ -4,9 +4,7 @@ import io.leangen.geantyref.TypeToken;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.kyori.adventure.identity.Identity;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.Command;
@@ -29,6 +27,7 @@ import xyz.jpenilla.wanderingtrades.command.commands.TradeCommands;
 
 import static org.incendo.cloud.translations.TranslationBundle.core;
 import static org.incendo.cloud.translations.bukkit.BukkitTranslationBundle.bukkit;
+import static org.incendo.cloud.translations.minecraft.extras.AudienceLocaleExtractor.audienceLocaleExtractor;
 import static org.incendo.cloud.translations.minecraft.extras.MinecraftExtrasTranslationBundle.minecraftExtras;
 
 @DefaultQualifier(NonNull.class)
@@ -72,9 +71,7 @@ public final class Commands {
     }
 
     private void registerCaptions() {
-        final LocaleExtractor<CommandSender> extractor = LocaleExtractor.<CommandSender>builder()
-            .senderType(Player.class, player -> this.plugin.audiences().player(player).get(Identity.LOCALE).orElse(null))
-            .build();
+        final LocaleExtractor<CommandSender> extractor = audienceLocaleExtractor(this.plugin.audiences()::sender);
         this.commandManager.captionRegistry()
             .registerProvider(minecraftExtras(extractor))
             .registerProvider(bukkit(extractor))
