@@ -1,28 +1,26 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.brigadier.CloudBrigadierManager;
-import cloud.commandframework.bukkit.BukkitCaptionKeys;
-import cloud.commandframework.bukkit.CloudBukkitCapabilities;
-import cloud.commandframework.captions.SimpleCaptionRegistry;
-import cloud.commandframework.captions.StandardCaptionKeys;
-import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.execution.FilteringCommandSuggestionProcessor;
-import cloud.commandframework.execution.preprocessor.CommandPreprocessingContext;
-import cloud.commandframework.keys.CloudKey;
-import cloud.commandframework.keys.SimpleCloudKey;
-import cloud.commandframework.paper.PaperCommandManager;
 import io.leangen.geantyref.TypeToken;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.bukkit.BukkitCaptionKeys;
+import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
+import org.incendo.cloud.caption.CaptionProvider;
+import org.incendo.cloud.caption.CaptionRegistry;
+import org.incendo.cloud.caption.StandardCaptionKeys;
+import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.execution.preprocessor.CommandPreprocessingContext;
+import org.incendo.cloud.key.CloudKey;
+import org.incendo.cloud.paper.PaperCommandManager;
+import org.incendo.cloud.parser.flag.CommandFlag;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
-import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
+import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigParser;
 import xyz.jpenilla.wanderingtrades.command.commands.AboutCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.ConfigCommands;
 import xyz.jpenilla.wanderingtrades.command.commands.HelpCommand;
@@ -30,11 +28,10 @@ import xyz.jpenilla.wanderingtrades.command.commands.ReloadCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.SummonCommands;
 import xyz.jpenilla.wanderingtrades.command.commands.TradeCommands;
 import xyz.jpenilla.wanderingtrades.config.Messages;
-import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 @DefaultQualifier(NonNull.class)
 public final class Commands {
-    public static final CloudKey<WanderingTrades> PLUGIN = SimpleCloudKey.of("wt:plugin", TypeToken.get(WanderingTrades.class));
+    public static final CloudKey<WanderingTrades> PLUGIN = CloudKey.of("wt:plugin", TypeToken.get(WanderingTrades.class));
 
     private final WanderingTrades plugin;
     private final PaperCommandManager<CommandSender> commandManager;
@@ -44,17 +41,12 @@ public final class Commands {
         this.plugin = plugin;
         this.commandManager = commandManager;
 
-        this.commandManager.commandSuggestionProcessor(new FilteringCommandSuggestionProcessor<>(
-            FilteringCommandSuggestionProcessor.Filter.<CommandSender>contains(true).andTrimBeforeLastSpace()
-        ));
         new ExceptionHandler(plugin, commandManager).register();
         this.registerMessageFactories();
         if (this.commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             this.commandManager.registerBrigadier();
-            final @Nullable CloudBrigadierManager<CommandSender, ?> brigManager = this.commandManager.brigadierManager();
-            if (brigManager != null) {
-                brigManager.setNativeNumberSuggestions(false);
-            }
+        } else if (this.commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+            this.commandManager.registerAsynchronousCompletions();
         }
         this.registerParsers();
         this.commandManager.registerCommandPreProcessor(this::preProcessContext);
@@ -73,37 +65,27 @@ public final class Commands {
         commands.forEach(BaseCommand::register);
     }
 
-    public PaperCommandManager<CommandSender> commandManager() {
+    public CommandManager<CommandSender> commandManager() {
         return this.commandManager;
     }
 
     private void registerMessageFactories() {
-        if (!(this.commandManager.captionRegistry() instanceof final SimpleCaptionRegistry<CommandSender> registry)) {
-            return;
-        }
-        registry.registerMessageFactory(
-            StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
-            (caption, sender) -> Messages.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM.message()
-        );
-        registry.registerMessageFactory(
-            BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE,
-            (caption, sender) -> Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE.message()
-        );
-        registry.registerMessageFactory(
-            BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT,
-            (caption, sender) -> Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT.message()
+        final CaptionRegistry<CommandSender> registry = this.commandManager.captionRegistry();
+        registry.registerProvider(
+            CaptionProvider.<CommandSender>constantProvider()
+                .putCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM, Messages.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM.message())
+                .putCaption(BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE, Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE.message())
+                .putCaption(BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT, Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT.message())
+                .build()
         );
     }
 
     private void registerParsers() {
-        this.commandManager.parserRegistry().registerParserSupplier(
-            TypeToken.get(TradeConfig.class),
-            parameters -> new TradeConfigArgument.Parser()
-        );
+        this.commandManager.parserRegistry().registerParser(TradeConfigParser.tradeConfigParser());
     }
 
     private void preProcessContext(final CommandPreprocessingContext<CommandSender> context) {
-        context.getCommandContext().store(PLUGIN, this.plugin);
+        context.commandContext().store(PLUGIN, this.plugin);
     }
 
     public CommandFlag.Builder<?> getFlag(final String name) {
@@ -114,20 +96,15 @@ public final class Commands {
         this.flagRegistry.put(name, flagBuilder);
     }
 
-    public void register(final List<Command<CommandSender>> commands) {
+    public void register(final List<Command<? extends CommandSender>> commands) {
         commands.forEach(this.commandManager::command);
     }
 
     public static void setup(final WanderingTrades plugin) {
-        final PaperCommandManager<CommandSender> manager;
-        try {
-            manager = PaperCommandManager.createNative(
-                plugin,
-                CommandExecutionCoordinator.simpleCoordinator()
-            );
-        } catch (final Exception ex) {
-            throw new RuntimeException("Failed to initialize command manager", ex);
-        }
+        final PaperCommandManager<CommandSender> manager = PaperCommandManager.createNative(
+            plugin,
+            ExecutionCoordinator.simpleCoordinator()
+        );
         new Commands(plugin, manager);
     }
 }

@@ -1,11 +1,5 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import cloud.commandframework.CommandManager;
-import cloud.commandframework.exceptions.ArgumentParseException;
-import cloud.commandframework.exceptions.InvalidCommandSenderException;
-import cloud.commandframework.exceptions.InvalidSyntaxException;
-import cloud.commandframework.exceptions.NoPermissionException;
-import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
@@ -14,7 +8,19 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.util.ComponentMessageThrowable;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.exception.ArgumentParseException;
+import org.incendo.cloud.exception.CommandExecutionException;
+import org.incendo.cloud.exception.InvalidCommandSenderException;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.exception.NoPermissionException;
+import org.incendo.cloud.exception.handling.ExceptionContext;
+import org.incendo.cloud.exception.handling.ExceptionContextFactory;
+import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
+import org.incendo.cloud.minecraft.extras.caption.ComponentCaptionFormatter;
+import org.incendo.cloud.util.TypeUtils;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.util.Components;
@@ -33,36 +39,37 @@ final class ExceptionHandler {
     }
 
     void register() {
-        new MinecraftExceptionHandler<CommandSender>()
-            .withHandler(MinecraftExceptionHandler.ExceptionType.NO_PERMISSION, ExceptionHandler::noPermission)
-            .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, this::invalidSyntax)
-            .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SENDER, this::invalidSender)
-            .withHandler(MinecraftExceptionHandler.ExceptionType.ARGUMENT_PARSING, this::argumentParsing)
-            .withHandler(MinecraftExceptionHandler.ExceptionType.COMMAND_EXECUTION, this::commandExecution)
-            .withDecorator(ExceptionHandler::decorate)
-            .apply(this.commandManager, this.plugin.audiences()::sender);
+        MinecraftExceptionHandler.create(this.plugin.audiences()::sender)
+            .handler(NoPermissionException.class, ExceptionHandler::noPermission)
+            .handler(InvalidSyntaxException.class, this::invalidSyntax)
+            .handler(InvalidCommandSenderException.class, this::invalidSender)
+            .handler(ArgumentParseException.class, this::argumentParsing)
+            .handler(CommandExecutionException.class, this::commandExecution)
+            .decorator(ExceptionHandler::decorate)
+            .registerTo(this.commandManager);
     }
 
-    private Component commandExecution(final CommandSender commandSender, final Exception ex) {
-        final Throwable cause = ex.getCause();
+    private @Nullable ComponentLike commandExecution(final ComponentCaptionFormatter<CommandSender> formatter, final ExceptionContext<CommandSender, CommandExecutionException> e) {
+        final Throwable cause = e.exception().getCause();
 
+        final ExceptionContextFactory<CommandSender> factory = new ExceptionContextFactory<>(this.commandManager.exceptionController());
         if (cause instanceof NoPermissionException noPermissionException) {
-            return noPermission(noPermissionException);
+            return noPermission(formatter, factory.createContext(e.context(), noPermissionException));
         } else if (cause instanceof InvalidSyntaxException invalidSyntaxException) {
-            return this.invalidSyntax(invalidSyntaxException);
+            return this.invalidSyntax(formatter, factory.createContext(e.context(), invalidSyntaxException));
         } else if (cause instanceof InvalidCommandSenderException invalidCommandSenderException) {
-            return this.invalidSender(invalidCommandSenderException);
+            return this.invalidSender(formatter, factory.createContext(e.context(), invalidCommandSenderException));
         } else if (cause instanceof ArgumentParseException argumentParseException) {
-            return this.argumentParsing(argumentParseException);
+            return this.argumentParsing(formatter, factory.createContext(e.context(), argumentParseException));
         }
 
-        return MinecraftExceptionHandler.DEFAULT_COMMAND_EXECUTION_FUNCTION.apply(ex);
+        return MinecraftExceptionHandler.<CommandSender>createDefaultCommandExecutionHandler().message(formatter, e);
     }
 
-    private Component invalidSyntax(final Exception ex) {
-        final InvalidSyntaxException exception = (InvalidSyntaxException) ex;
+    private Component invalidSyntax(final ComponentCaptionFormatter<CommandSender> formatter, final ExceptionContext<CommandSender, InvalidSyntaxException> e) {
+        final InvalidSyntaxException exception = e.exception();
         final Component correctSyntaxMessage = Component.text(
-            String.format("/%s", exception.getCorrectSyntax()),
+            String.format("/%s", exception.correctSyntax()),
             NamedTextColor.GRAY
         ).replaceText(config -> {
             config.match(SYNTAX_HIGHLIGHT_PATTERN);
@@ -73,22 +80,22 @@ final class ExceptionHandler {
         );
     }
 
-    private Component invalidSender(final Exception ex) {
-        final InvalidCommandSenderException exception = (InvalidCommandSenderException) ex;
+    private Component invalidSender(final ComponentCaptionFormatter<CommandSender> formatter, final ExceptionContext<CommandSender, InvalidCommandSenderException> e) {
+        final InvalidCommandSenderException exception = e.exception();
         return Messages.COMMAND_INVALID_SENDER.withPlaceholders(
-            Components.placeholder("type", exception.getRequiredSender().getSimpleName())
+            Components.placeholder("type", TypeUtils.simpleName(exception.requiredSender()))
         );
     }
 
-    private Component argumentParsing(final Exception ex) {
-        final Component causeMessage = Objects.requireNonNull(ComponentMessageThrowable.getOrConvertMessage(ex.getCause()))
+    private Component argumentParsing(final ComponentCaptionFormatter<CommandSender> formatter, final ExceptionContext<CommandSender, ArgumentParseException> ex) {
+        final Component causeMessage = Objects.requireNonNull(ComponentMessageThrowable.getOrConvertMessage(ex.exception().getCause()))
             .colorIfAbsent(NamedTextColor.GRAY);
         return Messages.COMMAND_INVALID_ARGUMENT.withPlaceholders(
             Components.placeholder("error", causeMessage)
         );
     }
 
-    private static Component noPermission(final Exception e) {
+    private static Component noPermission(final ComponentCaptionFormatter<CommandSender> formatter, final ExceptionContext<CommandSender, NoPermissionException> e) {
         return Component.translatable("commands.help.failed", NamedTextColor.RED);
     }
 

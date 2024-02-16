@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import cloud.commandframework.minecraft.extras.RichDescription;
 import com.google.common.base.Suppliers;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +24,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.cloud.description.Description;
+import org.incendo.cloud.minecraft.extras.RichDescription;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Logging;
 
@@ -450,7 +451,7 @@ public final class Messages {
             return new SingleMessage(message);
         }
 
-        default RichDescription asDescription() {
+        default Description asDescription() {
             return RichDescription.of(this.asComponent());
         }
     }

@@ -1,11 +1,7 @@
 package xyz.jpenilla.wanderingtrades.command.commands;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.bukkit.arguments.selector.MultiplePlayerSelector;
-import cloud.commandframework.bukkit.parsers.selector.MultiplePlayerSelectorArgument;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.InvalidCommandSenderException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -17,13 +13,19 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.bukkit.data.MultiplePlayerSelector;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.exception.InvalidCommandSenderException;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
-import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 import xyz.jpenilla.wanderingtrades.util.InventoryFactory;
+
+import static org.incendo.cloud.bukkit.parser.selector.MultiplePlayerSelectorParser.multiplePlayerSelectorParser;
+import static xyz.jpenilla.wanderingtrades.command.argument.TradeConfigParser.tradeConfigParser;
 
 @DefaultQualifier(NonNull.class)
 public final class TradeCommands extends BaseCommand {
@@ -39,13 +41,13 @@ public final class TradeCommands extends BaseCommand {
 
         final Command.Builder<CommandSender> config = trade
             .literal("config")
-            .argument(TradeConfigArgument.of("config"))
+            .required("config", tradeConfigParser())
             .permission("wanderingtrades.tradecommand")
             .handler(this::tradeConfig);
         this.commandManager.command(config);
         this.commandManager.command(config
             .permission("wanderingtrades.tradecommand.others")
-            .argument(MultiplePlayerSelectorArgument.of("players")));
+            .required("players", multiplePlayerSelectorParser()));
 
         final Command.Builder<CommandSender> natural = trade
             .literal("natural")
@@ -54,7 +56,7 @@ public final class TradeCommands extends BaseCommand {
         this.commandManager.command(natural);
         this.commandManager.command(natural
             .permission("wanderingtrades.tradenaturalcommand.others")
-            .argument(MultiplePlayerSelectorArgument.of("players")));
+            .required("players", multiplePlayerSelectorParser()));
     }
 
     private void tradeConfig(final CommandContext<CommandSender> ctx) {
@@ -104,15 +106,15 @@ public final class TradeCommands extends BaseCommand {
         });
     }
 
-    private static List<Player> players(final CommandContext<CommandSender> ctx) {
-        @Nullable List<Player> players = ctx.<MultiplePlayerSelector>getOptional("players")
-            .map(MultiplePlayerSelector::getPlayers)
+    private static Collection<Player> players(final CommandContext<CommandSender> ctx) {
+        @Nullable Collection<Player> players = ctx.<MultiplePlayerSelector>optional("players")
+            .map(MultiplePlayerSelector::values)
             .orElse(null);
         if (players == null) {
-            if (ctx.getSender() instanceof Player player) {
+            if (ctx.sender() instanceof Player player) {
                 players = List.of(player);
             } else {
-                throw new InvalidCommandSenderException(ctx.getSender(), Player.class, null);
+                throw new InvalidCommandSenderException(ctx.sender(), Player.class, null);
             }
         }
         return players;

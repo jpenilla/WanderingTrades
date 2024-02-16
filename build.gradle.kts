@@ -14,7 +14,7 @@ group = "xyz.jpenilla"
 version = "1.8.4-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.20.2"
+val mcVersion = "1.20.4"
 
 repositories {
     mavenCentral()
@@ -40,9 +40,10 @@ dependencies {
     implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+106-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
-    implementation(platform("cloud.commandframework:cloud-bom:1.8.4"))
-    implementation("cloud.commandframework", "cloud-paper")
-    implementation("cloud.commandframework", "cloud-minecraft-extras")
+    implementation(platform("org.incendo:cloud-bom:2.0.0-beta.2"))
+    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.3"))
+    implementation("org.incendo:cloud-paper")
+    implementation("org.incendo:cloud-minecraft-extras")
 
     implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-SNAPSHOT")
 
@@ -90,7 +91,7 @@ tasks {
         archiveFileName.set("${project.name}-${project.version}.jar")
         sequenceOf(
             "org.bstats",
-            "cloud.commandframework",
+            "org.incendo",
             "xyz.jpenilla.pluginbase",
             "net.kyori",
             "io.papermc.lib",
@@ -115,6 +116,9 @@ tasks {
                 result
             }
         }
+    }
+    compileJava {
+        options.compilerArgs.add("-Xlint:-classfile,-processing")
     }
 }
 
