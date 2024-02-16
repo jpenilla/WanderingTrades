@@ -4,21 +4,20 @@ import io.leangen.geantyref.TypeToken;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.kyori.adventure.identity.Identity;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.bukkit.BukkitCaptionKeys;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
-import org.incendo.cloud.caption.CaptionProvider;
-import org.incendo.cloud.caption.CaptionRegistry;
-import org.incendo.cloud.caption.StandardCaptionKeys;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.execution.preprocessor.CommandPreprocessingContext;
 import org.incendo.cloud.key.CloudKey;
 import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
+import org.incendo.cloud.translations.LocaleExtractor;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigParser;
 import xyz.jpenilla.wanderingtrades.command.commands.AboutCommand;
@@ -27,7 +26,10 @@ import xyz.jpenilla.wanderingtrades.command.commands.HelpCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.ReloadCommand;
 import xyz.jpenilla.wanderingtrades.command.commands.SummonCommands;
 import xyz.jpenilla.wanderingtrades.command.commands.TradeCommands;
-import xyz.jpenilla.wanderingtrades.config.Messages;
+
+import static org.incendo.cloud.translations.TranslationBundle.core;
+import static org.incendo.cloud.translations.bukkit.BukkitTranslationBundle.bukkit;
+import static org.incendo.cloud.translations.minecraft.extras.MinecraftExtrasTranslationBundle.minecraftExtras;
 
 @DefaultQualifier(NonNull.class)
 public final class Commands {
@@ -42,7 +44,7 @@ public final class Commands {
         this.commandManager = commandManager;
 
         new ExceptionHandler(plugin, commandManager).register();
-        this.registerMessageFactories();
+        this.registerCaptions();
         if (this.commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             this.commandManager.registerBrigadier();
         } else if (this.commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
@@ -69,15 +71,14 @@ public final class Commands {
         return this.commandManager;
     }
 
-    private void registerMessageFactories() {
-        final CaptionRegistry<CommandSender> registry = this.commandManager.captionRegistry();
-        registry.registerProvider(
-            CaptionProvider.<CommandSender>constantProvider()
-                .putCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM, Messages.COMMAND_ARGUMENT_PARSE_FAILURE_ENUM.message())
-                .putCaption(BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE, Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE.message())
-                .putCaption(BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT, Messages.COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT.message())
-                .build()
-        );
+    private void registerCaptions() {
+        final LocaleExtractor<CommandSender> extractor = LocaleExtractor.<CommandSender>builder()
+            .senderType(Player.class, player -> this.plugin.audiences().player(player).get(Identity.LOCALE).orElse(null))
+            .build();
+        this.commandManager.captionRegistry()
+            .registerProvider(minecraftExtras(extractor))
+            .registerProvider(bukkit(extractor))
+            .registerProvider(core(extractor));
     }
 
     private void registerParsers() {

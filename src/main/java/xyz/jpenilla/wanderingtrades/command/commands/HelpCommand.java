@@ -4,8 +4,6 @@ import java.util.Map;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -17,6 +15,7 @@ import org.incendo.cloud.help.HelpHandler;
 import org.incendo.cloud.help.result.CommandEntry;
 import org.incendo.cloud.help.result.IndexCommandResult;
 import org.incendo.cloud.minecraft.extras.MinecraftHelp;
+import org.incendo.cloud.minecraft.extras.caption.ComponentCaptionFormatter;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
@@ -82,11 +81,11 @@ public final class HelpCommand extends BaseCommand {
     }
 
     private Component helpMessage(final CommandSender sender, final String key, final Map<String, String> args) {
-        final TagResolver.Builder builder = TagResolver.builder();
-        for (final Map.Entry<String, String> entry : args.entrySet()) {
-            builder.resolver(Placeholder.parsed(entry.getKey(), entry.getValue()));
+        if (key.equals("help")) {
+            return Messages.COMMAND_HELP_DESCRIPTION.asComponent();
         }
-        return ((Messages.SingleMessage) Messages.get("command.help.message." + key.replace("_", "-")))
-            .withPlaceholders(builder.build());
+
+        return MinecraftHelp.captionMessageProvider(this.commandManager.captionRegistry(), ComponentCaptionFormatter.miniMessage())
+            .provide(sender, key, args);
     }
 }

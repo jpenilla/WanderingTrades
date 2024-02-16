@@ -6,13 +6,7 @@ command:
     help-query: 帮助查询
   exception:
     parse:
-      failure-enum: '''{input}''不属于下列情况: {acceptableValues}'
-      failure-location-invalid-format: '''{input}''不是有效的位置坐标，所需格式为''<x> <y> <z>'''
-      failure-location-mixed-local-absolute: 不能混合使用本地坐标和绝对坐标(所有坐标都使用'^'或不使用)
       no-trade-config: 没有加载该名称的交易配置
-    invalid-argument: <red>无效的命令参数：<error>
-    invalid-sender: <red>使用此命令您必须是<gray><type></gray>
-    invalid-syntax: <red>无效的命令语法。正确的命令语法是：<syntax>
     malformed-config: <red>配置格式不正确，请确保食谱至少拥有一种成分
   editconfig:
     description: 打开GUI以编辑 config.yml 配置
@@ -22,20 +16,6 @@ command:
     description: 打开GUI以编辑和创建交易配置
   help:
     description: WanderingTrades 帮助
-    message:
-      arguments: 参数
-      available-commands: 可用命令
-      click-for-next-page: 点击进入下一页
-      click-for-previous-page: 点击进入上一页
-      click-to-show-help: 单击此处显示此命令的帮助
-      command: 命令
-      description: 描述
-      help: WanderingTrades帮助
-      no-description: 无描述
-      no-results-for-query: 无查询结果
-      optional: 可选
-      page-out-of-range: '错误: 第<page>页不在范围内。可用范围[1, <max_pages>]'
-      showing-results-for-query: 显示查询的搜索结果
   list:
     description: 列出已加载的交易配置
     message: '<blue>已加载交易配置</blue><gray>:'

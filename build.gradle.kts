@@ -44,6 +44,8 @@ dependencies {
     implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.3"))
     implementation("org.incendo:cloud-paper")
     implementation("org.incendo:cloud-minecraft-extras")
+    implementation("org.incendo:cloud-translations-bukkit:1.0.0-SNAPSHOT")
+    implementation("org.incendo:cloud-translations-minecraft-extras:1.0.0-SNAPSHOT")
 
     implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-SNAPSHOT")
 
@@ -96,7 +98,6 @@ tasks {
             "net.kyori",
             "io.papermc.lib",
             "io.leangen.geantyref",
-            "org.incendo.interfaces",
         ).forEach {
             relocate(it, "xyz.jpenilla.wanderingtrades.lib.$it")
         }

@@ -6,15 +6,7 @@ command:
     help-query: Help Query
   exception:
     parse:
-      failure-enum: '''{input}'' is not one of the following: {acceptableValues}'
-      failure-location-invalid-format: '''{input}'' is not a valid location. Required
-        format is ''<x> <y> <z>'''
-      failure-location-mixed-local-absolute: Cannot mix local and absolute coordinates.
-        (either all coordinates use '^' or none do)
       no-trade-config: There are no trade configs with that name loaded.
-    invalid-argument: '<red>Invalid command argument: <error>'
-    invalid-sender: <red>Invalid command sender. You must be of type <gray><type></gray>.
-    invalid-syntax: '<red>Invalid command syntax. Correct command syntax is: <syntax>'
     malformed-config: <red>Config is malformed. Make sure recipes have at least one
       ingredient.
   editconfig:
@@ -25,21 +17,6 @@ command:
     description: Opens a GUI menu to edit and create trade configs
   help:
     description: WanderingTrades Help
-    message:
-      arguments: Arguments
-      available-commands: Available Commands
-      click-for-next-page: Click for next page
-      click-for-previous-page: Click for previous page
-      click-to-show-help: Click to show help for this command
-      command: Command
-      description: Description
-      help: WanderingTrades Help
-      no-description: No description
-      no-results-for-query: No results for query
-      optional: Optional
-      page-out-of-range: 'Error: Page <page> is not in range. Must be in range [1,
-        <max_pages>]'
-      showing-results-for-query: Showing search results for query
   list:
     description: Lists the loaded trade configs.
     message: '<blue>Loaded Trade Configs</blue><gray>:'
