@@ -37,11 +37,11 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.20.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+107-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+108-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
-    implementation(platform("org.incendo:cloud-bom:2.0.0-beta.3"))
-    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.4"))
+    implementation(platform("org.incendo:cloud-bom:2.0.0-beta.4"))
+    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.5"))
     implementation("org.incendo:cloud-paper")
     implementation("org.incendo:cloud-minecraft-extras")
     implementation(platform("org.incendo:cloud-translations-bom:1.0.0-SNAPSHOT"))
