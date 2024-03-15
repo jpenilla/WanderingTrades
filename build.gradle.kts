@@ -40,7 +40,7 @@ dependencies {
     implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+108-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
-    implementation(platform("org.incendo:cloud-bom:2.0.0-beta.4"))
+    implementation(platform("org.incendo:cloud-bom:2.0.0-SNAPSHOT"))
     implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.5"))
     implementation("org.incendo:cloud-paper")
     implementation("org.incendo:cloud-minecraft-extras")
