@@ -102,6 +102,7 @@ tasks {
         ).forEach {
             relocate(it, "xyz.jpenilla.wanderingtrades.lib.$it")
         }
+        mergeServiceFiles()
     }
     processResources {
         val tokens = mapOf(
