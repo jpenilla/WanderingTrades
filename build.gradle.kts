@@ -14,7 +14,7 @@ group = "xyz.jpenilla"
 version = "1.8.4-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.20.2"
+val mcVersion = "1.20.4"
 
 repositories {
     mavenCentral()
@@ -37,12 +37,16 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.20.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+106-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+108-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
-    implementation(platform("cloud.commandframework:cloud-bom:1.8.4"))
-    implementation("cloud.commandframework", "cloud-paper")
-    implementation("cloud.commandframework", "cloud-minecraft-extras")
+    implementation(platform("org.incendo:cloud-bom:2.0.0-beta.4"))
+    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.5"))
+    implementation("org.incendo:cloud-paper")
+    implementation("org.incendo:cloud-minecraft-extras")
+    implementation(platform("org.incendo:cloud-translations-bom:1.0.0-SNAPSHOT"))
+    implementation("org.incendo:cloud-translations-bukkit")
+    implementation("org.incendo:cloud-translations-minecraft-extras")
 
     implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-SNAPSHOT")
 
@@ -90,15 +94,15 @@ tasks {
         archiveFileName.set("${project.name}-${project.version}.jar")
         sequenceOf(
             "org.bstats",
-            "cloud.commandframework",
+            "org.incendo",
             "xyz.jpenilla.pluginbase",
             "net.kyori",
             "io.papermc.lib",
             "io.leangen.geantyref",
-            "org.incendo.interfaces",
         ).forEach {
             relocate(it, "xyz.jpenilla.wanderingtrades.lib.$it")
         }
+        mergeServiceFiles()
     }
     processResources {
         val tokens = mapOf(
@@ -115,6 +119,9 @@ tasks {
                 result
             }
         }
+    }
+    compileJava {
+        options.compilerArgs.add("-Xlint:-classfile,-processing")
     }
 }
 

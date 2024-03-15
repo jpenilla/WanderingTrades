@@ -6,16 +6,7 @@ command:
     help-query: Справка
   exception:
     parse:
-      failure-enum: '''{input}'' не является одним из: {acceptableValues}'
-      failure-location-invalid-format: '''{input}'' не является допустимым местоположением.
-        Требуемый формат ''<x> <y> <z>'''
-      failure-location-mixed-local-absolute: Невозможно смешивать локальные и абсолютные
-        координаты. (либо все координаты используют '^', либо ни одна не использует)
       no-trade-config: Не существует конфигурации торгов с таким именем.
-    invalid-argument: '<red>Недопустимый аргумент команды: <error>'
-    invalid-sender: <red>Неверный отправитель команды. Вы должны быть <gray><type></gray>
-    invalid-syntax: '<red>Неправильный синтаксис команды. Правильный синтаксис команды:
-      <syntax>'
     malformed-config: <red>Эта конфигурация неправильно сформирована. Убедитесь, что
       в рецептах есть хотя бы один ингредиент.
   editconfig:
@@ -26,21 +17,6 @@ command:
     description: Открывает меню для редактирования и создания торговых конфигураций
   help:
     description: Помощь WanderingTrades
-    message:
-      arguments: Аргументы
-      available-commands: Доступные команды
-      click-for-next-page: Нажмите для перехода на следующую страницу
-      click-for-previous-page: Нажмите для просмотра предыдущей страницы
-      click-to-show-help: Нажмите, чтобы показать справку для этой команды
-      command: Команда
-      description: Описание
-      help: Помощь WanderingTrades
-      no-description: Нет описания
-      no-results-for-query: Нет результатов по запросу
-      optional: Опционально
-      page-out-of-range: 'Ошибка: Страница <page> не находится в диапазоне. Должна
-        быть в диапазоне [1, <max_pages>]'
-      showing-results-for-query: Показаны результаты поиска по запросу
   list:
     description: Список загруженных конфигураций торгов.
     message: '<blue>Загруженные конфигурации торгов</blue><gray>:'

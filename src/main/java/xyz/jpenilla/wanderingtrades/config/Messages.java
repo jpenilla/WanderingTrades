@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.config;
 
-import cloud.commandframework.minecraft.extras.RichDescription;
 import com.google.common.base.Suppliers;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +24,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.cloud.description.Description;
+import org.incendo.cloud.minecraft.extras.RichDescription;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Logging;
 
@@ -40,12 +41,6 @@ public final class Messages {
     public static SingleMessage COMMAND_ABOUT_DESCRIPTION;
     @Key(value = "command.argument.help-query", legacyKey = "COMMAND_ARGUMENT_HELP_QUERY")
     public static SingleMessage COMMAND_ARGUMENT_HELP_QUERY;
-    @Key(value = "command.exception.parse.failure-enum", legacyKey = "COMMAND_ARGUMENT_PARSE_FAILURE_ENUM")
-    public static SingleMessage COMMAND_ARGUMENT_PARSE_FAILURE_ENUM;
-    @Key(value = "command.exception.parse.failure-location-invalid-format", legacyKey = "COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT")
-    public static SingleMessage COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_INVALID_FORMAT;
-    @Key(value = "command.exception.parse.failure-location-mixed-local-absolute", legacyKey = "COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE")
-    public static SingleMessage COMMAND_ARGUMENT_PARSE_FAILURE_LOCATION_MIXED_LOCAL_ABSOLUTE;
     @Key(value = "command.editconfig.description", legacyKey = "COMMAND_WT_CONFIG")
     public static SingleMessage COMMAND_EDITCONFIG_DESCRIPTION;
     @Key(value = "command.editplayerheads.description", legacyKey = "COMMAND_WT_PH_CONFIG")
@@ -54,38 +49,6 @@ public final class Messages {
     public static SingleMessage COMMAND_EDIT_DESCRIPTION;
     @Key(value = "command.help.description", legacyKey = "COMMAND_WT_HELP")
     public static SingleMessage COMMAND_HELP_DESCRIPTION;
-    @Key(value = "command.help.message.arguments", legacyKey = "HELP_ARGUMENTS")
-    public static SingleMessage COMMAND_HELP_MESSAGE_ARGUMENTS;
-    @Key(value = "command.help.message.available-commands", legacyKey = "HELP_AVAILABLE_COMMANDS")
-    public static SingleMessage COMMAND_HELP_MESSAGE_AVAILABLE_COMMANDS;
-    @Key(value = "command.help.message.click-for-next-page", legacyKey = "HELP_CLICK_FOR_NEXT_PAGE")
-    public static SingleMessage COMMAND_HELP_MESSAGE_CLICK_FOR_NEXT_PAGE;
-    @Key(value = "command.help.message.click-for-previous-page", legacyKey = "HELP_CLICK_FOR_PREVIOUS_PAGE")
-    public static SingleMessage COMMAND_HELP_MESSAGE_CLICK_FOR_PREVIOUS_PAGE;
-    @Key(value = "command.help.message.click-to-show-help", legacyKey = "HELP_CLICK_TO_SHOW_HELP")
-    public static SingleMessage COMMAND_HELP_MESSAGE_CLICK_TO_SHOW_HELP;
-    @Key(value = "command.help.message.command", legacyKey = "HELP_COMMAND")
-    public static SingleMessage COMMAND_HELP_MESSAGE_COMMAND;
-    @Key(value = "command.help.message.description", legacyKey = "HELP_DESCRIPTION")
-    public static SingleMessage COMMAND_HELP_MESSAGE_DESCRIPTION;
-    @Key(value = "command.help.message.help", legacyKey = "HELP_HELP")
-    public static SingleMessage COMMAND_HELP_MESSAGE_HELP;
-    @Key(value = "command.help.message.no-description", legacyKey = "HELP_NO_DESCRIPTION")
-    public static SingleMessage COMMAND_HELP_MESSAGE_NO_DESCRIPTION;
-    @Key(value = "command.help.message.no-results-for-query", legacyKey = "HELP_NO_RESULTS_FOR_QUERY")
-    public static SingleMessage COMMAND_HELP_MESSAGE_NO_RESULTS_FOR_QUERY;
-    @Key(value = "command.help.message.optional", legacyKey = "HELP_OPTIONAL")
-    public static SingleMessage COMMAND_HELP_MESSAGE_OPTIONAL;
-    @Key(value = "command.help.message.page-out-of-range", legacyKey = "HELP_PAGE_OUT_OF_RANGE")
-    public static SingleMessage COMMAND_HELP_MESSAGE_PAGE_OUT_OF_RANGE;
-    @Key(value = "command.help.message.showing-results-for-query", legacyKey = "HELP_SHOWING_RESULTS_FOR_QUERY")
-    public static SingleMessage COMMAND_HELP_MESSAGE_SHOWING_RESULTS_FOR_QUERY;
-    @Key(value = "command.exception.invalid-argument", legacyKey = "COMMAND_INVALID_ARGUMENT")
-    public static SingleMessage COMMAND_INVALID_ARGUMENT;
-    @Key(value = "command.exception.invalid-sender", legacyKey = "COMMAND_INVALID_SENDER")
-    public static SingleMessage COMMAND_INVALID_SENDER;
-    @Key(value = "command.exception.invalid-syntax", legacyKey = "COMMAND_INVALID_SYNTAX")
-    public static SingleMessage COMMAND_INVALID_SYNTAX;
     @Key(value = "command.exception.malformed-config", legacyKey = "COMMAND_SUMMON_MALFORMED_CONFIG")
     public static SingleMessage COMMAND_EXCEPTION_MALFORMED_CONFIG;
     @Key(value = "command.list.description", legacyKey = "COMMAND_WT_LIST")
@@ -450,7 +413,7 @@ public final class Messages {
             return new SingleMessage(message);
         }
 
-        default RichDescription asDescription() {
+        default Description asDescription() {
             return RichDescription.of(this.asComponent());
         }
     }

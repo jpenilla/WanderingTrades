@@ -1,17 +1,5 @@
 package xyz.jpenilla.wanderingtrades.command.commands;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.EnumArgument;
-import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.bukkit.arguments.selector.SingleEntitySelector;
-import cloud.commandframework.bukkit.parsers.WorldArgument;
-import cloud.commandframework.bukkit.parsers.location.LocationArgument;
-import cloud.commandframework.bukkit.parsers.selector.SingleEntitySelectorArgument;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.meta.CommandMeta;
-import cloud.commandframework.minecraft.extras.MinecraftExtrasMetaKeys;
 import io.papermc.lib.PaperLib;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,15 +18,26 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.bukkit.data.SingleEntitySelector;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
 import xyz.jpenilla.pluginbase.legacy.MiniMessageUtil;
 import xyz.jpenilla.pluginbase.legacy.PaperComponentUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
-import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigArgument;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
+
+import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
+import static org.incendo.cloud.bukkit.parser.location.LocationParser.locationParser;
+import static org.incendo.cloud.bukkit.parser.selector.SingleEntitySelectorParser.singleEntitySelectorParser;
+import static org.incendo.cloud.parser.standard.EnumParser.enumParser;
+import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
+import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
+import static xyz.jpenilla.wanderingtrades.command.argument.TradeConfigParser.tradeConfigParser;
 
 @DefaultQualifier(NonNull.class)
 public final class SummonCommands extends BaseCommand {
@@ -51,17 +50,17 @@ public final class SummonCommands extends BaseCommand {
         commands.registerFlag(
             "pitch",
             this.commandManager.flagBuilder("pitch")
-                .withArgument(IntegerArgument.builder("pitch").withMin(-180).withMax(180))
+                .withComponent(integerParser(-180, 180))
         );
         commands.registerFlag(
             "yaw",
             this.commandManager.flagBuilder("yaw")
-                .withArgument(IntegerArgument.builder("yaw").withMin(-90).withMax(90))
+                .withComponent(integerParser(-90, 90))
         );
         commands.registerFlag(
             "world",
             this.commandManager.flagBuilder("world")
-                .withArgument(WorldArgument.of("world"))
+                .withComponent(worldParser())
         );
     }
 
@@ -70,9 +69,9 @@ public final class SummonCommands extends BaseCommand {
         final Command.Builder<CommandSender> wt = this.commandManager.commandBuilder("wt");
 
         final Command<CommandSender> summonNatural = wt
-            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_SUMMONNATURAL_DESCRIPTION.asComponent())
+            .commandDescription(Messages.COMMAND_SUMMONNATURAL_DESCRIPTION.asDescription())
             .literal("summonnatural")
-            .argument(LocationArgument.of("location"))
+            .required("location", locationParser())
             .flag(this.commands.getFlag("world"))
             .flag(this.commands.getFlag("pitch"))
             .flag(this.commands.getFlag("yaw"))
@@ -91,17 +90,17 @@ public final class SummonCommands extends BaseCommand {
             .build();
 
         final Command<CommandSender> summon = wt
-            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_SUMMON_DESCRIPTION.asComponent())
+            .commandDescription(Messages.COMMAND_SUMMON_DESCRIPTION.asDescription())
             .literal("summon")
-            .argument(TradeConfigArgument.of("trade_config"))
-            .argument(LocationArgument.of("location"))
+            .required("trade_config", tradeConfigParser())
+            .required("location", locationParser())
             .flag(this.commands.getFlag("world"))
             .flag(this.commands.getFlag("pitch"))
             .flag(this.commands.getFlag("yaw"))
             .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.summon")
             .handler(context -> this.summonTrader(
-                context.getSender(),
+                context.sender(),
                 context.get("trade_config"),
                 resolveLocation(context),
                 context.flags().isPresent("noai")
@@ -109,19 +108,19 @@ public final class SummonCommands extends BaseCommand {
             .build();
 
         final Command<CommandSender> summonVillager = wt
-            .meta(MinecraftExtrasMetaKeys.DESCRIPTION, Messages.COMMAND_SUMMONVILLAGER_DESCRIPTION.asComponent())
+            .commandDescription(Messages.COMMAND_SUMMONVILLAGER_DESCRIPTION.asDescription())
             .literal("summonvillager")
-            .argument(TradeConfigArgument.of("trade_config"))
-            .argument(EnumArgument.of(Villager.Type.class, "type"))
-            .argument(EnumArgument.of(Villager.Profession.class, "profession"))
-            .argument(LocationArgument.of("location"))
+            .required("trade_config", tradeConfigParser())
+            .required("type", enumParser(Villager.Type.class))
+            .required("profession", enumParser(Villager.Profession.class))
+            .required("location", locationParser())
             .flag(this.commands.getFlag("world"))
             .flag(this.commands.getFlag("pitch"))
             .flag(this.commands.getFlag("yaw"))
             .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.villager")
             .handler(context -> this.summonVillagerTrader(
-                context.getSender(),
+                context.sender(),
                 context.get("trade_config"),
                 resolveLocation(context),
                 context.get("type"),
@@ -131,21 +130,20 @@ public final class SummonCommands extends BaseCommand {
             .build();
 
         /* Entity Rename Command */
-        final Command<CommandSender> nameEntity = this.commandManager.commandBuilder("nameentity")
-            .meta(CommandMeta.DESCRIPTION, "Sets the name of an entity.")
-            .argument(SingleEntitySelectorArgument.of("entity"))
-            .argument(StringArgument.of("name", StringArgument.StringMode.GREEDY),
-                ArgumentDescription.of("The MiniMessage string to use as a name."))
+        final Command<Player> nameEntity = this.commandManager.commandBuilder("nameentity")
+            .commandDescription(Description.of("Sets the name of an entity."))
+            .required("entity", singleEntitySelectorParser())
+            .required("name", greedyStringParser(), Description.of("The MiniMessage string to use as a name."))
             .permission("wanderingtrades.name")
             .senderType(Player.class)
             .handler(context -> {
-                final @Nullable Entity entity = context.<SingleEntitySelector>get("entity").getEntity();
+                final @Nullable Entity entity = context.<SingleEntitySelector>get("entity").single();
                 if (entity != null && !(entity instanceof Player)) {
                     this.setCustomName(entity, context.get("name"));
                     entity.setCustomNameVisible(true);
-                    this.chat.send(context.getSender(), "Named entity<gray>:</gray> " + context.get("name"));
+                    this.chat.send(context.sender(), "Named entity<gray>:</gray> " + context.get("name"));
                 } else {
-                    this.chat.send(context.getSender(), "<red>Cannot name player or non-living entity.");
+                    this.chat.send(context.sender(), "<red>Cannot name player or non-living entity.");
                 }
             })
             .build();

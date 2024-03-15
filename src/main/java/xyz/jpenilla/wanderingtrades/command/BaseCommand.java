@@ -1,9 +1,9 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
+import org.incendo.cloud.CommandManager;
 import xyz.jpenilla.pluginbase.legacy.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
@@ -11,7 +11,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 public abstract class BaseCommand {
     protected final WanderingTrades plugin;
     protected final Commands commands;
-    protected final PaperCommandManager<CommandSender> commandManager;
+    protected final CommandManager<CommandSender> commandManager;
     protected final Chat chat;
 
     protected BaseCommand(final WanderingTrades plugin, final Commands commands) {

@@ -6,18 +6,7 @@ command:
     help-query: Abfragehilfe
   exception:
     parse:
-      failure-enum: '''{input}'' ist keine von den folgenden: {acceptableValues}'
-      failure-location-invalid-format: '''{input}'' ist kein gültiger Ort. Erforderliches
-        Format ist ''<x> <y> <z>'''
-      failure-location-mixed-local-absolute: Absolute und relative Koordinaten können
-        nicht gemischt werden. (Entweder alle Koordinaten nutzen '^' oder keine tut
-        es.)
       no-trade-config: Es sind keine Angebots-Konfigurationen mit diesem Namen geladen.
-    invalid-argument: '<red>Ungültiges Befehlsargument: <error>'
-    invalid-sender: <red>Ungültiger Befehlseingabeort. Du musst vom Typ <gray><type></gray>
-      sein.
-    invalid-syntax: '<red>Ungültige Befehlseingabe. Die korrekte Befehlssyntax lautet:
-      <syntax>'
     malformed-config: <red>Diese Konfiguration enthält fehler. Stelle sicher, dass
       die Rezepte mindestens ein Item enthalten.
   editconfig:
@@ -30,21 +19,6 @@ command:
       bearbeiten.
   help:
     description: WanderingTrades Hilfe
-    message:
-      arguments: Argumente
-      available-commands: Verfügbare Befehle
-      click-for-next-page: Klicken für die nächste Seite
-      click-for-previous-page: Klicken für die vorherige Seite
-      click-to-show-help: Klicken um Hilfe für diesen Befehl anzuzeigen.
-      command: Befehl
-      description: Beschreibung
-      help: WanderingTrades Hilfe
-      no-description: Keine Beschreibung
-      no-results-for-query: Keine Ergebnisse für die Abfrage.
-      optional: Optional
-      page-out-of-range: 'Fehler: Seite <page> ist nicht in Reichweite. Sie muss sich
-        innerhalb der Reichweite befinden. [1, <max_pages>]'
-      showing-results-for-query: Zeigt die Ergebnisse der Abfrage.
   list:
     description: Zeigt die geladenen Angebots-Konfigurationen an.
     message: '<blue>Geladene Angebots-Konfigurationen</blue><gray>:'

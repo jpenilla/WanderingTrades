@@ -6,15 +6,7 @@ command:
     help-query: Help Query
   exception:
     parse:
-      failure-enum: '„{input}” nu este în mulțimea: {acceptableValues}'
-      failure-location-invalid-format: „{input}” nu este o locație validă. Formatul
-        cerut este „<x> <y> <z>”
-      failure-location-mixed-local-absolute: Nu poate conține și coordonate absolute
-        și coordonate locale (Ori folosesc toate coordonatele „^” sau niciuna)
       no-trade-config: Nu există nicio configurație încărcată cu numele acela.
-    invalid-argument: '<red>Parametru invalid pentru comandă: <error>'
-    invalid-sender: <red>Command sender invalid. Trebuie să fii un <gray><type></gray>
-    invalid-syntax: '<red>Sintaxă invalidă. Sintaxa corectă a comenzii este: <syntax>'
     malformed-config: <red>Această configurație nu este formatată corect. Verifică
       dacă schimburile au măcar un obiect.
   editconfig:
@@ -25,21 +17,6 @@ command:
     description: Deschide un meniu pentru a crea si edita schimburi.
   help:
     description: WanderingTrades Help
-    message:
-      arguments: Parametrii
-      available-commands: Comenzi disponibile
-      click-for-next-page: Dă click pentru pagina următoare
-      click-for-previous-page: Dă click pentru pagina precedentă
-      click-to-show-help: Dă click pentru a primi ajutor în folosirea comenzii
-      command: Comandă
-      description: Descriere
-      help: WanderingTrades Help
-      no-description: Nicio descriere
-      no-results-for-query: Niciun rezultat pentru căutare
-      optional: Opțional
-      page-out-of-range: 'Eroare: Pagina <page> nu este în interval. Trebuie să fie
-        în intervalul [1, <max_pages>]'
-      showing-results-for-query: Rezultatele căutării
   list:
     description: Enumeră toate configurațiile de schimb încărcate.
     message: '<blue>Configurațiile de schimburi au fost încărcate</blue><gray>:'
