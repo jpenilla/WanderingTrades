@@ -1,9 +1,10 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import xyz.jpenilla.resourcefactory.bukkit.Permission
+import xyz.jpenilla.resourcefactory.bukkit.bukkitPluginYml
 
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
+    id("xyz.jpenilla.resource-factory") version "0.0.1"
     val indraVersion = "3.1.3"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
@@ -65,18 +66,21 @@ indra {
     javaVersions().target(17)
 }
 
-bukkit {
+val bukkitPluginYml = bukkitPluginYml {
     main = "xyz.jpenilla.wanderingtrades.WanderingTrades"
-    name = project.name
     apiVersion = "1.16"
     website = "https://github.com/jpenilla/WanderingTrades"
     authors = listOf("jmp")
     softDepend = listOf("WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
     permissions {
         register("wanderingtrades.trader-spawn-notifications") {
-            default = BukkitPluginDescription.Permission.Default.TRUE
+            default = Permission.Default.TRUE
         }
     }
+}
+
+sourceSets.main {
+    resourceFactory.factory(bukkitPluginYml.resourceFactory())
 }
 
 tasks {
