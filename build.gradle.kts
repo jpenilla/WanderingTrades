@@ -1,10 +1,9 @@
 import xyz.jpenilla.resourcefactory.bukkit.Permission
-import xyz.jpenilla.resourcefactory.bukkit.bukkitPluginYml
 
 plugins {
     `java-library`
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("xyz.jpenilla.resource-factory") version "0.0.1"
+    id("xyz.jpenilla.resource-factory-bukkit-convention") version "0.0.5"
     val indraVersion = "3.1.3"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
@@ -66,7 +65,7 @@ indra {
     javaVersions().target(17)
 }
 
-val bukkitPluginYml = bukkitPluginYml {
+bukkitPluginYml {
     main = "xyz.jpenilla.wanderingtrades.WanderingTrades"
     apiVersion = "1.16"
     website = "https://github.com/jpenilla/WanderingTrades"
@@ -77,10 +76,6 @@ val bukkitPluginYml = bukkitPluginYml {
             default = Permission.Default.TRUE
         }
     }
-}
-
-sourceSets.main {
-    resourceFactory.factory(bukkitPluginYml.resourceFactory())
 }
 
 tasks {
