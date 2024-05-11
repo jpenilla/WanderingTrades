@@ -36,7 +36,7 @@ public final class Commands {
 
     private final WanderingTrades plugin;
     private final PaperCommandManager<CommandSender> commandManager;
-    private final Map<String, CommandFlag.Builder<?>> flagRegistry = new HashMap<>();
+    private final Map<String, CommandFlag.Builder<CommandSender, ?>> flagRegistry = new HashMap<>();
 
     private Commands(final WanderingTrades plugin, final PaperCommandManager<CommandSender> commandManager) {
         this.plugin = plugin;
@@ -86,11 +86,11 @@ public final class Commands {
         context.commandContext().store(PLUGIN, this.plugin);
     }
 
-    public CommandFlag.Builder<?> getFlag(final String name) {
+    public CommandFlag.Builder<CommandSender, ?> getFlag(final String name) {
         return this.flagRegistry.get(name);
     }
 
-    public void registerFlag(final String name, final CommandFlag.Builder<?> flagBuilder) {
+    public void registerFlag(final String name, final CommandFlag.Builder<CommandSender, ?> flagBuilder) {
         this.flagRegistry.put(name, flagBuilder);
     }
 
