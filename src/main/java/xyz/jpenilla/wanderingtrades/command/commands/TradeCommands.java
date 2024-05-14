@@ -3,6 +3,7 @@ package xyz.jpenilla.wanderingtrades.command.commands;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -114,7 +115,7 @@ public final class TradeCommands extends BaseCommand {
             if (ctx.sender() instanceof Player player) {
                 players = List.of(player);
             } else {
-                throw new InvalidCommandSenderException(ctx.sender(), Player.class, null);
+                throw new InvalidCommandSenderException(ctx.sender(), Set.of(Player.class), List.of(), null);
             }
         }
         return players;

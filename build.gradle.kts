@@ -14,7 +14,7 @@ group = "xyz.jpenilla"
 version = "1.8.4-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.20.4"
+val mcVersion = "1.20.6"
 
 repositories {
     mavenCentral()
@@ -37,11 +37,11 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.20.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+115-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+117-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
-    implementation(platform("org.incendo:cloud-bom:2.0.0-beta.5"))
-    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.6"))
+    implementation(platform("org.incendo:cloud-bom:2.0.0-rc.1"))
+    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.7"))
     implementation("org.incendo:cloud-paper")
     implementation("org.incendo:cloud-minecraft-extras")
     implementation(platform("org.incendo:cloud-translations-bom:1.0.0-SNAPSHOT"))
@@ -62,7 +62,10 @@ dependencies {
 }
 
 indra {
-    javaVersions().target(17)
+    javaVersions{
+        minimumToolchain(21)
+        target(17)
+    }
 }
 
 bukkitPluginYaml {
@@ -87,9 +90,11 @@ tasks {
     }
     jar {
         archiveClassifier.set("noshade")
+        manifest {
+            attributes("paperweight-mappings-namespace" to "mojang")
+        }
     }
     shadowJar {
-        minimize()
         archiveFileName.set("${project.name}-${project.version}.jar")
         sequenceOf(
             "org.bstats",
