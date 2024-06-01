@@ -2,7 +2,7 @@ import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.github.goooler.shadow") version "8.1.7"
     id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.1.1"
     val indraVersion = "3.1.3"
     id("net.kyori.indra") version indraVersion
