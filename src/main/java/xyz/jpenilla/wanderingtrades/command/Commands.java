@@ -13,7 +13,7 @@ import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.execution.preprocessor.CommandPreprocessingContext;
 import org.incendo.cloud.key.CloudKey;
-import org.incendo.cloud.paper.PaperCommandManager;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.translations.LocaleExtractor;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -35,10 +35,10 @@ public final class Commands {
     public static final CloudKey<WanderingTrades> PLUGIN = CloudKey.of("wt:plugin", TypeToken.get(WanderingTrades.class));
 
     private final WanderingTrades plugin;
-    private final PaperCommandManager<CommandSender> commandManager;
+    private final LegacyPaperCommandManager<CommandSender> commandManager;
     private final Map<String, CommandFlag.Builder<CommandSender, ?>> flagRegistry = new HashMap<>();
 
-    private Commands(final WanderingTrades plugin, final PaperCommandManager<CommandSender> commandManager) {
+    private Commands(final WanderingTrades plugin, final LegacyPaperCommandManager<CommandSender> commandManager) {
         this.plugin = plugin;
         this.commandManager = commandManager;
 
@@ -99,7 +99,7 @@ public final class Commands {
     }
 
     public static void setup(final WanderingTrades plugin) {
-        final PaperCommandManager<CommandSender> manager = PaperCommandManager.createNative(
+        final LegacyPaperCommandManager<CommandSender> manager = LegacyPaperCommandManager.createNative(
             plugin,
             ExecutionCoordinator.simpleCoordinator()
         );
