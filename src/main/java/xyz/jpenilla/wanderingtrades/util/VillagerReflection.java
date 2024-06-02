@@ -13,6 +13,7 @@ import org.bukkit.entity.WanderingTrader;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import xyz.jpenilla.pluginbase.legacy.Crafty;
 
+import static io.papermc.lib.PaperLib.getMinecraftPatchVersion;
 import static io.papermc.lib.PaperLib.getMinecraftVersion;
 import static io.papermc.lib.PaperLib.isPaper;
 
@@ -45,7 +46,13 @@ public final class VillagerReflection {
             case 17 -> "fF";
             case 18 -> "fH";
             case 19 -> "fU";
-            case 20 -> "gk";
+            case 20 -> {
+                if (getMinecraftPatchVersion() >= 5) {
+                    yield "gx";
+                } else {
+                    yield "gk";
+                }
+            }
             default -> throw new IllegalStateException("Don't know updateTrades method name for 1." + getMinecraftVersion());
         };
         try {
@@ -76,7 +83,13 @@ public final class VillagerReflection {
                     case 16, 17 -> "getBehaviorController";
                     case 18 -> "du";
                     case 19 -> "dD";
-                    case 20 -> "dN";
+                    case 20 -> {
+                        if (getMinecraftPatchVersion() >= 5) {
+                            yield "dS";
+                        } else {
+                            yield "dN";
+                        }
+                    }
                     default -> throw new IllegalStateException("Don't know getBrain method name for 1." + getMinecraftVersion());
                 };
                 LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, getBrainName, Brain_class), "LivingEntity#getBrain");
