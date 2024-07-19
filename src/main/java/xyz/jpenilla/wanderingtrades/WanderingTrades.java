@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -96,8 +97,14 @@ public final class WanderingTrades extends PluginBase {
 
     private void closeInterfaces() {
         for (final Player player : this.getServer().getOnlinePlayers()) {
-            if (player.getOpenInventory().getTopInventory().getHolder() instanceof InterfaceView<?, ?>) {
-                player.closeInventory();
+            try {
+                final Object openInventoryView = player.getClass().getDeclaredMethod("getOpenInventory").invoke(player);
+                final Inventory inv = (Inventory) openInventoryView.getClass().getMethod("getTopInventory").invoke(openInventoryView);
+                if (inv.getHolder() instanceof InterfaceView<?, ?>) {
+                    player.closeInventory();
+                }
+            } catch (final ReflectiveOperationException e) {
+                throw new RuntimeException(e);
             }
         }
     }
