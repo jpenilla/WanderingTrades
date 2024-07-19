@@ -34,14 +34,14 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.21-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
     implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+122-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.0.2")
 
     implementation(platform("org.incendo:cloud-bom:2.0.0-rc.2"))
-    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.9"))
+    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-SNAPSHOT"))
     implementation("org.incendo:cloud-paper")
     implementation("org.incendo:cloud-minecraft-extras")
     implementation(platform("org.incendo:cloud-translations-bom:1.0.0-SNAPSHOT"))
@@ -59,6 +59,10 @@ dependencies {
         exclude("org.bukkit")
     }
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.0")
+}
+
+java {
+    disableAutoTargetJvm()
 }
 
 indra {

@@ -1,5 +1,6 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
+import io.leangen.geantyref.GenericTypeReflector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -73,8 +74,12 @@ public final class ListTradeConfigsInterface extends BaseInterface {
             .lore(finalLores);
 
         if (tradeConfig.enabled()) {
-            stack = stack.addEnchant(Enchantment.DAMAGE_ALL, 1)
-                .editMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ENCHANTS));
+            if (GenericTypeReflector.isSuperType(Enum.class, Enchantment.class)) {
+                stack = stack.addEnchant(Enchantment.getByName("DAMAGE_ALL"), 1)
+                    .editMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ENCHANTS));
+            } else {
+                stack = stack.editMeta(meta -> meta.setEnchantmentGlintOverride(true));
+            }
         }
 
         return ItemStackElement.of(stack.build(), context -> new ListTradesInterface(

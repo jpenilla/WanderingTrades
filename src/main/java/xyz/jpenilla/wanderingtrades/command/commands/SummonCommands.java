@@ -1,8 +1,13 @@
 package xyz.jpenilla.wanderingtrades.command.commands;
 
+import io.leangen.geantyref.GenericTypeReflector;
+import io.leangen.geantyref.TypeToken;
 import io.papermc.lib.PaperLib;
+import io.papermc.paper.registry.RegistryKey;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import org.bukkit.Location;
 import org.bukkit.Nameable;
 import org.bukkit.World;
@@ -22,6 +27,8 @@ import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.data.SingleEntitySelector;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
+import org.incendo.cloud.paper.parser.RegistryEntryParser;
+import org.incendo.cloud.parser.ParserDescriptor;
 import xyz.jpenilla.pluginbase.legacy.MiniMessageUtil;
 import xyz.jpenilla.pluginbase.legacy.PaperComponentUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -30,10 +37,12 @@ import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
+import xyz.jpenilla.wanderingtrades.util.Reflection;
 
 import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
 import static org.incendo.cloud.bukkit.parser.location.LocationParser.locationParser;
 import static org.incendo.cloud.bukkit.parser.selector.SingleEntitySelectorParser.singleEntitySelectorParser;
+import static org.incendo.cloud.paper.parser.RegistryEntryParser.registryEntryParser;
 import static org.incendo.cloud.parser.standard.EnumParser.enumParser;
 import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
@@ -107,12 +116,12 @@ public final class SummonCommands extends BaseCommand {
             ))
             .build();
 
-        final Command<CommandSender> summonVillager = wt
+        @SuppressWarnings("RedundantCast") final Command<CommandSender> summonVillager = wt
             .commandDescription(Messages.COMMAND_SUMMONVILLAGER_DESCRIPTION.asDescription())
             .literal("summonvillager")
             .required("trade_config", tradeConfigParser())
-            .required("type", enumParser(Villager.Type.class))
-            .required("profession", enumParser(Villager.Profession.class))
+            .required("type", registryValueOrEnumParser(() -> (Object) RegistryKey.VILLAGER_TYPE, TypeToken.get(Villager.Type.class)))
+            .required("profession", registryValueOrEnumParser(() -> (Object) RegistryKey.VILLAGER_PROFESSION, TypeToken.get(Villager.Profession.class)))
             .required("location", locationParser())
             .flag(this.commands.getFlag("world"))
             .flag(this.commands.getFlag("pitch"))
@@ -151,6 +160,18 @@ public final class SummonCommands extends BaseCommand {
         this.commands.register(List.of(summonNatural, summon, summonVillager, nameEntity));
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <C, E> @NonNull ParserDescriptor<C, E> registryValueOrEnumParser(
+        final Supplier<Object> registryKey,
+        final TypeToken<E> elementType
+    ) {
+        if (GenericTypeReflector.isSuperType(Enum.class, elementType.getType())) {
+            return enumParser((Class<? extends Enum>) GenericTypeReflector.erase(elementType.getType()));
+        }
+        return registryEntryParser((RegistryKey) registryKey.get(), (TypeToken) elementType)
+            .mapSuccess(elementType, (ctx, entry) -> CompletableFuture.completedFuture(((RegistryEntryParser.RegistryEntry) entry).value()));
+    }
+
     private void summonNatural(
         final Location location,
         final boolean refresh,
@@ -158,7 +179,7 @@ public final class SummonCommands extends BaseCommand {
         final boolean protect,
         final boolean noInvisibility
     ) {
-        location.getWorld().spawn(location, WanderingTrader.class, wanderingTrader -> {
+        Reflection.spawn(location, WanderingTrader.class, wanderingTrader -> {
             final PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
             if (refresh) {
                 persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
@@ -188,7 +209,7 @@ public final class SummonCommands extends BaseCommand {
         if (recipes == null) {
             return;
         }
-        loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
+        Reflection.spawn(loc, WanderingTrader.class, wanderingTrader -> {
             wanderingTrader.setRecipes(recipes);
             if (disableAI) {
                 wanderingTrader.setAI(false);
@@ -217,7 +238,7 @@ public final class SummonCommands extends BaseCommand {
         if (recipes == null) {
             return;
         }
-        final Villager v = loc.getWorld().spawn(loc, Villager.class, villager -> {
+        final Villager v = Reflection.spawn(loc, Villager.class, villager -> {
             villager.setAI(!disableAI);
             villager.setVillagerType(type);
             villager.setProfession(profession);
