@@ -14,7 +14,7 @@ group = "xyz.jpenilla"
 version = "1.8.5-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.21"
+val mcVersion = "1.21.1"
 
 repositories {
     mavenCentral()
@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.21-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.21.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
     implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+122-SNAPSHOT")
