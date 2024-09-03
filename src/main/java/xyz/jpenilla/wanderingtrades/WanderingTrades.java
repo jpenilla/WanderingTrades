@@ -98,7 +98,7 @@ public final class WanderingTrades extends PluginBase {
     private void closeInterfaces() {
         for (final Player player : this.getServer().getOnlinePlayers()) {
             try {
-                final Object openInventoryView = player.getClass().getDeclaredMethod("getOpenInventory").invoke(player);
+                final Object openInventoryView = Player.class.getMethod("getOpenInventory").invoke(player);
                 final Inventory inv = (Inventory) openInventoryView.getClass().getMethod("getTopInventory").invoke(openInventoryView);
                 if (inv.getHolder() instanceof InterfaceView<?, ?>) {
                     player.closeInventory();
