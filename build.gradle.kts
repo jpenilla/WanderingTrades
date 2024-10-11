@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "xyz.jpenilla"
-version = "1.8.5".decorateVersion()
+version = "1.8.6-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
 val mcVersion = "1.21.1"
