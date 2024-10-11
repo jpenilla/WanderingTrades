@@ -41,7 +41,7 @@ dependencies {
     implementation("org.bstats", "bstats-bukkit", "3.1.0")
 
     implementation(platform("org.incendo:cloud-bom:2.0.0"))
-    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-SNAPSHOT"))
+    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.10"))
     implementation("org.incendo:cloud-paper")
     implementation("org.incendo:cloud-minecraft-extras")
     implementation(platform("org.incendo:cloud-translations-bom:1.0.0-SNAPSHOT"))
