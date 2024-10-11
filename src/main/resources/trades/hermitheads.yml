@@ -72,7 +72,7 @@ trades:
         amount: 1
     result:
       customname: "<yellow>Docm77's Head"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjFmNmNhZGMzZTljYWQ5NWZiZjZjMTFmYTU4ZTgwZWE0ZGI1MTllM2I0MjUwZGU5NjEzMGRjZjhjMWE3NDNlZSJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODI5OGY0MzE0MjE1YmY2NjA1NzU1NTE4NmIzMWZlNmVlY2QzMzFiY2FjZGJiYTFlYWUzYzA0NmJkZmRhNDNiOCJ9fX0=
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
@@ -163,7 +163,7 @@ trades:
         amount: 1
     result:
       customname: "<yellow>Renthedog's Head"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDBiYTY0YTkyNWRjZjUxNTRlNjYzYzU4NGQ0OGNlODBhNDBmZDEyOWVlOTRlNzA0NDZmNzJlOGEwMjRhOWM5In19fQ==
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmEwNWU1MjFlNmUyNTM3YmY5ZGNiMTQ5YzU3NDNkMmQ1YzVmNjBiMjJjOGUxMWZiMWQxOWVkMWZjYmMyMjBiMyJ9fX0=
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
@@ -241,7 +241,7 @@ trades:
         amount: 1
     result:
       customname: "<yellow>joehillssays's Head"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTIzNmJkNzgwZjkzNTM3NDI1ZWEwYWY1ZDRhMmE1MzQyZmI4MGRlMDY5MWViMTFkOTkzYjU1NmEzY2EyNDQ2OSJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTg4NjUyYmRjNjJkZWRlYWUwYzY1MWEzMjI3NGIzYmVjN2JkYzQ5ZWUwYzk0MDc2ZDM4OTczYWU4NmJmYjFhOSJ9fX0=
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
@@ -254,7 +254,7 @@ trades:
         amount: 1
     result:
       customname: "<yellow>cubfan135's Head"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTgxNTBlOTVkMjY5OTQ2NjQ2ZTFjN2FiOTJlZDUxOWViYWQ5NTc4MzY5NjhjMDA0N2YzM2ZhN2JhZTAyZTRhYyJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTJhOTM0Y2JhYmNhODU4MTg5OTg4MTg5NDA4MDNkYjM5YjM0NTBkM2Y5Y2E1MzE2ZmU0ZWMzYzU3MGU3OTJhNiJ9fX0=
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
@@ -332,7 +332,7 @@ trades:
         amount: 1
     result:
       customname: "<yellow>BdoubleO100's Head"
-      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzVlODA1ZDA0YjM3OGVkNzNkNDQ5ZWViOTUzZTBkNTdhMmIyZGZiZjNiNzk1MTY5OTRhMjNhMWRhMDcwNTFkZSJ9fX0=
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjcwOTYyYTM3YTNkZjgxN2E1ODg2MTlkNTlkZjA5MWYxMmM4NDE5NTJkZDFkMGZkMmQwMjliNjk3MjJlNWQ3ZiJ9fX0=
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
@@ -411,6 +411,32 @@ trades:
     result:
       customname: "<yellow>PearlescentMoon's Head"
       material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjdkOTEwZGI5YjRmOWQ3NWUwOTFkMWI1YWI3NzQ5ZjRhNjUyZGY1MDAxOTZiZWU2YjUxMmQ4NmQ4OWJhNmZhMCJ9fX0=
+      amount: 1
+      lore:
+        - "  <gray><italic>Hermit Head"
+  Skizzleman_head:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+    result:
+      customname: "<yellow>Skizzleman's Head"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjRhMjQyNmVjOTlmZDYyODE4ZDY4ZGNlMzliMDQyOTIwNWE5YWQxNGY0ZGRmODgxOTkyYjNmZTE4YjdhOGY4MCJ9fX0=
+      amount: 1
+      lore:
+        - "  <gray><italic>Hermit Head"
+  SmallishBeans_head:
+    experienceReward: true
+    ingredients:
+      1:
+        customname: NONE
+        material: EMERALD
+        amount: 1
+    result:
+      customname: "<yellow>SmallishBeans's Head"
+      material: head-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2FiYjM5NTU1Nzk0N2JlODM1ODE5ZmZiZTgwOTg4MDA0YThjZDQ5MzgxZTI2ZWE3ZTMwNTE3YzUyNGUxYTJmOCJ9fX0=
       amount: 1
       lore:
         - "  <gray><italic>Hermit Head"
