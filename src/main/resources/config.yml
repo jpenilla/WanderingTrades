@@ -76,6 +76,11 @@ traderSpawnNotifications:
   # Requires 'wanderingtrades.trader-spawn-notifications' permission, which defaults to true
   notifyPlayers: 500
 
+  # The wandering traders generated for this reason will not trigger Notifications.
+  # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+  spawnReasonBlackList:
+    - 'SPAWNER_EGG'
+
   # Commands to run when a trader spawns
   commands:
     - "effect give {trader-uuid} glowing 30"
