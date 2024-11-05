@@ -67,6 +67,11 @@ traderSpawnNotifications:
   # Toggle the notification feature
   enabled: false
 
+  # The wandering traders generated for this reason will not trigger Notifications.
+  # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+  spawnReasonBlackList:
+    - 'SPAWNER_EGG'
+
   # Who to notify. Can be:
   #  - 'all': all online players
   #  - 'world': all players in the world the trader spawned in
@@ -75,11 +80,6 @@ traderSpawnNotifications:
   #
   # Requires 'wanderingtrades.trader-spawn-notifications' permission, which defaults to true
   notifyPlayers: 500
-
-  # The wandering traders generated for this reason will not trigger Notifications.
-  # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
-  spawnReasonBlackList:
-    - 'SPAWNER_EGG'
 
   # Commands to run when a trader spawns
   commands:
