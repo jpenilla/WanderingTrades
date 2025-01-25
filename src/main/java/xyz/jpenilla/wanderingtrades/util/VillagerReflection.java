@@ -53,8 +53,14 @@ public final class VillagerReflection {
                     yield "gk";
                 }
             }
-            case 21 -> "gr";
-            default -> throw new IllegalStateException("Don't know updateTrades method name for 1." + getMinecraftVersion());
+            case 21 -> {
+                if (getMinecraftPatchVersion() == 1) {
+                    yield "gr";
+                } else { // .4
+                    yield "gz";
+                }
+            }
+            default -> "updateTrades";
         };
         try {
             EntityVillagerAbstract_updateTrades = EntityVillagerAbstract_class.getDeclaredMethod(updateTradesMethodName);
@@ -91,8 +97,14 @@ public final class VillagerReflection {
                             yield "dN";
                         }
                     }
-                    case 21 -> "dT";
-                    default -> throw new IllegalStateException("Don't know getBrain method name for 1." + getMinecraftVersion());
+                    case 21 -> {
+                        if (getMinecraftPatchVersion() == 1) {
+                            yield "dT";
+                        } else { // .4
+                            yield "eb";
+                        }
+                    }
+                    default -> "getBrain";
                 };
                 LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, getBrainName, Brain_class), "LivingEntity#getBrain");
             } else {
