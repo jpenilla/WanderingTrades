@@ -6,6 +6,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -99,7 +100,7 @@ public final class WanderingTrades extends PluginBase {
         for (final Player player : this.getServer().getOnlinePlayers()) {
             try {
                 final Object openInventoryView = Player.class.getMethod("getOpenInventory").invoke(player);
-                final Inventory inv = (Inventory) openInventoryView.getClass().getMethod("getTopInventory").invoke(openInventoryView);
+                final Inventory inv = (Inventory) InventoryView.class.getMethod("getTopInventory").invoke(openInventoryView);
                 if (inv.getHolder() instanceof InterfaceView<?, ?>) {
                     player.closeInventory();
                 }
