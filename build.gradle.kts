@@ -14,18 +14,28 @@ group = "xyz.jpenilla"
 version = "1.8.6-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.21.4"
+val mcVersion = "1.21.7"
 
 repositories {
-    mavenCentral()
-    sonatype.s01Snapshots()
-    sonatype.ossSnapshots()
-    maven("https://repo.papermc.io/repository/maven-public/")
+    mavenCentral {
+        mavenContent { releasesOnly() }
+    }
     maven("https://repo.jpenilla.xyz/snapshots/") {
+        mavenContent {
+            snapshotsOnly()
+            includeGroup("xyz.jpenilla")
+            includeGroup("net.kyori") // TODO adventure-platform snapshots
+        }
+    }
+    maven("https://central.sonatype.com/repository/maven-snapshots/") {
         mavenContent { snapshotsOnly() }
     }
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.essentialsx.net/releases/") {
-        mavenContent { includeGroup("net.essentialsx") }
+        mavenContent {
+            releasesOnly()
+            includeGroup("net.essentialsx")
+        }
     }
     maven("https://maven.enginehub.org/repo/")
     maven("https://jitpack.io") {
@@ -38,10 +48,11 @@ dependencies {
 
     implementation("io.papermc", "paperlib", "1.0.8")
     implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+143-SNAPSHOT")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.1-SNAPSHOT")
     implementation("org.bstats", "bstats-bukkit", "3.1.0")
 
     implementation(platform("org.incendo:cloud-bom:2.0.0"))
-    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.10"))
+    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.11"))
     implementation("org.incendo:cloud-paper")
     implementation("org.incendo:cloud-minecraft-extras")
     implementation(platform("org.incendo:cloud-translations-bom:1.0.0-SNAPSHOT"))
