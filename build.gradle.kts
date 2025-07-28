@@ -14,7 +14,7 @@ group = "xyz.jpenilla"
 version = "1.8.6-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
 
-val mcVersion = "1.21.7"
+val mcVersion = "1.21.8"
 
 repositories {
     mavenCentral {
@@ -24,20 +24,36 @@ repositories {
         mavenContent {
             snapshotsOnly()
             includeGroup("xyz.jpenilla")
-            includeGroup("net.kyori") // TODO adventure-platform snapshots
+            includeModule("org.incendo.interfaces", "interfaces-paper")
+            includeModule("org.incendo.interfaces", "interfaces-core")
+            includeModule("net.kyori", "adventure-text-feature-pagination")
         }
     }
     maven("https://central.sonatype.com/repository/maven-snapshots/") {
         mavenContent { snapshotsOnly() }
     }
-    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/") {
+        mavenContent {
+            includeGroup("io.papermc")
+            includeGroup("io.papermc.paper")
+            includeModule("com.mojang", "brigadier")
+            includeModule("net.md-5", "bungeecord-chat")
+        }
+    }
     maven("https://repo.essentialsx.net/releases/") {
         mavenContent {
             releasesOnly()
             includeGroup("net.essentialsx")
         }
     }
-    maven("https://maven.enginehub.org/repo/")
+    maven("https://maven.enginehub.org/repo/") {
+        mavenContent {
+            includeGroup("com.sk89q.worldguard")
+            includeGroup("com.sk89q.worldguard.worldguard-libs")
+            includeGroup("com.sk89q.worldedit")
+            includeGroup("com.sk89q.worldedit.worldedit-libs")
+        }
+    }
     maven("https://jitpack.io") {
         content { includeGroup("com.github.MilkBowl") }
     }
