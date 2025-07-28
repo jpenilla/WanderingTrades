@@ -55,7 +55,7 @@ public final class UpdateChecker {
         final int versionsBehind = versionList.indexOf(currentVersion);
         this.plugin.getLogger().info("There is an update available for " + this.plugin.getName() + "!");
         this.plugin.getLogger().info("This server is running version " + currentVersion + ", which is " + (versionsBehind == -1 ? "UNKNOWN" : versionsBehind) + " versions outdated.");
-        this.plugin.getLogger().info("Download the latest version, " + versionList.get(0) + " from GitHub at the link below:");
-        this.plugin.getLogger().info(versionMap.get(versionList.get(0)));
+        this.plugin.getLogger().info("Download the latest version, " + versionList.get(0) + " from Modrinth at the link below:");
+        this.plugin.getLogger().info("https://modrinth.com/plugin/wanderingtrades");
     }
 }
