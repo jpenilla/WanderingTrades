@@ -1,3 +1,4 @@
+import me.modmuss50.mpp.ReleaseType
 import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
@@ -8,13 +9,12 @@ plugins {
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
 group = "xyz.jpenilla"
 version = "1.8.6-SNAPSHOT".decorateVersion()
 description = "Customizable trades for Wandering Traders."
-
-val mcVersion = "1.21.8"
 
 repositories {
     mavenCentral {
@@ -112,9 +112,26 @@ bukkitPluginYaml {
     }
 }
 
+publishMods.modrinth {
+    projectId = "ZfddU72x"
+    type = ReleaseType.STABLE
+    file = tasks.shadowJar.flatMap { it.archiveFile }
+    changelog = providers.environmentVariable("RELEASE_NOTES")
+    accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+    minecraftVersions.addAll(
+        "1.16.5",
+        "1.17.1",
+        "1.18.2",
+        "1.19.4",
+        "1.20.6",
+        "1.21.8",
+    )
+    modLoaders.add("paper")
+}
+
 tasks {
     runServer {
-        minecraftVersion(mcVersion)
+        minecraftVersion("1.21.8")
     }
     assemble {
         dependsOn(shadowJar)
