@@ -12,9 +12,7 @@ plugins {
     id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
-group = "xyz.jpenilla"
-version = "1.8.6-SNAPSHOT".decorateVersion()
-description = "Customizable trades for Wandering Traders."
+version = (version as String).decorateVersion()
 
 repositories {
     mavenCentral {
