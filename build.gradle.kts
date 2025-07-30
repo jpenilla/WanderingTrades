@@ -62,7 +62,7 @@ dependencies {
 
     implementation("io.papermc", "paperlib", "1.0.8")
     implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+143-SNAPSHOT")
-    implementation("net.kyori:adventure-platform-bukkit:4.4.1-SNAPSHOT")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.1")
     implementation("org.bstats", "bstats-bukkit", "3.1.0")
 
     implementation(platform("org.incendo:cloud-bom:2.0.0"))
