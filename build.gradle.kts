@@ -61,7 +61,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.21.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+143-SNAPSHOT")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+147-SNAPSHOT")
     implementation("net.kyori:adventure-platform-bukkit:4.4.1")
     implementation("org.bstats", "bstats-bukkit", "3.1.0")
 
