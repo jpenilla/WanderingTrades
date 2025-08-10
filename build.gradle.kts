@@ -83,7 +83,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.12") {
         exclude("org.bukkit")
     }
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.15")
 }
 
 java {
