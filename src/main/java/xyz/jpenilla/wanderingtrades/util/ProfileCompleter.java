@@ -39,7 +39,7 @@ final class ProfileCompleter extends BukkitRunnable {
             final PlayerProfile updatedProfile = pair.first().update().join();
             pair.second().accept(updatedProfile);
         } catch (final Exception e) {
-            this.plugin.getSLF4JLogger().warn("Failed to complete player profile {}", pair.first());
+            this.plugin.getSLF4JLogger().warn("Failed to complete player profile {}", pair.first(), e);
         }
     }
 
