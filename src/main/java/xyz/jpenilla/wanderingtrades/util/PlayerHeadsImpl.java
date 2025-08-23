@@ -4,13 +4,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import org.bukkit.Bukkit;
@@ -59,24 +58,21 @@ final class PlayerHeadsImpl implements PlayerHeads {
         final Map<UUID, MerchantRecipe> recipes = Map.copyOf(this.uuidMerchantRecipeMap);
         final List<UUID> uuids = new ArrayList<>(recipes.keySet());
         final int amount = this.plugin.configManager().playerHeadConfig().getRandAmount();
-        final Collection<UUID> selected = new ArrayList<>();
-
-        if (uuids.size() < 2) {
-            selected.addAll(uuids);
-        } else {
-            for (int i = 0; selected.size() < amount; i++) {
-                final UUID uuid = uuids.get(ThreadLocalRandom.current().nextInt(0, uuids.size() - 1));
-                if (selected.contains(uuid)) {
-                    continue;
-                }
-                selected.add(uuid);
-                if (i > 10 * amount) {
-                    break;
-                }
+        Collections.shuffle(uuids);
+        final List<MerchantRecipe> selectedRecipes = new ArrayList<>();
+        for (final UUID uuid : uuids) {
+            if (selectedRecipes.size() >= amount) {
+                break;
             }
+            final MerchantRecipe recipe = recipes.get(uuid);
+            final @Nullable PlayerProfile profile = ((SkullMeta) recipe.getResult().getItemMeta()).getPlayerProfile();
+            if (profile == null || !profile.hasTextures()) {
+                // Profile is not yet complete
+                continue;
+            }
+            selectedRecipes.add(recipe);
         }
-
-        return selected.stream().map(recipes::get).toList();
+        return selectedRecipes;
     }
 
     @Override
