@@ -198,7 +198,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
             return;
         }
 
-        if (player instanceof Player onlinePlayer) {
+        if (player instanceof Player onlinePlayer && onlinePlayer.isConnected()) {
             this.addHead(onlinePlayer);
         } else {
             this.addHead(player, username);
