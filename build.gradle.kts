@@ -84,7 +84,7 @@ dependencies {
     compileOnly("org.checkerframework", "checker-qual", "3.49.4")
 
     // Don't import their leaky constraints
-    val worldGuardVer = "7.0.12"
+    val worldGuardVer = "7.0.14"
     val worldEditVer = "7.3.9"
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", worldGuardVer) { isTransitive = false }
     compileOnly("com.sk89q.worldguard", "worldguard-core", worldGuardVer) { isTransitive = false }
