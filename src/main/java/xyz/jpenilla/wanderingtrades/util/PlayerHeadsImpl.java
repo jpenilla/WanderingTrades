@@ -233,6 +233,10 @@ final class PlayerHeadsImpl implements PlayerHeads {
     }
 
     private boolean isUsernameBlacklisted(final String username) {
+        if (username.startsWith("*")) {
+            // Don't even try to do anything for Geyser/Bedrock users
+            return true;
+        }
         return TextUtil.containsCaseInsensitive(username, this.plugin.configManager().playerHeadConfig().usernameBlacklist());
     }
 
