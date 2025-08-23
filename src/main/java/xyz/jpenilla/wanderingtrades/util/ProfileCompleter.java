@@ -3,27 +3,26 @@ package xyz.jpenilla.wanderingtrades.util;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import org.bukkit.inventory.MerchantRecipe;
-import org.bukkit.inventory.meta.SkullMeta;
+import java.util.function.Consumer;
+import it.unimi.dsi.fastutil.Pair;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
+@DefaultQualifier(NonNull.class)
 final class ProfileCompleter extends BukkitRunnable {
 
-    private final Queue<SkullMeta> completionQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<Pair<PlayerProfile, Consumer<PlayerProfile>>> completionQueue = new ConcurrentLinkedQueue<>();
     private final WanderingTrades plugin;
 
     ProfileCompleter(final WanderingTrades plugin) {
         this.plugin = plugin;
     }
 
-    public void submitSkullMeta(final @NonNull SkullMeta meta) {
-        if (meta.getPlayerProfile() == null) {
-            return;
-        }
-        this.completionQueue.add(meta);
+    public void submitProfile(final PlayerProfile profile, final Consumer<PlayerProfile> callback) {
+        this.completionQueue.add(Pair.of(profile, callback));
     }
 
     public void clearQueue() {
@@ -32,22 +31,15 @@ final class ProfileCompleter extends BukkitRunnable {
 
     @Override
     public void run() {
-        final SkullMeta meta = this.completionQueue.poll();
-        if (meta == null) {
+        final @Nullable Pair<PlayerProfile, Consumer<PlayerProfile>> pair = this.completionQueue.poll();
+        if (pair == null) {
             return;
         }
-        final @Nullable PlayerProfile profile = meta.getPlayerProfile();
-        if (profile != null) {
-            try {
-                profile.complete();
-                final @Nullable MerchantRecipe recipe = ((PlayerHeadsImpl) this.plugin.playerHeads()).recipeMap().get(profile.getId());
-                if (recipe != null) {
-                    meta.setPlayerProfile(profile);
-                    recipe.getResult().setItemMeta(meta);
-                }
-            } catch (final Exception e) {
-                this.plugin.debug(String.format("Failed to cache player head skin for player: [username=%s,uuid=%s]", profile.getName(), profile.getId()));
-            }
+        try {
+            final PlayerProfile updatedProfile = pair.first().update().join();
+            pair.second().accept(updatedProfile);
+        } catch (final Exception e) {
+            this.plugin.getSLF4JLogger().warn("Failed to complete player profile {}", pair.first());
         }
     }
 
