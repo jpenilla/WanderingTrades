@@ -81,7 +81,7 @@ dependencies {
     compileOnly("net.essentialsx", "EssentialsX", "2.21.0") {
         isTransitive = false
     }
-    compileOnly("org.checkerframework", "checker-qual", "3.49.4")
+    compileOnly("org.checkerframework", "checker-qual", "3.49.5")
 
     // Don't import their leaky constraints
     val worldGuardVer = "7.0.14"
