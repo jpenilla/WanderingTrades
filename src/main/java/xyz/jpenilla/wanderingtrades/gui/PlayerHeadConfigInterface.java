@@ -18,15 +18,16 @@ import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
 import xyz.jpenilla.wanderingtrades.gui.transform.SlotTransform;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
 import xyz.jpenilla.wanderingtrades.util.Components;
+import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
+import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.toggle;
 
@@ -182,7 +183,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE)
                 .customName(Messages.GUI_TC_EDIT_CUSTOM_NAME)
                 .lore(
-                    this.parts.valueLore(this.plugin.miniMessage().deserialize(this.playerHeadConfig().name()).colorIfAbsent(NamedTextColor.YELLOW)),
+                    this.parts.valueLore(miniMessage().deserialize(this.playerHeadConfig().name()).colorIfAbsent(NamedTextColor.YELLOW)),
                     Messages.GUI_EDIT_LORE
                 )
                 .build(),
@@ -196,7 +197,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             Component.empty()
         ));
         this.playerHeadConfig().usernameBlacklist().forEach(name -> blacklistLore.add(
-            this.plugin.miniMessage().deserialize(" <red>-</red> <white>" + name)
+            miniMessage().deserialize(" <red>-</red> <white>" + name)
         ));
         return ItemStackElement.of(
             ItemBuilder.create(Material.PAPER)
@@ -212,7 +213,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             Messages.GUI_CONFIG_WG_LIST_LORE,
             Component.text("------------", NamedTextColor.WHITE)
         ));
-        resultLore.addAll(this.playerHeadConfig().lore().stream().map(this.plugin.miniMessage()::deserialize).toList());
+        resultLore.addAll(this.playerHeadConfig().lore().stream().map(miniMessage()::deserialize).toList());
         return ItemStackElement.of(
             ItemBuilder.create(Material.PAPER)
                 .customName(Messages.GUI_PH_CONFIG_RESULT_LORE)
@@ -257,9 +258,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_HEADS_DAYS_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().days())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
+                player.sendMessage(Messages.MESSAGE_SET_HEADS_DAYS_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().days())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGTEN1)
@@ -268,7 +269,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                 this.playerHeadConfig().days(Integer.parseInt(s));
                 this.playerHeadConfig().save();
                 this.plugin.playerHeads().configChanged();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -279,9 +280,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().playerHeadsFromServerAmount())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER_OR_RANGE);
+                player.sendMessage(Messages.MESSAGE_SET_HEADS_TRADES_AMOUNT_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().playerHeadsFromServerAmount())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER_OR_RANGE);
                 return "";
             })
             .onValidateInput(this.validators::validateIntRange)
@@ -289,7 +290,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.playerHeadConfig().playerHeadsFromServerAmount(s);
                 this.playerHeadConfig().save();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -300,9 +301,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_HEADS_AMOUNT_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().headsPerTrade())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
+                player.sendMessage(Messages.MESSAGE_SET_HEADS_AMOUNT_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().headsPerTrade())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGT0)
@@ -311,7 +312,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                 this.playerHeadConfig().headsPerTrade(Integer.parseInt(s));
                 this.playerHeadConfig().save();
                 this.plugin.playerHeads().configChanged();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -322,9 +323,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_MAX_USES_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().maxUses())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
+                player.sendMessage(Messages.MESSAGE_SET_MAX_USES_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().maxUses())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGT0)
@@ -333,7 +334,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                 this.playerHeadConfig().maxUses(Integer.parseInt(s));
                 this.playerHeadConfig().save();
                 this.plugin.playerHeads().configChanged();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -344,9 +345,9 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_CHANCE_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().playerHeadsFromServerChance())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
+                player.sendMessage(Messages.MESSAGE_SET_CHANCE_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.playerHeadConfig().playerHeadsFromServerChance())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateDouble0T1)
@@ -354,7 +355,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.playerHeadConfig().playerHeadsFromServerChance(Double.parseDouble(s));
                 this.playerHeadConfig().save();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -365,14 +366,14 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_CUSTOM_NAME_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(
-                    Components.valuePlaceholder(this.plugin.miniMessage().deserialize(this.playerHeadConfig().name()))
+                player.sendMessage(Messages.MESSAGE_CUSTOM_NAME_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(
+                    Components.valuePlaceholder(miniMessage().deserialize(this.playerHeadConfig().name()))
                 ));
                 return "";
             })
             .onValidateInput((pl, s) -> true)
-            .onConfirmText(this.validators.confirmYesNo(s -> this.plugin.miniMessage().deserialize(s).colorIfAbsent(NamedTextColor.YELLOW)))
+            .onConfirmText(this.validators.confirmYesNo(s -> miniMessage().deserialize(s).colorIfAbsent(NamedTextColor.YELLOW)))
             .onAccepted((player, string) -> {
                 this.playerHeadConfig().name(string);
                 this.playerHeadConfig().save();
@@ -397,16 +398,16 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             context.viewer().player().closeInventory();
             InputConversation.create()
                 .onPromptText(player -> {
-                    this.plugin.chat().send(player, Messages.MESSAGE_ADD_BLACKLIST_PLAYER);
+                    player.sendMessage(Messages.MESSAGE_ADD_BLACKLIST_PLAYER);
                     return "";
                 })
                 .onValidateInput((player, input) -> {
                     if (input.contains(" ")) {
-                        this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
+                        player.sendMessage(Messages.MESSAGE_NO_SPACES);
                         return false;
                     }
                     if (TextUtil.containsCaseInsensitive(input, this.playerHeadConfig().usernameBlacklist())) {
-                        this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
+                        player.sendMessage(Messages.MESSAGE_CREATE_UNIQUE);
                         return false;
                     }
                     return true;
@@ -418,7 +419,7 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
                     this.playerHeadConfig().usernameBlacklist(temp);
                     this.playerHeadConfig().save();
                     this.plugin.playerHeads().configChanged();
-                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                    player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                     this.open(player);
                 })
                 .onDenied(this.validators::editCancelled)
@@ -438,18 +439,18 @@ public final class PlayerHeadConfigInterface extends BaseInterface {
             context.viewer().player().closeInventory();
             InputConversation.create()
                 .onPromptText(player -> {
-                    this.plugin.chat().send(player, Messages.MESSAGE_ADD_LORE_PROMPT);
+                    player.sendMessage(Messages.MESSAGE_ADD_LORE_PROMPT);
                     return "";
                 })
                 .onValidateInput((player, input) -> true)
-                .onConfirmText(this.validators.confirmYesNo(s -> this.plugin.miniMessage().deserialize(s).colorIfAbsent(NamedTextColor.DARK_PURPLE)))
+                .onConfirmText(this.validators.confirmYesNo(s -> miniMessage().deserialize(s).colorIfAbsent(NamedTextColor.DARK_PURPLE)))
                 .onAccepted((player, s) -> {
                     List<String> temp = this.playerHeadConfig().lore();
                     temp.add(s);
                     this.playerHeadConfig().lore(temp);
                     this.playerHeadConfig().save();
                     this.plugin.playerHeads().configChanged();
-                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                    player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                     this.open(player);
                 })
                 .onDenied(this.validators::editCancelled)

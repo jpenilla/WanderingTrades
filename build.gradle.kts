@@ -5,6 +5,7 @@ plugins {
     `java-library`
     id("com.gradleup.shadow") version "9.0.2"
     id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.0"
+    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.0"
     val indraVersion = "3.2.0"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
@@ -58,11 +59,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper", "paper-api", "1.21.4-R0.1-SNAPSHOT")
 
-    implementation("io.papermc", "paperlib", "1.0.8")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+147-SNAPSHOT")
-    implementation("net.kyori:adventure-platform-bukkit:4.4.1")
+    implementation("io.papermc:paper-trail:1.0.1")
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+148-SNAPSHOT") {
+        exclude("net.kyori")
+    }
     implementation("org.bstats", "bstats-bukkit", "3.1.0")
 
     implementation(platform("org.incendo:cloud-bom:2.0.0"))
@@ -80,34 +82,52 @@ dependencies {
         isTransitive = false
     }
     compileOnly("org.checkerframework", "checker-qual", "3.49.4")
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", "7.0.12") {
-        exclude("org.bukkit")
-    }
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", "7.3.9")
-}
 
-java {
-    disableAutoTargetJvm()
+    // Don't import their leaky constraints
+    val worldGuardVer = "7.0.12"
+    val worldEditVer = "7.3.9"
+    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", worldGuardVer) { isTransitive = false }
+    compileOnly("com.sk89q.worldguard", "worldguard-core", worldGuardVer) { isTransitive = false }
+    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", worldEditVer) { isTransitive = false }
+    compileOnly("com.sk89q.worldedit", "worldedit-core", worldEditVer) { isTransitive = false }
 }
 
 indra {
     javaVersions{
-        minimumToolchain(21)
-        target(17)
+        target(21)
     }
 }
 
-bukkitPluginYaml {
+paperPluginYaml {
     main = "xyz.jpenilla.wanderingtrades.WanderingTrades"
-    apiVersion = "1.16"
+    apiVersion = "1.21.4"
     website = "https://github.com/jpenilla/WanderingTrades"
     authors = listOf("jmp")
-    softDepend = listOf("WorldEdit", "WorldGuard", "Vault", "PlaceholderAPI", "ViaVersion")
+
     permissions {
         register("wanderingtrades.trader-spawn-notifications") {
             default = Permission.Default.TRUE
         }
     }
+
+    dependencies.server.register("WorldEdit") {
+        required = false
+    }
+    dependencies.server.register("WorldGuard") {
+        required = false
+    }
+    dependencies.server.register("Vault") {
+        required = false
+    }
+    dependencies.server.register("PlaceholderAPI") {
+        required = false
+    }
+}
+
+bukkitPluginYaml {
+    main = "wanderingtrades.io.papermc.papertrail.RequiresPaperPlugins"
+    apiVersion = "1.21.4"
+    authors = listOf("jmp")
 }
 
 publishMods.modrinth {
@@ -117,11 +137,10 @@ publishMods.modrinth {
     changelog = providers.environmentVariable("RELEASE_NOTES")
     accessToken = providers.environmentVariable("MODRINTH_TOKEN")
     minecraftVersions.addAll(
-        "1.16.5",
-        "1.17.1",
-        "1.18.2",
-        "1.19.4",
-        "1.20.6",
+        "1.21.4",
+        "1.21.5",
+        "1.21.6",
+        "1.21.7",
         "1.21.8",
     )
     modLoaders.add("paper")
@@ -136,9 +155,6 @@ tasks {
     }
     jar {
         archiveClassifier.set("noshade")
-        manifest {
-            attributes("paperweight-mappings-namespace" to "mojang")
-        }
     }
     shadowJar {
         archiveFileName.set("${project.name}-${project.version}.jar")
@@ -146,11 +162,11 @@ tasks {
             "org.bstats",
             "org.incendo",
             "xyz.jpenilla.pluginbase",
-            "net.kyori",
             "io.papermc.lib",
             "io.leangen.geantyref",
+            "io.papermc.papertrail"
         ).forEach {
-            relocate(it, "xyz.jpenilla.wanderingtrades.lib.$it")
+            relocate(it, "wanderingtrades.$it")
         }
         mergeServiceFiles()
     }

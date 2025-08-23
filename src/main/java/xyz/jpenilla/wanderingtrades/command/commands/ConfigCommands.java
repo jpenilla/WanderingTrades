@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
@@ -22,6 +21,7 @@ import xyz.jpenilla.wanderingtrades.gui.ListTradesInterface;
 import xyz.jpenilla.wanderingtrades.gui.MainConfigInterface;
 import xyz.jpenilla.wanderingtrades.gui.PlayerHeadConfigInterface;
 import xyz.jpenilla.wanderingtrades.util.Constants;
+import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
 import static net.kyori.adventure.text.Component.text;
 import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
@@ -88,7 +88,7 @@ public final class ConfigCommands extends BaseCommand {
             .handler(context -> {
                 final Player player = context.sender();
                 if (!player.isConversing()) {
-                    this.plugin.audiences().player(player).sendMessage(text("Error. This command is meant for use by click events.", NamedTextColor.RED));
+                    player.sendMessage(text("Error. This command is meant for use by click events.", NamedTextColor.RED));
                     return;
                 }
                 player.acceptConversationInput(context.get("input"));
@@ -117,17 +117,14 @@ public final class ConfigCommands extends BaseCommand {
     }
 
     private void executeList(final CommandContext<CommandSender> context) {
-        this.chat.send(
-            context.sender(),
-            Component.textOfChildren(Constants.PREFIX_COMPONENT, Messages.COMMAND_LIST_LOADED)
-        );
+        context.sender().sendMessage(
+            Component.textOfChildren(Constants.PREFIX_COMPONENT, Messages.COMMAND_LIST_LOADED));
         final List<TradeConfig> toSort = new ArrayList<>(this.plugin.configManager().tradeConfigs().values());
         toSort.sort(Comparator.comparing(TradeConfig::configName));
         int index = 1;
         for (final TradeConfig cfg : toSort) {
             final String color = cfg.enabled() ? "green" : "red";
-            this.chat.send(
-                context.sender(),
+            context.sender().sendRichMessage(
                 String.format(" <gray>%s.</gray> <hover:show_text:'<green>Click to edit'><click:run_command:/wanderingtrades edit %s><%s>%s", index++, cfg.configName(), color, cfg.configName())
             );
         }

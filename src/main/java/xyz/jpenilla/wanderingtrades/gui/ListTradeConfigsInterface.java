@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import io.leangen.geantyref.GenericTypeReflector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,9 +12,7 @@ import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.click.ClickContext;
@@ -25,11 +22,11 @@ import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Components;
+import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
 @DefaultQualifier(NonNull.class)
 public final class ListTradeConfigsInterface extends BaseInterface {
@@ -69,17 +66,12 @@ public final class ListTradeConfigsInterface extends BaseInterface {
             finalLores.add(Messages.GUI_TC_LIST_AND_MORE.withPlaceholders(Components.placeholder("value", tradeKeys.size() - 10)));
         }
 
-        ItemBuilder<?, ?> stack = ItemBuilder.create(Material.BOOK)
+        ItemBuilder<?> stack = ItemBuilder.create(Material.BOOK)
             .customName(Component.text(tradeConfig.configName(), tradeConfig.enabled() ? NamedTextColor.GREEN : NamedTextColor.RED))
             .lore(finalLores);
 
         if (tradeConfig.enabled()) {
-            if (GenericTypeReflector.isSuperType(Enum.class, Enchantment.class)) {
-                stack = stack.addEnchant(Enchantment.getByName("DAMAGE_ALL"), 1)
-                    .editMeta(meta -> meta.addItemFlags(ItemFlag.HIDE_ENCHANTS));
-            } else {
-                stack = stack.editMeta(meta -> meta.setEnchantmentGlintOverride(true));
-            }
+            stack = stack.editMeta(meta -> meta.setEnchantmentGlintOverride(true));
         }
 
         return ItemStackElement.of(stack.build(), context -> new ListTradesInterface(
@@ -102,16 +94,16 @@ public final class ListTradeConfigsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_CONFIG_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CREATE_CONFIG_PROMPT);
                 return "";
             })
             .onValidateInput((player, input) -> {
                 if (input.contains(" ")) {
-                    this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
+                    player.sendMessage(Messages.MESSAGE_NO_SPACES);
                     return false;
                 }
                 if (TextUtil.containsCaseInsensitive(input, List.copyOf(this.plugin.configManager().tradeConfigs().keySet()))) {
-                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
+                    player.sendMessage(Messages.MESSAGE_CREATE_UNIQUE);
                     return false;
                 }
                 return true;
@@ -125,15 +117,15 @@ public final class ListTradeConfigsInterface extends BaseInterface {
                     );
 
                     this.plugin.configManager().reload();
-                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_CONFIG_SUCCESS);
+                    player.sendMessage(Messages.MESSAGE_CREATE_CONFIG_SUCCESS);
                 } catch (final IOException ex) {
                     ex.printStackTrace();
-                    this.plugin.chat().sendParsed(player, "<red>Error");
+                    player.sendMessage(Component.text("Error", NamedTextColor.RED));
                 }
                 this.open(player);
             })
             .onDenied((player, s) -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_CONFIG_CANCEL);
+                player.sendMessage(Messages.MESSAGE_CREATE_CONFIG_CANCEL);
                 this.open(player);
             })
             .start(context.viewer().player());

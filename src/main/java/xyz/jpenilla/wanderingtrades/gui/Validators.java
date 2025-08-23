@@ -68,7 +68,7 @@ public final class Validators {
             if (i >= 1) {
                 return true;
             }
-            this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_GT_0);
+            player.sendMessage(Messages.MESSAGE_NUMBER_GT_0);
             return false;
         });
     }
@@ -78,7 +78,7 @@ public final class Validators {
             if (i >= 0) {
                 return true;
             }
-            this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_GTE_0);
+            player.sendMessage(Messages.MESSAGE_NUMBER_GTE_0);
             return false;
         });
     }
@@ -88,7 +88,7 @@ public final class Validators {
             if (i >= -1) {
                 return true;
             }
-            this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_GTE_N1);
+            player.sendMessage(Messages.MESSAGE_NUMBER_GTE_N1);
             return false;
         });
     }
@@ -96,7 +96,7 @@ public final class Validators {
     public boolean validateDouble0T1(final Player player, final String input) {
         return this.validateDouble(input, d -> {
             if (d < 0 || d > 1) {
-                this.plugin.chat().send(player, Messages.MESSAGE_NUMBER_0T1);
+                player.sendMessage(Messages.MESSAGE_NUMBER_0T1);
                 return false;
             }
             return true;
@@ -112,13 +112,13 @@ public final class Validators {
     }
 
     private String confirmYesNo(final Player player, final TagResolver placeholder) {
-        this.plugin.chat().send(player, Messages.MESSAGE_YOU_ENTERED.withPlaceholders(placeholder));
-        this.plugin.chat().send(player, Messages.MESSAGE_YES_NO);
+        player.sendMessage(Messages.MESSAGE_YOU_ENTERED.withPlaceholders(placeholder));
+        player.sendMessage(Messages.MESSAGE_YES_NO);
         return "";
     }
 
     public void editCancelled(final Player player, final String s) {
-        this.plugin.chat().send(player, Messages.MESSAGE_EDIT_CANCELLED);
+        player.sendMessage(Messages.MESSAGE_EDIT_CANCELLED);
         this.baseInterface.open(player);
     }
 }

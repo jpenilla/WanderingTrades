@@ -23,9 +23,9 @@ import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
-import xyz.jpenilla.wanderingtrades.util.InventoryFactory;
 import xyz.jpenilla.wanderingtrades.util.Reflection;
 
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static org.incendo.cloud.bukkit.parser.selector.MultiplePlayerSelectorParser.multiplePlayerSelectorParser;
 import static xyz.jpenilla.wanderingtrades.command.argument.TradeConfigParser.tradeConfigParser;
 
@@ -80,7 +80,7 @@ public final class TradeCommands extends BaseCommand {
             }
 
             this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
-                final Merchant merchant = InventoryFactory.createMerchant(player, this.plugin.miniMessage().deserialize(config.customName()));
+                final Merchant merchant = this.plugin.getServer().createMerchant(miniMessage().deserialize(config.customName()));
                 merchant.setRecipes(merchantRecipes);
                 player.openMerchant(merchant, false);
             });
@@ -100,7 +100,7 @@ public final class TradeCommands extends BaseCommand {
         });
         wanderingTrader.remove();
         this.plugin.tradeApplicator().selectTrades(trades -> {
-            final Merchant merchant = InventoryFactory.createMerchant(player, Component.translatable("entity.minecraft.wandering_trader"));
+            final Merchant merchant = this.plugin.getServer().createMerchant(Component.translatable("entity.minecraft.wandering_trader"));
             final List<MerchantRecipe> result = new ArrayList<>(trades);
             result.addAll(recipes);
             merchant.setRecipes(result);

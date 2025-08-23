@@ -14,6 +14,7 @@ import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.help.HelpHandler;
 import org.incendo.cloud.help.result.CommandEntry;
 import org.incendo.cloud.help.result.IndexCommandResult;
+import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftHelp;
 import org.incendo.cloud.minecraft.extras.caption.ComponentCaptionFormatter;
 import org.incendo.cloud.suggestion.SuggestionProvider;
@@ -67,7 +68,7 @@ public final class HelpCommand extends BaseCommand {
     private MinecraftHelp<CommandSender> createMinecraftHelp() {
         return MinecraftHelp.<CommandSender>builder()
             .commandManager(this.commandManager)
-            .audienceProvider(this.plugin.audiences()::sender)
+            .audienceProvider(AudienceProvider.nativeAudience())
             .commandPrefix("/wanderingtrades help")
             .messageProvider(this::helpMessage)
             .colors(helpColors(

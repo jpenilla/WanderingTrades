@@ -1,19 +1,17 @@
 package xyz.jpenilla.wanderingtrades;
 
-import io.papermc.lib.PaperLib;
-import java.util.logging.Level;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.view.InterfaceView;
 import org.incendo.interfaces.paper.PaperInterfaceListeners;
-import xyz.jpenilla.pluginbase.legacy.PluginBase;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.ConfigManager;
@@ -25,7 +23,7 @@ import xyz.jpenilla.wanderingtrades.util.TradeApplicator;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
 
 @DefaultQualifier(NonNull.class)
-public final class WanderingTrades extends PluginBase {
+public final class WanderingTrades extends JavaPlugin {
     private static @MonotonicNonNull WanderingTrades instance;
 
     private @MonotonicNonNull ConfigManager configManager;
@@ -36,8 +34,7 @@ public final class WanderingTrades extends PluginBase {
     private @Nullable VaultHook vault = null;
 
     @Override
-    public void enable() {
-        PaperLib.suggestPaper(this, Level.WARNING);
+    public void onEnable() {
         instance = this;
         PaperInterfaceListeners.install(this);
         this.setupIntegrations();
@@ -54,7 +51,7 @@ public final class WanderingTrades extends PluginBase {
     }
 
     @Override
-    public void disable() {
+    public void onDisable() {
         this.closeInterfaces();
     }
 

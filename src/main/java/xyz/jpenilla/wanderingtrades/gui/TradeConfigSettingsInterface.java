@@ -15,15 +15,16 @@ import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
 import xyz.jpenilla.wanderingtrades.util.Components;
+import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
+import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.util.Logging;
 
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
 @DefaultQualifier(NonNull.class)
@@ -99,7 +100,7 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         final ItemStack stack = ItemBuilder.create(Material.PINK_STAINED_GLASS_PANE)
             .customName(Messages.GUI_TC_EDIT_CUSTOM_NAME)
             .lore(
-                this.parts.valueLore(this.plugin.miniMessage().deserialize("<white>" + this.tradeConfig.customName())),
+                this.parts.valueLore(miniMessage().deserialize("<white>" + this.tradeConfig.customName())),
                 Messages.GUI_EDIT_LORE
             )
             .build();
@@ -125,9 +126,9 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_RAND_AMOUNT_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.tradeConfig.randomAmount())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER_OR_RANGE);
+                player.sendMessage(Messages.MESSAGE_SET_RAND_AMOUNT_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.tradeConfig.randomAmount())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER_OR_RANGE);
                 return "";
             })
             .onValidateInput(this.validators::validateIntRange)
@@ -135,7 +136,7 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.tradeConfig.randomAmount(s);
                 this.tradeConfig.save();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -146,9 +147,9 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_CHANCE_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.tradeConfig.chance())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
+                player.sendMessage(Messages.MESSAGE_SET_CHANCE_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.tradeConfig.chance())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateDouble0T1)
@@ -156,7 +157,7 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
             .onAccepted((player, s) -> {
                 this.tradeConfig.chance(Double.parseDouble(s));
                 this.tradeConfig.save();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)
@@ -167,14 +168,14 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(
-                    Components.valuePlaceholder(this.plugin.miniMessage().deserialize(this.tradeConfig.customName()))
+                player.sendMessage(Messages.MESSAGE_CREATE_TITLE_OR_NONE_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(
+                    Components.valuePlaceholder(miniMessage().deserialize(this.tradeConfig.customName()))
                 ));
                 return "";
             })
             .onValidateInput((pl, s) -> true)
-            .onConfirmText(this.validators.confirmYesNo(this.plugin.miniMessage()::deserialize))
+            .onConfirmText(this.validators.confirmYesNo(miniMessage()::deserialize))
             .onAccepted((player, string) -> {
                 this.tradeConfig.customName(string);
                 this.tradeConfig.save();
@@ -188,26 +189,24 @@ public final class TradeConfigSettingsInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(
-                    player,
+                player.sendMessage(
                     Messages.MESSAGE_DELETE_PROMPT.withPlaceholders(Components.placeholder("name", this.tradeConfig.configName()))
                 );
-                this.plugin.chat().send(
-                    player,
+                player.sendMessage(
                     Messages.MESSAGE_CONFIRM.withPlaceholders(Components.placeholder("key", Messages.MESSAGE_CONFIRM_KEY.message()))
                 );
                 return "";
             })
             .onValidateInput((player, s) -> {
                 if (s.equals(Messages.MESSAGE_CONFIRM_KEY.message())) {
-                    final Path tcFile = this.plugin.dataPath().resolve("trades/" + this.tradeConfig.configName() + ".yml");
+                    final Path tcFile = this.plugin.getDataPath().resolve("trades/" + this.tradeConfig.configName() + ".yml");
                     try {
                         Files.delete(tcFile);
                     } catch (Exception e) {
                         Logging.logger().warn("File delete failed", e);
                     }
                     this.plugin.configManager().reload();
-                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                    player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                     new ListTradeConfigsInterface(this.plugin).open(player);
                 } else {
                     this.validators.editCancelled(player, s);

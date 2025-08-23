@@ -2,9 +2,7 @@ package xyz.jpenilla.wanderingtrades.command.commands;
 
 import io.leangen.geantyref.GenericTypeReflector;
 import io.leangen.geantyref.TypeToken;
-import io.papermc.lib.PaperLib;
 import io.papermc.paper.registry.RegistryKey;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -29,8 +27,6 @@ import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.parser.RegistryEntryParser;
 import org.incendo.cloud.parser.ParserDescriptor;
-import xyz.jpenilla.pluginbase.legacy.MiniMessageUtil;
-import xyz.jpenilla.pluginbase.legacy.PaperComponentUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
@@ -39,6 +35,7 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 import xyz.jpenilla.wanderingtrades.util.Reflection;
 
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
 import static org.incendo.cloud.bukkit.parser.location.LocationParser.locationParser;
 import static org.incendo.cloud.bukkit.parser.selector.SingleEntitySelectorParser.singleEntitySelectorParser;
@@ -150,9 +147,9 @@ public final class SummonCommands extends BaseCommand {
                 if (entity != null && !(entity instanceof Player)) {
                     this.setCustomName(entity, context.get("name"));
                     entity.setCustomNameVisible(true);
-                    this.chat.send(context.sender(), "Named entity<gray>:</gray> " + context.get("name"));
+                    context.sender().sendRichMessage("Named entity<gray>:</gray> " + context.get("name"));
                 } else {
-                    this.chat.send(context.sender(), "<red>Cannot name player or non-living entity.");
+                    context.sender().sendRichMessage("<red>Cannot name player or non-living entity.");
                 }
             })
             .build();
@@ -161,7 +158,7 @@ public final class SummonCommands extends BaseCommand {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <C, E> @NonNull ParserDescriptor<C, E> registryValueOrEnumParser(
+    public static <C, E> ParserDescriptor<C, E> registryValueOrEnumParser(
         final Supplier<Object> registryKey,
         final TypeToken<E> elementType
     ) {
@@ -191,9 +188,7 @@ public final class SummonCommands extends BaseCommand {
                 persistentDataContainer.set(Constants.PROTECT, PersistentDataType.STRING, "true");
             }
             if (noInvisibility) {
-                if (PaperLib.isPaper()) {
-                    wanderingTrader.setCanDrinkPotion(false);
-                }
+                wanderingTrader.setCanDrinkPotion(false);
                 persistentDataContainer.set(Constants.PREVENT_INVISIBILITY, PersistentDataType.STRING, "true");
             }
         });
@@ -220,7 +215,7 @@ public final class SummonCommands extends BaseCommand {
 
             this.applyConfig(tradeConfig, wanderingTrader);
 
-            if (this.plugin.config().preventNightInvisibility() && PaperLib.isPaper()) {
+            if (this.plugin.config().preventNightInvisibility()) {
                 wanderingTrader.setCanDrinkPotion(false);
             }
         });
@@ -268,31 +263,15 @@ public final class SummonCommands extends BaseCommand {
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void setCustomName(
         final Nameable entity,
         final @Nullable String miniMessage
     ) {
-        if (!PaperLib.isPaper()) {
-            if (miniMessage == null || miniMessage.isEmpty()) {
-                entity.setCustomName(null);
-                return;
-            }
-            entity.setCustomName(MiniMessageUtil.miniMessageToLegacy(miniMessage));
+        if (miniMessage == null || miniMessage.isBlank()) {
+            entity.customName(null);
             return;
         }
-        try {
-            final Method paperMethod = Nameable.class.getMethod("customName", PaperComponentUtil.nativeAdventureComponentClass());
-
-            if (miniMessage == null || miniMessage.isEmpty()) {
-                paperMethod.invoke(entity, (Object) null);
-                return;
-            }
-
-            paperMethod.invoke(entity, PaperComponentUtil.toNative(this.plugin.miniMessage().deserialize(miniMessage)));
-        } catch (final ReflectiveOperationException ex) {
-            throw new RuntimeException(ex);
-        }
+        entity.customName(miniMessage().deserialize(miniMessage));
     }
 
     private static Location resolveLocation(final CommandContext<CommandSender> ctx) {

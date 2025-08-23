@@ -30,8 +30,8 @@ public final class ReloadCommand extends BaseCommand {
     }
 
     private void execute(final CommandContext<CommandSender> context) {
-        this.chat.send(context.sender(), Chat.getCenteredMessage(Messages.COMMAND_RELOAD.message()));
+        context.sender().sendRichMessage(Chat.getCenteredMessage(Messages.COMMAND_RELOAD.message()));
         this.plugin.reload();
-        this.chat.send(context.sender(), Chat.getCenteredMessage(Messages.COMMAND_RELOAD_DONE.message()));
+        context.sender().sendRichMessage(Chat.getCenteredMessage(Messages.COMMAND_RELOAD_DONE.message()));
     }
 }

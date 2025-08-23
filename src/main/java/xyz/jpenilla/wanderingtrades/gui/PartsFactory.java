@@ -22,10 +22,10 @@ import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.transform.PaperTransform;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
+import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
+import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
 import static org.incendo.interfaces.paper.transform.PaperTransform.chestFill;
 

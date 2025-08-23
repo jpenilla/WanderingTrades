@@ -10,7 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 
 // Class from ChessCraft
-@SuppressWarnings("deprecation") // bukkit Consumer
+@SuppressWarnings({"removal"}) // bukkit Consumer
 @DefaultQualifier(NonNull.class)
 public final class Reflection {
   private static final @Nullable Method OLD_SPAWN;

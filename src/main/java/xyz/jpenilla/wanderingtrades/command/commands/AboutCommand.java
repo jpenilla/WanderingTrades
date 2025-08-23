@@ -35,6 +35,6 @@ public final class AboutCommand extends BaseCommand {
             "<hover:show_text:'<rainbow>click me!'><click:open_url:" + this.plugin.getDescription().getWebsite() + ">" + this.plugin.getName() + " <blue>" + this.plugin.getDescription().getVersion(),
             "<gray>By <blue>jmp",
             "<strikethrough><gradient:white:blue>-------------</gradient><gradient:blue:white>-------------"
-        ).map(Chat::getCenteredMessage).forEach(string -> this.chat.send(context.sender(), string));
+        ).map(Chat::getCenteredMessage).forEach(string -> context.sender().sendRichMessage(string));
     }
 }

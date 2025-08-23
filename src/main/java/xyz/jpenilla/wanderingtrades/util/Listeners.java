@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import io.papermc.lib.PaperLib;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.event.HandlerList;
@@ -43,10 +42,8 @@ public final class Listeners {
             this.registerListener(RefreshTradesListener.class, new RefreshTradesListener(this.plugin));
         }
 
-        if (PaperLib.isPaper()) {
-            this.registerListener(TraderPotionListener.class, new TraderPotionListener(this.plugin));
-            this.registerListener(BrainModificationListener.class, new BrainModificationListener(this.plugin));
-        }
+        this.registerListener(TraderPotionListener.class, new TraderPotionListener(this.plugin));
+        this.registerListener(BrainModificationListener.class, new BrainModificationListener(this.plugin));
     }
 
     private void unregister() {

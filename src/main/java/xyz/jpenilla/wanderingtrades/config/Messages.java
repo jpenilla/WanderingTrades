@@ -26,8 +26,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.minecraft.extras.RichDescription;
-import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Logging;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 @DefaultQualifier(NonNull.class)
 @SuppressWarnings("unused") // Command help messages retrieved by key
@@ -425,7 +426,7 @@ public final class Messages {
         private SingleMessage(final String message) {
             this.message = message;
             this.asComponent = Suppliers.memoize(
-                () -> WanderingTrades.instance().miniMessage().deserialize(message)
+                () -> miniMessage().deserialize(message)
             );
         }
 
@@ -435,7 +436,7 @@ public final class Messages {
         }
 
         public Component withPlaceholders(final TagResolver... placeholders) {
-            return WanderingTrades.instance().miniMessage().deserialize(this.message, placeholders);
+            return miniMessage().deserialize(this.message, placeholders);
         }
 
         public String message() {
@@ -451,7 +452,7 @@ public final class Messages {
             this.messages = messages;
             this.asComponents = Suppliers.memoize(
                 () -> this.messages.stream()
-                    .map(WanderingTrades.instance().miniMessage()::deserialize)
+                    .map(miniMessage()::deserialize)
                     .toList()
             );
         }
@@ -466,7 +467,7 @@ public final class Messages {
         }
 
         public List<Component> withPlaceholders(final TagResolver... placeholders) {
-            return this.messages.stream().map(message -> WanderingTrades.instance().miniMessage().deserialize(message, placeholders)).toList();
+            return this.messages.stream().map(message -> miniMessage().deserialize(message, placeholders)).toList();
         }
 
         public List<String> messages() {

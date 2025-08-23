@@ -13,6 +13,7 @@ import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.execution.preprocessor.CommandPreprocessingContext;
 import org.incendo.cloud.key.CloudKey;
+import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.translations.LocaleExtractor;
@@ -71,7 +72,7 @@ public final class Commands {
     }
 
     private void registerCaptions() {
-        final LocaleExtractor<CommandSender> extractor = audienceLocaleExtractor(this.plugin.audiences()::sender);
+        final LocaleExtractor<CommandSender> extractor = audienceLocaleExtractor(AudienceProvider.nativeAudience());
         this.commandManager.captionRegistry()
             .registerProvider(minecraftExtras(extractor))
             .registerProvider(bukkit(extractor))

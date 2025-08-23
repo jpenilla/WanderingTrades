@@ -1,6 +1,5 @@
 package xyz.jpenilla.wanderingtrades.util;
 
-import io.papermc.lib.PaperLib;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,8 +22,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
 
@@ -37,7 +34,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     PlayerHeadsImpl(final WanderingTrades plugin) {
         this.plugin = plugin;
-        this.profileCompleter = PaperLib.isPaper() ? new ProfileCompleter(plugin) : null;
+        this.profileCompleter = true ? new ProfileCompleter(plugin) : null;
         if (this.profileCompleter != null) {
             this.profileCompleter.runTaskTimerAsynchronously(plugin, 0L, 40L);
         }
@@ -117,7 +114,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     private MerchantRecipe getHeadRecipe(final OfflinePlayer player, final String name) {
         final PlayerHeadConfig playerHeadConfig = this.plugin.configManager().playerHeadConfig();
-        ItemBuilder<?, ?>.MiniMessageContext headBuilder = new HeadBuilder(player.getUniqueId())
+        ItemBuilder<?>.MiniMessageContext headBuilder = new HeadBuilder(player.getUniqueId())
             .stackSize(playerHeadConfig.headsPerTrade())
             .miniMessageContext()
             .lore(playerHeadConfig.lore());

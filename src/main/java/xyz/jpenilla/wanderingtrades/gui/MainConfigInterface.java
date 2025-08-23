@@ -16,12 +16,12 @@ import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
 import xyz.jpenilla.wanderingtrades.util.Components;
+import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
@@ -144,15 +144,15 @@ public final class MainConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_REFRESH_DELAY_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.plugin.config().refreshCommandTradersMinutes())));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
+                player.sendMessage(Messages.MESSAGE_SET_REFRESH_DELAY_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.plugin.config().refreshCommandTradersMinutes())));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGTE0)
             .onConfirmText(this.validators::confirmYesNo)
             .onAccepted((player, s) -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.plugin.config().refreshCommandTradersMinutes(Integer.parseInt(s));
                 this.plugin.config().save();
                 this.open(player);
@@ -179,16 +179,16 @@ public final class MainConfigInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_ADD_WG_REGION);
+                player.sendMessage(Messages.MESSAGE_ADD_WG_REGION);
                 return "";
             })
             .onValidateInput((player, input) -> {
                 if (input.contains(" ")) {
-                    this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
+                    player.sendMessage(Messages.MESSAGE_NO_SPACES);
                     return false;
                 }
                 if (TextUtil.containsCaseInsensitive(input, config.wgRegionList())) {
-                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
+                    player.sendMessage(Messages.MESSAGE_CREATE_UNIQUE);
                     return false;
                 }
                 return true;
@@ -199,7 +199,7 @@ public final class MainConfigInterface extends BaseInterface {
                 temp.add(s);
                 config.wgRegionList(temp);
                 config.save();
-                this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                 this.open(player);
             })
             .onDenied(this.validators::editCancelled)

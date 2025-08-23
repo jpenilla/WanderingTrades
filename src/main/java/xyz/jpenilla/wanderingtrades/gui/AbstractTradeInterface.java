@@ -17,14 +17,15 @@ import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.gui.transform.SlotTransform;
 import xyz.jpenilla.wanderingtrades.util.Components;
+import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
+import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
 @DefaultQualifier(NonNull.class)
@@ -83,9 +84,9 @@ public abstract class AbstractTradeInterface extends BaseInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_SET_MAX_USES_PROMPT);
-                this.plugin.chat().send(player, Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.maxUses)));
-                this.plugin.chat().send(player, Messages.MESSAGE_ENTER_NUMBER);
+                player.sendMessage(Messages.MESSAGE_SET_MAX_USES_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CURRENT_VALUE.withPlaceholders(Components.valuePlaceholder(this.maxUses)));
+                player.sendMessage(Messages.MESSAGE_ENTER_NUMBER);
                 return "";
             })
             .onValidateInput(this.validators::validateIntGT0)
@@ -149,7 +150,7 @@ public abstract class AbstractTradeInterface extends BaseInterface {
     private Component tradeNameValueLore() {
         final @Nullable String tradeName = this.tradeName();
         final String displayName = tradeName == null ? "<gray>________" : "<white>" + tradeName;
-        return this.parts.valueLore(this.plugin.miniMessage().deserialize(displayName));
+        return this.parts.valueLore(miniMessage().deserialize(displayName));
     }
 
     protected Transform<ChestPane, PlayerViewer> saveTransform() {

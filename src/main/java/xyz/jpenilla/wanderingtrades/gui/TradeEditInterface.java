@@ -12,11 +12,11 @@ import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
-import xyz.jpenilla.pluginbase.legacy.itembuilder.HeadBuilder;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Components;
+import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
@@ -77,12 +77,10 @@ public final class TradeEditInterface extends AbstractTradeInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(
-                    player,
+                player.sendMessage(
                     Messages.MESSAGE_DELETE_PROMPT.withPlaceholders(Components.placeholder("name", this.tradeName))
                 );
-                this.plugin.chat().send(
-                    player,
+                player.sendMessage(
                     Messages.MESSAGE_CONFIRM.withPlaceholders(Components.placeholder("key", Messages.MESSAGE_CONFIRM_KEY.message()))
                 );
                 return "";
@@ -90,7 +88,7 @@ public final class TradeEditInterface extends AbstractTradeInterface {
             .onValidateInput((player, s) -> {
                 if (s.equals(Messages.MESSAGE_CONFIRM_KEY.message())) {
                     this.tradeConfig.deleteTrade(this.tradeName);
-                    this.plugin.chat().send(player, Messages.MESSAGE_EDIT_SAVED);
+                    player.sendMessage(Messages.MESSAGE_EDIT_SAVED);
                     new ListTradesInterface(this.plugin, this.tradeConfig).open(player);
                 } else {
                     this.validators.editCancelled(player, s);

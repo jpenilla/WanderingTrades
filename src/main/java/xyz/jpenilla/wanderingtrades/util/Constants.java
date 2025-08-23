@@ -11,6 +11,7 @@ import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.event.ClickEvent.runCommand;
 import static net.kyori.adventure.text.format.NamedTextColor.WHITE;
 import static net.kyori.adventure.text.format.TextColor.color;
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 @DefaultQualifier(NonNull.class)
 public final class Constants {
@@ -38,7 +39,7 @@ public final class Constants {
         .clickEvent(runCommand("/wanderingtrades help"))
         .build();
 
-    public static final String PREFIX_MINIMESSAGE = WanderingTrades.instance().miniMessage().serialize(PREFIX_COMPONENT);
+    public static final String PREFIX_MINIMESSAGE = miniMessage().serialize(PREFIX_COMPONENT);
 
     public static final class Permissions {
         private Permissions() {

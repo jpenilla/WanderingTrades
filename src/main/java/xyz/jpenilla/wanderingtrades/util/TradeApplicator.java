@@ -19,8 +19,6 @@ import xyz.jpenilla.pluginbase.legacy.WeightedRandom;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
-import static io.papermc.lib.PaperLib.isPaper;
-
 @DefaultQualifier(NonNull.class)
 public final class TradeApplicator {
     private final WanderingTrades plugin;
@@ -111,38 +109,13 @@ public final class TradeApplicator {
         }
         if (refresh) {
             if (!this.plugin.config().removeOriginalTrades()) {
-                this.resetOffers(wanderingTrader);
+                wanderingTrader.resetOffers();
                 newTrades.addAll(wanderingTrader.getRecipes());
             }
         } else {
             newTrades.addAll(wanderingTrader.getRecipes());
         }
         wanderingTrader.setRecipes(newTrades);
-    }
-
-    private void resetOffers(final WanderingTrader wanderingTrader) {
-        if (isPaper()) {
-            wanderingTrader.resetOffers();
-        } else {
-            this.resetOffersUsingReflection(wanderingTrader);
-        }
-    }
-
-    /**
-     * Clear this {@link AbstractVillager}'s offers and acquire new ones.
-     *
-     * <p>Reflection-based implementation of Paper's Villager-resetOffers API</p>
-     *
-     * @param trader the trader to act on
-     */
-    private void resetOffersUsingReflection(final @NonNull AbstractVillager trader) {
-        final List<MerchantRecipe> oldOffers = trader.getRecipes();
-        try {
-            VillagerReflection.resetOffers(trader);
-        } catch (final Throwable throwable) {
-            trader.setRecipes(oldOffers);
-            Logging.logger().warn("Failed to reset trades! Please report this bug to the issue tracker at {} !", this.plugin.getDescription().getWebsite(), throwable);
-        }
     }
 
     private static boolean randBoolean(final double p) {

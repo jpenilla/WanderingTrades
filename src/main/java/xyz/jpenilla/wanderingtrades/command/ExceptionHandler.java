@@ -12,6 +12,7 @@ import org.incendo.cloud.exception.CommandExecutionException;
 import org.incendo.cloud.exception.InvalidCommandSenderException;
 import org.incendo.cloud.exception.InvalidSyntaxException;
 import org.incendo.cloud.exception.NoPermissionException;
+import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Constants;
@@ -33,7 +34,7 @@ final class ExceptionHandler {
     }
 
     void register() {
-        MinecraftExceptionHandler.create(this.plugin.audiences()::sender)
+        MinecraftExceptionHandler.<CommandSender>create(AudienceProvider.nativeAudience())
             .handler(NoPermissionException.class, (formatter, ctx) -> Component.translatable("commands.help.failed", NamedTextColor.RED))
             .defaultInvalidSyntaxHandler()
             .defaultInvalidSenderHandler()

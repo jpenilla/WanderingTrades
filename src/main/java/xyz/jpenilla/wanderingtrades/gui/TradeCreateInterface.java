@@ -58,16 +58,16 @@ public final class TradeCreateInterface extends AbstractTradeInterface {
         context.viewer().player().closeInventory();
         InputConversation.create()
             .onPromptText(player -> {
-                this.plugin.chat().send(player, Messages.MESSAGE_CREATE_TRADE_PROMPT);
+                player.sendMessage(Messages.MESSAGE_CREATE_TRADE_PROMPT);
                 return "";
             })
             .onValidateInput((player, input) -> {
                 if (input.contains(" ")) {
-                    this.plugin.chat().send(player, Messages.MESSAGE_NO_SPACES);
+                    player.sendMessage(Messages.MESSAGE_NO_SPACES);
                     return false;
                 }
                 if (this.tradeConfig.tradesByName().containsKey(input)) {
-                    this.plugin.chat().send(player, Messages.MESSAGE_CREATE_UNIQUE);
+                    player.sendMessage(Messages.MESSAGE_CREATE_UNIQUE);
                     return false;
                 }
                 return true;
