@@ -202,7 +202,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
     }
 
     private void addHead(final OfflinePlayer offlinePlayer, final String username) {
-        if (this.isUsernameBlacklisted(username)) {
+        if (this.isUsernameBlacklisted(username) || !this.playedRecentlyEnough(offlinePlayer.getLastSeen())) {
             return;
         }
         if (this.plugin.isVaultPermissions() && this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
