@@ -19,12 +19,11 @@ public class HeadBuilder extends ItemBuilder<SkullMeta> {
     }
 
     public HeadBuilder(final String base64) {
-        super(ItemBuilder.<SkullMeta>create(Material.PLAYER_HEAD).editMeta(meta -> {
-            meta.setPlayerProfile(skinProfile(meta, base64));
-        }).build());
+        super(ItemBuilder.<SkullMeta>create(Material.PLAYER_HEAD)
+            .editMeta(meta -> meta.setPlayerProfile(skinProfile(base64))).build());
     }
 
-    public static PlayerProfile skinProfile(final SkullMeta meta, final String base64) {
+    public static PlayerProfile skinProfile(final String base64) {
         final UUID hashAsId = new UUID(base64.hashCode(), base64.hashCode());
         final PlayerProfile profile = Bukkit.createProfile(hashAsId, "");
         profile.setProperty(new ProfileProperty("textures", base64));
@@ -32,15 +31,13 @@ public class HeadBuilder extends ItemBuilder<SkullMeta> {
     }
 
     public HeadBuilder(final OfflinePlayer offlinePlayer) {
-        super(ItemBuilder.<SkullMeta>create(Material.PLAYER_HEAD).editMeta(meta -> {
-            meta.setPlayerProfile(offlinePlayer.getPlayerProfile());
-        }).build());
+        super(ItemBuilder.<SkullMeta>create(Material.PLAYER_HEAD)
+            .editMeta(meta -> meta.setPlayerProfile(offlinePlayer.getPlayerProfile())).build());
     }
 
     public HeadBuilder(final UUID uuid) {
-        super(ItemBuilder.<SkullMeta>create(Material.PLAYER_HEAD).editMeta(meta -> {
-            meta.setPlayerProfile(Bukkit.createProfile(uuid));
-        }).build());
+        super(ItemBuilder.<SkullMeta>create(Material.PLAYER_HEAD)
+            .editMeta(meta -> meta.setPlayerProfile(Bukkit.createProfile(uuid))).build());
     }
 
     public HeadBuilder playerProfile(final PlayerProfile profile) {
@@ -48,7 +45,7 @@ public class HeadBuilder extends ItemBuilder<SkullMeta> {
     }
 
     public HeadBuilder skinBase64(final String base64) {
-        return (HeadBuilder) this.editMeta(meta -> meta.setPlayerProfile(skinProfile(meta, base64)));
+        return (HeadBuilder) this.editMeta(meta -> meta.setPlayerProfile(skinProfile(base64)));
     }
 
     @Override
