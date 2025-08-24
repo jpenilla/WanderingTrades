@@ -85,7 +85,7 @@ dependencies {
 
     // Don't import their leaky constraints
     val worldGuardVer = "7.0.14"
-    val worldEditVer = "7.3.15"
+    val worldEditVer = "7.3.16"
     compileOnly("com.sk89q.worldguard", "worldguard-bukkit", worldGuardVer) { isTransitive = false }
     compileOnly("com.sk89q.worldguard", "worldguard-core", worldGuardVer) { isTransitive = false }
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", worldEditVer) { isTransitive = false }
