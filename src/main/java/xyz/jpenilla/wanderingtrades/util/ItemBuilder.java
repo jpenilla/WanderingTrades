@@ -16,7 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
-import xyz.jpenilla.pluginbase.legacy.ComponentUtil;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
@@ -75,7 +74,7 @@ public class ItemBuilder<I extends ItemMeta> {
     }
 
     public final ItemBuilder<I> customName(final ComponentLike displayName) {
-        return this.editMeta(meta -> meta.customName(ComponentUtil.disableItalics(displayName.asComponent())));
+        return this.editMeta(meta -> meta.customName(Components.disableItalics(displayName.asComponent())));
     }
 
     public final ItemBuilder<I> addLore(final List<? extends ComponentLike> lore) {
@@ -89,7 +88,7 @@ public class ItemBuilder<I extends ItemMeta> {
             newLore.addAll(
                 lore.stream()
                     .map(ComponentLike::asComponent)
-                    .map(ComponentUtil::disableItalics)
+                    .map(Components::disableItalics)
                     .toList()
             );
             meta.lore(newLore);
@@ -104,7 +103,7 @@ public class ItemBuilder<I extends ItemMeta> {
         return this.editMeta(meta -> {
             final List<Component> mapped = lore.stream()
                 .map(ComponentLike::asComponent)
-                .map(ComponentUtil::disableItalics)
+                .map(Components::disableItalics)
                 .collect(Collectors.toList());
             meta.lore(mapped);
         });

@@ -5,7 +5,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
-import xyz.jpenilla.pluginbase.legacy.Chat;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
@@ -30,8 +29,8 @@ public final class ReloadCommand extends BaseCommand {
     }
 
     private void execute(final CommandContext<CommandSender> context) {
-        context.sender().sendRichMessage(Chat.getCenteredMessage(Messages.COMMAND_RELOAD.message()));
+        context.sender().sendMessage(Messages.COMMAND_RELOAD);
         this.plugin.reload();
-        context.sender().sendRichMessage(Chat.getCenteredMessage(Messages.COMMAND_RELOAD_DONE.message()));
+        context.sender().sendMessage(Messages.COMMAND_RELOAD_DONE);
     }
 }
