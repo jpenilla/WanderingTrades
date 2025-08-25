@@ -23,7 +23,6 @@ import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
-import xyz.jpenilla.wanderingtrades.util.Reflection;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static org.incendo.cloud.bukkit.parser.selector.MultiplePlayerSelectorParser.multiplePlayerSelectorParser;
@@ -89,7 +88,7 @@ public final class TradeCommands extends BaseCommand {
 
     private void tradeNatural(final Player player) {
         final List<MerchantRecipe> recipes = new ArrayList<>();
-        final WanderingTrader wanderingTrader = Reflection.spawn(player.getLocation(), WanderingTrader.class, trader -> {
+        final WanderingTrader wanderingTrader = player.getWorld().spawn(player.getLocation(), WanderingTrader.class, trader -> {
             trader.getPersistentDataContainer().set(Constants.TEMPORARY_BLACKLISTED, PersistentDataType.BYTE, (byte) 1);
             trader.setInvisible(true);
             trader.setInvulnerable(true);

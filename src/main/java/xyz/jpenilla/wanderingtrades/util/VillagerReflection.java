@@ -1,34 +1,37 @@
 package xyz.jpenilla.wanderingtrades.util;
 
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.bukkit.entity.Villager;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import xyz.jpenilla.pluginbase.legacy.Crafty;
 
 public final class VillagerReflection {
     private VillagerReflection() {
     }
 
     private static final Class<?> Brain_class;
-    private static final Class<?> BehaviorVillageHeroGift_class;
-    private static final Class<?> CraftVillager_class = Crafty.needCraftClass("entity.CraftVillager");
-    private static final Class<?> EntityVillager_class = Crafty.needNMSClassOrElse("EntityVillager", "net.minecraft.world.entity.npc.EntityVillager");
-    private static final Class<?> EntityLiving_class = Crafty.needNMSClassOrElse("EntityLiving", "net.minecraft.world.entity.EntityLiving");
-    private static final MethodHandle CraftVillager_getHandle = Objects.requireNonNull(Crafty.findMethod(CraftVillager_class, "getHandle", EntityVillager_class), "CraftVillager#getHandle");
+    private static final Class<?> GiveGiftToHero_class;
+    private static final Class<?> CraftVillager_class;
+    private static final Class<?> LivingEntity_class;
+    private static final MethodHandle CraftVillager_getHandle;
     private static final MethodHandle LivingEntity_getBrain;
     private static final Field Brain_availableBehaviorsByPriority;
 
     static {
         try {
-            BehaviorVillageHeroGift_class = Crafty.needNMSClassOrElse("BehaviorVillageHeroGift", "net.minecraft.world.entity.ai.behavior.BehaviorVillageHeroGift");
-            Brain_class = Crafty.needNMSClassOrElse("BehaviorController", "net.minecraft.world.entity.ai.BehaviorController");
+            final MethodHandles.Lookup lookup = MethodHandles.lookup();
+            CraftVillager_class = Class.forName("org.bukkit.craftbukkit.entity.CraftVillager");
+            CraftVillager_getHandle = lookup.unreflect(Objects.requireNonNull(CraftVillager_class.getMethod("getHandle"), "CraftVillager#getHandle"));
+            LivingEntity_class = Class.forName("net.minecraft.world.entity.LivingEntity");
+            GiveGiftToHero_class = Class.forName("net.minecraft.world.entity.ai.behavior.GiveGiftToHero");
+            Brain_class = Class.forName("net.minecraft.world.entity.ai.Brain");
             Brain_availableBehaviorsByPriority = Brain_class.getDeclaredField("availableBehaviorsByPriority");
             Brain_availableBehaviorsByPriority.setAccessible(true);
-            LivingEntity_getBrain = Objects.requireNonNull(Crafty.findMethod(EntityLiving_class, "getBrain", Brain_class), "LivingEntity#getBrain");
+            LivingEntity_getBrain = lookup.unreflect(Objects.requireNonNull(LivingEntity_class.getMethod("getBrain"), "LivingEntity#getBrain"));
         } catch (final ReflectiveOperationException e) {
             throw new IllegalStateException("Failed to initialize reflection helper", e);
         }
@@ -48,6 +51,6 @@ public final class VillagerReflection {
 
         behaviors.forEach((i, map) ->
             map.forEach((activity, behaviorSet) ->
-                behaviorSet.removeIf(it -> it.getClass().isAssignableFrom(BehaviorVillageHeroGift_class))));
+                behaviorSet.removeIf(it -> it.getClass().isAssignableFrom(GiveGiftToHero_class))));
     }
 }

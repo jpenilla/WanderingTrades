@@ -33,7 +33,6 @@ import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 import xyz.jpenilla.wanderingtrades.util.Constants;
-import xyz.jpenilla.wanderingtrades.util.Reflection;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
@@ -176,7 +175,7 @@ public final class SummonCommands extends BaseCommand {
         final boolean protect,
         final boolean noInvisibility
     ) {
-        Reflection.spawn(location, WanderingTrader.class, wanderingTrader -> {
+        location.getWorld().spawn(location, WanderingTrader.class, wanderingTrader -> {
             final PersistentDataContainer persistentDataContainer = wanderingTrader.getPersistentDataContainer();
             if (refresh) {
                 persistentDataContainer.set(Constants.REFRESH_NATURAL, PersistentDataType.STRING, "true");
@@ -204,7 +203,7 @@ public final class SummonCommands extends BaseCommand {
         if (recipes == null) {
             return;
         }
-        Reflection.spawn(loc, WanderingTrader.class, wanderingTrader -> {
+        loc.getWorld().spawn(loc, WanderingTrader.class, wanderingTrader -> {
             wanderingTrader.setRecipes(recipes);
             if (disableAI) {
                 wanderingTrader.setAI(false);
@@ -233,7 +232,7 @@ public final class SummonCommands extends BaseCommand {
         if (recipes == null) {
             return;
         }
-        final Villager v = Reflection.spawn(loc, Villager.class, villager -> {
+        final Villager v = loc.getWorld().spawn(loc, Villager.class, villager -> {
             villager.setAI(!disableAI);
             villager.setVillagerType(type);
             villager.setProfession(profession);
