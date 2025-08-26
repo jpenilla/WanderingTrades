@@ -30,6 +30,7 @@ public final class WanderingTrades extends JavaPlugin {
     private @MonotonicNonNull PlayerHeads playerHeads;
     private @MonotonicNonNull Listeners listeners;
     private @MonotonicNonNull TradeApplicator tradeApplicator;
+    private @MonotonicNonNull TradeSessionManager sessionManager;
     private @Nullable WorldGuardHook worldGuard = null;
     private @Nullable VaultHook vault = null;
 
@@ -42,6 +43,7 @@ public final class WanderingTrades extends JavaPlugin {
         this.configManager.load();
         this.playerHeads = PlayerHeads.create(this);
         this.tradeApplicator = new TradeApplicator(this);
+        this.sessionManager = new TradeSessionManager(this);
         this.listeners = Listeners.setup(this);
         if (!this.configManager.config().disableCommands()) {
             Commands.setup(this);
@@ -109,6 +111,10 @@ public final class WanderingTrades extends JavaPlugin {
 
     public ConfigManager configManager() {
         return this.configManager;
+    }
+
+    public TradeSessionManager sessionManager() {
+        return this.sessionManager;
     }
 
     public Config config() {
