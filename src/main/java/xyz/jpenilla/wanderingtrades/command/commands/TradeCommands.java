@@ -84,7 +84,7 @@ public final class TradeCommands extends BaseCommand {
         final long sessionLifetime = ctx.flags().<Long>getValue("lifetime").orElse(DEFAULT_SESSION_LIFETIME);
         final TradeConfig config = ctx.get("config");
         for (final Player player : players(ctx)) {
-            this.tradeWithSession(player, "config-" + config.configName() + "-", sessionId, sessionLifetime, this.tradeConfig(player, config));
+            this.tradeWithSession(player, sessionId, sessionLifetime, this.tradeConfig(player, config));
         }
     }
 
@@ -92,20 +92,19 @@ public final class TradeCommands extends BaseCommand {
         final @Nullable String sessionId = ctx.flags().<String>getValue("session").orElse(null);
         final long sessionLifetime = ctx.flags().<Long>getValue("lifetime").orElse(DEFAULT_SESSION_LIFETIME);
         for (final Player player : players(ctx)) {
-            this.tradeWithSession(player, "natural-", sessionId, sessionLifetime, this.tradeNatural(player));
+            this.tradeWithSession(player, sessionId, sessionLifetime, this.tradeNatural(player));
         }
     }
 
     private void tradeWithSession(
         final Player player,
-        final String sessionPrefix,
         final @Nullable String sessionId,
         final long sessionLifetime,
         final Supplier<CompletableFuture<Merchant>> merchantSupplier
     ) {
         final CompletableFuture<Merchant> future;
         if (sessionId != null) {
-            future = this.plugin.sessionManager().getOrCreateSession(sessionPrefix + sessionId, sessionLifetime, merchantSupplier);
+            future = this.plugin.sessionManager().getOrCreateSession(sessionId, sessionLifetime, merchantSupplier);
         } else {
             future = merchantSupplier.get();
         }
