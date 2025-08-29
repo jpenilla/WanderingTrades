@@ -6,11 +6,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.persistence.PersistentDataType;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.util.Constants;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class ProtectTradersListener implements Listener {
     @EventHandler
     public void onDamageByEntity(final EntityDamageByEntityEvent event) {

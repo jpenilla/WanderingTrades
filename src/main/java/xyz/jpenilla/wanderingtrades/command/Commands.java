@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
@@ -17,6 +15,7 @@ import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.translations.LocaleExtractor;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.argument.TradeConfigParser;
 import xyz.jpenilla.wanderingtrades.command.commands.AboutCommand;
@@ -31,7 +30,7 @@ import static org.incendo.cloud.translations.bukkit.BukkitTranslationBundle.bukk
 import static org.incendo.cloud.translations.minecraft.extras.AudienceLocaleExtractor.audienceLocaleExtractor;
 import static org.incendo.cloud.translations.minecraft.extras.MinecraftExtrasTranslationBundle.minecraftExtras;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class Commands {
     public static final CloudKey<WanderingTrades> PLUGIN = CloudKey.of("wt:plugin", TypeToken.get(WanderingTrades.class));
 

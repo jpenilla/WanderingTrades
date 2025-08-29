@@ -5,12 +5,11 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Location;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class WorldGuardHook {
     private final WanderingTrades plugin;
 

@@ -3,15 +3,14 @@ package xyz.jpenilla.wanderingtrades.gui;
 import com.google.common.base.Suppliers;
 import java.util.function.Supplier;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.arguments.HashMapInterfaceArguments;
 import org.incendo.interfaces.core.click.ClickContext;
 import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.type.ChestInterface;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public abstract class BaseInterface {
     protected final WanderingTrades plugin;
     protected final Validators validators;

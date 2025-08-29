@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.listener.AcquireTradeListener;
 import xyz.jpenilla.wanderingtrades.listener.BrainModificationListener;
@@ -15,7 +14,7 @@ import xyz.jpenilla.wanderingtrades.listener.RefreshTradesListener;
 import xyz.jpenilla.wanderingtrades.listener.TraderPotionListener;
 import xyz.jpenilla.wanderingtrades.listener.TraderSpawnListener;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class Listeners {
     private final WanderingTrades plugin;
     private final Map<Class<?>, Listener> listeners = new HashMap<>();

@@ -11,8 +11,6 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.click.ClickContext;
 import org.incendo.interfaces.core.click.ClickHandler;
 import org.incendo.interfaces.core.transform.Transform;
@@ -22,6 +20,7 @@ import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.transform.PaperTransform;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
 import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
@@ -29,7 +28,7 @@ import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
 import static org.incendo.interfaces.paper.transform.PaperTransform.chestFill;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class PartsFactory {
     private final ItemStack plus = new HeadBuilder(HeadSkins.LIGHT_BLUE_PLUS)
         .customName(Component.text('+', NamedTextColor.YELLOW))

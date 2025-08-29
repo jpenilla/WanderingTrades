@@ -7,11 +7,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.view.InterfaceView;
 import org.incendo.interfaces.paper.PaperInterfaceListeners;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Config;
 import xyz.jpenilla.wanderingtrades.config.ConfigManager;
@@ -22,7 +21,7 @@ import xyz.jpenilla.wanderingtrades.util.PlayerHeads;
 import xyz.jpenilla.wanderingtrades.util.TradeApplicator;
 import xyz.jpenilla.wanderingtrades.util.UpdateChecker;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class WanderingTrades extends JavaPlugin {
     private static @MonotonicNonNull WanderingTrades instance;
 

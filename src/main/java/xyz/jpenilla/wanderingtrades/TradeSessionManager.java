@@ -1,14 +1,14 @@
 package xyz.jpenilla.wanderingtrades;
 
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.Merchant;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.Merchant;
 
 public final class TradeSessionManager implements Listener {
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();

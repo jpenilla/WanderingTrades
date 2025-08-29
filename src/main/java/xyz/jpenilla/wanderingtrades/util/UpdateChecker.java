@@ -12,11 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class UpdateChecker {
     private static final Gson GSON = new GsonBuilder().create();
 

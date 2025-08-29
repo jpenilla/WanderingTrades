@@ -2,16 +2,15 @@ package xyz.jpenilla.wanderingtrades.command.commands;
 
 import java.util.stream.Stream;
 import org.bukkit.command.CommandSender;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class AboutCommand extends BaseCommand {
     public AboutCommand(final WanderingTrades plugin, final Commands commands) {
         super(plugin, commands);

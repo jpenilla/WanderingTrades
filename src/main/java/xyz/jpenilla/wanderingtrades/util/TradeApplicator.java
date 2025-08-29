@@ -12,14 +12,13 @@ import org.bukkit.entity.WanderingTrader;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.pluginbase.legacy.WeightedRandom;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class TradeApplicator {
     private final WanderingTrades plugin;
 

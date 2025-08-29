@@ -7,13 +7,12 @@ import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.click.ClickContext;
 import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -25,7 +24,7 @@ import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class MainConfigInterface extends BaseInterface {
     public MainConfigInterface(final WanderingTrades plugin) {
         super(plugin);

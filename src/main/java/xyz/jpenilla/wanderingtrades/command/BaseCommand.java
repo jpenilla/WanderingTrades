@@ -1,12 +1,11 @@
 package xyz.jpenilla.wanderingtrades.command;
 
 import org.bukkit.command.CommandSender;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.CommandManager;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public abstract class BaseCommand {
     protected final WanderingTrades plugin;
     protected final Commands commands;

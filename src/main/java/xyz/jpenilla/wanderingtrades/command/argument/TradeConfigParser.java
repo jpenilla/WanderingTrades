@@ -2,21 +2,20 @@ package xyz.jpenilla.wanderingtrades.command.argument;
 
 import java.util.List;
 import org.bukkit.command.CommandSender;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.parser.ArgumentParser;
 import org.incendo.cloud.parser.ParserDescriptor;
 import org.incendo.cloud.suggestion.BlockingSuggestionProvider;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.Commands;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class TradeConfigParser implements ArgumentParser<CommandSender, TradeConfig>, BlockingSuggestionProvider.Strings<CommandSender> {
 
     public static ParserDescriptor<CommandSender, TradeConfig> tradeConfigParser() {

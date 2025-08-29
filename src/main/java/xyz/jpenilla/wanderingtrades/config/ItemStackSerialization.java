@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
 import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 import xyz.jpenilla.wanderingtrades.util.Logging;

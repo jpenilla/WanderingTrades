@@ -8,10 +8,9 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 @SuppressWarnings("unused")
 public class HeadBuilder extends ItemBuilder<SkullMeta> {
     private HeadBuilder(final ItemStack stack, final SkullMeta meta) {

@@ -18,15 +18,14 @@ import org.bukkit.entity.WanderingTrader;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.data.SingleEntitySelector;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.parser.RegistryEntryParser;
 import org.incendo.cloud.parser.ParserDescriptor;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
@@ -44,7 +43,7 @@ import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 import static xyz.jpenilla.wanderingtrades.command.argument.TradeConfigParser.tradeConfigParser;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class SummonCommands extends BaseCommand {
     public SummonCommands(
         final WanderingTrades plugin,

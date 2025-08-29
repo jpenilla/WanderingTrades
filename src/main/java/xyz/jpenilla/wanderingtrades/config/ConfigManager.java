@@ -6,11 +6,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class ConfigManager {
     private final WanderingTrades plugin;
     private final Map<String, TradeConfig> tradeConfigs = new ConcurrentHashMap<>();

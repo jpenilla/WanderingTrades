@@ -2,10 +2,9 @@ package xyz.jpenilla.wanderingtrades.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class Logging {
     private static final Logger LOGGER = LogManager.getLogger("WanderingTrades");
 

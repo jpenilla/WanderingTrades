@@ -1,17 +1,16 @@
 package xyz.jpenilla.wanderingtrades.util;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import it.unimi.dsi.fastutil.Pair;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
-import it.unimi.dsi.fastutil.Pair;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 final class ProfileCompleter extends BukkitRunnable {
 
     private final Queue<Pair<PlayerProfile, Consumer<PlayerProfile>>> completionQueue = new ConcurrentLinkedQueue<>();

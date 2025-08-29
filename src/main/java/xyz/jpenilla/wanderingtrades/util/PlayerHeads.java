@@ -3,11 +3,10 @@ package xyz.jpenilla.wanderingtrades.util;
 import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.MerchantRecipe;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public interface PlayerHeads {
     List<MerchantRecipe> randomlySelectPlayerHeads();
 

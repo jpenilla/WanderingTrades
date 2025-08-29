@@ -7,13 +7,12 @@ import java.util.function.IntPredicate;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.util.Components;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class Validators {
     private final BaseInterface baseInterface;
     private final WanderingTrades plugin;

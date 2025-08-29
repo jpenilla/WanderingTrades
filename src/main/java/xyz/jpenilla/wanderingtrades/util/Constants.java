@@ -2,8 +2,7 @@ package xyz.jpenilla.wanderingtrades.util;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 import static net.kyori.adventure.text.Component.space;
@@ -13,7 +12,7 @@ import static net.kyori.adventure.text.format.NamedTextColor.WHITE;
 import static net.kyori.adventure.text.format.TextColor.color;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class Constants {
     private Constants() {
     }

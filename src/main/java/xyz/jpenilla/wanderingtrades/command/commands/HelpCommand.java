@@ -5,8 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.component.CommandComponent;
 import org.incendo.cloud.component.DefaultValue;
@@ -18,6 +16,7 @@ import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftHelp;
 import org.incendo.cloud.minecraft.extras.caption.ComponentCaptionFormatter;
 import org.incendo.cloud.suggestion.SuggestionProvider;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
@@ -26,7 +25,7 @@ import xyz.jpenilla.wanderingtrades.config.Messages;
 import static org.incendo.cloud.minecraft.extras.MinecraftHelp.helpColors;
 import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class HelpCommand extends BaseCommand {
     private final MinecraftHelp<CommandSender> minecraftHelp;
     private final HelpHandler<CommandSender> commandHelpHandler;

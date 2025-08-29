@@ -9,13 +9,12 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.click.ClickContext;
 import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
+import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -31,7 +30,7 @@ import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.toggle;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class PlayerHeadConfigInterface extends BaseInterface {
     private final ItemStack permissionWhitelistStack = ItemBuilder.create(Material.LIME_STAINED_GLASS_PANE)
         .customName(Messages.GUI_PH_CONFIG_PWL_ENABLED)

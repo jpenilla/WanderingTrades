@@ -21,16 +21,15 @@ import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.minecraft.extras.RichDescription;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.util.Logging;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 @SuppressWarnings("unused") // Command help messages retrieved by key
 public final class Messages {
     private static final List<Consumer<YamlConfiguration>> MIGRATIONS = List.of(

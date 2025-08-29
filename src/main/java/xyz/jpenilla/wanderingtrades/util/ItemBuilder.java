@@ -13,9 +13,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
@@ -24,7 +23,7 @@ import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
  *
  * @param <I> meta type
  */
-@DefaultQualifier(NonNull.class)
+@NullMarked
 @SuppressWarnings("unused")
 public class ItemBuilder<I extends ItemMeta> {
     private final ItemStack stack;

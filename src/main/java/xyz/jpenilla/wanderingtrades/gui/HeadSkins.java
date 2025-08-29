@@ -1,9 +1,8 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jspecify.annotations.NullMarked;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class HeadSkins {
     private HeadSkins() {
     }

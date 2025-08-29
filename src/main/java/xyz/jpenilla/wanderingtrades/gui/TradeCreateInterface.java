@@ -1,13 +1,12 @@
 package xyz.jpenilla.wanderingtrades.gui;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.framework.qual.DefaultQualifier;
 import org.incendo.interfaces.core.click.ClickContext;
 import org.incendo.interfaces.paper.PlayerViewer;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
@@ -15,7 +14,7 @@ import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 
-@DefaultQualifier(NonNull.class)
+@NullMarked
 public final class TradeCreateInterface extends AbstractTradeInterface {
     private @Nullable String tradeName;
 
