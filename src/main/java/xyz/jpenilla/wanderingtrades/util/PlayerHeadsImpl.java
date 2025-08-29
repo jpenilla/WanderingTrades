@@ -149,7 +149,8 @@ final class PlayerHeadsImpl implements PlayerHeads {
     }
 
     private PlayerProfile filterProfileProperties(final PlayerProfile profile) {
-        final PlayerProfile newProfile = this.plugin.getServer().createProfile(profile.getId(), profile.getName());
+        final PlayerProfile newProfile = (PlayerProfile) profile.clone();
+        newProfile.clearProperties();
         for (final ProfileProperty property : profile.getProperties()) {
             if (property.getName().equals("textures")) {
                 // Only copy the textures, and without the signature
