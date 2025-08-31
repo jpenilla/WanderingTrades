@@ -7,10 +7,10 @@ import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
+import xyz.jpenilla.wanderingtrades.util.InputConversation;
 
 import static xyz.jpenilla.wanderingtrades.gui.PartsFactory.chestItem;
 

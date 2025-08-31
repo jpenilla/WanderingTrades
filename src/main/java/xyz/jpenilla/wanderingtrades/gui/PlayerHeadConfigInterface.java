@@ -15,7 +15,6 @@ import org.incendo.interfaces.paper.element.ItemStackElement;
 import org.incendo.interfaces.paper.pane.ChestPane;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import org.jspecify.annotations.NullMarked;
-import xyz.jpenilla.pluginbase.legacy.InputConversation;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.config.Messages;
@@ -24,6 +23,7 @@ import xyz.jpenilla.wanderingtrades.gui.transform.SlotTransform;
 import xyz.jpenilla.wanderingtrades.util.BooleanConsumer;
 import xyz.jpenilla.wanderingtrades.util.Components;
 import xyz.jpenilla.wanderingtrades.util.HeadBuilder;
+import xyz.jpenilla.wanderingtrades.util.InputConversation;
 import xyz.jpenilla.wanderingtrades.util.ItemBuilder;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
