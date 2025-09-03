@@ -28,7 +28,8 @@ import xyz.jpenilla.wanderingtrades.config.PlayerHeadConfig;
 @NullMarked
 final class PlayerHeadsImpl implements PlayerHeads {
     private final WanderingTrades plugin;
-    private final Map<UUID, MerchantRecipe> uuidMerchantRecipeMap = new ConcurrentHashMap<>();
+    private final Map<UUID, MerchantRecipe> recipes = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> offlineLastSeen = new ConcurrentHashMap<>();
     private final ProfileCompleter profileCompleter;
     private @Nullable BukkitTask cleanupTask;
 
@@ -54,7 +55,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     @Override
     public List<MerchantRecipe> randomlySelectPlayerHeads() {
-        final Map<UUID, MerchantRecipe> recipes = Map.copyOf(this.uuidMerchantRecipeMap);
+        final Map<UUID, MerchantRecipe> recipes = Map.copyOf(this.recipes);
         final List<UUID> uuids = new ArrayList<>(recipes.keySet());
         final int amount = this.plugin.configManager().playerHeadConfig().getRandAmount();
         Collections.shuffle(uuids);
@@ -64,7 +65,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
                 break;
             }
             final MerchantRecipe recipe = recipes.get(uuid);
-            final @Nullable PlayerProfile profile = ((SkullMeta) recipe.getResult().getItemMeta()).getPlayerProfile();
+            final PlayerProfile profile = ((SkullMeta) recipe.getResult().getItemMeta()).getPlayerProfile();
             if (profile == null || !profile.hasTextures()) {
                 // Profile is not yet complete
                 continue;
@@ -80,6 +81,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
             return;
         }
 
+        this.offlineLastSeen.remove(player.getUniqueId());
         this.addHead(player);
     }
 
@@ -89,9 +91,12 @@ final class PlayerHeadsImpl implements PlayerHeads {
             return;
         }
 
+        this.offlineLastSeen.put(player.getUniqueId(), System.currentTimeMillis());
+
         if (this.plugin.vaultHook() != null && this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
             if (!player.hasPermission(Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
-                this.uuidMerchantRecipeMap.remove(player.getUniqueId());
+                this.recipes.remove(player.getUniqueId());
+                this.offlineLastSeen.remove(player.getUniqueId());
             }
         }
     }
@@ -130,7 +135,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
         final SkullMeta meta = (SkullMeta) head.getItemMeta();
         if (meta != null) {
-            final @Nullable PlayerProfile profile = meta.getPlayerProfile();
+            final PlayerProfile profile = meta.getPlayerProfile();
             if (profile != null && !profile.hasTextures()) {
                 this.profileCompleter.submitProfile(profile, updatedProfile -> {
                     this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
@@ -160,7 +165,8 @@ final class PlayerHeadsImpl implements PlayerHeads {
     }
 
     private void load() {
-        this.uuidMerchantRecipeMap.clear();
+        this.recipes.clear();
+        this.offlineLastSeen.clear();
         this.profileCompleter.clearQueue();
         if (!this.plugin.configManager().playerHeadConfig().playerHeadsFromServer()) {
             return;
@@ -169,7 +175,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
             this.load(onlinePlayer);
         }
         for (final OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-            if (this.uuidMerchantRecipeMap.containsKey(offlinePlayer.getUniqueId())) {
+            if (this.recipes.containsKey(offlinePlayer.getUniqueId())) {
                 continue;
             }
             this.load(offlinePlayer);
@@ -177,19 +183,19 @@ final class PlayerHeadsImpl implements PlayerHeads {
     }
 
     private void removeExpired() {
-        for (final UUID uuid : Set.copyOf(this.uuidMerchantRecipeMap.keySet())) {
-            final OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-            if (player.isOnline()) {
-                continue;
-            }
-            if (!this.playedRecentlyEnough(player.getLastSeen())) {
-                this.uuidMerchantRecipeMap.remove(uuid);
+        if (this.plugin.configManager().playerHeadConfig().days() == -1) {
+            return;
+        }
+        for (final UUID uuid : Set.copyOf(this.offlineLastSeen.keySet())) {
+            if (!this.playedRecentlyEnough(this.offlineLastSeen.get(uuid))) {
+                this.offlineLastSeen.remove(uuid);
+                this.recipes.remove(uuid);
             }
         }
     }
 
     private void load(final OfflinePlayer player) {
-        final @Nullable String username = player.getName();
+        final String username = player.getName();
         if (username == null || username.isBlank()) {
             return;
         }
@@ -202,20 +208,25 @@ final class PlayerHeadsImpl implements PlayerHeads {
     }
 
     private void addHead(final OfflinePlayer offlinePlayer, final String username) {
-        if (this.isUsernameBlacklisted(username) || !this.playedRecentlyEnough(offlinePlayer.getLastSeen())) {
+        if (this.isUsernameBlacklisted(username)) {
+            return;
+        }
+        final long lastSeen = offlinePlayer.getLastSeen();
+        if (!this.playedRecentlyEnough(lastSeen)) {
             return;
         }
         if (this.plugin.isVaultPermissions() && this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
             this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
                 if (this.plugin.vaultHook().permissions().playerHas(null, offlinePlayer, Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
-                    this.plugin.getServer().getScheduler().runTask(
-                        this.plugin,
-                        () -> this.uuidMerchantRecipeMap.put(offlinePlayer.getUniqueId(), this.getHeadRecipe(offlinePlayer, username))
-                    );
+                    this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+                        this.recipes.put(offlinePlayer.getUniqueId(), this.getHeadRecipe(offlinePlayer, username));
+                        this.offlineLastSeen.put(offlinePlayer.getUniqueId(), lastSeen);
+                    });
                 }
             });
         } else {
-            this.uuidMerchantRecipeMap.put(offlinePlayer.getUniqueId(), this.getHeadRecipe(offlinePlayer, username));
+            this.recipes.put(offlinePlayer.getUniqueId(), this.getHeadRecipe(offlinePlayer, username));
+            this.offlineLastSeen.put(offlinePlayer.getUniqueId(), lastSeen);
         }
     }
 
@@ -225,10 +236,10 @@ final class PlayerHeadsImpl implements PlayerHeads {
         }
         if (this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
             if (player.hasPermission(Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
-                this.uuidMerchantRecipeMap.put(player.getUniqueId(), this.getHeadRecipe(player, player.getName()));
+                this.recipes.put(player.getUniqueId(), this.getHeadRecipe(player, player.getName()));
             }
         } else {
-            this.uuidMerchantRecipeMap.put(player.getUniqueId(), this.getHeadRecipe(player, player.getName()));
+            this.recipes.put(player.getUniqueId(), this.getHeadRecipe(player, player.getName()));
         }
     }
 
@@ -242,11 +253,14 @@ final class PlayerHeadsImpl implements PlayerHeads {
 
     private boolean playedRecentlyEnough(final long lastPlayed) {
         final PlayerHeadConfig playerHeadConfig = this.plugin.configManager().playerHeadConfig();
+        if (playerHeadConfig.days() == -1) {
+            return true;
+        }
         final LocalDateTime logout = Instant.ofEpochMilli(lastPlayed)
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime();
         final LocalDateTime cutoff = LocalDateTime.now()
             .minusDays(playerHeadConfig.days());
-        return logout.isAfter(cutoff) || playerHeadConfig.days() == -1;
+        return logout.isAfter(cutoff);
     }
 }
