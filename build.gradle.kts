@@ -5,7 +5,7 @@ plugins {
     `java-library`
     id("com.gradleup.shadow") version "9.1.0"
     id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.0"
-    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.0"
+    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.1"
     val indraVersion = "3.2.0"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
