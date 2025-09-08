@@ -7,6 +7,7 @@ import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
+import xyz.jpenilla.wanderingtrades.config.ConfigManager;
 import xyz.jpenilla.wanderingtrades.config.Messages;
 
 @NullMarked
@@ -29,7 +30,19 @@ public final class ReloadCommand extends BaseCommand {
 
     private void execute(final CommandContext<CommandSender> context) {
         context.sender().sendMessage(Messages.COMMAND_RELOAD);
-        this.plugin.reload();
-        context.sender().sendMessage(Messages.COMMAND_RELOAD_DONE);
+
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            try {
+                final ConfigManager.Snapshot snapshot = this.plugin.configManager().buildSnapshot();
+                this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+                    this.plugin.configManager().applySnapshot(snapshot);
+                    context.sender().sendMessage(Messages.COMMAND_RELOAD_DONE);
+                });
+            } catch (final Exception ex) {
+                this.plugin.getServer().getScheduler().runTask(this.plugin, () ->
+                    context.sender().sendMessage("Reload failed: " + ex.getMessage())
+                );
+            }
+        });
     }
 }
