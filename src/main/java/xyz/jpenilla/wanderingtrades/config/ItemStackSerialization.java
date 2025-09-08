@@ -2,6 +2,7 @@ package xyz.jpenilla.wanderingtrades.config;
 
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.bukkit.Material;
@@ -34,7 +35,7 @@ public final class ItemStackSerialization {
         // Meaning if the item was originally added via config, and is later saved in serialized form, both will be in the config
         // but only the serialized form will be used. This avoids accidental data loss at the cost of config clutter which could confuse
         // some users...
-
+        
         final String paperPath = path + ".itemStackAsBytes";
         final String bukkitPath = path + ".itemStack";
         final String selectedPath = true ? paperPath : bukkitPath;
@@ -45,7 +46,6 @@ public final class ItemStackSerialization {
         if (true && config.get(bukkitPath, null) != null) {
             config.set(bukkitPath, null);
         }
-
         try {
             config.getClass().getMethod("getComments", String.class);
             config.setComments(selectedPath, COMMENT);
@@ -60,7 +60,6 @@ public final class ItemStackSerialization {
                 return ItemStack.deserializeBytes(stack);
             }
         }
-
         final ConfigurationSection configSection = config.getConfigurationSection(key + ".itemStack");
         if (configSection != null) {
             return ItemStack.deserialize(configSection.getValues(true));
@@ -91,18 +90,14 @@ public final class ItemStackSerialization {
         }
 
         final List<String> lore = config.getStringList(key + ".lore");
-        if (lore.size() != 0) {
+        if (!lore.isEmpty()) {
             itemBuilder = itemBuilder.miniMessageContext().lore(lore).exit();
         }
 
         final int amount = config.getInt(key + ".amount", 1);
         itemBuilder = itemBuilder.stackSize(amount);
 
-        itemBuilder = applyEnchants(
-            itemBuilder,
-            config.getStringList(key + ".enchantments"),
-            key
-        );
+        itemBuilder = applyEnchants(itemBuilder, config.getStringList(key + ".enchantments"), key);
 
         return itemBuilder.build();
     }
@@ -113,41 +108,70 @@ public final class ItemStackSerialization {
         final List<String> enchantStrings,
         final String itemKey
     ) {
-        final Material material = itemBuilder.build().getType();
-        for (final String enchantString : enchantStrings) {
-            final EnchantWithLevel enchantment = readEnchantString(enchantString);
+        if (enchantStrings.isEmpty()) {
+            return itemBuilder;
+        }
 
-            if (enchantment == null) {
-                Logging.logger().warn("'{}' is not a valid enchantment! (item at '{}')", enchantString, itemKey);
+        final Material material = itemBuilder.type();
+        final List<EnchantWithLevel> parsed = new ArrayList<>(enchantStrings.size());
+        for (final String s : enchantStrings) {
+            final EnchantWithLevel ewl = readEnchantString(s);
+            if (ewl == null || ewl.enchantment == null) {
+                Logging.logger().warn("'{}' is not a valid enchantment! (item at '{}')", s, itemKey);
                 continue;
             }
+            parsed.add(ewl);
+        }
+        if (parsed.isEmpty()) {
+            return itemBuilder;
+        }
 
-            if (material == Material.ENCHANTED_BOOK) {
-                itemBuilder = ((ItemBuilder<EnchantmentStorageMeta>) itemBuilder)
-                    .editMeta(meta -> meta.addStoredEnchant(enchantment.enchantment, enchantment.level, true));
-            } else {
-                itemBuilder = itemBuilder.addEnchant(enchantment.enchantment, enchantment.level);
-            }
+        if (material == Material.ENCHANTED_BOOK) {
+            itemBuilder = ((ItemBuilder<EnchantmentStorageMeta>) itemBuilder).editMeta(meta -> {
+                for (final EnchantWithLevel e : parsed) {
+                    meta.addStoredEnchant(e.enchantment, e.level, true);
+                }
+            });
+        } else {
+            itemBuilder = itemBuilder.editMeta(meta -> {
+                for (final EnchantWithLevel e : parsed) {
+                    meta.addEnchant(e.enchantment, e.level, true);
+                }
+            });
         }
         return itemBuilder;
     }
 
-    private record EnchantWithLevel(Enchantment enchantment, int level) {
-    }
+    private record EnchantWithLevel(Enchantment enchantment, int level) {}
 
-    private static @Nullable EnchantWithLevel readEnchantString(final String enchantString) {
-        if (enchantString.contains(":")) {
-            final String[] args = enchantString.toLowerCase(Locale.ENGLISH).split(":");
-            final Registry<Enchantment> registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
+    private static @Nullable EnchantWithLevel readEnchantString(final String raw) {
+        final String[] args = raw.toLowerCase(Locale.ENGLISH).split(":");
+        final Registry<Enchantment> registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
+
+        NamespacedKey key;
+        int level;
+
+        try {
             if (args.length == 1) {
-                return new EnchantWithLevel(registry.get(NamespacedKey.minecraft(args[0])), 1);
+                key = NamespacedKey.minecraft(args[0]);
+                level = 1;
             } else if (args.length == 2) {
-                return new EnchantWithLevel(registry.get(NamespacedKey.minecraft(args[0])), Integer.parseInt(args[1]));
+                key = NamespacedKey.minecraft(args[0]);
+                level = Integer.parseInt(args[1]);
             } else if (args.length == 3) {
-                return new EnchantWithLevel(registry.get(new NamespacedKey(args[0], args[1])), Integer.parseInt(args[2]));
+                key = new NamespacedKey(args[0], args[1]);
+                level = Integer.parseInt(args[2]);
+            } else {
+                return null;
             }
+        } catch (final NumberFormatException e) {
             return null;
         }
-        return null;
+
+        final Enchantment ench = registry.get(key);
+        if (ench == null) {
+            return null;
+        }
+        return new EnchantWithLevel(ench, level);
     }
 }
