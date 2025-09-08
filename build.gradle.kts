@@ -10,7 +10,7 @@ plugins {
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
     id("xyz.jpenilla.run-paper") version "3.0.0"
-    id("me.modmuss50.mod-publish-plugin") version "0.8.4"
+    id("me.modmuss50.mod-publish-plugin") version "1.0.0"
 }
 
 version = (version as String).decorateVersion()
