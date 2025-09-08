@@ -13,17 +13,21 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public record TraderSpawnNotificationOptions(
     boolean enabled,
+    List<String> spawnReasonBlackList,
     Players notifyPlayers,
     List<String> commands,
     List<String> perPlayerCommands
+
 ) {
     private static final String ENABLED = "enabled";
+    private static final String SPAWN_REASON_BLACK_LIST = "spawnReasonBlackList";
     private static final String NOTIFY_PLAYERS = "notifyPlayers";
     private static final String COMMANDS = "commands";
     private static final String PER_PLAYER_COMMANDS = "perPlayerCommands";
 
     void setTo(final DefaultedConfig config, final String path) {
         config.set(path + "." + ENABLED, this.enabled);
+        config.set(path + "." + SPAWN_REASON_BLACK_LIST, this.spawnReasonBlackList);
         config.set(path + "." + NOTIFY_PLAYERS, this.notifyPlayers.input());
         config.set(path + "." + COMMANDS, this.commands);
         config.set(path + "." + PER_PLAYER_COMMANDS, this.perPlayerCommands);
@@ -33,6 +37,7 @@ public record TraderSpawnNotificationOptions(
         Objects.requireNonNull(section, "section");
         return new TraderSpawnNotificationOptions(
             section.getBoolean(ENABLED),
+            section.getStringList(SPAWN_REASON_BLACK_LIST),
             Players.parse(section.getString(NOTIFY_PLAYERS)),
             section.getStringList(COMMANDS),
             section.getStringList(PER_PLAYER_COMMANDS)

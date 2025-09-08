@@ -65,6 +65,7 @@ public final class Config extends DefaultedConfig {
             config.set(Fields.traderSpawnNotificationCommands, null);
             this.traderSpawnNotificationOptions = new TraderSpawnNotificationOptions(
                 oldTraderSpawnNotificationRadius != -1,
+                List.of(),
                 TraderSpawnNotificationOptions.Players.parse(String.valueOf(
                     oldTraderSpawnNotificationRadius == -1 ? 500 : oldTraderSpawnNotificationRadius
                 )),

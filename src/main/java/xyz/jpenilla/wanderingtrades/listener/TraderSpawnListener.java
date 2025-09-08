@@ -40,8 +40,10 @@ public final class TraderSpawnListener implements Listener {
             return;
         }
 
+        String spawnReason = event.getSpawnReason().name();
+
         // Delay by 1 tick so entity is in world
-        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.notifyPlayers(trader));
+        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.notifyPlayers(trader, spawnReason));
 
         if (this.plugin.config().traderWorldWhitelist()) {
             if (this.plugin.config().traderWorldList().contains(event.getEntity().getWorld().getName())) {
@@ -54,9 +56,12 @@ public final class TraderSpawnListener implements Listener {
         }
     }
 
-    private void notifyPlayers(final WanderingTrader entity) {
+    private void notifyPlayers(final WanderingTrader entity, final String spawnReason) {
         final TraderSpawnNotificationOptions options = this.plugin.config().traderSpawnNotificationOptions();
         if (!options.enabled()) {
+            return;
+        }
+        if (options.spawnReasonBlackList().contains(spawnReason)) {
             return;
         }
         for (final String command : options.commands()) {
