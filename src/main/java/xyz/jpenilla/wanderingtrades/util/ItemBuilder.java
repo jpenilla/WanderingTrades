@@ -142,6 +142,10 @@ public class ItemBuilder<I extends ItemMeta> {
         return stack;
     }
 
+    public final Material type() {
+        return this.stack.getType();
+    }
+
     @SuppressWarnings("unchecked")
     public final I meta() {
         return (I) this.meta.clone();
