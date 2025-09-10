@@ -5,13 +5,12 @@ import it.unimi.dsi.fastutil.Pair;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
 @NullMarked
-final class ProfileCompleter extends BukkitRunnable {
+final class ProfileCompleter implements Runnable {
 
     private final Queue<Pair<PlayerProfile, Consumer<PlayerProfile>>> completionQueue = new ConcurrentLinkedQueue<>();
     private final WanderingTrades plugin;

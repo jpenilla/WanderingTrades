@@ -114,17 +114,15 @@ public final class TradeCommands extends BaseCommand {
         return () -> {
             final CompletableFuture<Merchant> future = new CompletableFuture<>();
 
-            this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            this.plugin.getFoliaLib().getScheduler().runAsync(asyncTask -> {
                 final @Nullable List<MerchantRecipe> merchantRecipes = config.tryGetTrades(player);
                 if (merchantRecipes == null) {
                     return;
                 }
 
-                this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
-                    final Merchant merchant = this.plugin.getServer().createMerchant(miniMessage().deserialize(config.customName()));
-                    merchant.setRecipes(merchantRecipes);
-                    future.complete(merchant);
-                });
+                final Merchant merchant = this.plugin.getServer().createMerchant(miniMessage().deserialize(config.customName()));
+                merchant.setRecipes(merchantRecipes);
+                future.complete(merchant);
             });
 
             return future;
