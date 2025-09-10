@@ -63,17 +63,8 @@ public final class TradeApplicator {
     public void selectTrades(final Consumer<List<MerchantRecipe>> mainThreadCallback) {
         this.plugin.getFoliaLib().getScheduler().runAsync(asyncTask -> {
             final List<MerchantRecipe> newTrades = this.selectTrades();
-
-            this.plugin.getFoliaLib().getScheduler().runNextTick(task -> {
-                try {
-                    mainThreadCallback.accept(newTrades);
-                } catch (IllegalStateException e) {
-                    // If we failed due to wrong thread access, retry on the entity's thread
-                    if (e.getMessage() != null && e.getMessage().contains("Thread failed main thread check")) {
-                        this.plugin.getFoliaLib().getScheduler().cancelTask(task);
-                    }
-                }
-            });
+            // FoliaLib handles thread safety automatically
+            mainThreadCallback.accept(newTrades);
         });
     }
 

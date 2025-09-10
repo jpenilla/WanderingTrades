@@ -137,10 +137,8 @@ final class PlayerHeadsImpl implements PlayerHeads {
             final PlayerProfile profile = meta.getPlayerProfile();
             if (profile != null && !profile.hasTextures()) {
                 this.profileCompleter.submitProfile(profile, updatedProfile -> {
-                    this.plugin.getFoliaLib().getScheduler().runNextTick(task -> {
-                        meta.setPlayerProfile(this.filterProfileProperties(updatedProfile));
-                        head.setItemMeta(meta);
-                    });
+                    meta.setPlayerProfile(this.filterProfileProperties(updatedProfile));
+                    head.setItemMeta(meta);
                 });
             } else if (profile != null && profile.hasTextures()) {
                 meta.setPlayerProfile(this.filterProfileProperties(profile));
@@ -217,10 +215,8 @@ final class PlayerHeadsImpl implements PlayerHeads {
         if (this.plugin.isVaultPermissions() && this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
             this.plugin.getFoliaLib().getScheduler().runAsync(asyncTask -> {
                 if (this.plugin.vaultHook().permissions().playerHas(null, offlinePlayer, Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
-                    this.plugin.getFoliaLib().getScheduler().runNextTick(task -> {
-                        this.recipes.put(offlinePlayer.getUniqueId(), this.getHeadRecipe(offlinePlayer, username));
-                        this.offlineLastSeen.put(offlinePlayer.getUniqueId(), lastSeen);
-                    });
+                    this.recipes.put(offlinePlayer.getUniqueId(), this.getHeadRecipe(offlinePlayer, username));
+                    this.offlineLastSeen.put(offlinePlayer.getUniqueId(), lastSeen);
                 }
             });
         } else {

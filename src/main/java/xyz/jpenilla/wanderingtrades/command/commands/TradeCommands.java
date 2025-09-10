@@ -120,11 +120,9 @@ public final class TradeCommands extends BaseCommand {
                     return;
                 }
 
-                this.plugin.getFoliaLib().getScheduler().runNextTick(task -> {
-                    final Merchant merchant = this.plugin.getServer().createMerchant(miniMessage().deserialize(config.customName()));
-                    merchant.setRecipes(merchantRecipes);
-                    future.complete(merchant);
-                });
+                final Merchant merchant = this.plugin.getServer().createMerchant(miniMessage().deserialize(config.customName()));
+                merchant.setRecipes(merchantRecipes);
+                future.complete(merchant);
             });
 
             return future;
