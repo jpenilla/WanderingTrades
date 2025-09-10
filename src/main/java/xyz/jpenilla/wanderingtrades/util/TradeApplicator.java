@@ -61,13 +61,19 @@ public final class TradeApplicator {
     }
 
     public void selectTrades(final Consumer<List<MerchantRecipe>> mainThreadCallback) {
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+        this.plugin.getFoliaLib().getScheduler().runAsync(asyncTask -> {
             final List<MerchantRecipe> newTrades = this.selectTrades();
 
-            this.plugin.getServer().getScheduler().runTask(
-                this.plugin,
-                () -> mainThreadCallback.accept(newTrades)
-            );
+            this.plugin.getFoliaLib().getScheduler().runNextTick(task -> {
+                try {
+                    mainThreadCallback.accept(newTrades);
+                } catch (IllegalStateException e) {
+                    // If we failed due to wrong thread access, retry on the entity's thread
+                    if (e.getMessage() != null && e.getMessage().contains("Thread failed main thread check")) {
+                        this.plugin.getFoliaLib().getScheduler().cancelTask(task);
+                    }
+                }
+            });
         });
     }
 
@@ -106,15 +112,20 @@ public final class TradeApplicator {
         if (!wanderingTrader.isValid()) {
             return;
         }
-        if (refresh) {
-            if (!this.plugin.config().removeOriginalTrades()) {
-                wanderingTrader.resetOffers();
-                newTrades.addAll(wanderingTrader.getRecipes());
+
+        // Schedule on the entity's region thread
+        this.plugin.getFoliaLib().getScheduler().runAtEntity(wanderingTrader, task -> {
+            List<MerchantRecipe> finalTrades = new ArrayList<>(newTrades);
+            if (refresh) {
+                if (!this.plugin.config().removeOriginalTrades()) {
+                    wanderingTrader.resetOffers();
+                    finalTrades.addAll(wanderingTrader.getRecipes());
+                }
+            } else {
+                finalTrades.addAll(wanderingTrader.getRecipes());
             }
-        } else {
-            newTrades.addAll(wanderingTrader.getRecipes());
-        }
-        wanderingTrader.setRecipes(newTrades);
+            wanderingTrader.setRecipes(finalTrades);
+        });
     }
 
     private static boolean randBoolean(final double p) {

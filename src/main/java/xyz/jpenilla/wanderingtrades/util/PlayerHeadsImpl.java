@@ -2,6 +2,7 @@ package xyz.jpenilla.wanderingtrades.util;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,7 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.scheduler.BukkitTask;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import xyz.jpenilla.pluginbase.legacy.TextUtil;
@@ -31,12 +31,12 @@ final class PlayerHeadsImpl implements PlayerHeads {
     private final Map<UUID, MerchantRecipe> recipes = new ConcurrentHashMap<>();
     private final Map<UUID, Long> offlineLastSeen = new ConcurrentHashMap<>();
     private final ProfileCompleter profileCompleter;
-    private @Nullable BukkitTask cleanupTask;
+    private @Nullable WrappedTask cleanupTask;
 
     PlayerHeadsImpl(final WanderingTrades plugin) {
         this.plugin = plugin;
         this.profileCompleter = new ProfileCompleter(plugin);
-        this.profileCompleter.runTaskTimerAsynchronously(plugin, 0L, 20L * 2L);
+        this.plugin.getFoliaLib().getScheduler().runTimerAsync(() -> this.profileCompleter.run(), 0L, 20L * 2L);
         this.load();
         this.scheduleCleanup();
     }
@@ -45,8 +45,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
         if (this.cleanupTask != null) {
             this.cleanupTask.cancel();
         }
-        this.cleanupTask = this.plugin.getServer().getScheduler().runTaskTimer(
-            this.plugin,
+        this.cleanupTask = this.plugin.getFoliaLib().getScheduler().runTimer(
             this::removeExpired,
             20L * 60L * 10L,
             20L * 60L * 10L
@@ -138,7 +137,7 @@ final class PlayerHeadsImpl implements PlayerHeads {
             final PlayerProfile profile = meta.getPlayerProfile();
             if (profile != null && !profile.hasTextures()) {
                 this.profileCompleter.submitProfile(profile, updatedProfile -> {
-                    this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+                    this.plugin.getFoliaLib().getScheduler().runNextTick(task -> {
                         meta.setPlayerProfile(this.filterProfileProperties(updatedProfile));
                         head.setItemMeta(meta);
                     });
@@ -216,9 +215,9 @@ final class PlayerHeadsImpl implements PlayerHeads {
             return;
         }
         if (this.plugin.isVaultPermissions() && this.plugin.configManager().playerHeadConfig().permissionWhitelist()) {
-            this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            this.plugin.getFoliaLib().getScheduler().runAsync(asyncTask -> {
                 if (this.plugin.vaultHook().permissions().playerHas(null, offlinePlayer, Constants.Permissions.WANDERINGTRADES_HEADAVAILABLE)) {
-                    this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+                    this.plugin.getFoliaLib().getScheduler().runNextTick(task -> {
                         this.recipes.put(offlinePlayer.getUniqueId(), this.getHeadRecipe(offlinePlayer, username));
                         this.offlineLastSeen.put(offlinePlayer.getUniqueId(), lastSeen);
                     });

@@ -1,5 +1,6 @@
 package xyz.jpenilla.wanderingtrades;
 
+import com.tcoded.folialib.FoliaLib;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
@@ -32,6 +33,7 @@ public final class WanderingTrades extends JavaPlugin {
     private @MonotonicNonNull TradeSessionManager sessionManager;
     private @Nullable WorldGuardHook worldGuard = null;
     private @Nullable VaultHook vault = null;
+    private final FoliaLib foliaLib = new FoliaLib(this);
 
     @Override
     public void onEnable() {
@@ -57,7 +59,7 @@ public final class WanderingTrades extends JavaPlugin {
     }
 
     private void setupIntegrations() {
-        this.getServer().getScheduler().runTask(this, () -> {
+        this.foliaLib.getScheduler().runNextTick(task -> {
             if (this.getServer().getPluginManager().isPluginEnabled("Vault")) {
                 this.vault = new VaultHook(this.getServer());
             }
@@ -70,9 +72,8 @@ public final class WanderingTrades extends JavaPlugin {
 
     private void updateCheck() {
         if (this.config().updateChecker()) {
-            this.getServer().getScheduler().runTask(
-                this,
-                () -> new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion()
+            this.foliaLib.getScheduler().runNextTick(task ->
+                new UpdateChecker(this, "jpenilla/WanderingTrades").checkVersion()
             );
         }
     }
@@ -152,5 +153,9 @@ public final class WanderingTrades extends JavaPlugin {
 
     public static WanderingTrades instance() {
         return instance;
+    }
+
+    public FoliaLib getFoliaLib() {
+        return foliaLib;
     }
 }

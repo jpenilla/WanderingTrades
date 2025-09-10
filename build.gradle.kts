@@ -56,6 +56,10 @@ repositories {
     maven("https://jitpack.io") {
         content { includeGroup("com.github.MilkBowl") }
     }
+    maven {
+        name = "tcoded-releases"
+        url = uri("https://repo.tcoded.com/releases")
+    }
 }
 
 dependencies {
@@ -90,6 +94,8 @@ dependencies {
     compileOnly("com.sk89q.worldguard", "worldguard-core", worldGuardVer) { isTransitive = false }
     compileOnly("com.sk89q.worldedit", "worldedit-bukkit", worldEditVer) { isTransitive = false }
     compileOnly("com.sk89q.worldedit", "worldedit-core", worldEditVer) { isTransitive = false }
+
+    implementation("com.tcoded:FoliaLib:0.5.1")
 }
 
 indra {
@@ -103,6 +109,7 @@ paperPluginYaml {
     apiVersion = "1.21.4"
     website = "https://github.com/jpenilla/WanderingTrades"
     authors = listOf("jmp")
+    foliaSupported = true
 
     permissions {
         register("wanderingtrades.trader-spawn-notifications") {
@@ -168,6 +175,7 @@ tasks {
         ).forEach {
             relocate(it, "wanderingtrades.$it")
         }
+        relocate("com.tcoded.folialib", "xyz.jpenilla.wanderingtrades.lib.folialib")
         mergeServiceFiles()
     }
     processResources {
