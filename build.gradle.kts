@@ -3,7 +3,7 @@ import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
     `java-library`
-    id("com.gradleup.shadow") version "9.1.0"
+    id("com.gradleup.shadow") version "9.2.2"
     id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.1"
     id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.1"
     val indraVersion = "3.2.0"
