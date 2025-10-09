@@ -4,7 +4,6 @@ import java.util.Map;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.component.CommandComponent;
 import org.incendo.cloud.component.DefaultValue;
@@ -12,9 +11,9 @@ import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.help.HelpHandler;
 import org.incendo.cloud.help.result.CommandEntry;
 import org.incendo.cloud.help.result.IndexCommandResult;
-import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftHelp;
 import org.incendo.cloud.minecraft.extras.caption.ComponentCaptionFormatter;
+import org.incendo.cloud.paper.util.sender.Source;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
@@ -27,8 +26,8 @@ import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 
 @NullMarked
 public final class HelpCommand extends BaseCommand {
-    private final MinecraftHelp<CommandSender> minecraftHelp;
-    private final HelpHandler<CommandSender> commandHelpHandler;
+    private final MinecraftHelp<Source> minecraftHelp;
+    private final HelpHandler<Source> commandHelpHandler;
 
     public HelpCommand(final WanderingTrades plugin, final Commands commands) {
         super(plugin, commands);
@@ -39,11 +38,11 @@ public final class HelpCommand extends BaseCommand {
     @Override
     public void register() {
         /* Help Query Argument */
-        final TypedCommandComponent<CommandSender, String> helpQueryArgument = CommandComponent.<CommandSender, String>ofType(String.class, "query")
+        final TypedCommandComponent<Source, String> helpQueryArgument = CommandComponent.<Source, String>ofType(String.class, "query")
             .parser(greedyStringParser())
             .optional()
             .suggestionProvider(SuggestionProvider.blockingStrings((context, input) -> {
-                final IndexCommandResult<CommandSender> indexHelpTopic = this.commandHelpHandler.queryRootIndex(context.sender());
+                final IndexCommandResult<Source> indexHelpTopic = this.commandHelpHandler.queryRootIndex(context.sender());
                 return indexHelpTopic.entries()
                     .stream()
                     .map(CommandEntry::syntax)
@@ -54,7 +53,7 @@ public final class HelpCommand extends BaseCommand {
             .build();
 
         /* Help Command */
-        final Command<CommandSender> help = this.commandManager.commandBuilder("wt", "wanderingtrades")
+        final Command<Source> help = this.commandManager.commandBuilder("wt", "wanderingtrades")
             .commandDescription(Messages.COMMAND_HELP_DESCRIPTION.asDescription())
             .literal("help")
             .argument(helpQueryArgument)
@@ -64,10 +63,10 @@ public final class HelpCommand extends BaseCommand {
         this.commandManager.command(help);
     }
 
-    private MinecraftHelp<CommandSender> createMinecraftHelp() {
-        return MinecraftHelp.<CommandSender>builder()
+    private MinecraftHelp<Source> createMinecraftHelp() {
+        return MinecraftHelp.<Source>builder()
             .commandManager(this.commandManager)
-            .audienceProvider(AudienceProvider.nativeAudience())
+            .audienceProvider(Source::source)
             .commandPrefix("/wanderingtrades help")
             .messageProvider(this::helpMessage)
             .colors(helpColors(
@@ -80,7 +79,7 @@ public final class HelpCommand extends BaseCommand {
             .build();
     }
 
-    private Component helpMessage(final CommandSender sender, final String key, final Map<String, String> args) {
+    private Component helpMessage(final Source sender, final String key, final Map<String, String> args) {
         if (key.equals("help")) {
             return Messages.COMMAND_HELP_DESCRIPTION.asComponent();
         }

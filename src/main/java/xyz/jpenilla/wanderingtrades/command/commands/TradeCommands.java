@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import net.kyori.adventure.text.Component;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WanderingTrader;
 import org.bukkit.inventory.Merchant;
@@ -17,6 +16,7 @@ import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.data.MultiplePlayerSelector;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.exception.InvalidCommandSenderException;
+import org.incendo.cloud.paper.util.sender.Source;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -48,11 +48,11 @@ public final class TradeCommands extends BaseCommand {
 
     @Override
     public void register() {
-        final Command.Builder<CommandSender> trade = this.commandManager
+        final Command.Builder<Source> trade = this.commandManager
             .commandBuilder("wt")
             .literal("trade");
 
-        final Command.Builder<CommandSender> config = trade
+        final Command.Builder<Source> config = trade
             .literal("config")
             .required("config", tradeConfigParser())
             .permission("wanderingtrades.tradecommand")
@@ -64,7 +64,7 @@ public final class TradeCommands extends BaseCommand {
             .flag(this.tradeSessionFlag())
             .flag(this.sessionLifetimeFlag()));
 
-        final Command.Builder<CommandSender> natural = trade
+        final Command.Builder<Source> natural = trade
             .literal("natural")
             .permission("wanderingtrades.tradenaturalcommand")
             .handler(this::tradeNatural);
@@ -78,7 +78,7 @@ public final class TradeCommands extends BaseCommand {
 
     private static final long DEFAULT_SESSION_LIFETIME = 20L * 60L * 60L; // 1 hour
 
-    private void tradeConfig(final CommandContext<CommandSender> ctx) {
+    private void tradeConfig(final CommandContext<Source> ctx) {
         final @Nullable String sessionId = ctx.flags().<String>getValue("session").orElse(null);
         final long sessionLifetime = ctx.flags().<Long>getValue("lifetime").orElse(DEFAULT_SESSION_LIFETIME);
         final TradeConfig config = ctx.get("config");
@@ -87,7 +87,7 @@ public final class TradeCommands extends BaseCommand {
         }
     }
 
-    private void tradeNatural(final CommandContext<CommandSender> ctx) {
+    private void tradeNatural(final CommandContext<Source> ctx) {
         final @Nullable String sessionId = ctx.flags().<String>getValue("session").orElse(null);
         final long sessionLifetime = ctx.flags().<Long>getValue("lifetime").orElse(DEFAULT_SESSION_LIFETIME);
         for (final Player player : players(ctx)) {
@@ -158,7 +158,7 @@ public final class TradeCommands extends BaseCommand {
         };
     }
 
-    private static Collection<Player> players(final CommandContext<CommandSender> ctx) {
+    private static Collection<Player> players(final CommandContext<Source> ctx) {
         @Nullable Collection<Player> players = ctx.<MultiplePlayerSelector>optional("players")
             .map(MultiplePlayerSelector::values)
             .orElse(null);

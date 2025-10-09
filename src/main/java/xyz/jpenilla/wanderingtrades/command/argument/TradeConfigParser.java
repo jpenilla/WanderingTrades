@@ -4,6 +4,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
+import org.incendo.cloud.paper.util.sender.Source;
 import org.incendo.cloud.parser.ArgumentParseResult;
 import org.incendo.cloud.parser.ArgumentParser;
 import org.incendo.cloud.parser.ParserDescriptor;
@@ -16,15 +17,15 @@ import xyz.jpenilla.wanderingtrades.config.Messages;
 import xyz.jpenilla.wanderingtrades.config.TradeConfig;
 
 @NullMarked
-public final class TradeConfigParser implements ArgumentParser<CommandSender, TradeConfig>, BlockingSuggestionProvider.Strings<CommandSender> {
+public final class TradeConfigParser implements ArgumentParser<Source, TradeConfig>, BlockingSuggestionProvider.Strings<CommandSender> {
 
-    public static ParserDescriptor<CommandSender, TradeConfig> tradeConfigParser() {
+    public static ParserDescriptor<Source, TradeConfig> tradeConfigParser() {
         return ParserDescriptor.of(new TradeConfigParser(), TradeConfig.class);
     }
 
     @Override
     public ArgumentParseResult<TradeConfig> parse(
-        final CommandContext<CommandSender> commandContext,
+        final CommandContext<Source> commandContext,
         final CommandInput input
     ) {
         final WanderingTrades plugin = commandContext.get(Commands.PLUGIN);

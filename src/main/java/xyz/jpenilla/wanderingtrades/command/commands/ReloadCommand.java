@@ -1,8 +1,8 @@
 package xyz.jpenilla.wanderingtrades.command.commands;
 
-import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.paper.util.sender.Source;
 import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
@@ -17,7 +17,7 @@ public final class ReloadCommand extends BaseCommand {
 
     @Override
     public void register() {
-        final Command<CommandSender> reload = this.commandManager.commandBuilder("wt")
+        final Command<Source> reload = this.commandManager.commandBuilder("wt")
             .commandDescription(Messages.COMMAND_RELOAD_DESCRIPTION.asDescription())
             .literal("reload")
             .permission("wanderingtrades.reload")
@@ -27,9 +27,9 @@ public final class ReloadCommand extends BaseCommand {
         this.commandManager.command(reload);
     }
 
-    private void execute(final CommandContext<CommandSender> context) {
-        context.sender().sendMessage(Messages.COMMAND_RELOAD);
+    private void execute(final CommandContext<Source> context) {
+        context.sender().source().sendMessage(Messages.COMMAND_RELOAD);
         this.plugin.reload();
-        context.sender().sendMessage(Messages.COMMAND_RELOAD_DONE);
+        context.sender().source().sendMessage(Messages.COMMAND_RELOAD_DONE);
     }
 }

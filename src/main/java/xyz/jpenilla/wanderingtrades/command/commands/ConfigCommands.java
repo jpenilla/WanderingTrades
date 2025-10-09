@@ -6,11 +6,12 @@ import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
+import org.incendo.cloud.paper.util.sender.PlayerSource;
+import org.incendo.cloud.paper.util.sender.Source;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.command.BaseCommand;
 import xyz.jpenilla.wanderingtrades.command.Commands;
@@ -34,10 +35,10 @@ public final class ConfigCommands extends BaseCommand {
 
     @Override
     public void register() {
-        final Command.Builder<CommandSender> wt = this.commandManager.commandBuilder("wt");
+        final Command.Builder<Source> wt = this.commandManager.commandBuilder("wt");
 
         /* List Trade Configs Command */
-        final Command<CommandSender> list = wt
+        final Command<Source> list = wt
             .commandDescription(Messages.COMMAND_LIST_DESCRIPTION.asDescription())
             .literal("list")
             .permission("wanderingtrades.list")
@@ -45,38 +46,38 @@ public final class ConfigCommands extends BaseCommand {
             .build();
 
         /* Trade Config Edit Command */
-        final Command<Player> edit = wt
+        final Command<PlayerSource> edit = wt
             .commandDescription(Messages.COMMAND_EDIT_DESCRIPTION.asDescription())
             .literal("edit")
             .optional("trade_config", tradeConfigParser())
             .permission("wanderingtrades.edit")
-            .senderType(Player.class)
+            .senderType(PlayerSource.class)
             .handler(context -> {
                 final TradeConfig config = context.<TradeConfig>optional("trade_config").orElse(null);
                 if (config == null) {
-                    new ListTradeConfigsInterface(this.plugin).open(context.sender());
+                    new ListTradeConfigsInterface(this.plugin).open(context.sender().source());
                 } else {
-                    new ListTradesInterface(this.plugin, config).open(context.sender());
+                    new ListTradesInterface(this.plugin, config).open(context.sender().source());
                 }
             })
             .build();
 
         /* Plugin Config Edit Command */
-        final Command<Player> editConfig = wt
+        final Command<PlayerSource> editConfig = wt
             .commandDescription(Messages.COMMAND_EDITCONFIG_DESCRIPTION.asDescription())
             .literal("editconfig")
             .permission("wanderingtrades.edit")
-            .senderType(Player.class)
-            .handler(context -> new MainConfigInterface(this.plugin).open(context.sender()))
+            .senderType(PlayerSource.class)
+            .handler(context -> new MainConfigInterface(this.plugin).open(context.sender().source()))
             .build();
 
         /* Player Head Config Edit Command */
-        final Command<Player> editPlayerHeadConfig = wt
+        final Command<PlayerSource> editPlayerHeadConfig = wt
             .commandDescription(Messages.COMMAND_EDITPLAYERHEADS_DESCRIPTION.asDescription())
             .literal("editplayerheads")
             .permission("wanderingtrades.edit")
-            .senderType(Player.class)
-            .handler(context -> new PlayerHeadConfigInterface(this.plugin).open(context.sender()))
+            .senderType(PlayerSource.class)
+            .handler(context -> new PlayerHeadConfigInterface(this.plugin).open(context.sender().source()))
             .build();
 
         // Needed for 1.19+ as run_command click events can no longer be used to send chat messages
@@ -84,9 +85,9 @@ public final class ConfigCommands extends BaseCommand {
             .literal("accept-input")
             .required("input", greedyStringParser())
             .permission("wanderingtrades.edit")
-            .senderType(Player.class)
+            .senderType(PlayerSource.class)
             .handler(context -> {
-                final Player player = context.sender();
+                final Player player = context.sender().source();
                 if (!player.isConversing()) {
                     player.sendMessage(text("Error. This command is meant for use by click events.", NamedTextColor.RED));
                     return;
@@ -95,13 +96,13 @@ public final class ConfigCommands extends BaseCommand {
             }));
 
         /* Held ItemStack Rename Command */
-        final Command<Player> nameHeldItem = this.commandManager.commandBuilder("namehelditem")
+        final Command<PlayerSource> nameHeldItem = this.commandManager.commandBuilder("namehelditem")
             .commandDescription(Description.of("Sets the display name of the held ItemStack."))
             .required("name", greedyStringParser(), Description.of("The MiniMessage string to use as a name."))
             .permission("wanderingtrades.namehand")
-            .senderType(Player.class)
+            .senderType(PlayerSource.class)
             .handler(context -> {
-                final Player player = context.sender();
+                final Player player = context.sender().source();
                 if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
                     player.getInventory().setItemInMainHand(
                         ItemBuilder.create(player.getInventory().getItemInMainHand())
@@ -116,15 +117,15 @@ public final class ConfigCommands extends BaseCommand {
         this.commands.register(List.of(list, edit, editConfig, editPlayerHeadConfig, nameHeldItem));
     }
 
-    private void executeList(final CommandContext<CommandSender> context) {
-        context.sender().sendMessage(
+    private void executeList(final CommandContext<Source> context) {
+        context.sender().source().sendMessage(
             Component.textOfChildren(Constants.PREFIX_COMPONENT, Messages.COMMAND_LIST_LOADED));
         final List<TradeConfig> toSort = new ArrayList<>(this.plugin.configManager().tradeConfigs().values());
         toSort.sort(Comparator.comparing(TradeConfig::configName));
         int index = 1;
         for (final TradeConfig cfg : toSort) {
             final String color = cfg.enabled() ? "green" : "red";
-            context.sender().sendRichMessage(
+            context.sender().source().sendRichMessage(
                 String.format(" <gray>%s.</gray> <hover:show_text:'<green>Click to edit'><click:run_command:/wanderingtrades edit %s><%s>%s", index++, cfg.configName(), color, cfg.configName())
             );
         }

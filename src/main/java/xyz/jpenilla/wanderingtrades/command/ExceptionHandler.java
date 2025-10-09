@@ -3,15 +3,14 @@ package xyz.jpenilla.wanderingtrades.command;
 import java.util.logging.Level;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.CommandSender;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.exception.ArgumentParseException;
 import org.incendo.cloud.exception.CommandExecutionException;
 import org.incendo.cloud.exception.InvalidCommandSenderException;
 import org.incendo.cloud.exception.InvalidSyntaxException;
 import org.incendo.cloud.exception.NoPermissionException;
-import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
+import org.incendo.cloud.paper.util.sender.Source;
 import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 import xyz.jpenilla.wanderingtrades.util.Constants;
@@ -22,18 +21,18 @@ import static org.incendo.cloud.exception.handling.ExceptionHandler.unwrappingHa
 final class ExceptionHandler {
 
     private final WanderingTrades plugin;
-    private final CommandManager<CommandSender> commandManager;
+    private final CommandManager<Source> commandManager;
 
     ExceptionHandler(
         final WanderingTrades plugin,
-        final CommandManager<CommandSender> commandManager
+        final CommandManager<Source> commandManager
     ) {
         this.plugin = plugin;
         this.commandManager = commandManager;
     }
 
     void register() {
-        MinecraftExceptionHandler.<CommandSender>create(AudienceProvider.nativeAudience())
+        MinecraftExceptionHandler.create(Source::source)
             .handler(NoPermissionException.class, (formatter, ctx) -> Component.translatable("commands.help.failed", NamedTextColor.RED))
             .defaultInvalidSyntaxHandler()
             .defaultInvalidSenderHandler()

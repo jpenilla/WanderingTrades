@@ -23,6 +23,8 @@ import org.incendo.cloud.bukkit.data.SingleEntitySelector;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.parser.RegistryEntryParser;
+import org.incendo.cloud.paper.util.sender.PlayerSource;
+import org.incendo.cloud.paper.util.sender.Source;
 import org.incendo.cloud.parser.ParserDescriptor;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -70,9 +72,9 @@ public final class SummonCommands extends BaseCommand {
 
     @Override
     public void register() {
-        final Command.Builder<CommandSender> wt = this.commandManager.commandBuilder("wt");
+        final Command.Builder<Source> wt = this.commandManager.commandBuilder("wt");
 
-        final Command<CommandSender> summonNatural = wt
+        final Command<Source> summonNatural = wt
             .commandDescription(Messages.COMMAND_SUMMONNATURAL_DESCRIPTION.asDescription())
             .literal("summonnatural")
             .required("location", locationParser())
@@ -93,7 +95,7 @@ public final class SummonCommands extends BaseCommand {
             ))
             .build();
 
-        final Command<CommandSender> summon = wt
+        final Command<Source> summon = wt
             .commandDescription(Messages.COMMAND_SUMMON_DESCRIPTION.asDescription())
             .literal("summon")
             .required("trade_config", tradeConfigParser())
@@ -104,14 +106,14 @@ public final class SummonCommands extends BaseCommand {
             .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.summon")
             .handler(context -> this.summonTrader(
-                context.sender(),
+                context.sender().source(),
                 context.get("trade_config"),
                 resolveLocation(context),
                 context.flags().isPresent("noai")
             ))
             .build();
 
-        @SuppressWarnings("RedundantCast") final Command<CommandSender> summonVillager = wt
+        @SuppressWarnings("RedundantCast") final Command<Source> summonVillager = wt
             .commandDescription(Messages.COMMAND_SUMMONVILLAGER_DESCRIPTION.asDescription())
             .literal("summonvillager")
             .required("trade_config", tradeConfigParser())
@@ -124,7 +126,7 @@ public final class SummonCommands extends BaseCommand {
             .flag(this.commandManager.flagBuilder("noai"))
             .permission("wanderingtrades.villager")
             .handler(context -> this.summonVillagerTrader(
-                context.sender(),
+                context.sender().source(),
                 context.get("trade_config"),
                 resolveLocation(context),
                 context.get("type"),
@@ -134,20 +136,20 @@ public final class SummonCommands extends BaseCommand {
             .build();
 
         /* Entity Rename Command */
-        final Command<Player> nameEntity = this.commandManager.commandBuilder("nameentity")
+        final Command<PlayerSource> nameEntity = this.commandManager.commandBuilder("nameentity")
             .commandDescription(Description.of("Sets the name of an entity."))
             .required("entity", singleEntitySelectorParser())
             .required("name", greedyStringParser(), Description.of("The MiniMessage string to use as a name."))
             .permission("wanderingtrades.name")
-            .senderType(Player.class)
+            .senderType(PlayerSource.class)
             .handler(context -> {
                 final @Nullable Entity entity = context.<SingleEntitySelector>get("entity").single();
                 if (entity != null && !(entity instanceof Player)) {
                     this.setCustomName(entity, context.get("name"));
                     entity.setCustomNameVisible(true);
-                    context.sender().sendRichMessage("Named entity<gray>:</gray> " + context.get("name"));
+                    context.sender().source().sendRichMessage("Named entity<gray>:</gray> " + context.get("name"));
                 } else {
-                    context.sender().sendRichMessage("<red>Cannot name player or non-living entity.");
+                    context.sender().source().sendRichMessage("<red>Cannot name player or non-living entity.");
                 }
             })
             .build();
@@ -272,7 +274,7 @@ public final class SummonCommands extends BaseCommand {
         entity.customName(miniMessage().deserialize(miniMessage));
     }
 
-    private static Location resolveLocation(final CommandContext<CommandSender> ctx) {
+    private static Location resolveLocation(final CommandContext<Source> ctx) {
         final Location loc = ctx.get("location");
         ctx.flags().<World>getValue("world").ifPresent(loc::setWorld);
         ctx.flags().<Integer>getValue("yaw").ifPresent(loc::setYaw);

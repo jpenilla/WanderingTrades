@@ -1,7 +1,7 @@
 package xyz.jpenilla.wanderingtrades.command;
 
-import org.bukkit.command.CommandSender;
 import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.paper.util.sender.Source;
 import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.wanderingtrades.WanderingTrades;
 
@@ -9,7 +9,7 @@ import xyz.jpenilla.wanderingtrades.WanderingTrades;
 public abstract class BaseCommand {
     protected final WanderingTrades plugin;
     protected final Commands commands;
-    protected final CommandManager<CommandSender> commandManager;
+    protected final CommandManager<Source> commandManager;
 
     protected BaseCommand(final WanderingTrades plugin, final Commands commands) {
         this.plugin = plugin;
