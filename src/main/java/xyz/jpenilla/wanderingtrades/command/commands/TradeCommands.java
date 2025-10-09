@@ -16,6 +16,7 @@ import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.data.MultiplePlayerSelector;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.exception.InvalidCommandSenderException;
+import org.incendo.cloud.paper.util.sender.PlayerSource;
 import org.incendo.cloud.paper.util.sender.Source;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.jspecify.annotations.NullMarked;
@@ -159,14 +160,14 @@ public final class TradeCommands extends BaseCommand {
     }
 
     private static Collection<Player> players(final CommandContext<Source> ctx) {
-        @Nullable Collection<Player> players = ctx.<MultiplePlayerSelector>optional("players")
+        Collection<Player> players = ctx.<MultiplePlayerSelector>optional("players")
             .map(MultiplePlayerSelector::values)
             .orElse(null);
         if (players == null) {
-            if (ctx.sender() instanceof Player player) {
-                players = List.of(player);
+            if (ctx.sender() instanceof PlayerSource player) {
+                players = List.of(player.source());
             } else {
-                throw new InvalidCommandSenderException(ctx.sender(), Set.of(Player.class), List.of(), null);
+                throw new InvalidCommandSenderException(ctx.sender(), Set.of(PlayerSource.class), List.of(), null);
             }
         }
         return players;
