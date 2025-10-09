@@ -168,7 +168,12 @@ tasks {
         ).forEach {
             relocate(it, "wanderingtrades.$it")
         }
+
         mergeServiceFiles()
+        // Needed for mergeServiceFiles to work properly in Shadow 9+
+        filesMatching("META-INF/services/**") {
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
     }
     processResources {
         val tokens = mapOf(
