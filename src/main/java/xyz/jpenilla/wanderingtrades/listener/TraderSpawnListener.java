@@ -30,7 +30,7 @@ public final class TraderSpawnListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onSpawn(final CreatureSpawnEvent event) {
         if (!(event.getEntity() instanceof final WanderingTrader trader) || event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.MOUNT) {
             return;
@@ -41,7 +41,11 @@ public final class TraderSpawnListener implements Listener {
         }
 
         // Delay by 1 tick so entity is in world
-        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.notifyPlayers(trader));
+        this.plugin.getServer().getScheduler().runTask(this.plugin, () -> {
+            if (trader.isValid()) {
+                this.notifyPlayers(trader);
+            }
+        });
 
         if (this.plugin.config().traderWorldWhitelist()) {
             if (this.plugin.config().traderWorldList().contains(event.getEntity().getWorld().getName())) {
