@@ -9,7 +9,7 @@ plugins {
     val indraVersion = "3.2.0"
     id("net.kyori.indra") version indraVersion
     id("net.kyori.indra.git") version indraVersion
-    id("xyz.jpenilla.run-paper") version "3.0.1"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
     id("me.modmuss50.mod-publish-plugin") version "1.0.0"
 }
 
