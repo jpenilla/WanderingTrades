@@ -62,7 +62,7 @@ dependencies {
     compileOnly("io.papermc.paper", "paper-api", "1.21.4-R0.1-SNAPSHOT")
 
     implementation("io.papermc:paper-trail:1.0.1")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+155-SNAPSHOT") {
+    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+161-SNAPSHOT") {
         exclude("net.kyori")
     }
     implementation("org.bstats", "bstats-bukkit", "3.1.0")
