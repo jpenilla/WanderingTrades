@@ -3,14 +3,13 @@ import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
     `java-library`
-    id("com.gradleup.shadow") version "9.2.2"
-    id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.1"
-    id("xyz.jpenilla.resource-factory-paper-convention") version "1.3.1"
-    val indraVersion = "3.2.0"
-    id("net.kyori.indra") version indraVersion
-    id("net.kyori.indra.git") version indraVersion
-    id("xyz.jpenilla.run-paper") version "3.0.2"
-    id("me.modmuss50.mod-publish-plugin") version "1.0.0"
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.resourceFactoryBukkit)
+    alias(libs.plugins.resourceFactoryPaper)
+    alias(libs.plugins.indra)
+    alias(libs.plugins.indraGit)
+    alias(libs.plugins.runPaper)
+    alias(libs.plugins.modPublishPlugin)
 }
 
 version = (version as String).decorateVersion()
@@ -59,37 +58,35 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", "1.21.4-R0.1-SNAPSHOT")
+    compileOnly(libs.paper.api)
 
-    implementation("io.papermc:paper-trail:1.0.1")
-    implementation("xyz.jpenilla", "legacy-plugin-base", "0.0.1+155-SNAPSHOT") {
+    implementation(libs.paper.trail)
+    implementation(libs.legacy.plugin.base) {
         exclude("net.kyori")
     }
-    implementation("org.bstats", "bstats-bukkit", "3.1.0")
+    implementation(libs.bstats.bukkit)
 
-    implementation(platform("org.incendo:cloud-bom:2.0.0"))
-    implementation(platform("org.incendo:cloud-minecraft-bom:2.0.0-beta.12"))
-    implementation("org.incendo:cloud-paper")
-    implementation("org.incendo:cloud-minecraft-extras")
-    implementation(platform("org.incendo:cloud-translations-bom:1.0.0-SNAPSHOT"))
-    implementation("org.incendo:cloud-translations-bukkit")
-    implementation("org.incendo:cloud-translations-minecraft-extras")
+    implementation(platform(libs.cloud.bom))
+    implementation(platform(libs.cloud.minecraft.bom))
+    implementation(libs.cloud.paper)
+    implementation(libs.cloud.minecraft.extras)
+    implementation(platform(libs.cloud.translations.bom))
+    implementation(libs.cloud.translations.bukkit)
+    implementation(libs.cloud.translations.minecraft.extras)
 
-    implementation("org.incendo.interfaces", "interfaces-paper", "1.0.0-SNAPSHOT")
+    implementation(libs.interfaces.paper)
 
-    compileOnly("com.github.MilkBowl", "VaultAPI", "1.7.1")
-    compileOnly("net.essentialsx", "EssentialsX", "2.21.2") {
+    compileOnly(libs.vaultApi)
+    compileOnly(libs.essentialsX) {
         isTransitive = false
     }
-    compileOnly("org.jspecify:jspecify:1.0.0")
+    compileOnly(libs.jspecify)
 
     // Don't import their leaky constraints
-    val worldGuardVer = "7.0.14"
-    val worldEditVer = "7.3.16"
-    compileOnly("com.sk89q.worldguard", "worldguard-bukkit", worldGuardVer) { isTransitive = false }
-    compileOnly("com.sk89q.worldguard", "worldguard-core", worldGuardVer) { isTransitive = false }
-    compileOnly("com.sk89q.worldedit", "worldedit-bukkit", worldEditVer) { isTransitive = false }
-    compileOnly("com.sk89q.worldedit", "worldedit-core", worldEditVer) { isTransitive = false }
+    compileOnly(libs.worldguard.bukkit) { isTransitive = false }
+    compileOnly(libs.worldguard.core) { isTransitive = false }
+    compileOnly(libs.worldedit.bukkit) { isTransitive = false }
+    compileOnly(libs.worldedit.core) { isTransitive = false }
 }
 
 indra {
@@ -198,7 +195,7 @@ tasks {
     }
 }
 
-fun lastCommitHash(): String = indraGit.commit()?.name?.substring(0, 7)
+fun lastCommitHash(): String = indraGit.commit().orNull?.name?.substring(0, 7)
     ?: error("Could not determine commit hash")
 
 fun String.decorateVersion(): String = if (endsWith("-SNAPSHOT")) "$this+${lastCommitHash()}" else this
