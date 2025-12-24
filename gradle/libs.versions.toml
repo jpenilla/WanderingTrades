@@ -19,7 +19,7 @@ vaultApi = "1.7.1"
 essentialsX = "2.21.2"
 jspecify = "1.0.0"
 worldGuard = "7.0.14"
-worldEdit = "7.3.16"
+worldEdit = "7.3.18"
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
