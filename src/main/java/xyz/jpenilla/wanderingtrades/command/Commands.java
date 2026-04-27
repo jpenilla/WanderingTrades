@@ -3,12 +3,15 @@ package xyz.jpenilla.wanderingtrades.command;
 import io.leangen.geantyref.TypeToken;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.execution.preprocessor.CommandPreprocessingContext;
 import org.incendo.cloud.key.CloudKey;
+import org.incendo.cloud.minecraft.extras.MinecraftHelp;
 import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.paper.util.sender.PaperSimpleSenderMapper;
 import org.incendo.cloud.paper.util.sender.Source;
@@ -26,8 +29,6 @@ import xyz.jpenilla.wanderingtrades.command.commands.TradeCommands;
 
 import static org.incendo.cloud.translations.TranslationBundle.core;
 import static org.incendo.cloud.translations.bukkit.BukkitTranslationBundle.bukkit;
-import static org.incendo.cloud.translations.minecraft.extras.AudienceLocaleExtractor.audienceLocaleExtractor;
-import static org.incendo.cloud.translations.minecraft.extras.MinecraftExtrasTranslationBundle.minecraftExtras;
 
 @NullMarked
 public final class Commands {
@@ -65,9 +66,10 @@ public final class Commands {
     }
 
     private void registerCaptions() {
-        final LocaleExtractor<Source> extractor = audienceLocaleExtractor(Source::source);
+        final LocaleExtractor<Source> extractor = source ->
+            source.source() instanceof Player player ? player.locale() : Locale.US;
         this.commandManager.captionRegistry()
-            .registerProvider(minecraftExtras(extractor))
+            .registerProvider(MinecraftHelp.defaultCaptionsProvider())
             .registerProvider(bukkit(extractor))
             .registerProvider(core(extractor));
     }

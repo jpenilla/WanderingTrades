@@ -1,4 +1,6 @@
 import me.modmuss50.mpp.ReleaseType
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
 import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
@@ -11,6 +13,9 @@ plugins {
     alias(libs.plugins.runPaper)
     alias(libs.plugins.modPublishPlugin)
 }
+
+val paperApi2612Version = "26.1.2.build.49-beta"
+val javaToolchainService = extensions.getByType<JavaToolchainService>()
 
 version = (version as String).decorateVersion()
 
@@ -70,9 +75,7 @@ dependencies {
     implementation(platform(libs.cloud.minecraft.bom))
     implementation(libs.cloud.paper)
     implementation(libs.cloud.minecraft.extras)
-    implementation(platform(libs.cloud.translations.bom))
     implementation(libs.cloud.translations.bukkit)
-    implementation(libs.cloud.translations.minecraft.extras)
 
     implementation(libs.interfaces.paper)
 
@@ -142,13 +145,23 @@ publishMods.modrinth {
         "1.21.9",
         "1.21.10",
         "1.21.11",
+        "26.1.2",
     )
     modLoaders.add("paper")
 }
 
+val paperApi2612 by configurations.creating {
+    isCanBeConsumed = false
+    isCanBeResolved = true
+}
+
+dependencies {
+    paperApi2612("io.papermc.paper:paper-api:$paperApi2612Version")
+}
+
 tasks {
     runServer {
-        minecraftVersion("1.21.11")
+        minecraftVersion(providers.gradleProperty("runMinecraftVersion").getOrElse("1.21.11"))
     }
     assemble {
         dependsOn(shadowJar)
@@ -193,6 +206,21 @@ tasks {
     }
     compileJava {
         options.compilerArgs.add("-Xlint:-classfile,-processing")
+    }
+    val compileJavaPaper2612 by registering(JavaCompile::class) {
+        group = "verification"
+        description = "Compiles main sources against Paper API $paperApi2612Version while keeping Java 21 bytecode."
+        source(sourceSets.main.get().java)
+        classpath = sourceSets.main.get().compileClasspath.filter { !it.name.startsWith("paper-api-") } + paperApi2612
+        destinationDirectory.set(layout.buildDirectory.dir("classes/java/paper2612"))
+        javaCompiler.set(javaToolchainService.compilerFor {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        })
+        options.release.set(21)
+        options.compilerArgs.add("-Xlint:-classfile,-processing")
+    }
+    check {
+        dependsOn(compileJavaPaper2612)
     }
 }
 

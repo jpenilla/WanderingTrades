@@ -19,6 +19,7 @@ import xyz.jpenilla.wanderingtrades.util.VillagerReflection;
 @NullMarked
 public final class BrainModificationListener implements Listener {
     private final WanderingTrades plugin;
+    private boolean loggedReflectionUnavailable;
 
     public BrainModificationListener(final WanderingTrades plugin) {
         this.plugin = plugin;
@@ -42,6 +43,13 @@ public final class BrainModificationListener implements Listener {
         final @Nullable String configName = villager.getPersistentDataContainer().get(Constants.CONFIG_NAME, PersistentDataType.STRING);
         final @Nullable TradeConfig tradeConfig = configName == null ? null : this.plugin.configManager().tradeConfigs().get(configName);
         if (configName == null || tradeConfig == null || !tradeConfig.disableHeroOfTheVillageGifts()) {
+            return;
+        }
+        if (!VillagerReflection.available()) {
+            if (!this.loggedReflectionUnavailable) {
+                Logging.logger().warn("Disabling hero-of-the-village gift removal because this server's villager internals are not compatible.");
+                this.loggedReflectionUnavailable = true;
+            }
             return;
         }
         try {

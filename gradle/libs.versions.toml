@@ -12,8 +12,8 @@ paperTrail = "1.0.1"
 legacyPluginBase = "0.0.1+161-SNAPSHOT"
 bstats = "3.1.0"
 cloudBom = "2.0.0"
-cloudMinecraftBom = "2.0.0-beta.14"
-cloudTranslationsBom = "1.0.0-SNAPSHOT"
+cloudMinecraftBom = "2.0.0-beta.15"
+cloudTranslations = "1.0.0-beta.2"
 interfacesPaper = "1.0.0-SNAPSHOT"
 vaultApi = "1.7.1"
 essentialsX = "2.21.2"
@@ -51,10 +51,7 @@ cloud-bom = { module = "org.incendo:cloud-bom", version.ref = "cloudBom" }
 cloud-minecraft-bom = { module = "org.incendo:cloud-minecraft-bom", version.ref = "cloudMinecraftBom" }
 cloud-paper = { module = "org.incendo:cloud-paper" }
 cloud-minecraft-extras = { module = "org.incendo:cloud-minecraft-extras" }
-cloud-translations-bom = { module = "org.incendo:cloud-translations-bom", version.ref = "cloudTranslationsBom" }
-cloud-translations-bukkit = { module = "org.incendo:cloud-translations-bukkit" }
-cloud-translations-minecraft-extras = { module = "org.incendo:cloud-translations-minecraft-extras" }
+cloud-translations-bukkit = { module = "org.incendo:cloud-translations-bukkit", version.ref = "cloudTranslations" }
 
 # Interfaces
 interfaces-paper = { module = "org.incendo.interfaces:interfaces-paper", version.ref = "interfacesPaper" }
-
