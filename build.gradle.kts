@@ -142,13 +142,16 @@ publishMods.modrinth {
         "1.21.9",
         "1.21.10",
         "1.21.11",
+        "26.1",
+        "26.1.1",
+        "26.1.2",
     )
     modLoaders.add("paper")
 }
 
 tasks {
     runServer {
-        minecraftVersion("1.21.11")
+        minecraftVersion("26.1.2")
     }
     assemble {
         dependsOn(shadowJar)
