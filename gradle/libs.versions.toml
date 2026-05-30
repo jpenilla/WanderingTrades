@@ -18,7 +18,7 @@ interfacesPaper = "1.0.0-SNAPSHOT"
 vaultApi = "1.7.1"
 essentialsX = "2.21.2"
 jspecify = "1.0.0"
-worldGuard = "7.0.14"
+worldGuard = "7.0.17"
 worldEdit = "7.3.16"
 
 [plugins]
