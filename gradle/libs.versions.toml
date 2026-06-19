@@ -7,7 +7,7 @@ runPaper = "3.0.2"
 modPublishPlugin = "1.1.0"
 
 # Dependencies
-paper = "1.21.4-R0.1-SNAPSHOT"
+paper = "26.1.2.build.72-stable"
 paperTrail = "1.0.1"
 legacyPluginBase = "0.0.1+169-SNAPSHOT"
 bstats = "3.2.1"
