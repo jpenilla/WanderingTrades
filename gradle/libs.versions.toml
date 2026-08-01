@@ -17,7 +17,7 @@ cloudTranslationsBom = "1.0.0-SNAPSHOT"
 interfacesPaper = "1.0.0-SNAPSHOT"
 vaultApi = "1.7.1"
 essentialsX = "2.21.2"
-jspecify = "1.0.0"
+jspecify = "1.0.1"
 worldGuard = "7.0.14"
 worldEdit = "7.3.16"
 
