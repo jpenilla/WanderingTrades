@@ -9,7 +9,7 @@ modPublishPlugin = "2.2.0"
 # Dependencies
 paper = "1.21.4-R0.1-SNAPSHOT"
 paperTrail = "1.0.1"
-legacyPluginBase = "0.0.1+169-SNAPSHOT"
+legacyPluginBase = "0.0.1+177-SNAPSHOT"
 bstats = "3.2.1"
 cloudBom = "2.1.0"
 cloudMinecraftBom = "2.0.1"
